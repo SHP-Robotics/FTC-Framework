@@ -1,29 +1,26 @@
-/**
- * Top-level build file for ftc_app project.
- *
- * It is extraordinarily rare that you will ever need to edit this file.
- */
+import java.text.SimpleDateFormat
 
-buildscript {
-    repositories {
-        mavenCentral()
-        google()
+//
+// build.gradle in FtcRobotController
+//
+apply plugin: 'com.android.library'
+
+android {
+
+    defaultConfig {
+        minSdkVersion 24
+        //noinspection ExpiredTargetSdkVersion
+        targetSdkVersion 28
+        buildConfigField "String", "APP_BUILD_TIME", '"' + (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ROOT).format(new Date())) + '"'
     }
-    dependencies {
-        // Note for FTC Teams: Do not modify this yourself.
-        classpath 'com.android.tools.build:gradle:7.2.0'
+
+    compileSdkVersion 29
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
+    namespace = 'com.qualcomm.ftcrobotcontroller'
 }
 
-// This is now required because aapt2 has to be downloaded from the
-// google() repository beginning with version 3.2 of the Android Gradle Plugin
-allprojects {
-    repositories {
-        mavenCentral()
-        google()
-    }
-}
-
-repositories {
-    mavenCentral()
-}
+apply from: '../build.dependencies.gradle'
