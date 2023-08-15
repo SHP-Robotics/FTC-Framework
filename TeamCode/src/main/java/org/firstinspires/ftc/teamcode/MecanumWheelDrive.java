@@ -7,11 +7,9 @@ import org.firstinspires.ftc.teamcode.generals.*;
 
 @TeleOp(name = "Mecanum Wheel Drive")
 public class MecanumWheelDrive extends LinearOpMode {
-    MecanumController mecanumController;
-
     @Override
     public void runOpMode() throws InterruptedException {
-        mecanumController = new MecanumController(hardwareMap, RuntimeType.DRIVER_CONTROLLED_TELEOP);
+        MecanumController mecanumController = new MecanumController(hardwareMap, RuntimeType.DRIVER_CONTROLLED_TELEOP);
 
         waitForStart();
         while (opModeIsActive()) {

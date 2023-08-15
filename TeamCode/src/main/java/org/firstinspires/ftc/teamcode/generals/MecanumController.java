@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
+import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class MecanumController {
@@ -184,12 +185,20 @@ public class MecanumController {
         setMotorsRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setMotorsRunMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+        double forward = (frontLeftInches + frontRightInches) / 2;
+        double right = frontLeftInches - forward;
+
+        double frontLeftEncoderTicks = forward * Constants.WHEEL_ENCODER_TICKS_PER_INCH_FORWARD + right * Constants.WHEEL_ENCODER_TICKS_PER_INCH_SIDEWAYS;
+        double frontRightEncoderTicks = forward * Constants.WHEEL_ENCODER_TICKS_PER_INCH_FORWARD - right * Constants.WHEEL_ENCODER_TICKS_PER_INCH_SIDEWAYS;
+        double backLeftEncoderTicks = forward * Constants.WHEEL_ENCODER_TICKS_PER_INCH_FORWARD - right * Constants.WHEEL_ENCODER_TICKS_PER_INCH_SIDEWAYS;
+        double backRightEncoderTicks = forward * Constants.WHEEL_ENCODER_TICKS_PER_INCH_FORWARD + right * Constants.WHEEL_ENCODER_TICKS_PER_INCH_SIDEWAYS;
+
         double max = Math.max(Math.max(Math.abs(frontLeftInches), Math.abs(frontRightInches)), Math.max(Math.abs(backLeftInches), Math.abs(backRightInches)));
 
-        frontLeft.setTargetPosition((int) (frontLeftInches * Constants.WHEEL_ENCODER_TICKS_PER_INCH));
-        frontRight.setTargetPosition((int) (frontRightInches * Constants.WHEEL_ENCODER_TICKS_PER_INCH));
-        backLeft.setTargetPosition((int) (backLeftInches * Constants.WHEEL_ENCODER_TICKS_PER_INCH));
-        backRight.setTargetPosition((int) (backRightInches * Constants.WHEEL_ENCODER_TICKS_PER_INCH));
+        frontLeft.setTargetPosition((int) frontLeftEncoderTicks);
+        frontRight.setTargetPosition((int) frontRightEncoderTicks);
+        backLeft.setTargetPosition((int) backLeftEncoderTicks);
+        backRight.setTargetPosition((int) backRightEncoderTicks);
 
         frontLeft.setPower(driveSpeed * frontLeftInches / max);
         frontRight.setPower(driveSpeed * frontRightInches / max);
