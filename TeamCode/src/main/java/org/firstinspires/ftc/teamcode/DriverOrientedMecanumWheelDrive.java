@@ -17,7 +17,7 @@ public class DriverOrientedMecanumWheelDrive extends LinearOpMode {
             mecanumController.driverOrientedDrive(gamepad1);
 
             if (gamepad1.b) {
-                mecanumController.InitIMU(hardwareMap);
+                mecanumController.initIMU(hardwareMap);
                 mecanumController.calibrateIMUAngleOffset();
             }
         }

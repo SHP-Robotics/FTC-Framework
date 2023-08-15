@@ -14,76 +14,97 @@ public class MecanumController {
     private DcMotor backLeft;
     private DcMotor backRight;
 
-    private IMU imu;
-    private float imuAngleOffset = 0;
+    public IMU imu;
+    private double imuAngleOffset = 0;
 
-    private float driveSpeed = 1;
+    private double driveSpeed = 1;
+    private double rotationSpeed = 1;
 
-    public void InitIMU(HardwareMap hardwareMap) {
+    private double positionX = 0;
+    private double positionY = 0;
+
+    public void setMotorsRunMode(DcMotor.RunMode runMode) {
+        frontLeft.setMode(runMode);
+        frontRight.setMode(runMode);
+        backLeft.setMode(runMode);
+        backRight.setMode(runMode);
+    }
+
+    public void initIMU(HardwareMap hardwareMap) {
         imu = hardwareMap.get(IMU.class, "imu");
     }
 
-    private void Init(HardwareMap hardwareMap) {
+    private void init(HardwareMap hardwareMap) {
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
 
-        InitIMU(hardwareMap);
+        initIMU(hardwareMap);
     }
 
-    private void InitDriverControlledTeleop() {
+    private void initDriverControlledTeleop() {
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotor.Direction.REVERSE);
+
+        setMotorsRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    private void initAutonomous() {
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.REVERSE);
     }
 
-    private void InitAutonomous() {
+    private void initIntelligentTeleop() {
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.REVERSE);
+
+        setMotorsRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    private void InitIntelligentTeleop() {
+    private void initIntelligentAutonomous() {
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.REVERSE);
-    }
 
-    private void InitIntelligentAutonomous() {
-        frontLeft.setDirection(DcMotor.Direction.REVERSE);
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotor.Direction.REVERSE);
+        setMotorsRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public MecanumController(HardwareMap hardwareMap, RuntimeType runtimeType) {
-        Init(hardwareMap);
+        init(hardwareMap);
 
         if (runtimeType == RuntimeType.DRIVER_CONTROLLED_TELEOP) {
-            InitDriverControlledTeleop();
+            initDriverControlledTeleop();
         } else if (runtimeType == RuntimeType.AUTONOMOUS) {
-            InitAutonomous();
+            initAutonomous();
         } else if (runtimeType == RuntimeType.INTELLIGENT_TELEOP) {
-            InitIntelligentTeleop();
+            initIntelligentTeleop();
         } else if (runtimeType == RuntimeType.INTELLIGENT_AUTONOMOUS) {
-            InitIntelligentAutonomous();
+            initIntelligentAutonomous();
         }
     }
 
-    public void setDriveSpeed(float speed) {
+    public void setDriveSpeed(double speed) {
         driveSpeed = speed;
     }
 
-    public void calibrateIMUAngleOffset() {
-        imuAngleOffset = -(float)imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+    public void setRotationSpeed(double speed) {
+        rotationSpeed = speed;
     }
 
-    public float getCalibratedIMUAngle() {
-        return (float)imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) + imuAngleOffset;
+    public void calibrateIMUAngleOffset() {
+        imuAngleOffset = -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+    }
+
+    public double getCalibratedIMUAngle() {
+        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) + imuAngleOffset;
     }
 
     public void drive(Gamepad gamepad) {
@@ -123,5 +144,79 @@ public class MecanumController {
         frontRight.setPower(frontRightPower * driveSpeed / max);
         backLeft.setPower(backLeftPower * driveSpeed / max);
         backRight.setPower(backRightPower * driveSpeed / max);
+    }
+
+    public boolean isBusy() {
+        return frontLeft.isBusy() || frontRight.isBusy() || backLeft.isBusy() || backRight.isBusy();
+    }
+
+    public void waitUntilCompletion() {
+        while (isBusy()) {}
+    }
+
+    public void deactivate() {
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
+    }
+
+    public void rotateToRadian(double targetRadian, double radianTolerance) {
+        setMotorsRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        targetRadian = Constants.setToDomain(targetRadian, 0, 2 * Math.PI);
+        double currentRadian = Constants.setToDomain(getCalibratedIMUAngle(), 0, 2 * Math.PI);
+        while (Math.abs(currentRadian - targetRadian) > radianTolerance) {
+            currentRadian = Constants.setToDomain(getCalibratedIMUAngle(), 0, 2 * Math.PI);
+            double difference = targetRadian - currentRadian;
+            if (difference > Math.PI) {
+                difference -= 2 * Math.PI;
+            } else if (difference < -Math.PI) {
+                difference += 2 * Math.PI;
+            }
+            frontLeft.setPower(rotationSpeed);
+            frontRight.setPower(-rotationSpeed);
+            backLeft.setPower(rotationSpeed);
+            backRight.setPower(-rotationSpeed);
+        }
+    }
+
+    public void moveInches(double frontLeftInches, double frontRightInches, double backLeftInches, double backRightInches, boolean wait) {
+        setMotorsRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setMotorsRunMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        double max = Math.max(Math.max(Math.abs(frontLeftInches), Math.abs(frontRightInches)), Math.max(Math.abs(backLeftInches), Math.abs(backRightInches)));
+
+        frontLeft.setTargetPosition((int) (frontLeftInches * Constants.WHEEL_ENCODER_TICKS_PER_INCH));
+        frontRight.setTargetPosition((int) (frontRightInches * Constants.WHEEL_ENCODER_TICKS_PER_INCH));
+        backLeft.setTargetPosition((int) (backLeftInches * Constants.WHEEL_ENCODER_TICKS_PER_INCH));
+        backRight.setTargetPosition((int) (backRightInches * Constants.WHEEL_ENCODER_TICKS_PER_INCH));
+
+        frontLeft.setPower(driveSpeed * frontLeftInches / max);
+        frontRight.setPower(driveSpeed * frontRightInches / max);
+        backLeft.setPower(driveSpeed * backLeftInches / max);
+        backRight.setPower(driveSpeed * backRightInches / max);
+
+        if (wait) {
+            waitUntilCompletion();
+            deactivate();
+        }
+    }
+
+    public void moveToPosition(double inchesX, double inchesY, boolean wait) {
+        double x = inchesX - positionX;
+        double y = inchesY - positionY;
+
+        double xOriented = x * Math.cos(getCalibratedIMUAngle()) - y * Math.sin(getCalibratedIMUAngle());
+        double yOriented = x * Math.sin(getCalibratedIMUAngle()) + y * Math.cos(getCalibratedIMUAngle());
+
+        double frontLeftInches = yOriented + xOriented;
+        double frontRightInches = yOriented - xOriented;
+        double backLeftInches = yOriented - xOriented;
+        double backRightInches = yOriented + xOriented;
+
+        moveInches(frontLeftInches, frontRightInches, backLeftInches, backRightInches, wait);
+
+        positionX = inchesX;
+        positionY = inchesY;
     }
 }
