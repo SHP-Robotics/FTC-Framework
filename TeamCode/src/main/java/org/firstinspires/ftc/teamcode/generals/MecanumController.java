@@ -49,8 +49,6 @@ public class MecanumController {
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.REVERSE);
-
-        setMotorsRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     private void initAutonomous() {
@@ -65,8 +63,6 @@ public class MecanumController {
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.REVERSE);
-
-        setMotorsRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     private void initIntelligentAutonomous() {
@@ -74,8 +70,6 @@ public class MecanumController {
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.REVERSE);
-
-        setMotorsRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public MecanumController(HardwareMap hardwareMap, RuntimeType runtimeType) {
