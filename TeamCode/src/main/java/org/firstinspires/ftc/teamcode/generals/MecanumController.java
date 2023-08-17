@@ -46,30 +46,30 @@ public class MecanumController {
 
     private void initDriverControlledTeleop() {
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotor.Direction.REVERSE);
+        backRight.setDirection(DcMotor.Direction.FORWARD);
     }
 
     private void initAutonomous() {
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotor.Direction.REVERSE);
+        backRight.setDirection(DcMotor.Direction.FORWARD);
     }
 
     private void initIntelligentTeleop() {
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotor.Direction.REVERSE);
+        backRight.setDirection(DcMotor.Direction.FORWARD);
     }
 
     private void initIntelligentAutonomous() {
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotor.Direction.REVERSE);
+        backRight.setDirection(DcMotor.Direction.FORWARD);
     }
 
     public MecanumController(HardwareMap hardwareMap, RuntimeType runtimeType) {
@@ -114,6 +114,10 @@ public class MecanumController {
 
         double max = Math.max(Math.max(Math.abs(frontLeftPower), Math.abs(frontRightPower)), Math.max(Math.abs(backLeftPower), Math.abs(backRightPower)));
 
+        if (max < 1) {
+            max = 1;
+        }
+
         frontLeft.setPower(frontLeftPower * driveSpeed / max);
         frontRight.setPower(frontRightPower * driveSpeed / max);
         backLeft.setPower(backLeftPower * driveSpeed / max);
@@ -125,8 +129,12 @@ public class MecanumController {
         double y = -gamepad.left_stick_y;
         double r = gamepad.right_trigger - gamepad.left_trigger;
 
-        double xOriented = x * Math.cos(getCalibratedIMUAngle()) - y * Math.sin(getCalibratedIMUAngle());
-        double yOriented = x * Math.sin(getCalibratedIMUAngle()) + y * Math.cos(getCalibratedIMUAngle());
+        // cos * y = how much right if gamepad forward
+        // cos * x = how much right if gamepad right
+        // sin * y = how much forward if gamepad forward
+        // sin * x = how much forward if gamepad right
+        double xOriented = (Math.cos(getCalibratedIMUAngle()) * x) - (Math.sin(getCalibratedIMUAngle()) * y);
+        double yOriented = (Math.cos(getCalibratedIMUAngle()) * y) + (Math.sin(getCalibratedIMUAngle()) * x);
 
         double frontLeftPower = yOriented + xOriented + r;
         double frontRightPower = yOriented - xOriented - r;
@@ -134,6 +142,10 @@ public class MecanumController {
         double backRightPower = yOriented + xOriented - r;
 
         double max = Math.max(Math.max(Math.abs(frontLeftPower), Math.abs(frontRightPower)), Math.max(Math.abs(backLeftPower), Math.abs(backRightPower)));
+
+        if (max < 1) {
+            max = 1;
+        }
 
         frontLeft.setPower(frontLeftPower * driveSpeed / max);
         frontRight.setPower(frontRightPower * driveSpeed / max);
@@ -221,5 +233,21 @@ public class MecanumController {
 
         positionX = inchesX;
         positionY = inchesY;
+    }
+
+    public void gearDown() {
+        if (driveSpeed > 0.1) {
+            driveSpeed -= 0.1;
+        } else {
+            driveSpeed = 0;
+        }
+    }
+
+    public void gearUp() {
+        if (driveSpeed < 0.9) {
+            driveSpeed += 0.1;
+        } else {
+            driveSpeed = 1;
+        }
     }
 }
