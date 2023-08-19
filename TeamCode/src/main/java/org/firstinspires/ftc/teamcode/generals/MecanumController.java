@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.generals;
 
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -33,6 +34,10 @@ public class MecanumController {
 
     public void initIMU(HardwareMap hardwareMap) {
         imu = hardwareMap.get(IMU.class, "imu");
+        RevHubOrientationOnRobot.LogoFacingDirection logo = RevHubOrientationOnRobot.LogoFacingDirection.RIGHT;
+        RevHubOrientationOnRobot.UsbFacingDirection usb = RevHubOrientationOnRobot.UsbFacingDirection.UP;
+        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logo, usb);
+        imu.initialize(new IMU.Parameters(orientationOnRobot));
     }
 
     private void init(HardwareMap hardwareMap) {
@@ -133,8 +138,8 @@ public class MecanumController {
         // cos * x = how much right if gamepad right
         // sin * y = how much forward if gamepad forward
         // sin * x = how much forward if gamepad right
-        double xOriented = (Math.cos(getCalibratedIMUAngle()) * x) - (Math.sin(getCalibratedIMUAngle()) * y);
-        double yOriented = (Math.cos(getCalibratedIMUAngle()) * y) + (Math.sin(getCalibratedIMUAngle()) * x);
+        double xOriented = (Math.cos(getCalibratedIMUAngle()) * x) + (Math.sin(getCalibratedIMUAngle()) * y);
+        double yOriented = (Math.cos(getCalibratedIMUAngle()) * y) - (Math.sin(getCalibratedIMUAngle()) * x);
 
         double frontLeftPower = yOriented + xOriented + r;
         double frontRightPower = yOriented - xOriented - r;
@@ -189,7 +194,6 @@ public class MecanumController {
 
     public void moveInches(double frontLeftInches, double frontRightInches, double backLeftInches, double backRightInches, boolean wait) {
         setMotorsRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        setMotorsRunMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         double forward = (frontLeftInches + frontRightInches) / 2;
         double right = frontLeftInches - forward;
@@ -205,6 +209,8 @@ public class MecanumController {
         frontRight.setTargetPosition((int) frontRightEncoderTicks);
         backLeft.setTargetPosition((int) backLeftEncoderTicks);
         backRight.setTargetPosition((int) backRightEncoderTicks);
+
+        setMotorsRunMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         frontLeft.setPower(driveSpeed * frontLeftInches / max);
         frontRight.setPower(driveSpeed * frontRightInches / max);
