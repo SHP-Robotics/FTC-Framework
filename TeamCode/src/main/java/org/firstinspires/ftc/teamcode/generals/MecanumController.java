@@ -179,12 +179,6 @@ public class MecanumController {
         double currentRadian = Constants.setToDomain(getCalibratedIMUAngle(), 0, 2 * Math.PI);
         while (Math.abs(currentRadian - targetRadian) > radianTolerance) {
             currentRadian = Constants.setToDomain(getCalibratedIMUAngle(), 0, 2 * Math.PI);
-            double difference = targetRadian - currentRadian;
-            if (difference > Math.PI) {
-                difference -= 2 * Math.PI;
-            } else if (difference < -Math.PI) {
-                difference += 2 * Math.PI;
-            }
             frontLeft.setPower(rotationSpeed);
             frontRight.setPower(-rotationSpeed);
             backLeft.setPower(rotationSpeed);
