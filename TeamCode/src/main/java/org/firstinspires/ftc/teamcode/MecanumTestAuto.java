@@ -11,9 +11,9 @@ public class MecanumTestAuto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         MecanumController mecanumController = new MecanumController(hardwareMap, RuntimeType.AUTONOMOUS);
-        mecanumController.setDriveSpeed(0.7);
+        mecanumController.setDriveSpeed(0.3);
 
         waitForStart();
-        mecanumController.moveInches(60, 60, 60, 60, true);
+        mecanumController.moveInches(60, -60, -60, 60, true);
     }
 }
