@@ -6,15 +6,19 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class MecanumController {
-    private DcMotor frontLeft;
-    private DcMotor frontRight;
-    private DcMotor backLeft;
-    private DcMotor backRight;
+    public DcMotor frontLeft;
+    public DcMotor frontRight;
+    public DcMotor backLeft;
+    public DcMotor backRight;
+    //temp
+    private DcMotor lift;
+    private Servo claw;
 
     public IMU imu;
     private double imuAngleOffset = 0;
@@ -46,6 +50,10 @@ public class MecanumController {
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
 
+        //temp
+        lift = hardwareMap.get(DcMotor.class, "lift");
+        claw = hardwareMap.get(Servo.class, "claw");
+
         initIMU(hardwareMap);
     }
 
@@ -54,6 +62,10 @@ public class MecanumController {
         frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.FORWARD);
+
+        //temp
+        lift.setDirection(DcMotor.Direction.REVERSE);
+        claw.setDirection(Servo.Direction.REVERSE);
     }
 
     private void initAutonomous() {
@@ -61,6 +73,10 @@ public class MecanumController {
         frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.FORWARD);
+
+        //temp
+        lift.setDirection(DcMotor.Direction.REVERSE);
+        claw.setDirection(Servo.Direction.REVERSE);
     }
 
     private void initIntelligentTeleop() {
@@ -68,6 +84,10 @@ public class MecanumController {
         frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.FORWARD);
+
+        //temp
+        lift.setDirection(DcMotor.Direction.REVERSE);
+        claw.setDirection(Servo.Direction.REVERSE);
     }
 
     private void initIntelligentAutonomous() {
@@ -75,6 +95,10 @@ public class MecanumController {
         frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.FORWARD);
+
+        //temp
+        lift.setDirection(DcMotor.Direction.REVERSE);
+        claw.setDirection(Servo.Direction.REVERSE);
     }
 
     public MecanumController(HardwareMap hardwareMap, RuntimeType runtimeType) {
@@ -110,7 +134,7 @@ public class MecanumController {
     public void drive(Gamepad gamepad) {
         double x = gamepad.left_stick_x;
         double y = -gamepad.left_stick_y;
-        double r = gamepad.right_trigger - gamepad.left_trigger;
+        double r = gamepad.right_stick_x;
 
         double frontLeftPower = y + x + r;
         double frontRightPower = y - x - r;
@@ -127,12 +151,22 @@ public class MecanumController {
         frontRight.setPower(frontRightPower * driveSpeed / max);
         backLeft.setPower(backLeftPower * driveSpeed / max);
         backRight.setPower(backRightPower * driveSpeed / max);
+
+        //temp
+        double liftPower = gamepad.right_trigger - gamepad.left_trigger;
+        lift.setPower(liftPower);
+
+        if (gamepad.left_bumper) {
+            claw.setPosition(1);
+        } else if (gamepad.right_bumper) {
+            claw.setPosition(0.6);
+        }
     }
 
     public void driverOrientedDrive(Gamepad gamepad) {
         double x = gamepad.left_stick_x;
         double y = -gamepad.left_stick_y;
-        double r = gamepad.right_trigger - gamepad.left_trigger;
+        double r = gamepad.right_stick_x;
 
         // cos * y = how much right if gamepad forward
         // cos * x = how much right if gamepad right
@@ -156,6 +190,16 @@ public class MecanumController {
         frontRight.setPower(frontRightPower * driveSpeed / max);
         backLeft.setPower(backLeftPower * driveSpeed / max);
         backRight.setPower(backRightPower * driveSpeed / max);
+
+        //temp
+        double liftPower = gamepad.right_trigger - gamepad.left_trigger;
+        lift.setPower(liftPower);
+
+        if (gamepad.left_bumper) {
+            claw.setPosition(1);
+        } else if (gamepad.right_bumper) {
+            claw.setPosition(0.6);
+        }
     }
 
     public boolean isBusy() {
