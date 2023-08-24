@@ -12,13 +12,10 @@ import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class MecanumController {
-    public DcMotor frontLeft;
-    public DcMotor frontRight;
-    public DcMotor backLeft;
-    public DcMotor backRight;
-    //temp
-    private DcMotor lift;
-    private Servo claw;
+    public DcMotor leftFront;
+    public DcMotor rightFront;
+    public DcMotor leftRear;
+    public DcMotor rightRear;
 
     public IMU imu;
     private double imuAngleOffset = 0;
@@ -30,10 +27,10 @@ public class MecanumController {
     private double positionY = 0;
 
     public void setMotorsRunMode(DcMotor.RunMode runMode) {
-        frontLeft.setMode(runMode);
-        frontRight.setMode(runMode);
-        backLeft.setMode(runMode);
-        backRight.setMode(runMode);
+        leftFront.setMode(runMode);
+        rightFront.setMode(runMode);
+        leftRear.setMode(runMode);
+        rightRear.setMode(runMode);
     }
 
     public void initIMU(HardwareMap hardwareMap) {
@@ -45,60 +42,40 @@ public class MecanumController {
     }
 
     private void init(HardwareMap hardwareMap) {
-        frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
-        frontRight = hardwareMap.get(DcMotor.class, "frontRight");
-        backLeft = hardwareMap.get(DcMotor.class, "backLeft");
-        backRight = hardwareMap.get(DcMotor.class, "backRight");
-
-        //temp
-        lift = hardwareMap.get(DcMotor.class, "lift");
-        claw = hardwareMap.get(Servo.class, "claw");
+        leftFront = hardwareMap.get(DcMotor.class, "leftFront");
+        rightFront = hardwareMap.get(DcMotor.class, "rightFront");
+        leftRear = hardwareMap.get(DcMotor.class, "leftRear");
+        rightRear = hardwareMap.get(DcMotor.class, "rightRear");
 
         initIMU(hardwareMap);
     }
 
     private void initDriverControlledTeleop() {
-        frontLeft.setDirection(DcMotor.Direction.REVERSE);
-        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotor.Direction.FORWARD);
-
-        //temp
-        lift.setDirection(DcMotor.Direction.REVERSE);
-        claw.setDirection(Servo.Direction.REVERSE);
+        leftFront.setDirection(DcMotor.Direction.REVERSE);
+        rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightRear.setDirection(DcMotor.Direction.FORWARD);
     }
 
     private void initAutonomous() {
-        frontLeft.setDirection(DcMotor.Direction.REVERSE);
-        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotor.Direction.FORWARD);
-
-        //temp
-        lift.setDirection(DcMotor.Direction.REVERSE);
-        claw.setDirection(Servo.Direction.REVERSE);
+        leftFront.setDirection(DcMotor.Direction.REVERSE);
+        rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightRear.setDirection(DcMotor.Direction.FORWARD);
     }
 
     private void initIntelligentTeleop() {
-        frontLeft.setDirection(DcMotor.Direction.REVERSE);
-        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotor.Direction.FORWARD);
-
-        //temp
-        lift.setDirection(DcMotor.Direction.REVERSE);
-        claw.setDirection(Servo.Direction.REVERSE);
+        leftFront.setDirection(DcMotor.Direction.REVERSE);
+        rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightRear.setDirection(DcMotor.Direction.FORWARD);
     }
 
     private void initIntelligentAutonomous() {
-        frontLeft.setDirection(DcMotor.Direction.REVERSE);
-        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotor.Direction.FORWARD);
-
-        //temp
-        lift.setDirection(DcMotor.Direction.REVERSE);
-        claw.setDirection(Servo.Direction.REVERSE);
+        leftFront.setDirection(DcMotor.Direction.REVERSE);
+        rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightRear.setDirection(DcMotor.Direction.FORWARD);
     }
 
     public MecanumController(HardwareMap hardwareMap, RuntimeType runtimeType) {
@@ -136,31 +113,21 @@ public class MecanumController {
         double y = -gamepad.left_stick_y;
         double r = gamepad.right_stick_x;
 
-        double frontLeftPower = y + x + r;
-        double frontRightPower = y - x - r;
-        double backLeftPower = y - x + r;
-        double backRightPower = y + x - r;
+        double leftFrontPower = y + x + r;
+        double rightFrontPower = y - x - r;
+        double leftRearPower = y - x + r;
+        double rightRearPower = y + x - r;
 
-        double max = Math.max(Math.max(Math.abs(frontLeftPower), Math.abs(frontRightPower)), Math.max(Math.abs(backLeftPower), Math.abs(backRightPower)));
+        double max = Math.max(Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower)), Math.max(Math.abs(leftRearPower), Math.abs(rightRearPower)));
 
         if (max < 1) {
             max = 1;
         }
 
-        frontLeft.setPower(frontLeftPower * driveSpeed / max);
-        frontRight.setPower(frontRightPower * driveSpeed / max);
-        backLeft.setPower(backLeftPower * driveSpeed / max);
-        backRight.setPower(backRightPower * driveSpeed / max);
-
-        //temp
-        double liftPower = gamepad.right_trigger - gamepad.left_trigger;
-        lift.setPower(liftPower);
-
-        if (gamepad.left_bumper) {
-            claw.setPosition(1);
-        } else if (gamepad.right_bumper) {
-            claw.setPosition(0.6);
-        }
+        leftFront.setPower(leftFrontPower * driveSpeed / max);
+        rightFront.setPower(rightFrontPower * driveSpeed / max);
+        leftRear.setPower(leftRearPower * driveSpeed / max);
+        rightRear.setPower(rightRearPower * driveSpeed / max);
     }
 
     public void driverOrientedDrive(Gamepad gamepad) {
@@ -175,35 +142,25 @@ public class MecanumController {
         double xOriented = (Math.cos(getCalibratedIMUAngle()) * x) + (Math.sin(getCalibratedIMUAngle()) * y);
         double yOriented = (Math.cos(getCalibratedIMUAngle()) * y) - (Math.sin(getCalibratedIMUAngle()) * x);
 
-        double frontLeftPower = yOriented + xOriented + r;
-        double frontRightPower = yOriented - xOriented - r;
-        double backLeftPower = yOriented - xOriented + r;
-        double backRightPower = yOriented + xOriented - r;
+        double leftFrontPower = yOriented + xOriented + r;
+        double rightFrontPower = yOriented - xOriented - r;
+        double leftRearPower = yOriented - xOriented + r;
+        double rightRearPower = yOriented + xOriented - r;
 
-        double max = Math.max(Math.max(Math.abs(frontLeftPower), Math.abs(frontRightPower)), Math.max(Math.abs(backLeftPower), Math.abs(backRightPower)));
+        double max = Math.max(Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower)), Math.max(Math.abs(leftRearPower), Math.abs(rightRearPower)));
 
         if (max < 1) {
             max = 1;
         }
 
-        frontLeft.setPower(frontLeftPower * driveSpeed / max);
-        frontRight.setPower(frontRightPower * driveSpeed / max);
-        backLeft.setPower(backLeftPower * driveSpeed / max);
-        backRight.setPower(backRightPower * driveSpeed / max);
-
-        //temp
-        double liftPower = gamepad.right_trigger - gamepad.left_trigger;
-        lift.setPower(liftPower);
-
-        if (gamepad.left_bumper) {
-            claw.setPosition(1);
-        } else if (gamepad.right_bumper) {
-            claw.setPosition(0.6);
-        }
+        leftFront.setPower(leftFrontPower * driveSpeed / max);
+        rightFront.setPower(rightFrontPower * driveSpeed / max);
+        leftRear.setPower(leftRearPower * driveSpeed / max);
+        rightRear.setPower(rightRearPower * driveSpeed / max);
     }
 
     public boolean isBusy() {
-        return frontLeft.isBusy() || frontRight.isBusy() || backLeft.isBusy() || backRight.isBusy();
+        return leftFront.isBusy() || rightFront.isBusy() || leftRear.isBusy() || rightRear.isBusy();
     }
 
     public void waitUntilCompletion() {
@@ -211,10 +168,10 @@ public class MecanumController {
     }
 
     public void deactivate() {
-        frontLeft.setPower(0);
-        frontRight.setPower(0);
-        backLeft.setPower(0);
-        backRight.setPower(0);
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        leftRear.setPower(0);
+        rightRear.setPower(0);
     }
 
     public void rotateToRadian(double targetRadian, double radianTolerance) {
@@ -223,37 +180,37 @@ public class MecanumController {
         double currentRadian = Constants.setToDomain(getCalibratedIMUAngle(), 0, 2 * Math.PI);
         while (Math.abs(currentRadian - targetRadian) > radianTolerance) {
             currentRadian = Constants.setToDomain(getCalibratedIMUAngle(), 0, 2 * Math.PI);
-            frontLeft.setPower(rotationSpeed);
-            frontRight.setPower(-rotationSpeed);
-            backLeft.setPower(rotationSpeed);
-            backRight.setPower(-rotationSpeed);
+            leftFront.setPower(rotationSpeed);
+            rightFront.setPower(-rotationSpeed);
+            leftRear.setPower(rotationSpeed);
+            rightRear.setPower(-rotationSpeed);
         }
     }
 
-    public void moveInches(double frontLeftInches, double frontRightInches, double backLeftInches, double backRightInches, boolean wait) {
+    public void moveInches(double leftFrontInches, double rightFrontInches, double leftRearInches, double rightRearInches, boolean wait) {
         setMotorsRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        double forward = (frontLeftInches + frontRightInches) / 2;
-        double right = frontLeftInches - forward;
+        double forward = (leftFrontInches + rightFrontInches) / 2;
+        double right = leftFrontInches - forward;
 
-        double frontLeftEncoderTicks = forward * Constants.WHEEL_ENCODER_TICKS_PER_INCH_FORWARD + right * Constants.WHEEL_ENCODER_TICKS_PER_INCH_SIDEWAYS;
-        double frontRightEncoderTicks = forward * Constants.WHEEL_ENCODER_TICKS_PER_INCH_FORWARD - right * Constants.WHEEL_ENCODER_TICKS_PER_INCH_SIDEWAYS;
-        double backLeftEncoderTicks = forward * Constants.WHEEL_ENCODER_TICKS_PER_INCH_FORWARD - right * Constants.WHEEL_ENCODER_TICKS_PER_INCH_SIDEWAYS;
-        double backRightEncoderTicks = forward * Constants.WHEEL_ENCODER_TICKS_PER_INCH_FORWARD + right * Constants.WHEEL_ENCODER_TICKS_PER_INCH_SIDEWAYS;
+        double leftFrontEncoderTicks = forward * Constants.WHEEL_ENCODER_TICKS_PER_INCH_FORWARD + right * Constants.WHEEL_ENCODER_TICKS_PER_INCH_SIDEWAYS;
+        double rightFrontEncoderTicks = forward * Constants.WHEEL_ENCODER_TICKS_PER_INCH_FORWARD - right * Constants.WHEEL_ENCODER_TICKS_PER_INCH_SIDEWAYS;
+        double leftRearEncoderTicks = forward * Constants.WHEEL_ENCODER_TICKS_PER_INCH_FORWARD - right * Constants.WHEEL_ENCODER_TICKS_PER_INCH_SIDEWAYS;
+        double rightRearEncoderTicks = forward * Constants.WHEEL_ENCODER_TICKS_PER_INCH_FORWARD + right * Constants.WHEEL_ENCODER_TICKS_PER_INCH_SIDEWAYS;
 
-        double max = Math.max(Math.max(Math.abs(frontLeftInches), Math.abs(frontRightInches)), Math.max(Math.abs(backLeftInches), Math.abs(backRightInches)));
+        double max = Math.max(Math.max(Math.abs(leftFrontInches), Math.abs(rightFrontInches)), Math.max(Math.abs(leftRearInches), Math.abs(rightRearInches)));
 
-        frontLeft.setTargetPosition((int) frontLeftEncoderTicks);
-        frontRight.setTargetPosition((int) frontRightEncoderTicks);
-        backLeft.setTargetPosition((int) backLeftEncoderTicks);
-        backRight.setTargetPosition((int) backRightEncoderTicks);
+        leftFront.setTargetPosition((int) leftFrontEncoderTicks);
+        rightFront.setTargetPosition((int) rightFrontEncoderTicks);
+        leftRear.setTargetPosition((int) leftRearEncoderTicks);
+        rightRear.setTargetPosition((int) rightRearEncoderTicks);
 
         setMotorsRunMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        frontLeft.setPower(driveSpeed * frontLeftInches / max);
-        frontRight.setPower(driveSpeed * frontRightInches / max);
-        backLeft.setPower(driveSpeed * backLeftInches / max);
-        backRight.setPower(driveSpeed * backRightInches / max);
+        leftFront.setPower(driveSpeed * leftFrontInches / max);
+        rightFront.setPower(driveSpeed * rightFrontInches / max);
+        leftRear.setPower(driveSpeed * leftRearInches / max);
+        rightRear.setPower(driveSpeed * rightRearInches / max);
 
         if (wait) {
             waitUntilCompletion();
@@ -268,12 +225,12 @@ public class MecanumController {
         double xOriented = x * Math.cos(getCalibratedIMUAngle()) - y * Math.sin(getCalibratedIMUAngle());
         double yOriented = x * Math.sin(getCalibratedIMUAngle()) + y * Math.cos(getCalibratedIMUAngle());
 
-        double frontLeftInches = yOriented + xOriented;
-        double frontRightInches = yOriented - xOriented;
-        double backLeftInches = yOriented - xOriented;
-        double backRightInches = yOriented + xOriented;
+        double leftFrontInches = yOriented + xOriented;
+        double rightFrontInches = yOriented - xOriented;
+        double leftRearInches = yOriented - xOriented;
+        double rightRearInches = yOriented + xOriented;
 
-        moveInches(frontLeftInches, frontRightInches, backLeftInches, backRightInches, wait);
+        moveInches(leftFrontInches, rightFrontInches, leftRearInches, rightRearInches, wait);
 
         positionX = inchesX;
         positionY = inchesY;
