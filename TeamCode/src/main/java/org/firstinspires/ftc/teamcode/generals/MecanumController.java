@@ -51,29 +51,29 @@ public class MecanumController {
     }
 
     private void initDriverControlledTeleop() {
-        leftFront.setDirection(DcMotor.Direction.REVERSE);
-        rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftFront.setDirection(DcMotor.Direction.FORWARD);
+        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
         rightRear.setDirection(DcMotor.Direction.FORWARD);
     }
 
     private void initAutonomous() {
-        leftFront.setDirection(DcMotor.Direction.REVERSE);
-        rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftFront.setDirection(DcMotor.Direction.FORWARD);
+        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
         rightRear.setDirection(DcMotor.Direction.FORWARD);
     }
 
     private void initIntelligentTeleop() {
-        leftFront.setDirection(DcMotor.Direction.REVERSE);
-        rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftFront.setDirection(DcMotor.Direction.FORWARD);
+        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
         rightRear.setDirection(DcMotor.Direction.FORWARD);
     }
 
     private void initIntelligentAutonomous() {
-        leftFront.setDirection(DcMotor.Direction.REVERSE);
-        rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftFront.setDirection(DcMotor.Direction.FORWARD);
+        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
         rightRear.setDirection(DcMotor.Direction.FORWARD);
     }
