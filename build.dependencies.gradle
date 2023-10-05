@@ -23,4 +23,5 @@ dependencies {
     implementation 'org.firstinspires.ftc:Vision:8.2.0'
 
     implementation 'com.acmerobotics.dashboard:dashboard:0.4.10'
+    implementation 'com.microsoft.onnxruntime:onnxruntime-android:1.14.0'
 }
