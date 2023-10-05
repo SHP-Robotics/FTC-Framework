@@ -5,19 +5,19 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.teamcode.generals.Suspension;
+
 @TeleOp(name = "test")
 public class test extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        DcMotor lift = hardwareMap.get(DcMotor.class, "lift");
-
-        lift.setDirection(DcMotorSimple.Direction.FORWARD);
+        Suspension suspension = new Suspension(hardwareMap);
 
         waitForStart();
 
         while (opModeIsActive()) {
-            lift.setPower(-gamepad1.right_stick_y);
+            suspension.setPower(gamepad1.right_stick_y);
         }
     }
 }
