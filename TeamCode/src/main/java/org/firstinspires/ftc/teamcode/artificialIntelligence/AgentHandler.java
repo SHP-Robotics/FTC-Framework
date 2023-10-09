@@ -1,95 +1,194 @@
 package org.firstinspires.ftc.teamcode.artificialIntelligence;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.vuforia.Image;
+import com.vuforia.PIXEL_FORMAT;
 
-import java.util.List;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.tfod.TfodProcessor;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+
+import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.Map;
+
+import ai.onnxruntime.OnnxTensor;
+import ai.onnxruntime.OrtEnvironment;
+import ai.onnxruntime.OrtException;
+import ai.onnxruntime.OrtSession;
 
 public class AgentHandler {
-    private static final boolean USE_WEBCAM = true;
+    OrtEnvironment env;
+    OrtSession session;
 
-    private TfodProcessor tfod;
-    private HardwareMap hardwareMap;
+    private static final String VUFORIA_KEY = "ATZ/F4X/////AAABmSjnLIM91kSRo8TfH6CpvkpQb02HUOXzsAmc9sWr5aQKwBP0+GpVCddkSd7qVIgzYGRsutM1OEr4dRHyoy7G3gE8kovM+mnw5nVVkEJQEOhXlUt8ZN23VxVEMHO9qDIcH4vEv6w105kXo9FLJlikfRmKzVjMF/YAS4bU9UQVYpVzXCrEaoSE67McYRahSc3JfFmVkMqUCS2DDqyBC3MkN/YsO+EPmjz4iDIGz9HkSHkxylCOQ3rSHZQwZoGyrPJfkpl4XJoH+dKIawL3KeEWbMOIwDFR/IECVa8SNEeeaThDF3pvha2lTtdtgh5XLIcdSi27UQVTnaaM+5/G2gHLPMQ4n3DHIg4CQvmChLZTwD65";
 
-    private VisionPortal visionPortal;
+    private VuforiaLocalizer vuforiaCamera1;
+    private VuforiaLocalizer vuforiaCamera2;
+    private VuforiaLocalizer vuforiaCamera3;
 
-    public AgentHandler(HardwareMap hardwareMap) {
-        this.hardwareMap = hardwareMap;
-        initTfod();
+    private ByteBuffer realCamera1;
+    private ByteBuffer realCamera2;
+    private ByteBuffer realCamera3;
+
+    private int pleaseWorkIndex = -1;
+
+    public void initEnvironment(String modelPath) {
+        try {
+            env = OrtEnvironment.getEnvironment();
+            OrtSession.SessionOptions opts = new OrtSession.SessionOptions();
+            session = env.createSession(modelPath, opts);
+        } catch ( OrtException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public void stopStreaming() {
-        visionPortal.stopStreaming();
+    public void closeEnvironment() {
+        try {
+            session.close();
+            env.close();
+        } catch (OrtException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public void resumeStreaming() {
-        visionPortal.resumeStreaming();
+    public void initVuforia(HardwareMap map) {
+        // Usual code to initialize Vuforia
+
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
+        parameters.vuforiaLicenseKey = VUFORIA_KEY;
+
+        parameters.cameraName = map.get(WebcamName.class, "Webcam 1");
+        vuforiaCamera1 = ClassFactory.getInstance().createVuforia(parameters);
+
+        parameters.cameraName = map.get(WebcamName.class, "Webcam 2");
+        vuforiaCamera2 = ClassFactory.getInstance().createVuforia(parameters);
+
+        parameters.cameraName = map.get(WebcamName.class, "Webcam 3");
+        vuforiaCamera3 = ClassFactory.getInstance().createVuforia(parameters);
+
+        // This code probs doesn't work
+        vuforiaCamera1.setFrameQueueCapacity(3);
+        vuforiaCamera2.setFrameQueueCapacity(3);
+        vuforiaCamera3.setFrameQueueCapacity(3);
     }
 
-    public void close() {
-        visionPortal.close();
-    }
-
-    private void initTfod() {
-
-        tfod = new TfodProcessor.Builder()
-                .setModelFileName("Hehehehah.tflite")
-                .setModelLabels(new String[]{"positionX", "rotationY", "positionZ"})
-
-                // Use setModelAssetName() if the TF Model is built in as an asset.
-                // Use setModelFileName() if you have downloaded a custom team model to the Robot Controller.
-                //.setModelAssetName(TFOD_MODEL_ASSET)
-                //.setModelFileName(TFOD_MODEL_FILE)
-
-                //.setModelLabels(LABELS)
-                //.setIsModelTensorFlow2(true)
-                //.setIsModelQuantized(true)
-                //.setModelInputSize(300)
-                //.setModelAspectRatio(16.0 / 9.0)
-
-                .build();
-
-        // Create the vision portal by using a builder.
-        VisionPortal.Builder builder = new VisionPortal.Builder();
-
-        // Set the camera (webcam vs. built-in RC phone camera).
-        if (USE_WEBCAM) {
-            builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"));
+    private void getCameraFrame(CameraIdentifier cameraIdentifier) {
+        VuforiaLocalizer.CloseableFrame frame;
+        if (cameraIdentifier == CameraIdentifier.REAL_CAMERA_ONE) {
+            frame = vuforiaCamera1.getFrameQueue().poll();
+        } else if (cameraIdentifier == CameraIdentifier.REAL_CAMERA_TWO) {
+            frame = vuforiaCamera2.getFrameQueue().poll();
+        } else if (cameraIdentifier == CameraIdentifier.REAL_CAMERA_THREE) {
+            frame = vuforiaCamera3.getFrameQueue().poll();
         }
 
-        // Choose a camera resolution. Not all cameras support all resolutions.
-        //builder.setCameraResolution(new Size(640, 480));
-
-        // Enable the RC preview (LiveView).  Set "false" to omit camera monitoring.
-        //builder.enableCameraMonitoring(true);
-
-        // Set the stream format; MJPEG uses less bandwidth than default YUY2.
-        //builder.setStreamFormat(VisionPortal.StreamFormat.YUY2);
-
-        // Choose whether or not LiveView stops if no processors are enabled.
-        // If set "true", monitor shows solid orange screen if no processors enabled.
-        // If set "false", monitor shows camera view without annotations.
-        //builder.setAutoStopLiveView(false);
-
-        // Set and enable the processor.
-        builder.addProcessor(tfod);
-
-        // Build the Vision Portal, using the above settings.
-        visionPortal = builder.build();
-
-        // Set confidence threshold for TFOD recognitions, at any time.
-        //tfod.setMinResultConfidence(0.75f);
-
-        // Disable or re-enable the TFOD processor at any time.
-        //visionPortal.setProcessorEnabled(tfod, true);
-
+        Image image = frame.getImage(pleaseWorkIndex);
+        if (image.getFormat() == PIXEL_FORMAT.GRAYSCALE) {
+            realCamera1 = image.getPixels();
+        } else {
+            throw new Error("The pleaseWorkIndex didn't work!");
+        }
     }
 
-    public List<Recognition> getCurrentRecognitions() {
-        return tfod.getRecognitions();
+    public void getCurrentFrames() {
+        VuforiaLocalizer.CloseableFrame frame1 = vuforiaCamera1.getFrameQueue().poll();
+        VuforiaLocalizer.CloseableFrame frame2 = vuforiaCamera2.getFrameQueue().poll();
+        VuforiaLocalizer.CloseableFrame frame3 = vuforiaCamera3.getFrameQueue().poll();
+
+        if (pleaseWorkIndex == -1) {
+            for (int i = 0; i < frame1.getNumImages(); i++) {
+                Image image1 = frame1.getImage(i);
+
+                if (image1.getFormat() == PIXEL_FORMAT.GRAYSCALE) {
+                    pleaseWorkIndex = i;
+
+                    int width = image1.getWidth();
+
+                    int height = image1.getHeight();
+
+                    // Once you have selected a specific RGB565 image, you can fill a ByteBuffer with its
+
+                    // pixel contents.
+
+                    ByteBuffer buf = image1.getPixels();
+
+                    realCamera1 = buf;
+                }
+            }
+        } else {
+
+        }
+
+        Image image2 = frame2.getImage(pleaseWorkIndex);
+
+        if (image2.getFormat() == PIXEL_FORMAT.GRAYSCALE) {
+            int width = image2.getWidth();
+
+            int height = image2.getHeight();
+
+            // Once you have selected a specific RGB565 image, you can fill a ByteBuffer with its
+
+            // pixel contents.
+
+            ByteBuffer buf = image2.getPixels();
+
+            // And you can fill an array of bytes with the contents of the byte buffer (two bytes per pixel)
+
+            byte[] bytes = new byte[2 * width * height];
+
+            realCamera2 = bytes;
+        } else {
+            throw new Error("Your code sucks");
+        }
+
+        Image image3 = frame3.getImage(pleaseWorkIndex);
+
+        if (image3.getFormat() == PIXEL_FORMAT.GRAYSCALE) {
+            int width = image3.getWidth();
+
+            int height = image3.getHeight();
+
+            // Once you have selected a specific RGB565 image, you can fill a ByteBuffer with its
+
+            // pixel contents.
+
+            ByteBuffer buf = image3.getPixels();
+
+            // And you can fill an array of bytes with the contents of the byte buffer (two bytes per pixel)
+
+            byte[] bytes = new byte[2 * width * height];
+
+            realCamera3 = bytes;
+        } else {
+            throw new Error("Your code sucks");
+        }
+    }
+
+    public float[] forward() {
+        try {
+            Map<String, OnnxTensor> tensor = new HashMap<String, OnnxTensor>(){{
+                put("realCamera1", OnnxTensor.createTensor(env, ByteBuffer.wrap(realCamera1), new long[]{1}));
+                put("realCamera2", OnnxTensor.createTensor(env, ByteBuffer.wrap(realCamera2), new long[]{1}));
+                put("realCamera3", OnnxTensor.createTensor(env, ByteBuffer.wrap(realCamera3), new long[]{1}));
+                put("offsetCamera1", OnnxTensor.createTensor(env, offsetCamera1, new long[]{1}));
+                put("offsetCamera2", OnnxTensor.createTensor(env, offsetCamera2, new long[]{1}));
+                put("offsetCamera3", OnnxTensor.createTensor(env, offsetCamera3, new long[]{1}));
+            }};
+
+            float[] output = new float[3];
+
+            OrtSession.Result result = session.run(tensor);
+
+            output[0] = ((float[])result.get(0).getValue())[0];
+            output[1] = -((float[])result.get(1).getValue())[0];
+            output[2] = ((float[])result.get(2).getValue())[0];
+
+            return output;
+
+        } catch (OrtException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
