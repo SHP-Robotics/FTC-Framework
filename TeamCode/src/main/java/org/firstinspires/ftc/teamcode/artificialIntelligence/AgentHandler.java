@@ -1,115 +1,95 @@
 package org.firstinspires.ftc.teamcode.artificialIntelligence;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.vuforia.Image;
-import com.vuforia.PIXEL_FORMAT;
 
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import java.util.List;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.teamcode.debug.Constants;
-
-import java.nio.ByteBuffer;
-import java.util.HashMap;
-import java.util.Map;
-
-import ai.onnxruntime.OnnxJavaType;
-import ai.onnxruntime.OnnxTensor;
-import ai.onnxruntime.OrtEnvironment;
-import ai.onnxruntime.OrtException;
-import ai.onnxruntime.OrtSession;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 
 public class AgentHandler {
-    OrtEnvironment env;
-    OrtSession session;
-    private static final String VUFORIA_KEY = "ATZ/F4X/////AAABmSjnLIM91kSRo8TfH6CpvkpQb02HUOXzsAmc9sWr5aQKwBP0+GpVCddkSd7qVIgzYGRsutM1OEr4dRHyoy7G3gE8kovM+mnw5nVVkEJQEOhXlUt8ZN23VxVEMHO9qDIcH4vEv6w105kXo9FLJlikfRmKzVjMF/YAS4bU9UQVYpVzXCrEaoSE67McYRahSc3JfFmVkMqUCS2DDqyBC3MkN/YsO+EPmjz4iDIGz9HkSHkxylCOQ3rSHZQwZoGyrPJfkpl4XJoH+dKIawL3KeEWbMOIwDFR/IECVa8SNEeeaThDF3pvha2lTtdtgh5XLIcdSi27UQVTnaaM+5/G2gHLPMQ4n3DHIg4CQvmChLZTwD65";
+    private static final boolean USE_WEBCAM = true;
 
-    private VuforiaLocalizer vuforia;
+    private TfodProcessor tfod;
+    private HardwareMap hardwareMap;
 
-    public void initEnvironment(String modelPath) {
-        try {
-            env = OrtEnvironment.getEnvironment();
-            OrtSession.SessionOptions opts = new OrtSession.SessionOptions();
-            session = env.createSession(modelPath, opts);
-        } catch ( OrtException e) {
-            throw new RuntimeException(e);
-        }
+    private VisionPortal visionPortal;
+
+    public AgentHandler(HardwareMap hardwareMap) {
+        this.hardwareMap = hardwareMap;
+        initTfod();
     }
 
-    public void closeEnvironment() {
-        try {
-            session.close();
-            env.close();
-        } catch (OrtException e) {
-            throw new RuntimeException(e);
-        }
+    public void stopStreaming() {
+        visionPortal.stopStreaming();
     }
 
-    public void initVuforia(HardwareMap map) {
-        // Usual code to initialize Vuforia
-
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-
-        parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraName = map.get(WebcamName.class, "Webcam 1");
-
-        vuforia = ClassFactory.getInstance().createVuforia(parameters);
-
-        // Set the frame queue capacity (3 has always worked for us)
-
-        vuforia.setFrameQueueCapacity(3);
+    public void resumeStreaming() {
+        visionPortal.resumeStreaming();
     }
 
-    public ByteBuffer getFrame() {
-        VuforiaLocalizer.CloseableFrame frame = vuforia.getFrameQueue().poll();
-
-        for (int i = 0; i < frame.getNumImages(); i++) {
-            Image image = frame.getImage(i);
-
-            if (image.getFormat() == PIXEL_FORMAT.GRAYSCALE) {
-                int width = image.getWidth();
-
-                int height = image.getHeight();
-
-                // Once you have selected a specific RGB565 image, you can fill a ByteBuffer with its
-
-                // pixel contents.
-
-                ByteBuffer buf = image.getPixels();
-
-                // And you can fill an array of bytes with the contents of the byte buffer (two bytes per pixel)
-
-                byte[] bytes = new byte[2 * width * height];
-
-                return buf;
-            }
-        }
-
-        return null;
+    public void close() {
+        visionPortal.close();
     }
 
-    public float[] getOffset(ByteBuffer realPositionCamera1, ByteBuffer realPositionCamera2, ByteBuffer offsetPositionCamera1, ByteBuffer offsetPositionCamera2) {
-        try {
-            Map<String, OnnxTensor> tensor = new HashMap<String, OnnxTensor>() {{
-                put("realPositionCamera1", OnnxTensor.createTensor(env, realPositionCamera1, new long[]{1, 1}, OnnxJavaType.FLOAT));
-                put("realPositionCamera2", OnnxTensor.createTensor(env, realPositionCamera2, new long[]{1, 1}, OnnxJavaType.FLOAT));
-                put("offsetPositionCamera1", OnnxTensor.createTensor(env, offsetPositionCamera1, new long[]{1, 1}, OnnxJavaType.FLOAT));
-                put("offsetPositionCamera2", OnnxTensor.createTensor(env, offsetPositionCamera2, new long[]{1, 1}, OnnxJavaType.FLOAT));
-            }};
+    private void initTfod() {
 
-            float[] output = new float[3];
+        tfod = new TfodProcessor.Builder()
+                .setModelFileName("Hehehehah.tflite")
+                .setModelLabels(new String[]{"positionX", "rotationY", "positionZ"})
 
-            // Run the model
-            OrtSession.Result result = session.run(tensor);
+                // Use setModelAssetName() if the TF Model is built in as an asset.
+                // Use setModelFileName() if you have downloaded a custom team model to the Robot Controller.
+                //.setModelAssetName(TFOD_MODEL_ASSET)
+                //.setModelFileName(TFOD_MODEL_FILE)
 
-            output[0] = ((float[])result.get(0).getValue())[0] * Constants.UNIT_LENGTH;
-            output[1] = ((float[])result.get(1).getValue())[0] * Constants.UNIT_LENGTH;
-            output[2] = ((float[])result.get(2).getValue())[0] * Constants.UNIT_ROTATION;
+                //.setModelLabels(LABELS)
+                //.setIsModelTensorFlow2(true)
+                //.setIsModelQuantized(true)
+                //.setModelInputSize(300)
+                //.setModelAspectRatio(16.0 / 9.0)
 
-            return output;
+                .build();
 
-        } catch (OrtException e) {
-            throw new RuntimeException(e);
+        // Create the vision portal by using a builder.
+        VisionPortal.Builder builder = new VisionPortal.Builder();
+
+        // Set the camera (webcam vs. built-in RC phone camera).
+        if (USE_WEBCAM) {
+            builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"));
         }
+
+        // Choose a camera resolution. Not all cameras support all resolutions.
+        //builder.setCameraResolution(new Size(640, 480));
+
+        // Enable the RC preview (LiveView).  Set "false" to omit camera monitoring.
+        //builder.enableCameraMonitoring(true);
+
+        // Set the stream format; MJPEG uses less bandwidth than default YUY2.
+        //builder.setStreamFormat(VisionPortal.StreamFormat.YUY2);
+
+        // Choose whether or not LiveView stops if no processors are enabled.
+        // If set "true", monitor shows solid orange screen if no processors enabled.
+        // If set "false", monitor shows camera view without annotations.
+        //builder.setAutoStopLiveView(false);
+
+        // Set and enable the processor.
+        builder.addProcessor(tfod);
+
+        // Build the Vision Portal, using the above settings.
+        visionPortal = builder.build();
+
+        // Set confidence threshold for TFOD recognitions, at any time.
+        //tfod.setMinResultConfidence(0.75f);
+
+        // Disable or re-enable the TFOD processor at any time.
+        //visionPortal.setProcessorEnabled(tfod, true);
+
+    }
+
+    public List<Recognition> getCurrentRecognitions() {
+        return tfod.getRecognitions();
     }
 }
