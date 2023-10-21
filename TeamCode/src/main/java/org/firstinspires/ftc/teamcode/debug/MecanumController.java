@@ -46,30 +46,7 @@ public class MecanumController {
         rightRear = hardwareMap.get(DcMotor.class, "rightRear");
 
         initIMU(hardwareMap);
-    }
 
-    private void initDriverControlledTeleop() {
-        leftFront.setDirection(DcMotor.Direction.FORWARD);
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightRear.setDirection(DcMotor.Direction.FORWARD);
-    }
-
-    private void initAutonomous() {
-        leftFront.setDirection(DcMotor.Direction.FORWARD);
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightRear.setDirection(DcMotor.Direction.FORWARD);
-    }
-
-    private void initIntelligentTeleop() {
-        leftFront.setDirection(DcMotor.Direction.FORWARD);
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightRear.setDirection(DcMotor.Direction.FORWARD);
-    }
-
-    private void initIntelligentAutonomous() {
         leftFront.setDirection(DcMotor.Direction.FORWARD);
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -78,16 +55,6 @@ public class MecanumController {
 
     public MecanumController(HardwareMap hardwareMap, RuntimeType runtimeType) {
         init(hardwareMap);
-
-        if (runtimeType == RuntimeType.DRIVER_CONTROLLED_TELEOP) {
-            initDriverControlledTeleop();
-        } else if (runtimeType == RuntimeType.AUTONOMOUS) {
-            initAutonomous();
-        } else if (runtimeType == RuntimeType.INTELLIGENT_TELEOP) {
-            initIntelligentTeleop();
-        } else if (runtimeType == RuntimeType.INTELLIGENT_AUTONOMOUS) {
-            initIntelligentAutonomous();
-        }
     }
 
     public void setDriveSpeed(double speed) {

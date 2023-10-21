@@ -10,10 +10,6 @@ public final class Constants {
     public static final double CLAW_CLOSE = 0;
     public static final double CLAW_HEIGHT = 0;
 
-    //FTC-AI
-    public static final float UNIT_LENGTH = 20;
-    public static final float UNIT_ROTATION = 180;
-
     public static double setToDomain(double x, double begin, double end) {
         double length = end - begin;
         while (x < begin) {
