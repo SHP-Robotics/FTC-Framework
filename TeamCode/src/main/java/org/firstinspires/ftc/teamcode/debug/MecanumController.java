@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
+import org.firstinspires.ftc.teamcode.debug.config.*;
+
 public class MecanumController {
     public DcMotor leftFront;
     public DcMotor rightFront;
@@ -47,13 +49,13 @@ public class MecanumController {
 
         initIMU(hardwareMap);
 
-        leftFront.setDirection(DcMotor.Direction.FORWARD);
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFront.setDirection(DcMotor.Direction.REVERSE);
+        rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
         rightRear.setDirection(DcMotor.Direction.FORWARD);
     }
 
-    public MecanumController(HardwareMap hardwareMap, RuntimeType runtimeType) {
+    public MecanumController(HardwareMap hardwareMap) {
         init(hardwareMap);
     }
 
@@ -74,9 +76,9 @@ public class MecanumController {
     }
 
     public void drive(Gamepad gamepad) {
-        double x = gamepad.left_stick_x;
-        double y = -gamepad.left_stick_y;
-        double r = gamepad.right_stick_x;
+        double x = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.STRAFE_RIGHT);
+        double y = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.STRAFE_UP);
+        double r = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.ROTATE_RIGHT);
 
         double leftFrontPower = y + x + r;
         double rightFrontPower = y - x - r;
@@ -96,9 +98,9 @@ public class MecanumController {
     }
 
     public void driverOrientedDrive(Gamepad gamepad) {
-        double x = gamepad.left_stick_x;
-        double y = -gamepad.left_stick_y;
-        double r = gamepad.right_stick_x;
+        double x = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.STRAFE_RIGHT);
+        double y = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.STRAFE_UP);
+        double r = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.ROTATE_RIGHT);
 
         // cos * y = how much right if gamepad forward
         // cos * x = how much right if gamepad right

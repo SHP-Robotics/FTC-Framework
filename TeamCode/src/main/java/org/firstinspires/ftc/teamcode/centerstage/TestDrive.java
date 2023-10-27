@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.centerstage;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.debug.*;
 
@@ -11,14 +10,9 @@ public class TestDrive extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Synchronous climber = new Synchronous(hardwareMap, "leftClimber", "rightClimber");
-        climber.setMotorDirection(Side.LEFT, DcMotor.Direction.FORWARD);
-        climber.setMotorDirection(Side.RIGHT, DcMotor.Direction.REVERSE);
+        MecanumController mecanumController = new MecanumController(hardwareMap);
 
         waitForStart();
-
-        while (opModeIsActive()) {
-            climber.setPowerSynchronous(gamepad1.right_stick_y);
-        }
+        // do something here
     }
 }

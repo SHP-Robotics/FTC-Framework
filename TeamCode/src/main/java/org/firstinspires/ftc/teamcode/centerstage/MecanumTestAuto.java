@@ -3,14 +3,13 @@ package org.firstinspires.ftc.teamcode.centerstage;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.debug.MecanumController;
-import org.firstinspires.ftc.teamcode.debug.RuntimeType;
+import org.firstinspires.ftc.teamcode.debug.*;
 
 @Autonomous(name = "Mecanum Test Auto")
 public class MecanumTestAuto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        MecanumController mecanumController = new MecanumController(hardwareMap, RuntimeType.AUTONOMOUS);
+        MecanumController mecanumController = new MecanumController(hardwareMap);
         mecanumController.setDriveSpeed(0.3);
 
         waitForStart();

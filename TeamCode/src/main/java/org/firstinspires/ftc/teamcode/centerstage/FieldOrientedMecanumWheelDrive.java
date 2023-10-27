@@ -4,15 +4,16 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.debug.*;
+import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
 
-@TeleOp(name = "Driver Oriented Mecanum Wheel Drive")
-public class DriverOrientedMecanumWheelDrive extends LinearOpMode {
+@TeleOp(name = "Field Oriented Mecanum Wheel Drive")
+public class FieldOrientedMecanumWheelDrive extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         boolean gearDown = false;
         boolean gearUp = false;
 
-        MecanumController mecanumController = new MecanumController(hardwareMap, RuntimeType.DRIVER_CONTROLLED_TELEOP);
+        MecanumController mecanumController = new MecanumController(hardwareMap);
         mecanumController.calibrateIMUAngleOffset();
         mecanumController.setDriveSpeed(0.7);
 
@@ -22,12 +23,14 @@ public class DriverOrientedMecanumWheelDrive extends LinearOpMode {
             telemetry.addData("radians clockwise", mecanumController.getCalibratedIMUAngle());
             telemetry.update();
 
-            if (gamepad1.b) {
-                //mecanumController.initIMU(hardwareMap);
+            if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.RESET_IMU)) {
+                // I wonder if this will reset the IMU if the Yaw is off after a collision
+                // Further testing required
+                // mecanumController.initIMU(hardwareMap);
                 mecanumController.calibrateIMUAngleOffset();
             }
 
-            if (gamepad1.y) {
+            if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.GEAR_UP)) {
                 if (!gearUp) {
                     mecanumController.gearUp();
                 }
@@ -36,7 +39,7 @@ public class DriverOrientedMecanumWheelDrive extends LinearOpMode {
                 gearUp = false;
             }
 
-            if (gamepad1.a) {
+            if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.GEAR_DOWN)) {
                 if (!gearDown) {
                     mecanumController.gearDown();
                 }
