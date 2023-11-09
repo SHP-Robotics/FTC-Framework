@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
+import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 import org.firstinspires.ftc.teamcode.debug.config.*;
@@ -25,6 +26,12 @@ public class MecanumController {
 
     private double positionX = 0;
     private double positionY = 0;
+
+    private Speed speed = Speed.NO_CHANGE;
+    private Braking braking = Braking.APPLY_ZERO_POWER;
+
+    private boolean holdingGearUp = false;
+    private boolean holdingGearDown = false;
 
     public void setMotorsRunMode(DcMotor.RunMode runMode) {
         leftFront.setMode(runMode);
@@ -57,6 +64,22 @@ public class MecanumController {
 
     public MecanumController(HardwareMap hardwareMap) {
         init(hardwareMap);
+    }
+
+    public MecanumController(HardwareMap hardwareMap, Speed speed) {
+        init(hardwareMap);
+        this.speed = speed;
+    }
+
+    public MecanumController(HardwareMap hardwareMap, Braking braking) {
+        init(hardwareMap);
+        this.braking = braking;
+    }
+
+    public MecanumController(HardwareMap hardwareMap, Speed speed, Braking braking) {
+        init(hardwareMap);
+        this.speed = speed;
+        this.braking = braking;
     }
 
     public void setDriveSpeed(double speed) {
@@ -95,6 +118,24 @@ public class MecanumController {
         rightFront.setPower(rightFrontPower * driveSpeed / max);
         leftRear.setPower(leftRearPower * driveSpeed / max);
         rightRear.setPower(rightRearPower * driveSpeed / max);
+
+        if (DrivingConfiguration.getValue(gamepad, DrivingConfiguration.GEAR_UP)) {
+            if (this.speed != Speed.GEAR_SHIFT || !holdingGearUp) {
+                gearUp();
+                holdingGearUp = true;
+            }
+        } else {
+            holdingGearUp = false;
+        }
+
+        if (DrivingConfiguration.getValue(gamepad, DrivingConfiguration.GEAR_DOWN)) {
+            if (this.speed != Speed.GEAR_SHIFT || !holdingGearDown) {
+                gearDown();
+                holdingGearDown = true;
+            }
+        } else {
+            holdingGearDown = false;
+        }
     }
 
     public void driverOrientedDrive(Gamepad gamepad) {
@@ -203,19 +244,27 @@ public class MecanumController {
         positionY = inchesY;
     }
 
-    public void gearDown() {
-        if (driveSpeed > 0.1) {
-            driveSpeed -= 0.1;
-        } else {
-            driveSpeed = 0;
+    public void gearUp() {
+        if (this.speed == Speed.GEAR_SHIFT) {
+            if (driveSpeed < 0.9) {
+                driveSpeed += 0.1;
+            } else {
+                driveSpeed = 1;
+            }
+        } else if (this.speed == Speed.MOVING_AVERAGE_WITH_OVERRIDE) {
+            driveSpeed = 1;
         }
     }
 
-    public void gearUp() {
-        if (driveSpeed < 0.9) {
-            driveSpeed += 0.1;
-        } else {
-            driveSpeed = 1;
+    public void gearDown() {
+        if (this.speed == Speed.GEAR_SHIFT) {
+            if (driveSpeed > 0.1) {
+                driveSpeed -= 0.1;
+            } else {
+                driveSpeed = 0;
+            }
+        } else if (this.speed == Speed.MOVING_AVERAGE_WITH_OVERRIDE) {
+            driveSpeed = 0.1;
         }
     }
 }
