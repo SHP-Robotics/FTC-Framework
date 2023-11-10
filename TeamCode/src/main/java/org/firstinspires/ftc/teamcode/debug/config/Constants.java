@@ -1,9 +1,14 @@
-package org.firstinspires.ftc.teamcode.debug;
+package org.firstinspires.ftc.teamcode.debug.config;
 
 public final class Constants {
     public static final double WHEEL_ENCODER_TICKS_PER_INCH_FORWARD = 46.7532467532;
     public static final double WHEEL_ENCODER_TICKS_PER_INCH_SIDEWAYS = 54.5454545455;
-    public static final double WHEEL_MOTOR_STALL_VOLTAGE = 2.41;
+    public static final double MINIMUM_VOLTAGE_APPLIED = 0.07;
+
+    // Gear Shifting PID Controller
+    public static final double KP = 0.01;
+    public static final double KI = 0.00;
+    public static final double KD = 0.01;
 
     public static final double LIFT_ENCODER_TICKS_PER_INCH = 1;
 

@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.teamcode.debug.config.Constants;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 
@@ -40,7 +41,7 @@ public class GetFocalLength extends LinearOpMode {
 
         double focalLength = currentRecognition.getWidth() * 10 / Constants.BACKDROP_WIDTH;
         telemetry.addData("Focal Length Successfully Calculated", focalLength);
-        telemetry.addLine("Please update the focal length in teamcode/debug/Constants...");
+        telemetry.addLine("Please update the focal length in teamcode/debug/config/Constants...");
         telemetry.addLine("... not to be mistaken for teamcode/Constants");
         telemetry.update();
 

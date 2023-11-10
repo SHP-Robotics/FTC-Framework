@@ -10,9 +10,6 @@ import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
 public class FieldOrientedMecanumWheelDrive extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        boolean gearDown = false;
-        boolean gearUp = false;
-
         MecanumController mecanumController = new MecanumController(hardwareMap);
         mecanumController.calibrateIMUAngleOffset();
         mecanumController.setDriveSpeed(0.7);
@@ -28,24 +25,6 @@ public class FieldOrientedMecanumWheelDrive extends LinearOpMode {
                 // Further testing required
                 // mecanumController.initIMU(hardwareMap);
                 mecanumController.calibrateIMUAngleOffset();
-            }
-
-            if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.GEAR_UP)) {
-                if (!gearUp) {
-                    mecanumController.gearUp();
-                }
-                gearUp = true;
-            } else {
-                gearUp = false;
-            }
-
-            if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.GEAR_DOWN)) {
-                if (!gearDown) {
-                    mecanumController.gearDown();
-                }
-                gearDown = true;
-            } else {
-                gearDown = false;
             }
         }
     }

@@ -28,7 +28,7 @@ public class MecanumController {
     private double positionY = 0;
 
     private Speed speed = Speed.NO_CHANGE;
-    private Braking braking = Braking.APPLY_ZERO_POWER;
+    private PIDController speedController;
 
     private boolean holdingGearUp = false;
     private boolean holdingGearDown = false;
@@ -60,6 +60,8 @@ public class MecanumController {
         rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
         rightRear.setDirection(DcMotor.Direction.FORWARD);
+
+        speedController = new PIDController(Constants.KP, Constants.KI, Constants.KD);
     }
 
     public MecanumController(HardwareMap hardwareMap) {
@@ -67,19 +69,8 @@ public class MecanumController {
     }
 
     public MecanumController(HardwareMap hardwareMap, Speed speed) {
-        init(hardwareMap);
         this.speed = speed;
-    }
-
-    public MecanumController(HardwareMap hardwareMap, Braking braking) {
         init(hardwareMap);
-        this.braking = braking;
-    }
-
-    public MecanumController(HardwareMap hardwareMap, Speed speed, Braking braking) {
-        init(hardwareMap);
-        this.speed = speed;
-        this.braking = braking;
     }
 
     public void setDriveSpeed(double speed) {
@@ -112,6 +103,17 @@ public class MecanumController {
 
         if (max < 1) {
             max = 1;
+        }
+
+        if (this.speed == Speed.PID_CONTROLLED || this.speed == Speed.PID_CONTROLLED_WITH_OVERRIDE) {
+            double output = speedController.getOutput(driveSpeed - max);
+            if (output < 0.1) {
+                driveSpeed = 0.1;
+            } else if (output > 1) {
+                driveSpeed = 1;
+            } else {
+                driveSpeed = output;
+            }
         }
 
         leftFront.setPower(leftFrontPower * driveSpeed / max);
@@ -161,10 +163,39 @@ public class MecanumController {
             max = 1;
         }
 
+        if (this.speed == Speed.PID_CONTROLLED || this.speed == Speed.PID_CONTROLLED_WITH_OVERRIDE) {
+            double output = speedController.getOutput(driveSpeed - max);
+            if (output < 0.1) {
+                driveSpeed = 0.1;
+            } else if (output > 1) {
+                driveSpeed = 1;
+            } else {
+                driveSpeed = output;
+            }
+        }
+
         leftFront.setPower(leftFrontPower * driveSpeed / max);
         rightFront.setPower(rightFrontPower * driveSpeed / max);
         leftRear.setPower(leftRearPower * driveSpeed / max);
         rightRear.setPower(rightRearPower * driveSpeed / max);
+
+        if (DrivingConfiguration.getValue(gamepad, DrivingConfiguration.GEAR_UP)) {
+            if (this.speed != Speed.GEAR_SHIFT || !holdingGearUp) {
+                gearUp();
+                holdingGearUp = true;
+            }
+        } else {
+            holdingGearUp = false;
+        }
+
+        if (DrivingConfiguration.getValue(gamepad, DrivingConfiguration.GEAR_DOWN)) {
+            if (this.speed != Speed.GEAR_SHIFT || !holdingGearDown) {
+                gearDown();
+                holdingGearDown = true;
+            }
+        } else {
+            holdingGearDown = false;
+        }
     }
 
     public boolean isBusy() {
@@ -251,7 +282,7 @@ public class MecanumController {
             } else {
                 driveSpeed = 1;
             }
-        } else if (this.speed == Speed.MOVING_AVERAGE_WITH_OVERRIDE) {
+        } else if (this.speed == Speed.PID_CONTROLLED_WITH_OVERRIDE) {
             driveSpeed = 1;
         }
     }
@@ -263,7 +294,7 @@ public class MecanumController {
             } else {
                 driveSpeed = 0;
             }
-        } else if (this.speed == Speed.MOVING_AVERAGE_WITH_OVERRIDE) {
+        } else if (this.speed == Speed.PID_CONTROLLED_WITH_OVERRIDE) {
             driveSpeed = 0.1;
         }
     }

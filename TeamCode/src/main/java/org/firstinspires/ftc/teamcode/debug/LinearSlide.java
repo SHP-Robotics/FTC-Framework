@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.debug.config.Constants;
+
 public class LinearSlide {
     private DcMotor lift;
 
@@ -18,12 +20,12 @@ public class LinearSlide {
         lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
-    public LinearSlide(HardwareMap hardwareMap, RuntimeType runtimeType) {
+    public LinearSlide(HardwareMap hardwareMap, boolean useEncoders) {
         lift = hardwareMap.get(DcMotor.class, "lift");
 
         init();
 
-        if (runtimeType != RuntimeType.AUTONOMOUS) {
+        if (useEncoders) {
             lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
