@@ -6,15 +6,19 @@ public class DrivingConfiguration {
     // An example of how different controls might be mapped to different enumerations,
     // and then referenced in other classes, so any changes are global
 
+    // Driving
     public static final GamepadAnalog STRAFE_RIGHT = GamepadAnalog.LEFT_STICK_X;
     public static final GamepadAnalog STRAFE_UP = GamepadAnalog.LEFT_STICK_Y;
 
     public static final GamepadAnalog ROTATE_RIGHT = GamepadAnalog.RIGHT_STICK_X;
 
-    public static final GamepadDigital GEAR_UP = GamepadDigital.RIGHT_BUMPER;
-    public static final GamepadDigital GEAR_DOWN = GamepadDigital.LEFT_BUMPER;
+    public static final GamepadDigital GEAR_UP = GamepadDigital.Y;
+    public static final GamepadDigital GEAR_DOWN = GamepadDigital.A;
 
     public static final GamepadDigital RESET_IMU = GamepadDigital.B;
+
+    // Climbing
+    public static final GamepadAnalog CLIMBER_POWER = GamepadAnalog.RIGHT_TRIGGER;
 
     public static double getValue(Gamepad gamepad, GamepadAnalog analog) {
         switch (analog) {

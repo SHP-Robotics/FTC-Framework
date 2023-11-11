@@ -1,10 +1,12 @@
-package org.firstinspires.ftc.teamcode.centerstage;
+package org.firstinspires.ftc.teamcode.debug.examples;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.debug.*;
 
+@Disabled
 @Autonomous(name = "Mecanum Test Auto")
 public class MecanumTestAuto extends LinearOpMode {
     @Override

@@ -89,6 +89,56 @@ public class MecanumController {
         return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) + imuAngleOffset;
     }
 
+    public void gearUp(double max) {
+        if (this.speed == Speed.GEAR_SHIFT) {
+            driveSpeed += 0.1;
+        } else if (this.speed == Speed.PID_CONTROLLED_WITH_OVERRIDE) {
+            driveSpeed = 1;
+        } else if (this.speed == Speed.PID_CONTROLLED_OVERRIDE) {
+            driveSpeed = speedController.getOutput(max - driveSpeed);
+        }
+    }
+
+    public void gearDown(double max) {
+        if (this.speed == Speed.GEAR_SHIFT) {
+            driveSpeed -= 0.1;
+        } else if (this.speed == Speed.PID_CONTROLLED_WITH_OVERRIDE) {
+            driveSpeed = 0.1;
+        } else if (this.speed == Speed.PID_CONTROLLED_OVERRIDE) {
+            driveSpeed = speedController.getOutput(max - driveSpeed);
+        }
+    }
+
+    public void updateDrivingSpeed(Gamepad gamepad, double max) {
+        if (this.speed == Speed.PID_CONTROLLED || this.speed == Speed.PID_CONTROLLED_WITH_OVERRIDE) {
+            driveSpeed = speedController.getOutput(driveSpeed - max);
+        }
+
+        if (DrivingConfiguration.getValue(gamepad, DrivingConfiguration.GEAR_UP)) {
+            if (this.speed != Speed.GEAR_SHIFT || !holdingGearUp) {
+                gearUp(max);
+                holdingGearUp = true;
+            }
+        } else {
+            holdingGearUp = false;
+        }
+
+        if (DrivingConfiguration.getValue(gamepad, DrivingConfiguration.GEAR_DOWN)) {
+            if (this.speed != Speed.GEAR_SHIFT || !holdingGearDown) {
+                gearDown(max);
+                holdingGearDown = true;
+            }
+        } else {
+            holdingGearDown = false;
+        }
+
+        if (driveSpeed < 0.1) {
+            driveSpeed = 0.1;
+        } else if (driveSpeed > 1) {
+            driveSpeed = 1;
+        }
+    }
+
     public void drive(Gamepad gamepad) {
         double x = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.STRAFE_RIGHT);
         double y = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.STRAFE_UP);
@@ -101,46 +151,19 @@ public class MecanumController {
 
         double max = Math.max(Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower)), Math.max(Math.abs(leftRearPower), Math.abs(rightRearPower)));
 
+        updateDrivingSpeed(gamepad, max);
+
         if (max < 1) {
             max = 1;
-        }
-
-        if (this.speed == Speed.PID_CONTROLLED || this.speed == Speed.PID_CONTROLLED_WITH_OVERRIDE) {
-            double output = speedController.getOutput(driveSpeed - max);
-            if (output < 0.1) {
-                driveSpeed = 0.1;
-            } else if (output > 1) {
-                driveSpeed = 1;
-            } else {
-                driveSpeed = output;
-            }
         }
 
         leftFront.setPower(leftFrontPower * driveSpeed / max);
         rightFront.setPower(rightFrontPower * driveSpeed / max);
         leftRear.setPower(leftRearPower * driveSpeed / max);
         rightRear.setPower(rightRearPower * driveSpeed / max);
-
-        if (DrivingConfiguration.getValue(gamepad, DrivingConfiguration.GEAR_UP)) {
-            if (this.speed != Speed.GEAR_SHIFT || !holdingGearUp) {
-                gearUp();
-                holdingGearUp = true;
-            }
-        } else {
-            holdingGearUp = false;
-        }
-
-        if (DrivingConfiguration.getValue(gamepad, DrivingConfiguration.GEAR_DOWN)) {
-            if (this.speed != Speed.GEAR_SHIFT || !holdingGearDown) {
-                gearDown();
-                holdingGearDown = true;
-            }
-        } else {
-            holdingGearDown = false;
-        }
     }
 
-    public void driverOrientedDrive(Gamepad gamepad) {
+    public void fieldOrientedDrive(Gamepad gamepad) {
         double x = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.STRAFE_RIGHT);
         double y = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.STRAFE_UP);
         double r = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.ROTATE_RIGHT);
@@ -159,43 +182,16 @@ public class MecanumController {
 
         double max = Math.max(Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower)), Math.max(Math.abs(leftRearPower), Math.abs(rightRearPower)));
 
+        updateDrivingSpeed(gamepad, max);
+
         if (max < 1) {
             max = 1;
-        }
-
-        if (this.speed == Speed.PID_CONTROLLED || this.speed == Speed.PID_CONTROLLED_WITH_OVERRIDE) {
-            double output = speedController.getOutput(driveSpeed - max);
-            if (output < 0.1) {
-                driveSpeed = 0.1;
-            } else if (output > 1) {
-                driveSpeed = 1;
-            } else {
-                driveSpeed = output;
-            }
         }
 
         leftFront.setPower(leftFrontPower * driveSpeed / max);
         rightFront.setPower(rightFrontPower * driveSpeed / max);
         leftRear.setPower(leftRearPower * driveSpeed / max);
         rightRear.setPower(rightRearPower * driveSpeed / max);
-
-        if (DrivingConfiguration.getValue(gamepad, DrivingConfiguration.GEAR_UP)) {
-            if (this.speed != Speed.GEAR_SHIFT || !holdingGearUp) {
-                gearUp();
-                holdingGearUp = true;
-            }
-        } else {
-            holdingGearUp = false;
-        }
-
-        if (DrivingConfiguration.getValue(gamepad, DrivingConfiguration.GEAR_DOWN)) {
-            if (this.speed != Speed.GEAR_SHIFT || !holdingGearDown) {
-                gearDown();
-                holdingGearDown = true;
-            }
-        } else {
-            holdingGearDown = false;
-        }
     }
 
     public boolean isBusy() {
@@ -273,29 +269,5 @@ public class MecanumController {
 
         positionX = inchesX;
         positionY = inchesY;
-    }
-
-    public void gearUp() {
-        if (this.speed == Speed.GEAR_SHIFT) {
-            if (driveSpeed < 0.9) {
-                driveSpeed += 0.1;
-            } else {
-                driveSpeed = 1;
-            }
-        } else if (this.speed == Speed.PID_CONTROLLED_WITH_OVERRIDE) {
-            driveSpeed = 1;
-        }
-    }
-
-    public void gearDown() {
-        if (this.speed == Speed.GEAR_SHIFT) {
-            if (driveSpeed > 0.1) {
-                driveSpeed -= 0.1;
-            } else {
-                driveSpeed = 0;
-            }
-        } else if (this.speed == Speed.PID_CONTROLLED_WITH_OVERRIDE) {
-            driveSpeed = 0.1;
-        }
     }
 }

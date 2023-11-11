@@ -1,11 +1,13 @@
-package org.firstinspires.ftc.teamcode.centerstage;
+package org.firstinspires.ftc.teamcode.debug.examples;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.debug.*;
 import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
 
+@Disabled
 @TeleOp(name = "Field Oriented Mecanum Wheel Drive")
 public class FieldOrientedMecanumWheelDrive extends LinearOpMode {
     @Override
