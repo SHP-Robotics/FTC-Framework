@@ -105,6 +105,8 @@ public class MecanumController {
             driveSpeed += 0.1;
         } else if (speed == Speed.PID_CONTROLLED_WITH_OVERRIDE) {
             driveSpeed = 1;
+        } else if (speed == Speed.SINGLE_OVERRIDE) {
+            driveSpeed = 0.3;
         }
     }
 
@@ -113,8 +115,6 @@ public class MecanumController {
             driveSpeed -= 0.1;
         } else if (speed == Speed.PID_CONTROLLED_WITH_OVERRIDE) {
             driveSpeed = 0.1;
-        } else if (speed == Speed.SINGLE_OVERRIDE) {
-            driveSpeed = 0.3;
         }
     }
 
