@@ -7,22 +7,23 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.debug.MecanumController;
 import org.firstinspires.ftc.teamcode.debug.Side;
+import org.firstinspires.ftc.teamcode.debug.Speed;
 import org.firstinspires.ftc.teamcode.debug.Synchronous;
 import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
 
-@Disabled
 @TeleOp(name = "CenterStage Field Oriented")
 public class CenterstageFieldOriented extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        MecanumController mecanumController = new MecanumController(hardwareMap);
+        MecanumController mecanumController = new MecanumController(hardwareMap, Speed.SINGLE_OVERRIDE);
         mecanumController.calibrateIMUAngleOffset();
-        mecanumController.setDriveSpeed(0.7);
+        mecanumController.setDriveSpeed(1);
 
-        Synchronous climber = new Synchronous(hardwareMap, "leftClimber", "rightClimber");
-        climber.setMotorDirection(Side.LEFT, DcMotorSimple.Direction.REVERSE);
+        //Synchronous climber = new Synchronous(hardwareMap, "leftClimber", "rightClimber");
+        //climber.setMotorDirection(Side.LEFT, DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
+
         while (opModeIsActive()) {
             mecanumController.fieldOrientedDrive(gamepad1);
             telemetry.addData("radians clockwise", mecanumController.getCalibratedIMUAngle());
@@ -35,7 +36,7 @@ public class CenterstageFieldOriented extends LinearOpMode {
                 mecanumController.calibrateIMUAngleOffset();
             }
 
-            climber.setPowerSynchronous(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER));
+            //climber.setPowerSynchronous(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER));
         }
     }
 }

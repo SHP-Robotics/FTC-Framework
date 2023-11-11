@@ -75,7 +75,7 @@ public class LinearSlide {
         if (inches < 0) {
             inches = 0;
         }
-
+// andrew was here
         lift.setTargetPosition((int) (inches * Constants.LIFT_ENCODER_TICKS_PER_INCH));
         lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         lift.setPower(liftPower);

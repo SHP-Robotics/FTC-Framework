@@ -14,11 +14,11 @@ public class FieldOrientedMecanumWheelDrive extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         MecanumController mecanumController = new MecanumController(hardwareMap);
         mecanumController.calibrateIMUAngleOffset();
-        mecanumController.setDriveSpeed(0.7);
+        mecanumController.setDriveSpeed(1);
 
         waitForStart();
         while (opModeIsActive()) {
-            mecanumController.driverOrientedDrive(gamepad1);
+            mecanumController.fieldOrientedDrive(gamepad1);
             telemetry.addData("radians clockwise", mecanumController.getCalibratedIMUAngle());
             telemetry.update();
 

@@ -6,9 +6,9 @@ public final class Constants {
     public static final double MINIMUM_VOLTAGE_APPLIED = 0.07;
 
     // Gear Shifting PID Controller
-    public static final double KP = 0.10;
+    public static final double KP = 1.00;
     public static final double KI = 0.00;
-    public static final double KD = 0.01;
+    public static final double KD = 0.00;
 
     public static final double LIFT_ENCODER_TICKS_PER_INCH = 1;
 
