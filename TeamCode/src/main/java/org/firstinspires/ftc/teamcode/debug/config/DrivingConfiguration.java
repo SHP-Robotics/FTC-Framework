@@ -20,6 +20,10 @@ public class DrivingConfiguration {
     // Climbing
     public static final GamepadAnalog CLIMBER_POWER = GamepadAnalog.RIGHT_TRIGGER;
 
+    // Pixel Handling
+    public static final GamepadAnalog ARM_POWER_DOWN = GamepadAnalog.LEFT_TRIGGER;
+    public static final GamepadAnalog ARM_POWER_UP = GamepadAnalog.RIGHT_TRIGGER;
+
     public static double getValue(Gamepad gamepad, GamepadAnalog analog) {
         switch (analog) {
             case LEFT_STICK_X:

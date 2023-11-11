@@ -18,7 +18,7 @@ public class FieldOrientedMecanumWheelDrive extends LinearOpMode {
 
         waitForStart();
         while (opModeIsActive()) {
-            mecanumController.driverOrientedDrive(gamepad1);
+            mecanumController.fieldOrientedDrive(gamepad1);
             telemetry.addData("radians clockwise", mecanumController.getCalibratedIMUAngle());
             telemetry.update();
 

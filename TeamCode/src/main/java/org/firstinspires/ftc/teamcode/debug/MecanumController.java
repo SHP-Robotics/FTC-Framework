@@ -59,7 +59,7 @@ public class MecanumController {
         leftFront.setDirection(DcMotor.Direction.REVERSE);
         rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightRear.setDirection(DcMotor.Direction.FORWARD);
+        rightRear.setDirection(DcMotor.Direction.REVERSE);
 
         speedController = new PIDController(Constants.KP, Constants.KI, Constants.KD);
     }
@@ -111,7 +111,7 @@ public class MecanumController {
 
     public void updateDrivingSpeed(Gamepad gamepad, double max) {
         if (this.speed == Speed.PID_CONTROLLED || this.speed == Speed.PID_CONTROLLED_WITH_OVERRIDE) {
-            driveSpeed = speedController.getOutput(driveSpeed - max);
+            driveSpeed = speedController.getOutput(max - driveSpeed);
         }
 
         if (DrivingConfiguration.getValue(gamepad, DrivingConfiguration.GEAR_UP)) {

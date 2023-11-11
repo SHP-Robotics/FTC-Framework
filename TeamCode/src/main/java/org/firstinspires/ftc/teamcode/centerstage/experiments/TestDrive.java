@@ -13,11 +13,16 @@ public class TestDrive extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         MecanumController mecanumController = new MecanumController(hardwareMap, Speed.PID_CONTROLLED_WITH_OVERRIDE);
+        mecanumController.setDriveSpeed(0.7);
+
+        Synchronous arm = new Synchronous(hardwareMap, "armLeft", "armRight");
+        arm.setMotorDirection(Side.LEFT, DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
 
         while (opModeIsActive()) {
             mecanumController.drive(gamepad1);
+            arm.setPowerSynchronous(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.ARM_POWER_UP) - DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.ARM_POWER_DOWN));
         }
     }
 }

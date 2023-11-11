@@ -19,9 +19,6 @@ public class CenterstageFieldOriented extends LinearOpMode {
         mecanumController.calibrateIMUAngleOffset();
         mecanumController.setDriveSpeed(0.7);
 
-        Synchronous climber = new Synchronous(hardwareMap, "leftClimber", "rightClimber");
-        climber.setMotorDirection(Side.LEFT, DcMotorSimple.Direction.REVERSE);
-
         waitForStart();
         while (opModeIsActive()) {
             mecanumController.fieldOrientedDrive(gamepad1);
@@ -34,8 +31,6 @@ public class CenterstageFieldOriented extends LinearOpMode {
                 // mecanumController.initIMU(hardwareMap);
                 mecanumController.calibrateIMUAngleOffset();
             }
-
-            climber.setPowerSynchronous(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER));
         }
     }
 }

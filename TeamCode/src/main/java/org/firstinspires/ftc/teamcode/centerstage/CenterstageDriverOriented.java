@@ -18,13 +18,9 @@ public class CenterstageDriverOriented extends LinearOpMode {
         MecanumController mecanumController = new MecanumController(hardwareMap);
         mecanumController.setDriveSpeed(0.7);
 
-        Synchronous climber = new Synchronous(hardwareMap, "leftClimber", "rightClimber");
-        climber.setMotorDirection(Side.LEFT, DcMotorSimple.Direction.REVERSE);
-
         waitForStart();
         while (opModeIsActive()) {
             mecanumController.drive(gamepad1);
-            climber.setPowerSynchronous(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER));
         }
     }
 }
