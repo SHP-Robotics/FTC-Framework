@@ -84,6 +84,11 @@ public class MecanumController {
         this.speedController = new PIDController(Constants.KP, Constants.KI, Constants.KD);
     }
 
+    public void fakeReset() {
+        this.positionX = 0;
+        this.positionY = 0;
+    }
+
     public void setDriveSpeed(double speed) {
         driveSpeed = speed;
     }
