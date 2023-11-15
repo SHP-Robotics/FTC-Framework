@@ -65,7 +65,7 @@ public class CenterstageFieldOriented extends LinearOpMode {
                 if (position != null) {
                     Pose2d startPose = new Pose2d(0, 0, 0);
                     TrajectorySequence trajSeq = roadrunnerCorrection.trajectorySequenceBuilder(startPose)
-                            .lineTo(new Vector2d(position.x, position.y-20))
+                            .lineTo(new Vector2d(-position.x, 5-position.y))
                             .build();
 
                     roadrunnerCorrection.setPoseEstimate(startPose);
