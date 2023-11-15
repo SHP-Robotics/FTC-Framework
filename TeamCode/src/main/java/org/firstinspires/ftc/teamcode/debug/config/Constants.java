@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.debug.config;
 public final class Constants {
     public static final double WHEEL_ENCODER_TICKS_PER_INCH_FORWARD = 46.7532467532;
     public static final double WHEEL_ENCODER_TICKS_PER_INCH_SIDEWAYS = 54.5454545455;
-    public static final double MINIMUM_VOLTAGE_APPLIED = 0.07;
+    public static final double MINIMUM_VOLTAGE_APPLIED = 0.044;
 
     // Gear Shifting PID Controller
     public static final double KP = 1.00;

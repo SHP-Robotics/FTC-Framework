@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.centerstage;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -8,13 +11,18 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.debug.MecanumController;
 import org.firstinspires.ftc.teamcode.debug.Side;
 import org.firstinspires.ftc.teamcode.debug.Speed;
 import org.firstinspires.ftc.teamcode.debug.Synchronous;
 import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
+import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
+import org.firstinspires.ftc.vision.apriltag.AprilTagLibrary;
 import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
@@ -24,8 +32,8 @@ import java.util.List;
 public class CenterstageFieldOriented extends LinearOpMode {
 
     private boolean USE_WEBCAM = true;
-
-    private AprilTagProcessor aprilTag;
+    AprilTagLibrary myAprilTagLibrary;
+    AprilTagProcessor myAprilTagProcessor;
     private VisionPortal visionPortal;
 
     @Override
@@ -34,23 +42,9 @@ public class CenterstageFieldOriented extends LinearOpMode {
         mecanumController.calibrateIMUAngleOffset();
         mecanumController.setDriveSpeed(1);
 
-        //Synchronous climber = new Synchronous(hardwareMap, "leftClimber", "rightClimber");
-        //climber.setMotorDirection(Side.LEFT, DcMotorSimple.Direction.REVERSE);
+        SampleMecanumDrive roadrunnerCorrection = new SampleMecanumDrive(hardwareMap);
 
-        aprilTag = new AprilTagProcessor.Builder()
-                .build();
-
-        VisionPortal.Builder builder = new VisionPortal.Builder();
-
-        if (USE_WEBCAM) {
-            builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"));
-        } else {
-            builder.setCamera(BuiltinCameraDirection.BACK);
-        }
-
-        builder.addProcessor(aprilTag);
-
-        visionPortal = builder.build();
+        initProcessors();
 
         waitForStart();
 
@@ -66,29 +60,66 @@ public class CenterstageFieldOriented extends LinearOpMode {
                 mecanumController.calibrateIMUAngleOffset();
             }
 
-            if (gamepad1.b) {
+            if (gamepad1.x) {
                 AprilTagPoseFtc position = getCenterPosition();
                 if (position != null) {
-                    mecanumController.moveToPosition(position.x, position.y - 20, true);
-                    mecanumController.fakeReset();
+                    Pose2d startPose = new Pose2d(0, 0, 0);
+                    TrajectorySequence trajSeq = roadrunnerCorrection.trajectorySequenceBuilder(startPose)
+                            .lineTo(new Vector2d(position.x, position.y-20))
+                            .build();
+
+                    roadrunnerCorrection.setPoseEstimate(startPose);
+                    roadrunnerCorrection.followTrajectorySequence(trajSeq);
                 }
             }
-
-            //climber.setPowerSynchronous(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER));
         }
 
         visionPortal.close();
     }
 
     public AprilTagPoseFtc getCenterPosition() {
-        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+        List<AprilTagDetection> currentDetections = myAprilTagProcessor.getDetections();
 
         for (AprilTagDetection detection : currentDetections) {
-            if (detection.id == 2) {
-                return detection.ftcPose;
+            if (detection.metadata != null) {
+                if (detection.metadata.name == "blue_alliance_center"
+                        || detection.metadata.name == "red_alliance_center") {
+                    return detection.ftcPose;
+                }
             }
         }
 
         return null;
+    }
+
+    public void initProcessors() {
+        AprilTagLibrary.Builder myAprilTagLibraryBuilder = new AprilTagLibrary.Builder();
+        myAprilTagLibraryBuilder.addTags(AprilTagGameDatabase.getCurrentGameTagLibrary());
+
+        // Add tags in CenterStage
+        myAprilTagLibraryBuilder.addTag(1, "blue_alliance_left", 3.5, DistanceUnit.INCH);
+        myAprilTagLibraryBuilder.addTag(2, "blue_alliance_center", 3.5, DistanceUnit.INCH);
+        myAprilTagLibraryBuilder.addTag(3, "blue_alliance_right", 3.5, DistanceUnit.INCH);
+        myAprilTagLibraryBuilder.addTag(4, "red_alliance_left", 3.5, DistanceUnit.INCH);
+        myAprilTagLibraryBuilder.addTag(5, "red_alliance_center", 3.5, DistanceUnit.INCH);
+        myAprilTagLibraryBuilder.addTag(6, "red_alliance_right", 3.5, DistanceUnit.INCH);
+
+        myAprilTagLibrary = myAprilTagLibraryBuilder.build();
+
+        AprilTagProcessor.Builder myAprilTagProcessorBuilder = new AprilTagProcessor.Builder();
+        myAprilTagProcessorBuilder.setTagLibrary(myAprilTagLibrary);
+        myAprilTagProcessor = myAprilTagProcessorBuilder.build();
+
+        VisionPortal.Builder builder = new VisionPortal.Builder();
+
+        if (USE_WEBCAM) {
+            builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"));
+        } else {
+            builder.setCamera(BuiltinCameraDirection.BACK);
+        }
+
+        builder.addProcessor(myAprilTagProcessor);
+
+        visionPortal = builder.build();
     }
 }

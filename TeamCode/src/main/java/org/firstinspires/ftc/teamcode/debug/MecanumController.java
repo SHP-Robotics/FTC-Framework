@@ -67,9 +67,11 @@ public class MecanumController {
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
         rightRear.setDirection(DcMotor.Direction.FORWARD);
 
-        timer = new ElapsedTime();
-        timer.startTime();
-        lastTime = 0;
+        if (speed == Speed.PID_CONTROLLED_WITH_OVERRIDE) {
+            timer = new ElapsedTime();
+            timer.startTime();
+            lastTime = 0;
+        }
     }
 
     public MecanumController(HardwareMap hardwareMap) {
@@ -124,16 +126,21 @@ public class MecanumController {
     }
 
     public void updateDrivingSpeed(Gamepad gamepad, double max) {
-        double currentTime = timer.time(TimeUnit.SECONDS);
-        if (lastTime == 0 && speed == Speed.PID_CONTROLLED_WITH_OVERRIDE) {
+        if (speed == Speed.PID_CONTROLLED_WITH_OVERRIDE) {
+            double currentTime = timer.time(TimeUnit.SECONDS);
+            if (lastTime == 0) {
+                lastTime = currentTime;
+                return;
+            }
+            double deltaTime = currentTime - lastTime;
+
+            driveSpeed = speedController.getScaledOutput(driveSpeed, max - driveSpeed, deltaTime);
+
             lastTime = currentTime;
             return;
         }
-        double deltaTime = currentTime - lastTime;
 
-        if (speed == Speed.PID_CONTROLLED_WITH_OVERRIDE) {
-            driveSpeed = speedController.getScaledOutput(driveSpeed, max - driveSpeed, deltaTime);
-        } else if (speed == Speed.SINGLE_OVERRIDE) {
+        if (speed == Speed.SINGLE_OVERRIDE) {
             driveSpeed = 1;
         }
 
@@ -160,8 +167,6 @@ public class MecanumController {
         } else if (driveSpeed > 1) {
             driveSpeed = 1;
         }
-
-        lastTime = currentTime;
     }
 
     public void drive(Gamepad gamepad) {
@@ -182,6 +187,14 @@ public class MecanumController {
 
         if (max < 1) {
             max = 1;
+        }
+
+        if (max * driveSpeed < Constants.MINIMUM_VOLTAGE_APPLIED) {
+            leftFront.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);
+            rightFront.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);
+            leftRear.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);
+            rightRear.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);
+            return;
         }
 
         leftFront.setPower(leftFrontPower * driveSpeed / max);
@@ -215,6 +228,14 @@ public class MecanumController {
 
         if (max < 1) {
             max = 1;
+        }
+
+        if (max * driveSpeed < Constants.MINIMUM_VOLTAGE_APPLIED) {
+            leftFront.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);
+            rightFront.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);
+            leftRear.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);
+            rightRear.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);
+            return;
         }
 
         leftFront.setPower(leftFrontPower * driveSpeed / max);
