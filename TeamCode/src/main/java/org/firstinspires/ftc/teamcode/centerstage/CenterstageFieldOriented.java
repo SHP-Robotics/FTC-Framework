@@ -39,13 +39,13 @@ public class CenterstageFieldOriented extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        MecanumController mecanumController = new MecanumController(hardwareMap, Speed.SINGLE_OVERRIDE);
+        MecanumController mecanumController = new MecanumController(hardwareMap, Speed.GEAR_SHIFT);
         mecanumController.calibrateIMUAngleOffset();
         mecanumController.setDriveSpeed(1);
 
-        SampleMecanumDrive roadrunnerCorrection = new SampleMecanumDrive(hardwareMap);
+        //SampleMecanumDrive roadrunnerCorrection = new SampleMecanumDrive(hardwareMap);
 
-        initProcessors();
+        //initProcessors();
 
         waitForStart();
 
@@ -61,36 +61,41 @@ public class CenterstageFieldOriented extends LinearOpMode {
                 mecanumController.calibrateIMUAngleOffset();
             }
 
+            /*
             if (gamepad1.x) {
-                AprilTagPoseFtc position = getCenterPosition();
+                AprilTagPoseFtc position = getAprilTagPosition(2, 4);
                 if (position != null) {
                     //telemetry.addData("yaw", position.yaw);
                     //telemetry.addData("Forward", position.y/25.4);
                     //telemetry.addData("Right", position.z/25.4);
                     //telemetry.update();
-                    Pose2d startPose = new Pose2d(0, 0, position.yaw);
+
+                    Pose2d startPose = new Pose2d(0, 0, 0);
+
                     TrajectorySequence trajSeq = roadrunnerCorrection.trajectorySequenceBuilder(startPose)
-                            .turn(-position.yaw%360)
                             .lineTo(new Vector2d(position.y+0.5, -position.x))
                             .build();
 
                     roadrunnerCorrection.setPoseEstimate(startPose);
+                    roadrunnerCorrection.turn(Math.toRadians(-position.yaw));
                     roadrunnerCorrection.followTrajectorySequence(trajSeq);
                 }
             }
+            */
         }
 
         visionPortal.close();
     }
 
-    public AprilTagPoseFtc getCenterPosition() {
+    public AprilTagPoseFtc getAprilTagPosition(int... ids) {
         List<AprilTagDetection> currentDetections = myAprilTagProcessor.getDetections();
 
         for (AprilTagDetection detection : currentDetections) {
             if (detection.metadata != null) {
-                if (detection.metadata.name == "blue_alliance_center"
-                        || detection.metadata.name == "red_alliance_center") {
-                    return detection.ftcPose;
+                for (int id: ids) {
+                    if (detection.id == id) {
+                        return detection.ftcPose;
+                    }
                 }
             }
         }
@@ -105,12 +110,12 @@ public class CenterstageFieldOriented extends LinearOpMode {
         // Add tags in CenterStage
         myAprilTagLibraryBuilder.setAllowOverwrite(true);
 
-        myAprilTagLibraryBuilder.addTag(1, "blue_alliance_left", 1+13/16, DistanceUnit.INCH);
-        myAprilTagLibraryBuilder.addTag(2, "blue_alliance_center", 1+13/16, DistanceUnit.INCH);
-        myAprilTagLibraryBuilder.addTag(3, "blue_alliance_right", 1+13/16, DistanceUnit.INCH);
-        myAprilTagLibraryBuilder.addTag(4, "red_alliance_left", 1+13/16, DistanceUnit.INCH);
-        myAprilTagLibraryBuilder.addTag(5, "red_alliance_center", 1+13/16, DistanceUnit.INCH);
-        myAprilTagLibraryBuilder.addTag(6, "red_alliance_right", 1+13/16, DistanceUnit.INCH);
+        myAprilTagLibraryBuilder.addTag(1, "blue_alliance_left", 1+(13/16), DistanceUnit.INCH);
+        myAprilTagLibraryBuilder.addTag(2, "blue_alliance_center", 1+(13/16), DistanceUnit.INCH);
+        myAprilTagLibraryBuilder.addTag(3, "blue_alliance_right", 1+(13/16), DistanceUnit.INCH);
+        myAprilTagLibraryBuilder.addTag(4, "red_alliance_left", 1+(13/16), DistanceUnit.INCH);
+        myAprilTagLibraryBuilder.addTag(5, "red_alliance_center", 1+(13/16), DistanceUnit.INCH);
+        myAprilTagLibraryBuilder.addTag(6, "red_alliance_right", 1+(13/16), DistanceUnit.INCH);
 
         myAprilTagLibrary = myAprilTagLibraryBuilder.build();
 
