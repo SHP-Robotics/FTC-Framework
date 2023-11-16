@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -63,9 +64,14 @@ public class CenterstageFieldOriented extends LinearOpMode {
             if (gamepad1.x) {
                 AprilTagPoseFtc position = getCenterPosition();
                 if (position != null) {
-                    Pose2d startPose = new Pose2d(0, 0, 0);
+                    //telemetry.addData("yaw", position.yaw);
+                    //telemetry.addData("Forward", position.y/25.4);
+                    //telemetry.addData("Right", position.z/25.4);
+                    //telemetry.update();
+                    Pose2d startPose = new Pose2d(0, 0, position.yaw);
                     TrajectorySequence trajSeq = roadrunnerCorrection.trajectorySequenceBuilder(startPose)
-                            .lineTo(new Vector2d(-position.x, 5-position.y))
+                            .turn(-position.yaw%360)
+                            .lineTo(new Vector2d(position.y+0.5, -position.x))
                             .build();
 
                     roadrunnerCorrection.setPoseEstimate(startPose);
@@ -97,12 +103,14 @@ public class CenterstageFieldOriented extends LinearOpMode {
         myAprilTagLibraryBuilder.addTags(AprilTagGameDatabase.getCurrentGameTagLibrary());
 
         // Add tags in CenterStage
-        myAprilTagLibraryBuilder.addTag(1, "blue_alliance_left", 3.5, DistanceUnit.INCH);
-        myAprilTagLibraryBuilder.addTag(2, "blue_alliance_center", 3.5, DistanceUnit.INCH);
-        myAprilTagLibraryBuilder.addTag(3, "blue_alliance_right", 3.5, DistanceUnit.INCH);
-        myAprilTagLibraryBuilder.addTag(4, "red_alliance_left", 3.5, DistanceUnit.INCH);
-        myAprilTagLibraryBuilder.addTag(5, "red_alliance_center", 3.5, DistanceUnit.INCH);
-        myAprilTagLibraryBuilder.addTag(6, "red_alliance_right", 3.5, DistanceUnit.INCH);
+        myAprilTagLibraryBuilder.setAllowOverwrite(true);
+
+        myAprilTagLibraryBuilder.addTag(1, "blue_alliance_left", 1+13/16, DistanceUnit.INCH);
+        myAprilTagLibraryBuilder.addTag(2, "blue_alliance_center", 1+13/16, DistanceUnit.INCH);
+        myAprilTagLibraryBuilder.addTag(3, "blue_alliance_right", 1+13/16, DistanceUnit.INCH);
+        myAprilTagLibraryBuilder.addTag(4, "red_alliance_left", 1+13/16, DistanceUnit.INCH);
+        myAprilTagLibraryBuilder.addTag(5, "red_alliance_center", 1+13/16, DistanceUnit.INCH);
+        myAprilTagLibraryBuilder.addTag(6, "red_alliance_right", 1+13/16, DistanceUnit.INCH);
 
         myAprilTagLibrary = myAprilTagLibraryBuilder.build();
 
