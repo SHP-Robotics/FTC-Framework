@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.debug;
+package org.firstinspires.ftc.teamcode.debug.ObjectDetection;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -11,8 +11,8 @@ import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 
 import java.util.List;
 
-@Autonomous(name = "Get Focal Length")
-public class GetFocalLength extends LinearOpMode {
+@Autonomous(name = "Get Distance")
+public class GetDistance extends LinearOpMode {
     private TfodProcessor tfod;
     private VisionPortal visionPortal;
 
@@ -33,18 +33,13 @@ public class GetFocalLength extends LinearOpMode {
 
         waitForStart();
 
-        List<Recognition> currentRecognitions = tfod.getRecognitions();
-        while(currentRecognitions.size() == 0) {
+        List<Recognition> currentRecognitions;
+        while(opModeIsActive()) {
             currentRecognitions = tfod.getRecognitions();
+            for (Recognition recognition : currentRecognitions) {
+                telemetry.addData("Distance", Constants.FOCAL_LENGTH * Constants.BACKDROP_WIDTH / recognition.getWidth());
+            }
+            telemetry.update();
         }
-        Recognition currentRecognition = currentRecognitions.get(0);
-
-        double focalLength = currentRecognition.getWidth() * 10 / Constants.BACKDROP_WIDTH;
-        telemetry.addData("Focal Length Successfully Calculated", focalLength);
-        telemetry.addLine("Please update the focal length in teamcode/debug/config/Constants...");
-        telemetry.addLine("... not to be mistaken for teamcode/Constants");
-        telemetry.update();
-
-        sleep(30*1000);
     }
 }

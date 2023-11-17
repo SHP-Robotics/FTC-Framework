@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.debug;
+package org.firstinspires.ftc.teamcode.debug.ObjectDetection;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 
