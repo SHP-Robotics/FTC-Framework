@@ -18,7 +18,9 @@ public class DrivingConfiguration {
     public static final GamepadDigital RESET_IMU = GamepadDigital.B;
 
     // Lift
-    public static final GamepadAnalog LIFT_POWER = GamepadAnalog.RIGHT_TRIGGER;
+    public static final GamepadAnalog LIFT_POWER_UP = GamepadAnalog.RIGHT_TRIGGER;
+    public static final GamepadAnalog LIFT_POWER_DOWN = GamepadAnalog.LEFT_TRIGGER;
+
 
     public static double getValue(Gamepad gamepad, GamepadAnalog analog) {
         switch (analog) {
