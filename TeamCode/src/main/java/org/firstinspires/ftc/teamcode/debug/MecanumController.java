@@ -244,6 +244,36 @@ public class MecanumController {
         rightRear.setPower(rightRearPower * driveSpeed / max);
     }
 
+    public void driveParamsFast(Gamepad gamepad, double x, double y, double r) {
+        double leftFrontPower = y + x + r;
+        double rightFrontPower = y - x - r;
+        double leftRearPower = y - x + r;
+        double rightRearPower = y + x - r;
+
+        double max = Math.max(Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower)), Math.max(Math.abs(leftRearPower), Math.abs(rightRearPower)));
+
+        if (this.speed != Speed.NO_CHANGE) {
+            updateDrivingSpeed(gamepad, max);
+        }
+
+        //if (max < 1) {
+        //    max = 1;
+        //}
+
+        if (max * driveSpeed < Constants.MINIMUM_VOLTAGE_APPLIED) {
+            leftFront.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);
+            rightFront.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);
+            leftRear.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);
+            rightRear.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);
+            return;
+        }
+
+        leftFront.setPower(leftFrontPower * driveSpeed / max);
+        rightFront.setPower(rightFrontPower * driveSpeed / max);
+        leftRear.setPower(leftRearPower * driveSpeed / max);
+        rightRear.setPower(rightRearPower * driveSpeed / max);
+    }
+
     public boolean isBusy() {
         return leftFront.isBusy() || rightFront.isBusy() || leftRear.isBusy() || rightRear.isBusy();
     }

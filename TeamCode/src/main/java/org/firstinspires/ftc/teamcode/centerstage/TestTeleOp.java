@@ -1,27 +1,12 @@
 package org.firstinspires.ftc.teamcode.centerstage;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.debug.MecanumController;
-import org.firstinspires.ftc.teamcode.debug.Side;
-import org.firstinspires.ftc.teamcode.debug.Speed;
-import org.firstinspires.ftc.teamcode.debug.Synchronous;
+import org.firstinspires.ftc.teamcode.debug.WeightedMecanumController;
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
-import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
@@ -31,8 +16,8 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
 
-@Autonomous(name = "Test Auto")
-public class TestAuto extends LinearOpMode {
+@TeleOp(name = "Test TeleOp")
+public class TestTeleOp extends LinearOpMode {
 
     private boolean USE_WEBCAM = true;
     AprilTagLibrary myAprilTagLibrary;
@@ -41,6 +26,12 @@ public class TestAuto extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        WeightedMecanumController weightedMecanumController = new WeightedMecanumController(hardwareMap);
+        weightedMecanumController.setDriveSpeed(0.3);
+        double tolerance = 0.05;
+
+        int emptyFrames = 0;
+
         initProcessors();
 
         telemetry.addLine("Processors Initialized");
@@ -49,12 +40,32 @@ public class TestAuto extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
+            weightedMecanumController.driveWeights(gamepad1);
+
             AprilTagPoseFtc position = getAprilTagPosition(2, 4);
             if (position != null) {
                 telemetry.addData("Yaw", position.yaw);
                 telemetry.addData("Right", position.x * Constants.APRIL_TAG_POSITION_CORRECTION);
                 telemetry.addData("Forward", position.y * Constants.APRIL_TAG_POSITION_CORRECTION);
                 telemetry.update();
+
+                double x = position.x * Constants.APRIL_TAG_POSITION_CORRECTION;
+                double y = (position.y * Constants.APRIL_TAG_POSITION_CORRECTION) - 5;
+                double r = position.yaw / 180;
+
+                double distance = Math.sqrt((x * x) + (y * y) + (r * r));
+
+                if (distance < tolerance) {
+                    break;
+                }
+
+                weightedMecanumController.driveParamsFast(gamepad1, x, y, -r);
+                emptyFrames = 0;
+            } else {
+                if (emptyFrames > 5) {
+                    weightedMecanumController.deactivate();
+                }
+                emptyFrames += 1;
             }
         }
 
