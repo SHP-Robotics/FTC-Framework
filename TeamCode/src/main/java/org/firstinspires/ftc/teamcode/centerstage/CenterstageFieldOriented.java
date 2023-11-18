@@ -13,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.debug.Claw;
 import org.firstinspires.ftc.teamcode.debug.LinearSlide;
 import org.firstinspires.ftc.teamcode.debug.MecanumController;
 import org.firstinspires.ftc.teamcode.debug.Side;
@@ -45,6 +46,10 @@ public class CenterstageFieldOriented extends LinearOpMode {
         mecanumController.setDriveSpeed(1);
 
         LinearSlide lift = new LinearSlide(hardwareMap, "lift", true);
+        lift.applyLiftBrakes();
+
+        Claw claw = new Claw(hardwareMap, "claw");
+        claw.setRange(0, 1);
 
         //SampleMecanumDrive roadrunnerCorrection = new SampleMecanumDrive(hardwareMap);
 
@@ -54,8 +59,8 @@ public class CenterstageFieldOriented extends LinearOpMode {
 
         while (opModeIsActive()) {
             mecanumController.fieldOrientedDrive(gamepad1);
-            //telemetry.addData("radians clockwise", mecanumController.getCalibratedIMUAngle());
-            //telemetry.update();
+            telemetry.addData("radians clockwise", mecanumController.getCalibratedIMUAngle());
+            telemetry.update();
 
             if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.RESET_IMU)) {
                 // I wonder if this will reset the IMU if the Yaw is off after a collision
@@ -64,10 +69,14 @@ public class CenterstageFieldOriented extends LinearOpMode {
                 mecanumController.calibrateIMUAngleOffset();
             }
 
-            double encoderTicks = lift.drive(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.LIFT_POWER_UP)
+            lift.drive(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.LIFT_POWER_UP)
                 - DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.LIFT_POWER_DOWN));
-            telemetry.addData("At position", encoderTicks);
-            telemetry.update();
+
+            if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLAW_OPEN)) {
+                claw.open();
+            } else if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLAW_CLOSE)) {
+                claw.close();
+            }
         }
     }
 }

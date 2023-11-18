@@ -53,7 +53,7 @@ public class LinearSlide {
         liftIsStatic = true;
     }
 
-    public double drive(double power) {
+    public void drive(double power) {
         if (power == 0) {
             if (!liftIsStatic) {
                 applyLiftBrakes();
@@ -74,8 +74,6 @@ public class LinearSlide {
                 lift.setPower(power * liftPower);
             }
         }
-
-        return lift.getCurrentPosition();
     }
 
     public void deactivate() {

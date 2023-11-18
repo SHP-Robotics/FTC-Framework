@@ -21,6 +21,10 @@ public class DrivingConfiguration {
     public static final GamepadAnalog LIFT_POWER_UP = GamepadAnalog.RIGHT_TRIGGER;
     public static final GamepadAnalog LIFT_POWER_DOWN = GamepadAnalog.LEFT_TRIGGER;
 
+    // Claw
+    public static final GamepadDigital CLAW_OPEN = GamepadDigital.LEFT_BUMPER;
+    public static final GamepadDigital CLAW_CLOSE = GamepadDigital.RIGHT_BUMPER;
+
 
     public static double getValue(Gamepad gamepad, GamepadAnalog analog) {
         switch (analog) {

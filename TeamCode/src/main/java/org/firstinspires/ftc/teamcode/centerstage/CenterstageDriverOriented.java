@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.teamcode.debug.Claw;
 import org.firstinspires.ftc.teamcode.debug.LinearSlide;
 import org.firstinspires.ftc.teamcode.debug.MecanumController;
 import org.firstinspires.ftc.teamcode.debug.Side;
@@ -22,14 +23,21 @@ public class CenterstageDriverOriented extends LinearOpMode {
         LinearSlide lift = new LinearSlide(hardwareMap, true);
         lift.applyLiftBrakes();
 
+        Claw claw = new Claw(hardwareMap, "claw");
+        claw.setRange(0, 1);
+
         waitForStart();
 
         while (opModeIsActive()) {
             mecanumController.drive(gamepad1);
-            double encoderTicks = lift.drive(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.LIFT_POWER_UP)
+            lift.drive(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.LIFT_POWER_UP)
                     - DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.LIFT_POWER_DOWN));
-            telemetry.addData("At position", encoderTicks);
-            telemetry.update();
+
+            if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLAW_OPEN)) {
+                claw.open();
+            } else if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLAW_CLOSE)) {
+                claw.close();
+            }
         }
     }
 }

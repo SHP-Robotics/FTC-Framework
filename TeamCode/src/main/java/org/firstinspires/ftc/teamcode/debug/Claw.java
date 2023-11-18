@@ -20,4 +20,16 @@ public class Claw {
         this.mostOpen = mostOpen;
         this.mostClose = mostClose;
     }
+
+    public void open() {
+        servo.setPosition(mostOpen);
+    }
+
+    public void close() {
+        servo.setPosition(mostClose);
+    }
+
+    public void setPosition(double position) {
+        servo.setPosition(position * (mostClose-mostOpen) * (position + 1));
+    }
 }
