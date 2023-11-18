@@ -10,8 +10,8 @@ public final class Constants {
     public static final double KI = 0.00;
     public static final double KD = 0.00;
 
-    public static final double LIFT_ENCODER_TICKS_PER_INCH = 10;
-    public static final double LIFT_HEIGHT = 10;
+    public static final double LIFT_ENCODER_TICKS_PER_INCH = 122;
+    public static final double LIFT_HEIGHT = 36;
 
     public static final double CLAW_OPEN = 0;
     public static final double CLAW_CLOSE = 0;
