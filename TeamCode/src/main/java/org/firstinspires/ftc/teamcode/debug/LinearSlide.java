@@ -26,6 +26,7 @@ public class LinearSlide {
         init();
 
         if (useEncoders) {
+            lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
@@ -52,7 +53,7 @@ public class LinearSlide {
         liftIsStatic = true;
     }
 
-    public void drive(double power) {
+    public double drive(double power) {
         if (power == 0) {
             if (!liftIsStatic) {
                 applyLiftBrakes();
@@ -71,6 +72,8 @@ public class LinearSlide {
                 lift.setPower(power * liftPower);
             }
         }
+
+        return lift.getCurrentPosition();
     }
 
     public void deactivate() {
