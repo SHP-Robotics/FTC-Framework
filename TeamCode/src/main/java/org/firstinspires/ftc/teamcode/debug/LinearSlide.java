@@ -68,7 +68,7 @@ public class LinearSlide {
                 if (lift.getCurrentPosition() < Constants.LIFT_HEIGHT * Constants.LIFT_ENCODER_TICKS_PER_INCH) {
                     lift.setPower(power * liftPower);
                 } else {
-                    lift.setPower(-0.3);
+                    lift.setPower(0);
                 }
             } else {
                 lift.setPower(power * liftPower);
