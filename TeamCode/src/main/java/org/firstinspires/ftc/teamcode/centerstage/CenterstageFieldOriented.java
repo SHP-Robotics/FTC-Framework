@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.debug.MecanumController;
 import org.firstinspires.ftc.teamcode.debug.Side;
 import org.firstinspires.ftc.teamcode.debug.Speed;
 import org.firstinspires.ftc.teamcode.debug.Synchronous;
+import org.firstinspires.ftc.teamcode.debug.config.Constants;
 import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
@@ -49,7 +50,7 @@ public class CenterstageFieldOriented extends LinearOpMode {
         lift.applyLiftBrakes();
 
         Claw claw = new Claw(hardwareMap, "claw");
-        claw.setRange(0, 1);
+        claw.setRange(Constants.CLAW_OPEN, Constants.CLAW_CLOSE);
 
         //SampleMecanumDrive roadrunnerCorrection = new SampleMecanumDrive(hardwareMap);
 
