@@ -10,6 +10,8 @@ public final class Constants {
     public static final double KI = 0.00;
     public static final double KD = 0.00;
 
+    // Lift
+
     public static final double LIFT_ENCODER_TICKS_PER_INCH = 1;
 
     public static final double CLAW_OPEN = 0;
@@ -21,6 +23,7 @@ public final class Constants {
     // FOCAL_LENGTH = (PERCEIVED_WIDTH x DISTANCE) / WIDTH
     public static final double BACKDROP_WIDTH = 25.625;
     public static final double FOCAL_LENGTH = 1;
+    public static final double APRIL_TAG_POSITION_CORRECTION = 1.2676056338;
 
     public static double setToDomain(double x, double begin, double end) {
         double length = end - begin;

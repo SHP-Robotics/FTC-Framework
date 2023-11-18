@@ -1,21 +1,21 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kClawClosed;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kClawName;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kClawOpen;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kLeftSlideName;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kRightSlideName;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideBottom;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideD;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideG;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideHigh;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideHub;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideLow;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideMiddle;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideP;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideS;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideStackDistance;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideTolerance;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Arm.kClawClosed;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Arm.kClawName;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Arm.kClawOpen;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Arm.kLeftSlideName;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Arm.kRightSlideName;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Arm.kSlideBottom;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Arm.kSlideD;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Arm.kSlideG;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Arm.kSlideHigh;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Arm.kSlideHub;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Arm.kSlideLow;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Arm.kSlideMiddle;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Arm.kSlideP;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Arm.kSlideS;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Arm.kSlideStackDistance;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Arm.kSlideTolerance;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
