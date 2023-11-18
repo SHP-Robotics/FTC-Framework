@@ -14,16 +14,17 @@ public class TestAuto extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        SampleMecanumDrive roadrunnerDrive = new SampleMecanumDrive(hardwareMap);
+        MecanumController mecanumDrive = new MecanumController(hardwareMap);
 
         waitForStart();
 
-        Pose2d startPos = new Pose2d(0, 0, 0);
-
-        TrajectorySequence trajectorySequence = roadrunnerDrive.trajectorySequenceBuilder(startPos)
-                .forward(1)
-                .build();
-
-        roadrunnerDrive.followTrajectorySequence(trajectorySequence);
+        mecanumDrive.leftFront.setPower(1);
+        sleep(1000);
+        mecanumDrive.rightFront.setPower(1);
+        sleep(1000);
+        mecanumDrive.leftRear.setPower(1);
+        sleep(1000);
+        mecanumDrive.rightRear.setPower(1);
+        sleep(1000);
     }
 }

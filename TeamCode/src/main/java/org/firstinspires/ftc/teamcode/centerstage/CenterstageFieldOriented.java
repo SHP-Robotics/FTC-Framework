@@ -44,7 +44,7 @@ public class CenterstageFieldOriented extends LinearOpMode {
         mecanumController.calibrateIMUAngleOffset();
         mecanumController.setDriveSpeed(1);
 
-        LinearSlide lift = new LinearSlide(hardwareMap, "lift", false);
+        LinearSlide lift = new LinearSlide(hardwareMap, "lift", true);
 
         //SampleMecanumDrive roadrunnerCorrection = new SampleMecanumDrive(hardwareMap);
 

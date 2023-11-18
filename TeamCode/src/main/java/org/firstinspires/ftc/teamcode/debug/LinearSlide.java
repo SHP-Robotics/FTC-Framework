@@ -62,7 +62,14 @@ public class LinearSlide {
                 lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 liftIsStatic = false;
             }
-            lift.setPower(power * liftPower);
+
+            if (power > 0) {
+                if (lift.getCurrentPosition() < Constants.LIFT_HEIGHT * Constants.LIFT_ENCODER_TICKS_PER_INCH) {
+                    lift.setPower(power * liftPower);
+                }
+            } else {
+                lift.setPower(power * liftPower);
+            }
         }
     }
 

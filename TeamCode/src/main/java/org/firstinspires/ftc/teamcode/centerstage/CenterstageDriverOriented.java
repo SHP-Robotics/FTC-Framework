@@ -19,7 +19,7 @@ public class CenterstageDriverOriented extends LinearOpMode {
         MecanumController mecanumController = new MecanumController(hardwareMap, Speed.SINGLE_OVERRIDE);
         mecanumController.setDriveSpeed(1);
 
-        LinearSlide lift = new LinearSlide(hardwareMap, false);
+        LinearSlide lift = new LinearSlide(hardwareMap, true);
         lift.applyLiftBrakes();
 
         waitForStart();
