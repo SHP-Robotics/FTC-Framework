@@ -17,8 +17,8 @@ public class DrivingConfiguration {
 
     public static final GamepadDigital RESET_IMU = GamepadDigital.B;
 
-    // Climbing
-    public static final GamepadAnalog CLIMBER_POWER = GamepadAnalog.RIGHT_TRIGGER;
+    // Lift
+    public static final GamepadAnalog LIFT_POWER = GamepadAnalog.RIGHT_TRIGGER;
 
     public static double getValue(Gamepad gamepad, GamepadAnalog analog) {
         switch (analog) {

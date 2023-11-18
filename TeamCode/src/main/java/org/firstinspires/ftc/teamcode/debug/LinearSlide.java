@@ -30,6 +30,16 @@ public class LinearSlide {
         }
     }
 
+    public LinearSlide(HardwareMap hardwareMap, String name, boolean useEncoders) {
+        lift = hardwareMap.get(DcMotor.class, name);
+
+        init();
+
+        if (useEncoders) {
+            lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+    }
+
     public void setLiftPower(double power) {
         liftPower = power;
     }
@@ -42,8 +52,8 @@ public class LinearSlide {
         liftIsStatic = true;
     }
 
-    public void drive(Gamepad gamepad) {
-        if (gamepad.left_stick_y == 0) {
+    public void drive(double power) {
+        if (power == 0) {
             if (!liftIsStatic) {
                 applyLiftBrakes();
             }
@@ -52,7 +62,7 @@ public class LinearSlide {
                 lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 liftIsStatic = false;
             }
-            lift.setPower(-gamepad.left_stick_y * liftPower);
+            lift.setPower(power * liftPower);
         }
     }
 

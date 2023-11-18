@@ -13,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.debug.LinearSlide;
 import org.firstinspires.ftc.teamcode.debug.MecanumController;
 import org.firstinspires.ftc.teamcode.debug.Side;
 import org.firstinspires.ftc.teamcode.debug.Speed;
@@ -39,9 +40,11 @@ public class CenterstageFieldOriented extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        MecanumController mecanumController = new MecanumController(hardwareMap, Speed.GEAR_SHIFT);
+        MecanumController mecanumController = new MecanumController(hardwareMap, Speed.SINGLE_OVERRIDE);
         mecanumController.calibrateIMUAngleOffset();
         mecanumController.setDriveSpeed(1);
+
+        LinearSlide lift = new LinearSlide(hardwareMap, "lift", false);
 
         //SampleMecanumDrive roadrunnerCorrection = new SampleMecanumDrive(hardwareMap);
 
@@ -61,78 +64,7 @@ public class CenterstageFieldOriented extends LinearOpMode {
                 mecanumController.calibrateIMUAngleOffset();
             }
 
-            /*
-            if (gamepad1.x) {
-                AprilTagPoseFtc position = getAprilTagPosition(2, 4);
-                if (position != null) {
-                    //telemetry.addData("yaw", position.yaw);
-                    //telemetry.addData("Forward", position.y/25.4);
-                    //telemetry.addData("Right", position.z/25.4);
-                    //telemetry.update();
-
-                    Pose2d startPose = new Pose2d(0, 0, 0);
-
-                    TrajectorySequence trajSeq = roadrunnerCorrection.trajectorySequenceBuilder(startPose)
-                            .lineTo(new Vector2d(position.y+0.5, -position.x))
-                            .build();
-
-                    roadrunnerCorrection.setPoseEstimate(startPose);
-                    roadrunnerCorrection.turn(Math.toRadians(-position.yaw));
-                    roadrunnerCorrection.followTrajectorySequence(trajSeq);
-                }
-            }
-            */
+            lift.drive(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.LIFT_POWER));
         }
-
-        visionPortal.close();
-    }
-
-    public AprilTagPoseFtc getAprilTagPosition(int... ids) {
-        List<AprilTagDetection> currentDetections = myAprilTagProcessor.getDetections();
-
-        for (AprilTagDetection detection : currentDetections) {
-            if (detection.metadata != null) {
-                for (int id: ids) {
-                    if (detection.id == id) {
-                        return detection.ftcPose;
-                    }
-                }
-            }
-        }
-
-        return null;
-    }
-
-    public void initProcessors() {
-        AprilTagLibrary.Builder myAprilTagLibraryBuilder = new AprilTagLibrary.Builder();
-        myAprilTagLibraryBuilder.addTags(AprilTagGameDatabase.getCurrentGameTagLibrary());
-
-        // Add tags in CenterStage
-        myAprilTagLibraryBuilder.setAllowOverwrite(true);
-
-        myAprilTagLibraryBuilder.addTag(1, "blue_alliance_left", 1+(13/16), DistanceUnit.INCH);
-        myAprilTagLibraryBuilder.addTag(2, "blue_alliance_center", 1+(13/16), DistanceUnit.INCH);
-        myAprilTagLibraryBuilder.addTag(3, "blue_alliance_right", 1+(13/16), DistanceUnit.INCH);
-        myAprilTagLibraryBuilder.addTag(4, "red_alliance_left", 1+(13/16), DistanceUnit.INCH);
-        myAprilTagLibraryBuilder.addTag(5, "red_alliance_center", 1+(13/16), DistanceUnit.INCH);
-        myAprilTagLibraryBuilder.addTag(6, "red_alliance_right", 1+(13/16), DistanceUnit.INCH);
-
-        myAprilTagLibrary = myAprilTagLibraryBuilder.build();
-
-        AprilTagProcessor.Builder myAprilTagProcessorBuilder = new AprilTagProcessor.Builder();
-        myAprilTagProcessorBuilder.setTagLibrary(myAprilTagLibrary);
-        myAprilTagProcessor = myAprilTagProcessorBuilder.build();
-
-        VisionPortal.Builder builder = new VisionPortal.Builder();
-
-        if (USE_WEBCAM) {
-            builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"));
-        } else {
-            builder.setCamera(BuiltinCameraDirection.BACK);
-        }
-
-        builder.addProcessor(myAprilTagProcessor);
-
-        visionPortal = builder.build();
     }
 }
