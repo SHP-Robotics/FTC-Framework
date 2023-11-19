@@ -44,11 +44,11 @@ public class CenterstageFieldOriented extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            mecanumController.fieldOrientedDrive(gamepad1);
+            mecanumController.fieldOrientedDrive(gamepad1, gamepad2);
             telemetry.addData("radians clockwise", mecanumController.getCalibratedIMUAngle());
             telemetry.update();
 
-            if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.RESET_IMU)) {
+            if (DrivingConfiguration.getValue(gamepad2, DrivingConfiguration.RESET_IMU)) {
                 // I wonder if this will reset the IMU if the Yaw is off after a collision
                 // Further testing required
                 // mecanumController.initIMU(hardwareMap);
