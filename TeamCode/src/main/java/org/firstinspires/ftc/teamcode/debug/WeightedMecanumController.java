@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode.debug;
 
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.debug.config.Constants;
 import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
 
 public class WeightedMecanumController extends MecanumController {
@@ -17,8 +15,8 @@ public class WeightedMecanumController extends MecanumController {
         this.rightRear = new WeightedDcMotor(rightRear);
     }
 
-    public WeightedMecanumController(HardwareMap hardwareMap, Speed speed) {
-        super(hardwareMap, speed);
+    public WeightedMecanumController(HardwareMap hardwareMap, SpeedController speedController) {
+        super(hardwareMap, speedController);
 
         this.leftFront = new WeightedDcMotor(leftFront);
         this.rightFront = new WeightedDcMotor(rightFront);

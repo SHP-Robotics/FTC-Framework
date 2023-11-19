@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.centerstage;
+package org.firstinspires.ftc.teamcode.centerstage.experiments;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -16,8 +16,8 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
 
-@TeleOp(name = "Test TeleOp")
-public class TestTeleOp extends LinearOpMode {
+@TeleOp(name = "April Tag Correction")
+public class AprilTagCorrection extends LinearOpMode {
 
     private boolean USE_WEBCAM = true;
     AprilTagLibrary myAprilTagLibrary;

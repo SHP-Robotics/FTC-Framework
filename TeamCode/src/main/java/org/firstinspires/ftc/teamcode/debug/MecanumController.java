@@ -24,20 +24,11 @@ public class MecanumController {
     public IMU imu;
     private double imuAngleOffset = 0;
 
+    private SpeedController speedController;
     private double driveSpeed = 1;
-    private double rotationSpeed = 1;
 
     private double positionX = 0;
     private double positionY = 0;
-
-    private PIDController speedController;
-    private Speed speed;
-
-    private boolean holdingGearUp = false;
-    private boolean holdingGearDown = false;
-
-    private ElapsedTime timer;
-    private double lastTime;
 
     public void setMotorsRunMode(DcMotor.RunMode runMode) {
         leftFront.setMode(runMode);
@@ -62,28 +53,21 @@ public class MecanumController {
 
         initIMU(hardwareMap);
 
-        leftFront.setDirection(DcMotor.Direction.FORWARD);
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftRear.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightRear.setDirection(DcMotor.Direction.REVERSE);
-
-        if (speed == Speed.PID_CONTROLLED_WITH_OVERRIDE) {
-            timer = new ElapsedTime();
-            timer.startTime();
-            lastTime = 0;
-        }
+        leftFront.setDirection(DcMotor.Direction.REVERSE);
+        rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightRear.setDirection(DcMotor.Direction.FORWARD);
     }
 
     public MecanumController(HardwareMap hardwareMap) {
         init(hardwareMap);
-        this.speed = Speed.NO_CHANGE;
-        this.speedController = new PIDController(Constants.KP, Constants.KI, Constants.KD);
+        this.speedController = new SpeedController.SpeedBuilder(SpeedType.NO_CHANGE)
+                .build();
     }
 
-    public MecanumController(HardwareMap hardwareMap, Speed speed) {
+    public MecanumController(HardwareMap hardwareMap, SpeedController speedController) {
         init(hardwareMap);
-        this.speed = speed;
-        this.speedController = new PIDController(Constants.KP, Constants.KI, Constants.KD);
+        this.speedController = speedController;
     }
 
     public void fakeReset() {
@@ -91,12 +75,13 @@ public class MecanumController {
         this.positionY = 0;
     }
 
-    public void setDriveSpeed(double speed) {
-        driveSpeed = speed;
+    public double getDriveSpeed() {
+        return this.driveSpeed;
     }
 
-    public void setRotationSpeed(double speed) {
-        rotationSpeed = speed;
+    public void setDriveSpeed(double speed) {
+        this.speedController.setSpeed(speed);
+        this.driveSpeed = speed;
     }
 
     public void calibrateIMUAngleOffset() {
@@ -105,68 +90,6 @@ public class MecanumController {
 
     public double getCalibratedIMUAngle() {
         return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) + imuAngleOffset;
-    }
-
-    public void gearUp() {
-        if (speed == Speed.GEAR_SHIFT) {
-            driveSpeed += 0.1;
-        } else if (speed == Speed.PID_CONTROLLED_WITH_OVERRIDE) {
-            driveSpeed = 1;
-        } else if (speed == Speed.SINGLE_OVERRIDE) {
-            driveSpeed = 0.3;
-        }
-    }
-
-    public void gearDown() {
-        if (speed == Speed.GEAR_SHIFT) {
-            driveSpeed -= 0.1;
-        } else if (speed == Speed.PID_CONTROLLED_WITH_OVERRIDE) {
-            driveSpeed = 0.1;
-        }
-    }
-
-    public void updateDrivingSpeed(Gamepad gamepad, double max) {
-        if (speed == Speed.PID_CONTROLLED_WITH_OVERRIDE) {
-            double currentTime = timer.time(TimeUnit.SECONDS);
-            if (lastTime == 0) {
-                lastTime = currentTime;
-                return;
-            }
-            double deltaTime = currentTime - lastTime;
-
-            driveSpeed = speedController.getScaledOutput(driveSpeed, max - driveSpeed, deltaTime);
-
-            lastTime = currentTime;
-            return;
-        }
-
-        if (speed == Speed.SINGLE_OVERRIDE) {
-            driveSpeed = 1;
-        }
-
-        if (DrivingConfiguration.getValue(gamepad, DrivingConfiguration.GEAR_UP)) {
-            if (speed != Speed.GEAR_SHIFT || !holdingGearUp) {
-                gearUp();
-                holdingGearUp = true;
-            }
-        } else {
-            holdingGearUp = false;
-        }
-
-        if (DrivingConfiguration.getValue(gamepad, DrivingConfiguration.GEAR_DOWN)) {
-            if (speed != Speed.GEAR_SHIFT || !holdingGearDown) {
-                gearDown();
-                holdingGearDown = true;
-            }
-        } else {
-            holdingGearDown = false;
-        }
-
-        if (driveSpeed < 0.1) {
-            driveSpeed = 0.1;
-        } else if (driveSpeed > 1) {
-            driveSpeed = 1;
-        }
     }
 
     public void drive(Gamepad gamepad) {
@@ -181,9 +104,8 @@ public class MecanumController {
 
         double max = Math.max(Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower)), Math.max(Math.abs(leftRearPower), Math.abs(rightRearPower)));
 
-        if (this.speed != Speed.NO_CHANGE) {
-            updateDrivingSpeed(gamepad, max);
-        }
+        speedController.updateSpeed(gamepad);
+        this.driveSpeed = speedController.getSpeed();
 
         if (max < 1) {
             max = 1;
@@ -222,9 +144,8 @@ public class MecanumController {
 
         double max = Math.max(Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower)), Math.max(Math.abs(leftRearPower), Math.abs(rightRearPower)));
 
-        if (speed != Speed.NO_CHANGE) {
-            updateDrivingSpeed(gamepad, max);
-        }
+        speedController.updateSpeed(gamepad);
+        this.driveSpeed = speedController.getSpeed();
 
         if (max < 1) {
             max = 1;
@@ -252,9 +173,8 @@ public class MecanumController {
 
         double max = Math.max(Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower)), Math.max(Math.abs(leftRearPower), Math.abs(rightRearPower)));
 
-        if (this.speed != Speed.NO_CHANGE) {
-            updateDrivingSpeed(gamepad, max);
-        }
+        speedController.updateSpeed(gamepad);
+        this.driveSpeed = speedController.getSpeed();
 
         //if (max < 1) {
         //    max = 1;
@@ -295,10 +215,10 @@ public class MecanumController {
         double currentRadian = Constants.setToDomain(getCalibratedIMUAngle(), 0, 2 * Math.PI);
         while (Math.abs(currentRadian - targetRadian) > radianTolerance) {
             currentRadian = Constants.setToDomain(getCalibratedIMUAngle(), 0, 2 * Math.PI);
-            leftFront.setPower(rotationSpeed);
-            rightFront.setPower(-rotationSpeed);
-            leftRear.setPower(rotationSpeed);
-            rightRear.setPower(-rotationSpeed);
+            leftFront.setPower(driveSpeed);
+            rightFront.setPower(-driveSpeed);
+            leftRear.setPower(driveSpeed);
+            rightRear.setPower(-driveSpeed);
         }
     }
 

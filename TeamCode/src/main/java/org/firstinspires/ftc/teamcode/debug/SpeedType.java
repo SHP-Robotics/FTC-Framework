@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.debug;
 
-public enum Speed {
+public enum SpeedType {
     NO_CHANGE,
     SINGLE_OVERRIDE,
     GEAR_SHIFT,
