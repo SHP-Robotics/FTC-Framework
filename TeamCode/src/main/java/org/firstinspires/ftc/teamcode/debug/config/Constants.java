@@ -13,8 +13,8 @@ public final class Constants {
     public static final double LIFT_ENCODER_TICKS_PER_INCH = 122;
     public static final double LIFT_HEIGHT = 36;
 
-    public static final double CLAW_OPEN = 0.2;
-    public static final double CLAW_CLOSE = 0.6;
+    public static final double CLAW_OPEN = 0.1;
+    public static final double CLAW_CLOSE = 0.35;
     public static final double CLAW_HEIGHT = 0;
 
     // TODO: Find these values

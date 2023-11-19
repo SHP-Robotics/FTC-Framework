@@ -10,13 +10,13 @@ import org.firstinspires.ftc.teamcode.debug.SpeedType;
 public class PIDControlledSpeed extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        MecanumController mecanumController = new MecanumController(hardwareMap, SpeedType.PID_CONTROLLED_WITH_OVERRIDE);
-        mecanumController.setDriveSpeed(0);
+      //  MecanumController mecanumController = new MecanumController(hardwareMap, SpeedType.PID_CONTROLLED_WITH_OVERRIDE);
+     //   mecanumController.setDriveSpeed(0);
 
         waitForStart();
 
         while (opModeIsActive()) {
-            mecanumController.drive(gamepad1);
+         //   mecanumController.drive(gamepad1);
         }
     }
 }

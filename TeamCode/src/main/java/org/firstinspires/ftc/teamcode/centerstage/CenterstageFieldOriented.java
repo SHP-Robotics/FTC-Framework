@@ -25,6 +25,7 @@ public class CenterstageFieldOriented extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         SpeedController speedController = new SpeedController.SpeedBuilder(SpeedType.GEAR_SHIFT)
+                .setGearSpacing(0.05)
                 .build();
 
         MecanumController mecanumController = new MecanumController(hardwareMap, speedController);
@@ -32,6 +33,7 @@ public class CenterstageFieldOriented extends LinearOpMode {
         mecanumController.calibrateIMUAngleOffset();
 
         LinearSlide lift = new LinearSlide(hardwareMap, "lift", true);
+        lift.setLiftPower(1);
         lift.applyLiftBrakes();
 
         Claw claw = new Claw(hardwareMap, "claw");
@@ -46,6 +48,7 @@ public class CenterstageFieldOriented extends LinearOpMode {
         while (opModeIsActive()) {
             mecanumController.fieldOrientedDrive(gamepad1);
             telemetry.addData("radians clockwise", mecanumController.getCalibratedIMUAngle());
+            telemetry.addData("speed", speedController.getSpeed());
             telemetry.update();
 
             if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.RESET_IMU)) {
