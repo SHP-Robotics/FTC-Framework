@@ -4,13 +4,13 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.debug.MecanumController;
-import org.firstinspires.ftc.teamcode.debug.Speed;
+import org.firstinspires.ftc.teamcode.debug.SpeedType;
 
 @TeleOp(name = "PID Controlled Speed")
 public class PIDControlledSpeed extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        MecanumController mecanumController = new MecanumController(hardwareMap, Speed.PID_CONTROLLED_WITH_OVERRIDE);
+        MecanumController mecanumController = new MecanumController(hardwareMap, SpeedType.PID_CONTROLLED_WITH_OVERRIDE);
         mecanumController.setDriveSpeed(0);
 
         waitForStart();

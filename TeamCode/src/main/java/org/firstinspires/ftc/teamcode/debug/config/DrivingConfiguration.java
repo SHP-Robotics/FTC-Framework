@@ -12,7 +12,9 @@ public class DrivingConfiguration {
 
     public static final GamepadAnalog ROTATE_RIGHT = GamepadAnalog.RIGHT_STICK_X;
 
-    public static final GamepadDigital GEAR_UP = GamepadDigital.LEFT_STICK_BUTTON;
+    public static final GamepadDigital SPEED_OVERRIDE = GamepadDigital.LEFT_STICK_BUTTON;
+
+    public static final GamepadDigital GEAR_UP = GamepadDigital.Y;
     public static final GamepadDigital GEAR_DOWN = GamepadDigital.A;
 
     public static final GamepadDigital RESET_IMU = GamepadDigital.B;

@@ -1,16 +1,13 @@
 package org.firstinspires.ftc.teamcode.centerstage;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.debug.Claw;
 import org.firstinspires.ftc.teamcode.debug.LinearSlide;
 import org.firstinspires.ftc.teamcode.debug.MecanumController;
-import org.firstinspires.ftc.teamcode.debug.Side;
-import org.firstinspires.ftc.teamcode.debug.Speed;
-import org.firstinspires.ftc.teamcode.debug.Synchronous;
+import org.firstinspires.ftc.teamcode.debug.SpeedController;
+import org.firstinspires.ftc.teamcode.debug.SpeedType;
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
 import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
 
@@ -18,7 +15,10 @@ import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
 public class CenterstageDriverOriented extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        MecanumController mecanumController = new MecanumController(hardwareMap, Speed.SINGLE_OVERRIDE);
+        SpeedController speed = new SpeedController.SpeedBuilder(SpeedType.GEAR_SHIFT)
+                .setGearSpacing(0.1).build();
+
+        MecanumController mecanumController = new MecanumController(hardwareMap, speed);
         mecanumController.setDriveSpeed(1);
 
         LinearSlide lift = new LinearSlide(hardwareMap, true);
