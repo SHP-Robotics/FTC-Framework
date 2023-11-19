@@ -30,7 +30,7 @@ public class CenterstageDriverOriented extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            mecanumController.drive(gamepad1);
+            mecanumController.drive(gamepad1, gamepad2);
             lift.drive(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.LIFT_POWER_UP)
                     - DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.LIFT_POWER_DOWN));
 

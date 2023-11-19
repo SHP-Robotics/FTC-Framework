@@ -85,10 +85,10 @@ public class MecanumController {
         return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) + imuAngleOffset;
     }
 
-    public void drive(Gamepad gamepad) {
-        double x = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.STRAFE_RIGHT);
-        double y = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.STRAFE_UP);
-        double r = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.ROTATE_RIGHT);
+    public void drive(Gamepad gamepad1, Gamepad gamepad2) {
+        double x = DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.STRAFE_RIGHT);
+        double y = DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.STRAFE_UP);
+        double r = DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.ROTATE_RIGHT);
 
         double leftFrontPower = y + x + r;
         double rightFrontPower = y - x - r;
@@ -97,7 +97,7 @@ public class MecanumController {
 
         double max = Math.max(Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower)), Math.max(Math.abs(leftRearPower), Math.abs(rightRearPower)));
 
-        speedController.updateSpeed(gamepad);
+        speedController.updateSpeed(gamepad2);
         driveSpeed = speedController.getSpeed();
 
         if (max < 1) {
@@ -118,10 +118,10 @@ public class MecanumController {
         rightRear.setPower(rightRearPower * driveSpeed / max);
     }
 
-    public void fieldOrientedDrive(Gamepad gamepad) {
-        double x = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.STRAFE_RIGHT);
-        double y = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.STRAFE_UP);
-        double r = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.ROTATE_RIGHT);
+    public void fieldOrientedDrive(Gamepad gamepad1, Gamepad gamepad2) {
+        double x = DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.STRAFE_RIGHT);
+        double y = DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.STRAFE_UP);
+        double r = DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.ROTATE_RIGHT);
 
         // cos * y = how much right if gamepad forward
         // cos * x = how much right if gamepad right
@@ -137,7 +137,7 @@ public class MecanumController {
 
         double max = Math.max(Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower)), Math.max(Math.abs(leftRearPower), Math.abs(rightRearPower)));
 
-        speedController.updateSpeed(gamepad);
+        speedController.updateSpeed(gamepad2);
         driveSpeed = speedController.getSpeed();
 
         if (max < 1) {
