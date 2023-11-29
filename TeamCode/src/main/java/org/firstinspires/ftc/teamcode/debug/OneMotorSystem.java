@@ -52,8 +52,12 @@ public class OneMotorSystem {
 
     public void drive(double power) {
         if (power == 0) {
-            if (!isStatic && shouldUseBrakes) {
-                applyBrakes();
+            if (!isStatic) {
+                if (shouldUseBrakes) {
+                    applyBrakes();
+                } else {
+                    motor.setPower(0);
+                }
             }
         } else {
             if (isStatic) {

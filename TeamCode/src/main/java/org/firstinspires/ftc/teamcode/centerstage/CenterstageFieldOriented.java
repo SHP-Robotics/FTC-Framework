@@ -8,6 +8,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDir
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.debug.MecanumController;
+import org.firstinspires.ftc.teamcode.debug.OneMotorSystem;
 import org.firstinspires.ftc.teamcode.debug.Side;
 import org.firstinspires.ftc.teamcode.debug.SpeedController;
 import org.firstinspires.ftc.teamcode.debug.SpeedType;
@@ -38,10 +39,21 @@ public class CenterstageFieldOriented extends LinearOpMode {
                 .build();
 
         MecanumController mecanumController = new MecanumController(hardwareMap, speedController);
-        mecanumController.calibrateIMUAngleOffset();
 
         Synchronous climber = new Synchronous(hardwareMap, "leftClimber", "rightClimber");
         climber.setMotorDirection(Side.LEFT, DcMotorSimple.Direction.REVERSE);
+
+        OneMotorSystem lift = new OneMotorSystem.OneMotorSystemBuilder(hardwareMap, "lift")
+                .setDirection(DcMotorSimple.Direction.REVERSE)
+                .setUseBrakes(true)
+                .setUseEncoders(false)
+                .setStaticPower(0.3)
+                .build();
+
+        OneMotorSystem intake = new OneMotorSystem.OneMotorSystemBuilder(hardwareMap, "intake")
+                .setDirection(DcMotorSimple.Direction.REVERSE)
+                .setUseEncoders(false)
+                .build();
 
         //SampleMecanumDrive roadrunnerCorrection = new SampleMecanumDrive(hardwareMap);
 
@@ -50,15 +62,31 @@ public class CenterstageFieldOriented extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            mecanumController.fieldOrientedDrive(gamepad1);
             telemetry.addData("radians clockwise", mecanumController.getCalibratedIMUAngle());
             telemetry.update();
 
-            if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.RESET_IMU)) {
-                // I wonder if this will reset the IMU if the Yaw is off after a collision
-                // Further testing required
-                // mecanumController.initIMU(hardwareMap);
-                mecanumController.calibrateIMUAngleOffset();
+            if (gamepad1.x) {
+
+                mecanumController.deactivate();
+                lift.drive(0);
+                intake.drive(0);
+
+                climber.leftMotor.setPower(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.LEFT_CLIMBER_POWER));
+                climber.rightMotor.setPower(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.RIGHT_CLIMBER_POWER));
+
+            } else {
+
+                mecanumController.fieldOrientedDrive(gamepad1);
+                lift.drive(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.LIFT_POWER));
+                intake.drive(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.INTAKE_POWER_FORWARDS)
+                        - DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.INTAKE_POWER_BACKWARDS));
+
+                climber.setPowerSynchronous(0);
+
+                if (gamepad1.b) {
+                    mecanumController.calibrateIMUAngleOffset();
+                }
+
             }
 
             /*

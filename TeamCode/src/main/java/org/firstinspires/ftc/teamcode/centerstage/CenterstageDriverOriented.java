@@ -41,18 +41,23 @@ public class CenterstageDriverOriented extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            mecanumController.drive(gamepad1);
-            lift.drive(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.LIFT_POWER));
-
             if (gamepad1.x) {
 
-                climber.setPowerSynchronous(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER_UP)
-                        - DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER_DOWN));
+                mecanumController.deactivate();
+                lift.drive(0);
+                intake.drive(0);
+
+                climber.leftMotor.setPower(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.LEFT_CLIMBER_POWER));
+                climber.rightMotor.setPower(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.RIGHT_CLIMBER_POWER));
 
             } else {
 
+                mecanumController.drive(gamepad1);
+                lift.drive(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.LIFT_POWER));
                 intake.drive(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.INTAKE_POWER_FORWARDS)
                     - DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.INTAKE_POWER_BACKWARDS));
+
+                climber.setPowerSynchronous(0);
 
             }
         }
