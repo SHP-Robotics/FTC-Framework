@@ -45,12 +45,15 @@ public class BlueAutoLeft extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         MecanumController primitiveMecanumDrive = new MecanumController(hardwareMap);
+        primitiveMecanumDrive.calibrateIMUAngleOffset();
 
         lift = new OneMotorSystem.OneMotorSystemBuilder(hardwareMap, "lift")
                 .setDirection(DcMotorSimple.Direction.FORWARD)
                 .build();
 
         claw = hardwareMap.get(Servo.class, "claw");
+
+        DcMotor intake = hardwareMap.get(DcMotor.class, "intake");
 
         ColorSensor colorSensorForward = hardwareMap.get(ColorSensor.class, "colorSensorForward");
 
@@ -69,6 +72,30 @@ public class BlueAutoLeft extends LinearOpMode {
 
 
         waitForStart();
+
+        intake.setPower(0.4);
+        primitiveMecanumDrive.moveInches(36, 36, 36, 36, true);
+
+        spikeLocation = 3;
+        if (colorSensorForward.blue() > 1200) {
+            spikeLocation = 2;
+            primitiveMecanumDrive.moveInches(12, 12, 12, 12, true);
+            intake.setPower(-0.4);
+        } else {
+            primitiveMecanumDrive.rotateToRadian(Math.toRadians(90), Math.toRadians(1));
+            if (colorSensorForward.blue() > 1200) {
+                spikeLocation = 1;
+                primitiveMecanumDrive.moveInches(12, 12, 12, 12, true);
+                intake.setPower(-0.4);
+            } else {
+                primitiveMecanumDrive.moveInches(-12, -12, -12, -12, true);
+                intake.setPower(-0.4);
+            }
+        }
+        telemetry.addData("Spike Location", spikeLocation);
+        telemetry.update();
+
+        sleep(10000);
 
         while (opModeIsActive()) {
             AprilTagPoseFtc position = centerstageMacros.getAprilTagPosition(2);
