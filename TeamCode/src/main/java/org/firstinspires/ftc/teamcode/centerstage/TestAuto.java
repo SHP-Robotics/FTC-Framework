@@ -11,58 +11,18 @@ import org.firstinspires.ftc.teamcode.debug.MecanumController;
 public class TestAuto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        /*
-        CRServo planeLauncher = hardwareMap.get(CRServo.class, "planeLauncher");
-
-        waitForStart();
-
-        planeLauncher.setPower(1);
-
-        sleep(1000);
-
-         */
-
-
-        ColorSensor colorSensor = hardwareMap.get(ColorSensor.class, "colorSensorForward");
-        colorSensor.enableLed(true);
-
-        boolean detectedBlue = false;
-
-        waitForStart();
-
-        while (opModeIsActive()) {
-            if (detectedBlue) {
-                if (colorSensor.blue() > 1100) {
-                    telemetry.addLine("left");
-                    telemetry.update();
-                } else {
-                    break;
-                }
-            } else {
-                if (colorSensor.blue() > 1100) {
-                    detectedBlue = true;
-                } else {
-                    telemetry.addLine("right");
-                    telemetry.update();
-                }
-            }
-        }
-
-
-        /*
-
         MecanumController mecanumController = new MecanumController(hardwareMap);
+        mecanumController.setDriveSpeed(0.3);
+
+        telemetry.addLine("L + Bozo + Ratio");
+        telemetry.update();
 
         waitForStart();
 
-        mecanumController.leftFront.setPower(1);
-        sleep(1000);
-        mecanumController.rightFront.setPower(1);
-        sleep(1000);
-        mecanumController.leftRear.setPower(1);
-        sleep(1000);
-        mecanumController.rightRear.setPower(1);
-        sleep(1000);
-        */
+        // TODO: calibrate wheel encoder ticks to inches
+        mecanumController.moveToPosition(0, 24, true);
+        // mecanumController.moveToPosition(24, 0, true);
+        // TODO: calibrate IMU direction in MecanumController class
+        // mecanumController.rotateToRadian(Math.toRadians(90), Math.toRadians(1));
     }
 }

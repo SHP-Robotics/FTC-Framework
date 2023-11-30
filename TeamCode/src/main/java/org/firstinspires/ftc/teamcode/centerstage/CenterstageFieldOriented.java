@@ -33,9 +33,9 @@ public class CenterstageFieldOriented extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        SpeedController speedController = new SpeedController.SpeedBuilder(SpeedType.SINGLE_OVERRIDE)
-                .setNaturalSpeed(0.5)
-                .setOverrideSpeed(0.2)
+        SpeedController speedController = new SpeedController.SpeedBuilder(SpeedType.GEAR_SHIFT)
+                .setNaturalSpeed(1)
+                .setGearSpacing(0.1)
                 .build();
 
         MecanumController mecanumController = new MecanumController(hardwareMap, speedController);

@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -41,81 +42,27 @@ public class BlueAutoLeft extends LinearOpMode {
     Servo fourBarLinkage;
     Servo claw;
 
-    public void dropPurplePixel() {
-        fourBarLinkage.setPosition(Constants.DUAL_PIXEL_STORAGE_POSITION);
-        claw.setPosition(Constants.CLAW_OPEN);
-        lift.setPosition((int) (Constants.LIFT_ENCODER_TICKS_PER_INCH * Constants.SHALLOW_PIXEL_CLAW_HEIGHT), true);
-        lift.setLiftPower(0.3);
-
-        claw.setPosition(Constants.CLAW_CLOSE);
-        lift.setPosition((int) (Constants.LOW_BONUS_HEIGHT), true);
-        lift.setLiftPower(0.3);
-        fourBarLinkage.setPosition(Constants.BEHIND_DUAL_PIXEL_STORAGE_POSITION);
-
-        claw.setPosition(Constants.CLAW_OPEN);
-
-        fourBarLinkage.setPosition(Constants.DUAL_PIXEL_STORAGE_POSITION);
-        lift.setPosition((int) (Constants.LIFT_ENCODER_TICKS_PER_INCH * Constants.DEEP_PIXEL_CLAW_HEIGHT), true);
-        lift.setLiftPower(0);
-    }
-
-    public void dropYellowPixel() {
-        fourBarLinkage.setPosition(Constants.DUAL_PIXEL_STORAGE_POSITION);
-        claw.setPosition(Constants.CLAW_OPEN);
-        lift.setPosition((int) (Constants.LIFT_ENCODER_TICKS_PER_INCH * Constants.DEEP_PIXEL_CLAW_HEIGHT), true);
-        lift.setLiftPower(0.3);
-
-        claw.setPosition(Constants.CLAW_CLOSE);
-        lift.setPosition((int) (Constants.LOW_BONUS_HEIGHT), true);
-        lift.setLiftPower(0.3);
-        fourBarLinkage.setPosition(Constants.OUTTAKE_POSITION);
-
-        claw.setPosition(Constants.CLAW_OPEN);
-
-        fourBarLinkage.setPosition(Constants.DUAL_PIXEL_STORAGE_POSITION);
-        lift.setPosition((int) (Constants.LIFT_ENCODER_TICKS_PER_INCH * Constants.DEEP_PIXEL_CLAW_HEIGHT), true);
-        lift.setLiftPower(0);
-    }
-
     @Override
     public void runOpMode() throws InterruptedException {
         MecanumController primitiveMecanumDrive = new MecanumController(hardwareMap);
-        SampleMecanumDrive roadrunnerMecanumDrive = new SampleMecanumDrive(hardwareMap);
 
         lift = new OneMotorSystem.OneMotorSystemBuilder(hardwareMap, "lift")
                 .setDirection(DcMotorSimple.Direction.FORWARD)
                 .build();
 
-        fourBarLinkage = hardwareMap.get(Servo.class, "fourBarLinkage");
         claw = hardwareMap.get(Servo.class, "claw");
 
         ColorSensor colorSensorForward = hardwareMap.get(ColorSensor.class, "colorSensorForward");
 
-        TrajectorySequence initialization = roadrunnerMecanumDrive.trajectorySequenceBuilder(roadrunnerMecanumDrive.getPoseEstimate())
-                // align with center spike mark
-                .forward(24)
-                .addDisplacementMarker(() -> {
-                    if (colorSensorForward.blue() > 1200) {
-                        spikeLocation = 2;
-                        dropPurplePixel();
-                    }
-                })
-                .turn(Math.toRadians(90))
-                .addDisplacementMarker(() -> {
-                    if (colorSensorForward.blue() > 1200) {
-                        spikeLocation = 1;
-                        dropPurplePixel();
-                    }
-                })
-                .forward(48)
+        CenterstageMacros centerstageMacros = new CenterstageMacros.CenterstageRobotBuilder(primitiveMecanumDrive)
+                .setLift(lift)
+                .setClaw(claw)
+                .setAprilTagProcessor(myAprilTagProcessor)
+                .setColorSensor(colorSensorForward)
                 .build();
-
-        telemetry.addLine("Trajectories built");
-        telemetry.update();
 
         initProcessors();
 
-        telemetry.addLine("Trajectories built");
         telemetry.addLine("Processors initialized");
         telemetry.addLine("Ready to start!");
         telemetry.update();
@@ -123,80 +70,17 @@ public class BlueAutoLeft extends LinearOpMode {
 
         waitForStart();
 
-        roadrunnerMecanumDrive.followTrajectorySequence(initialization);
-
-        int count = 0;
-        double avgX = 0;
-        double avgY = 0;
-
-        ElapsedTime oneSecondTimer = new ElapsedTime();
-        oneSecondTimer.reset();
-
-        while (oneSecondTimer.seconds() < 1) {
-            AprilTagPoseFtc position = getAprilTagPosition(2);
+        while (opModeIsActive()) {
+            AprilTagPoseFtc position = centerstageMacros.getAprilTagPosition(2);
             if (position != null) {
                 telemetry.addData("yaw", position.yaw);
-                telemetry.addData("Forward", position.y/25.4);
-                telemetry.addData("Right", position.z/25.4);
+                telemetry.addData("X", position.x);
+                telemetry.addData("Y", position.y);
+                telemetry.addData("Z", position.z);
                 telemetry.update();
-                count += 1;
             }
             sleep(5);
         }
-
-        if (spikeLocation == 1) {
-            avgX -= 3;
-        } else if (spikeLocation == 3) {
-            avgX += 3;
-        }
-
-        if (count != 0) {
-            avgX /= count;
-            avgY /= count;
-        }
-
-        TrajectorySequence aprilTagAlignment = roadrunnerMecanumDrive.trajectorySequenceBuilder(new Pose2d(0, 0,roadrunnerMecanumDrive.getPoseEstimate().getHeading()))
-            .lineTo(new Vector2d(avgY, avgX))
-            /*
-            .addDisplacementMarker(() -> {
-                // Currently ~1inch right of April Tag to be safe
-                // Finish alignment Y axis (left-right) with color sensor
-                while (colorSensorForward.blue() < 1200) {
-                    primitiveMecanumDrive.leftFront.setPower(-0.3);
-                    primitiveMecanumDrive.rightFront.setPower(0.3);
-                    primitiveMecanumDrive.leftRear.setPower(0.3);
-                    primitiveMecanumDrive.rightRear.setPower(-0.3);
-                }
-
-                while (colorSensorForward.blue() > 1200) {
-                    primitiveMecanumDrive.leftFront.setPower(0.3);
-                    primitiveMecanumDrive.rightFront.setPower(-0.3);
-                    primitiveMecanumDrive.leftRear.setPower(-0.3);
-                    primitiveMecanumDrive.rightRear.setPower(0.3);
-                }
-
-                dropYellowPixel();
-            })
-             */
-            .build();
-
-        roadrunnerMecanumDrive.followTrajectorySequence(aprilTagAlignment);
-    }
-
-    public AprilTagPoseFtc getAprilTagPosition(int... ids) {
-        List<AprilTagDetection> currentDetections = myAprilTagProcessor.getDetections();
-
-        for (AprilTagDetection detection : currentDetections) {
-            if (detection.metadata != null) {
-                for (int id: ids) {
-                    if (detection.id == id) {
-                        return detection.ftcPose;
-                    }
-                }
-            }
-        }
-
-        return null;
     }
 
     public void initProcessors() {

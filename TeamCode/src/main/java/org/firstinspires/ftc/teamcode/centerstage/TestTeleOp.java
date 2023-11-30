@@ -8,17 +8,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class TestTeleOp extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        Servo fourBarLinkage = hardwareMap.get(Servo.class, "fourBarLinkage");
-
-        while (opModeIsActive()) {
-            fourBarLinkage.setPosition(gamepad1.left_stick_y);
-            telemetry.addData("position", gamepad1.left_stick_y);
-            telemetry.update();
-            sleep(20);
-        }
-
-        /*
-
         Servo claw = hardwareMap.get(Servo.class, "claw");
 
         while (opModeIsActive()) {
@@ -27,7 +16,5 @@ public class TestTeleOp extends LinearOpMode {
             telemetry.update();
             sleep(20);
         }
-
-        */
     }
 }
