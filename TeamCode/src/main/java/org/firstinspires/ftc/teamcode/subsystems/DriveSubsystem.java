@@ -55,7 +55,7 @@ public class DriveSubsystem extends Subsystem {
 
 //                new GainSchedule(0.00015, 0.0, 0.0, 0.20)
         );
-        drive.enableFF(kFFs);
+        //drive.enableFF(kFFs);
     }
 
     public void setInitialPositions() {

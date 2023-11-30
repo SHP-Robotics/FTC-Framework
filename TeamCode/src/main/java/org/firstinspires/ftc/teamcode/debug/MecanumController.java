@@ -42,10 +42,15 @@ public class MecanumController {
     }
 
     private void init(HardwareMap hardwareMap) {
-        leftFront = hardwareMap.get(DcMotor.class, "leftFront");
-        rightFront = hardwareMap.get(DcMotor.class, "rightFront");
-        leftRear = hardwareMap.get(DcMotor.class, "leftRear");
-        rightRear = hardwareMap.get(DcMotor.class, "rightRear");
+        leftFront = hardwareMap.get(DcMotor.class, "frontLeft");//leftFront
+        rightFront = hardwareMap.get(DcMotor.class, "frontRight");
+        leftRear = hardwareMap.get(DcMotor.class, "backLeft");
+        rightRear = hardwareMap.get(DcMotor.class, "backRight");
+
+        //"frontRight",
+        //                "backLeft",
+        //                "backRight",
+        //                "frontLeft"
 
         initIMU(hardwareMap);
 

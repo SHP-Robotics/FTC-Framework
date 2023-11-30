@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class LynxModuleUtil {
 
-    private static final LynxFirmwareVersion MIN_VERSION = new LynxFirmwareVersion(1, 8, 2);
+    private static final LynxFirmwareVersion MIN_VERSION = new LynxFirmwareVersion(1, 8, 2); //1.8.2
 
     /**
      * Parsed representation of a Lynx module firmware version.

@@ -139,5 +139,7 @@ android {
 }
 
 repositories {
+    jcenter() //added line
+
 }
 
