@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.centerstage;
 
+import android.util.Size;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -29,7 +31,6 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
 
-@Disabled
 @Autonomous(name = "Blue Alliance Left Autonomous")
 public class BlueAutoLeft extends LinearOpMode {
     AprilTagLibrary myAprilTagLibrary;
@@ -45,13 +46,13 @@ public class BlueAutoLeft extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         MecanumController primitiveMecanumDrive = new MecanumController(hardwareMap);
-        primitiveMecanumDrive.calibrateIMUAngleOffset();
+        primitiveMecanumDrive.setDriveSpeed(0.3);
 
-        lift = new OneMotorSystem.OneMotorSystemBuilder(hardwareMap, "lift")
-                .setDirection(DcMotorSimple.Direction.FORWARD)
-                .build();
+        //lift = new OneMotorSystem.OneMotorSystemBuilder(hardwareMap, "lift")
+        //        .setDirection(DcMotorSimple.Direction.FORWARD)
+        //        .build();
 
-        claw = hardwareMap.get(Servo.class, "claw");
+        //claw = hardwareMap.get(Servo.class, "claw");
 
         DcMotor intake = hardwareMap.get(DcMotor.class, "intake");
 
@@ -72,41 +73,44 @@ public class BlueAutoLeft extends LinearOpMode {
 
 
         waitForStart();
+        primitiveMecanumDrive.calibrateIMUAngleOffset();
 
-        intake.setPower(0.4);
-        primitiveMecanumDrive.moveInches(36, 36, 36, 36, true);
+        primitiveMecanumDrive.moveInches(31.5, 31.5, 31.5, 31.5, true);
+        primitiveMecanumDrive.calibrateIMUAngleOffset();
+
+        telemetry.addData("blue", colorSensorForward.blue());
+        telemetry.update();
+        sleep(1000);
 
         spikeLocation = 3;
-        if (colorSensorForward.blue() > 1200) {
+        if (colorSensorForward.blue() > 100) {
             spikeLocation = 2;
-            primitiveMecanumDrive.moveInches(12, 12, 12, 12, true);
-            intake.setPower(-0.4);
+            primitiveMecanumDrive.moveInches(19.5, 19.5, 19.5, 19.5, true);
+            intake.setPower(-0.2);
+            sleep(4000);
+            intake.setPower(0);
+            primitiveMecanumDrive.moveInches(3, 3, 3, 3, true);
+
+            primitiveMecanumDrive.rotateToRadian(Math.toRadians(90), Math.toRadians(3));
+            primitiveMecanumDrive.moveInches(54, 54, 54, 54, true);
         } else {
-            primitiveMecanumDrive.rotateToRadian(Math.toRadians(90), Math.toRadians(1));
-            if (colorSensorForward.blue() > 1200) {
-                spikeLocation = 1;
-                primitiveMecanumDrive.moveInches(12, 12, 12, 12, true);
-                intake.setPower(-0.4);
-            } else {
-                primitiveMecanumDrive.moveInches(-12, -12, -12, -12, true);
-                intake.setPower(-0.4);
-            }
-        }
-        telemetry.addData("Spike Location", spikeLocation);
-        telemetry.update();
+            primitiveMecanumDrive.moveInches(2, 2, 2, 2, true);
 
-        sleep(10000);
+            intake.setPower(0.4);
+            sleep(200);
+            intake.setPower(0);
 
-        while (opModeIsActive()) {
-            AprilTagPoseFtc position = centerstageMacros.getAprilTagPosition(2);
-            if (position != null) {
-                telemetry.addData("yaw", position.yaw);
-                telemetry.addData("X", position.x);
-                telemetry.addData("Y", position.y);
-                telemetry.addData("Z", position.z);
-                telemetry.update();
+            primitiveMecanumDrive.rotateToRadian(Math.toRadians(90), Math.toRadians(3));
+            primitiveMecanumDrive.moveInches(2, 2, 2, 2, true);
+
+            if (colorSensorForward.blue() > 100) {
+                primitiveMecanumDrive.moveInches(19.5, 19.5, 19.5, 19.5, true);
+                intake.setPower(-0.2);
+                sleep(4000);
+                intake.setPower(0);
+            } else  {
+
             }
-            sleep(5);
         }
     }
 
@@ -133,6 +137,7 @@ public class BlueAutoLeft extends LinearOpMode {
         VisionPortal.Builder builder = new VisionPortal.Builder();
 
         builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"));
+        builder.setCameraResolution(new Size(160, 120));
 
         builder.addProcessor(myAprilTagProcessor);
 

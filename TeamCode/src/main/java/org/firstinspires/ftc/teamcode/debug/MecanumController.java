@@ -39,7 +39,7 @@ public class MecanumController {
 
     public void initIMU(HardwareMap hardwareMap) {
         imu = hardwareMap.get(IMU.class, "imu");
-        RevHubOrientationOnRobot.LogoFacingDirection logo = RevHubOrientationOnRobot.LogoFacingDirection.RIGHT;
+        RevHubOrientationOnRobot.LogoFacingDirection logo = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
         RevHubOrientationOnRobot.UsbFacingDirection usb = RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logo, usb);
         imu.initialize(new IMU.Parameters(orientationOnRobot));
@@ -210,16 +210,31 @@ public class MecanumController {
     }
 
     public void rotateToRadian(double targetRadian, double radianTolerance) {
-        setMotorsRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        targetRadian = Constants.setToDomain(targetRadian, 0, 2 * Math.PI);
-        double currentRadian = Constants.setToDomain(getCalibratedIMUAngle(), 0, 2 * Math.PI);
-        while (Math.abs(currentRadian - targetRadian) > radianTolerance) {
-            currentRadian = Constants.setToDomain(getCalibratedIMUAngle(), 0, 2 * Math.PI);
-            leftFront.setPower(driveSpeed);
-            rightFront.setPower(-driveSpeed);
-            leftRear.setPower(driveSpeed);
-            rightRear.setPower(-driveSpeed);
+        this.setMotorsRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        double currentRadians = this.getCalibratedIMUAngle();
+        double relativeRadians = Constants.setToDomain(currentRadians, targetRadian - Math.PI, targetRadian + Math.PI);
+        double direction;
+        double dif;
+
+        while (!((relativeRadians < targetRadian && (relativeRadians + radianTolerance) > targetRadian)
+                || (relativeRadians > targetRadian && (relativeRadians - radianTolerance) < targetRadian))) {
+            dif = targetRadian - relativeRadians;
+            direction = dif / (Math.abs(dif));
+
+            this.leftFront.setPower(-direction * this.driveSpeed);
+            this.rightFront.setPower(direction * this.driveSpeed);
+            this.leftRear.setPower(-direction * this.driveSpeed);
+            this.rightRear.setPower(direction * this.driveSpeed);
+
+            currentRadians = this.getCalibratedIMUAngle();
+            relativeRadians = Constants.setToDomain(currentRadians, targetRadian - Math.PI, targetRadian + Math.PI);
         }
+
+        this.leftFront.setPower(0);
+        this.rightFront.setPower(0);
+        this.leftRear.setPower(0);
+        this.rightRear.setPower(0);
     }
 
     public void moveInches(double leftFrontInches, double rightFrontInches, double leftRearInches, double rightRearInches, boolean wait) {
