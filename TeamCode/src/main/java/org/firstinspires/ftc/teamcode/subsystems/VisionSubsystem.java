@@ -45,7 +45,7 @@ public class VisionSubsystem extends Subsystem {
 
     private State state;
 
-    public VisionSubsystem(HardwareMap hardwareMap,String color) {
+    public VisionSubsystem(HardwareMap hardwareMap, String color) {
 //        detector = new ObjectDetectionPipeline();
         detectorRed = new ElementDetectionPipelineRed();
         detectorBlue = new ElementDetectionPipelineBlue();

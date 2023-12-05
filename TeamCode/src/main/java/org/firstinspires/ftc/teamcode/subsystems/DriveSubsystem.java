@@ -1,8 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import static org.firstinspires.ftc.teamcode.Constants.Drive.kMaximumBias;
-import static org.firstinspires.ftc.teamcode.Constants.Drive.kMinimumBias;
-import static org.firstinspires.ftc.teamcode.Constants.Drive.kMotorNames;
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+import static org.firstinspires.ftc.teamcode.Constants.Drive.*;
 
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -13,11 +12,15 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.roadrunner.util.Encoder;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
+import org.firstinspires.ftc.teamcode.shplib.controllers.GainSchedule;
+import org.firstinspires.ftc.teamcode.shplib.controllers.PositionPID;
 import org.firstinspires.ftc.teamcode.shplib.hardware.SHPMotor;
 import org.firstinspires.ftc.teamcode.shplib.hardware.drive.SHPMecanumDrive;
 import org.firstinspires.ftc.teamcode.shplib.hardware.sensors.SHPIMU;
+import org.firstinspires.ftc.teamcode.shplib.hardware.units.MotorUnit;
 
 public class DriveSubsystem extends Subsystem {
     private final SHPMecanumDrive drive;
@@ -27,8 +30,8 @@ public class DriveSubsystem extends Subsystem {
     private double bias = kMaximumBias; // will always be between kMinimumBias and 1.0
     final SHPMotor[] motors;
     final String[] motorNames = kMotorNames;
-    private Encoder leftEncoder, rightEncoder, frontEncoder;
-//    private SHPIMU imu;
+    //private Encoder leftEncoder, rightEncoder, frontEncoder;
+    //    private SHPIMU imu;
     //tracks - mod 2
     //odd is speed down - 0.3 factor
     //even is speed normal
@@ -57,9 +60,9 @@ public class DriveSubsystem extends Subsystem {
 
         buttonClicks=0;
 
-        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "leftRear"));
-        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rightRear"));
-        frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rightFront"));
+//        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "leftRear"));
+//        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rightRear"));
+//        frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rightFront"));
     }
 
     public void incrementButtonClicks(){
@@ -122,7 +125,7 @@ public class DriveSubsystem extends Subsystem {
     }
 
 
-//    get speed up here?
+    //    get speed up here?
     public void setDriveBias(double driveBias) {
         bias = Range.clip(driveBias, kMinimumBias, kMaximumBias);
     }
@@ -157,7 +160,7 @@ public class DriveSubsystem extends Subsystem {
 //        }
 //    }
 
-//    public boolean atPositionSetpoint() {
+    //    public boolean atPositionSetpoint() {
 //        return drive.atPositionSetpoint();
 //    }
     //uncomment later
@@ -170,12 +173,12 @@ public class DriveSubsystem extends Subsystem {
     public void periodic(Telemetry telemetry) {
 //        telemetry.addData("Bot Direction: ", Math.toDegrees(imu.getYaw()));
 //        for (int i = 0; i < 4; i++) {
-           // telemetry.addData("Motor " + i + " Position: ", drive.getPositions(MotorUnit.TICKS)[i]);
+        // telemetry.addData("Motor " + i + " Position: ", drive.getPositions(MotorUnit.TICKS)[i]);
 //        }
 //        telemetry.addData("Drive at position setpoint: ", drive.atPositionSetpoint() ? "true" : "false");
-        telemetry.addData("leftEncoderVal:", leftEncoder.getCurrentPosition());
-        telemetry.addData("rightEncoderVal:", rightEncoder.getCurrentPosition());
-        telemetry.addData("frontEncoderVal:", frontEncoder.getCurrentPosition());
+//        telemetry.addData("leftEncoderVal:", leftEncoder.getCurrentPosition());
+//        telemetry.addData("rightEncoderVal:", rightEncoder.getCurrentPosition());
+//        telemetry.addData("frontEncoderVal:", frontEncoder.getCurrentPosition());
         telemetry.addData("IMU ANGLE:", imu.getYaw(AngleUnit.DEGREES));
     }
 }

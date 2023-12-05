@@ -27,7 +27,7 @@ public class DropConeCommand extends Command {
     // Called once after isFinished() returns true
     @Override
     public void end() {
-        arm.openClaw();
+//        arm.openClaw();
     }
 
     // Specifies whether or not the command has finished
