@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.centerstage;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -17,6 +18,7 @@ import java.util.List;
 
 public class CenterstageMacros {
     MecanumController mecanumController;
+    DcMotor intake;
     OneMotorSystem lift;
     Servo claw;
 
@@ -25,12 +27,30 @@ public class CenterstageMacros {
 
     public CenterstageMacros(CenterstageRobotBuilder centerstageRobotBuilder) {
         this.mecanumController = centerstageRobotBuilder.mecanumController;
+        this.intake = centerstageRobotBuilder.intake;
+        this.lift = centerstageRobotBuilder.lift;
         this.aprilTagProcessor = centerstageRobotBuilder.aprilTagProcessor;
         this.colorSensor = centerstageRobotBuilder.colorSensor;
     }
 
+    public void rotateIntake() {
+        intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        intake.setTargetPosition(-960);
+        intake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        intake.setPower(0.15);
+        while (intake.isBusy()) {}
+        intake.setPower(0);
+    }
+
+    public void shakeItOff() {
+        lift.setPosition(0, true);
+        mecanumController.setRotationSpeed(1);
+        mecanumController.rotateToRadian(Math.toRadians(90), Math.toRadians(0.1));
+    }
+
     public static class CenterstageRobotBuilder {
         MecanumController mecanumController;
+        DcMotor intake;
         OneMotorSystem lift;
         Servo claw;
 
@@ -39,6 +59,11 @@ public class CenterstageMacros {
 
         public CenterstageRobotBuilder(MecanumController mecanumController) {
             this.mecanumController = mecanumController;
+        }
+
+        public CenterstageRobotBuilder setIntake(DcMotor intake) {
+            this.intake = intake;
+            return this;
         }
 
         public CenterstageRobotBuilder setLift(OneMotorSystem lift) {

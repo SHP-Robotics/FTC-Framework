@@ -19,16 +19,9 @@ public class DrivingConfiguration {
 
     public static final GamepadDigital RESET_IMU = GamepadDigital.B;
 
-    // Climbing
-    public static final GamepadAnalog LEFT_CLIMBER_POWER = GamepadAnalog.LEFT_STICK_Y;
-    public static final GamepadAnalog RIGHT_CLIMBER_POWER = GamepadAnalog.RIGHT_STICK_Y;
-
-    // Intake
-    public static final GamepadAnalog INTAKE_POWER_BACKWARDS = GamepadAnalog.LEFT_TRIGGER;
-    public static final GamepadAnalog INTAKE_POWER_FORWARDS = GamepadAnalog.RIGHT_TRIGGER;
-
-    // Outtake
-    public static final GamepadAnalog LIFT_POWER = GamepadAnalog.RIGHT_STICK_Y;
+    // Claw
+    public static final GamepadDigital OPEN_CLAW = GamepadDigital.LEFT_BUMPER;
+    public static final GamepadDigital CLOSE_CLAW = GamepadDigital.RIGHT_BUMPER;
 
     public static double getValue(Gamepad gamepad, GamepadAnalog analog) {
         switch (analog) {

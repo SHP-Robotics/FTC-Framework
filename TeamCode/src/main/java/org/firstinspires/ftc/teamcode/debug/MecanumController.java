@@ -26,6 +26,7 @@ public class MecanumController {
 
     private SpeedController speedController;
     private double driveSpeed = 1;
+    private double rotationSpeed = 1;
 
     private double positionX = 0;
     private double positionY = 0;
@@ -82,6 +83,10 @@ public class MecanumController {
     public void setDriveSpeed(double speed) {
         this.speedController.setSpeed(speed);
         this.driveSpeed = speed;
+    }
+
+    public void setRotationSpeed(double rotationSpeed) {
+        this.rotationSpeed = rotationSpeed;
     }
 
     public void calibrateIMUAngleOffset() {
@@ -222,10 +227,10 @@ public class MecanumController {
             dif = targetRadian - relativeRadians;
             direction = dif / (Math.abs(dif));
 
-            this.leftFront.setPower(-direction * this.driveSpeed);
-            this.rightFront.setPower(direction * this.driveSpeed);
-            this.leftRear.setPower(-direction * this.driveSpeed);
-            this.rightRear.setPower(direction * this.driveSpeed);
+            this.leftFront.setPower(-direction * this.rotationSpeed);
+            this.rightFront.setPower(direction * this.rotationSpeed);
+            this.leftRear.setPower(-direction * this.rotationSpeed);
+            this.rightRear.setPower(direction * this.rotationSpeed);
 
             currentRadians = this.getCalibratedIMUAngle();
             relativeRadians = Constants.setToDomain(currentRadians, targetRadian - Math.PI, targetRadian + Math.PI);
