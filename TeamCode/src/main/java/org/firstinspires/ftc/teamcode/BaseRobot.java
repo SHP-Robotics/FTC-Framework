@@ -5,8 +5,16 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
+import org.firstinspires.ftc.teamcode.subsystems.AdjustHolder;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.CRWheel;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.HookServo1;
+import org.firstinspires.ftc.teamcode.subsystems.HookServo2;
+import org.firstinspires.ftc.teamcode.subsystems.PixelServo;
+import org.firstinspires.ftc.teamcode.subsystems.PlaneServo;
+import org.firstinspires.ftc.teamcode.subsystems.PracticeArmServo;
+import org.firstinspires.ftc.teamcode.subsystems.SpinningIntake;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 /**
@@ -23,8 +31,21 @@ import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 public class BaseRobot extends OpMode {
     // Declare subsystems and devices
     public DriveSubsystem drive;
+    public CRWheel crWheel;
+    public PixelServo pixelServo;
+    //public CameraOn vision;
     public VisionSubsystem vision;
+//    public VisionSubsystem vision;
+    public PracticeArmServo slideServos;
+    public HookServo1 rightPlane;
+    public HookServo2 leftPlane;
     public ArmSubsystem arm;
+    public SpinningIntake spinningIntake;
+    public AdjustHolder adjustHolder;
+    public PlaneServo planeServo;
+//    public SpinningIntake spinningIntake;
+//    public CRWheel cWheel;
+//    public Flap flap;
 //    public ScoopSubsystem scoop;
 
     public double previousTime = 0;
@@ -37,10 +58,22 @@ public class BaseRobot extends OpMode {
 
         // Initialize your subsystems and devices
         drive = new DriveSubsystem(hardwareMap);
+        crWheel = new CRWheel(hardwareMap);
+        spinningIntake = new SpinningIntake(hardwareMap);
+        //vision = new CameraOn(hardwareMap);
 //        vision = new VisionSubsystem(hardwareMap);
         arm = new ArmSubsystem(hardwareMap);
+        slideServos = new PracticeArmServo(hardwareMap);
+//        spinningIntake = new SpinningIntake(hardwareMap);
+//        cWheel = new CRWheel(hardwareMap);
+//        flap = new Flap(hardwareMap);
 //        scoop = new ScoopSubsystem(hardwareMap);
 //        intake = new SHPMotor(hardwareMap, "intake");
+        rightPlane = new HookServo1(hardwareMap);
+        leftPlane = new HookServo2(hardwareMap);
+        pixelServo = new PixelServo(hardwareMap);
+        adjustHolder = new AdjustHolder(hardwareMap);
+        planeServo = new PlaneServo(hardwareMap);
 
 
     }
