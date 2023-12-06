@@ -79,6 +79,7 @@ public class DriveSubsystem extends Subsystem {
                 leftY,
                 leftX
         ).rotated(-(imu.getYaw(AngleUnit.RADIANS)));
+        //IF ITS NOT WORKING SWITCH VECTOR GETX AND VECTOR GETY
         drive.mecanum(vector.getX(), vector.getY(), rightX); // field oriented
 
 
