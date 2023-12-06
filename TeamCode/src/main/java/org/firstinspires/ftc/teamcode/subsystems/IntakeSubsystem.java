@@ -56,16 +56,16 @@ public class IntakeSubsystem extends Subsystem {
 
         switch (state) {
             case INTAKING:
-                cWheel.setPower(kWheelBackward);
+                cWheel.setPower(-1.0);
                 spinner.setPower(0.5);
                 pixelServo.setPosition(1.0);
                 break;
             case OUTTAKING:
-                cWheel.setPower(kWheelForward);
+                cWheel.setPower(1.0);
                 pixelServo.setPosition(0.0);
                 break;
             case STILL:
-                cWheel.setPower(kWheelStill);
+                cWheel.setPower(0);
                 spinner.setPower(0.0);
                 break;
             case REJECT:
