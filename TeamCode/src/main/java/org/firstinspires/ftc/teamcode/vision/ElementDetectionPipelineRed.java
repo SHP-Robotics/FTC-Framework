@@ -36,19 +36,20 @@ public class ElementDetectionPipelineRed extends OpenCvPipeline {
     //we can draw rectangles on the screen to find the perfect fit
     //edit as necessary
     static final Rect LEFT_ROI = new Rect(
-            new Point(200, 1), //TODO: MAGIC NUMBERS ;-;
+            new Point(0, 1), //TODO: MAGIC NUMBERS ;-;
             //new Point(399, 447)
-            new Point(500, 447)
+            new Point(230, 447)
     );
 
     static final Rect RIGHT_ROI = new Rect(
             //new Point(400, 1),
-            new Point(501, 1),
-            new Point(799, 447)
+            new Point(400, 60),
+            new Point(720, 270)
     );
 
     //threshold(lowest possible) percentage of that color
-    static double THRESHOLD = 0.4; //TODO threshold
+    //change to 0.4 if too many inconsistencies
+    static double THRESHOLD = 0.25; //TODO threshold
 
     //check if we really need this
 

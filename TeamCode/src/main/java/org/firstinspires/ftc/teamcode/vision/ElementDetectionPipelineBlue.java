@@ -38,17 +38,17 @@ public class ElementDetectionPipelineBlue extends OpenCvPipeline {
     static final Rect LEFT_ROI = new Rect(
             new Point(1, 1), //TODO: MAGIC NUMBERS ;-;
             //new Point(399, 447)
-            new Point(500, 447)
+            new Point(210, 447)
     );
 
     static final Rect RIGHT_ROI = new Rect(
             //new Point(400, 1),
-            new Point(501, 1),
-            new Point(799, 447)
+            new Point(400, 10),
+            new Point(700, 220)
     );
 
     //threshold(lowest possible) percentage of that color
-    static double THRESHOLD = 0.4; //TODO threshold
+    static double THRESHOLD = 0.25; //TODO threshold
 
     //check if we really need this
 
@@ -63,7 +63,8 @@ public class ElementDetectionPipelineBlue extends OpenCvPipeline {
         //Lower and upper bounds for the color to detect
         //Scalar lowHSV= new Scalar(95, 100, 100);
         //Scalar highHSV= new Scalar(112.5, 255, 255);
-        Scalar lowHSV = new Scalar(210/2, 50, 70); //TODO: currently for RED. need to tune
+        //change from 210/2
+        Scalar lowHSV = new Scalar(95, 50, 70); //TODO: for BLUE
         Scalar highHSV = new Scalar(250/2, 255, 255); //bruh red is like 0-15 & 350-360 wtf
 
         Mat detected = new Mat();
