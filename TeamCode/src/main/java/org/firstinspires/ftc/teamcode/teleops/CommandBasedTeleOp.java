@@ -123,7 +123,7 @@ public class CommandBasedTeleOp extends BaseRobot {
 
 
         new Trigger (gamepad1.dpad_right, new RunCommand(()->{
-            rightPlane.setState(HookServo1.State.ENGAGED);
+            rightPlane.setState(HookServo1.State.ENGAGED); 
         })
                 .then(new RunCommand(()->{
                     leftPlane.setState(HookServo2.State.ENGAGED);
