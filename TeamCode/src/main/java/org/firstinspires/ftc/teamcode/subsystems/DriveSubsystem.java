@@ -1,7 +1,8 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-import static org.firstinspires.ftc.teamcode.Constants.Drive.*;
+import static org.firstinspires.ftc.teamcode.Constants.Drive.kMaximumBias;
+import static org.firstinspires.ftc.teamcode.Constants.Drive.kMinimumBias;
+import static org.firstinspires.ftc.teamcode.Constants.Drive.kMotorNames;
 
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -125,7 +126,7 @@ public class DriveSubsystem extends Subsystem {
     }
 
 
-    //    get speed up here?
+//    get speed up here?
     public void setDriveBias(double driveBias) {
         bias = Range.clip(driveBias, kMinimumBias, kMaximumBias);
     }
@@ -160,7 +161,7 @@ public class DriveSubsystem extends Subsystem {
 //        }
 //    }
 
-    //    public boolean atPositionSetpoint() {
+//    public boolean atPositionSetpoint() {
 //        return drive.atPositionSetpoint();
 //    }
     //uncomment later
@@ -173,7 +174,7 @@ public class DriveSubsystem extends Subsystem {
     public void periodic(Telemetry telemetry) {
 //        telemetry.addData("Bot Direction: ", Math.toDegrees(imu.getYaw()));
 //        for (int i = 0; i < 4; i++) {
-        // telemetry.addData("Motor " + i + " Position: ", drive.getPositions(MotorUnit.TICKS)[i]);
+           // telemetry.addData("Motor " + i + " Position: ", drive.getPositions(MotorUnit.TICKS)[i]);
 //        }
 //        telemetry.addData("Drive at position setpoint: ", drive.atPositionSetpoint() ? "true" : "false");
 //        telemetry.addData("leftEncoderVal:", leftEncoder.getCurrentPosition());
