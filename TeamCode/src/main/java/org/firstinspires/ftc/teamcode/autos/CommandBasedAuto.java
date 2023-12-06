@@ -1,16 +1,9 @@
 package org.firstinspires.ftc.teamcode.autos;
 
-import static org.firstinspires.ftc.teamcode.Constants.Drive.kMotorNames;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.BaseRobot;
 import org.firstinspires.ftc.teamcode.commands.DropConeCommand;
-import org.firstinspires.ftc.teamcode.commands.RaiseToHighCommand;
-import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
-import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
-import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
-import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 
 @Autonomous(preselectTeleOp = "CommandBasedTeleOp")
 public class CommandBasedAuto extends BaseRobot {

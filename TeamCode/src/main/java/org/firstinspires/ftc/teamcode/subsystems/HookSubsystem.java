@@ -1,20 +1,24 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-        import static org.firstinspires.ftc.teamcode.Constants.Intake.kHookLeftDisengaged;
-        import static org.firstinspires.ftc.teamcode.Constants.Intake.kHookLeftEngaged;
-        import static org.firstinspires.ftc.teamcode.Constants.Intake.kHookServo1Name;
+import static org.firstinspires.ftc.teamcode.Constants.Intake.kHookLeftDisengaged;
+import static org.firstinspires.ftc.teamcode.Constants.Intake.kHookLeftEngaged;
+import static org.firstinspires.ftc.teamcode.Constants.Intake.kHookRightDisengaged;
+import static org.firstinspires.ftc.teamcode.Constants.Intake.kHookRightEngaged;
+import static org.firstinspires.ftc.teamcode.Constants.Intake.kHookServo1Name;
+import static org.firstinspires.ftc.teamcode.Constants.Intake.kHookServo2Name;
 
-        import com.qualcomm.robotcore.hardware.HardwareMap;
-        import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
-        import org.firstinspires.ftc.robotcore.external.Telemetry;
-        import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 
-public class HookServo1 extends Subsystem {
+public class HookSubsystem extends Subsystem {
     // Declare devices
     // Example:
     // private final SHPMotor motor;
     private final Servo hook1;
+    private final Servo hook2;
 
     public enum State {
         // Define states
@@ -24,8 +28,9 @@ public class HookServo1 extends Subsystem {
 
     private State state;
 
-    public HookServo1(HardwareMap hardwareMap) {
+    public HookSubsystem(HardwareMap hardwareMap) {
         hook1 = hardwareMap.get(Servo.class, kHookServo1Name);
+        hook2 = hardwareMap.get(Servo.class, kHookServo2Name);
 
         // Set initial state
         // Example:
@@ -51,9 +56,11 @@ public class HookServo1 extends Subsystem {
         switch (state) {
             case ENGAGED:
                 hook1.setPosition(kHookLeftEngaged);
+                hook2.setPosition(kHookRightEngaged);
                 break;
             case DISENGAGED:
                 hook1.setPosition(kHookLeftDisengaged);
+                hook2.setPosition(kHookRightDisengaged);
                 break;
         }
     }
