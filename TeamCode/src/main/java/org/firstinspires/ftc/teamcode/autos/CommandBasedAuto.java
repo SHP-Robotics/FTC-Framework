@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.autos;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.BaseRobot;
-import org.firstinspires.ftc.teamcode.commands.DropConeCommand;
+//import org.firstinspires.ftc.teamcode.commands.DropConeCommand;
 
 @Autonomous(preselectTeleOp = "CommandBasedTeleOp")
 public class CommandBasedAuto extends BaseRobot {
