@@ -61,6 +61,9 @@ public class ArmSubsystem extends Subsystem {
     public void setState(State state) {
         this.state = state;
     }
+    public State getState() {
+        return state;
+    }
     public void goUP(){
         if(state==State.BOTTOM){
             state=State.MIDDLE;

@@ -24,6 +24,7 @@ import org.firstinspires.ftc.teamcode.subsystems.SpinningIntake;
 @TeleOp
 public class TestTeleop extends TestBaseRobot {
     private double debounce;
+    private double driveBias;
 
     @Override
     public void init() {
@@ -33,7 +34,7 @@ public class TestTeleop extends TestBaseRobot {
         // Default command runs when no other commands are scheduled for the subsystem
         drive.setDefaultCommand(
                 new RunCommand(
-                        () -> drive.mecanum(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x)
+                        () -> drive.mecanum(-gamepad1.left_stick_y*driveBias, -gamepad1.left_stick_x*driveBias, -gamepad1.right_stick_x*driveBias)
                 )
         );
 //        vision.setDefaultCommand(
@@ -41,7 +42,7 @@ public class TestTeleop extends TestBaseRobot {
 //                        () -> vision.showRes(telemetry)
 //                )
 //        );
-
+        driveBias = 1;
     }
 
     @Override
@@ -63,6 +64,15 @@ public class TestTeleop extends TestBaseRobot {
         new Trigger (gamepad1.right_bumper,
                 new RaiseArmCommand(arm,wrist,elbow,pixelServo)
         );
+
+        new Trigger(gamepad1.left_trigger > 0.5,new RunCommand(()->{
+            driveBias = 0.5;
+        })
+        );
+        new Trigger(gamepad1.left_trigger < 0.5,new RunCommand(()->{
+            driveBias = 1;
+        })
+        );
         new Trigger (gamepad1.left_bumper,
                 new LowerArmCommand(arm,wrist,elbow)
                         .then(new RunCommand(()->{
@@ -74,37 +84,23 @@ public class TestTeleop extends TestBaseRobot {
         })
         );
 
-
-        //drop 1
-
-
-//        new Trigger (gamepad2.dpad_up, new RunCommand(()->{
-//            crWheel.setState(CRWheel.State.FORWARD);
-//        }));
-//        new Trigger (gamepad2.dpad_down, new RunCommand(()->{
-//            crWheel.setState(CRWheel.State.BACKWARD);
-//        }));
-
-
+        new Trigger (gamepad1.y, new RunCommand(()->{
+            intake.setState(IntakeSubsystem.State.REJECT);
+        })
+        );
 
         new Trigger (gamepad1.a, new RunCommand(()->{
-            intake.setState(IntakeSubsystem.State.INTAKING);
-            })
-        );
-        new Trigger (gamepad1.y, new RunCommand(()->{
-            intake.setState(IntakeSubsystem.State.INTAKING);
+            if (arm.getState() == ArmSubsystem.State.BOTTOM)
+                intake.setState(IntakeSubsystem.State.INTAKING);
+            else
+                intake.setState(IntakeSubsystem.State.OUTTAKING);
             })
         );
 
         new Trigger (gamepad1.dpad_right, new RunCommand(()->{
             planeServo.setState(PlaneServo.State.OUT);
         })
-//
         );
-
-        new Trigger(gamepad1.x, new RunCommand(()->{
-            drive.incrementButtonClicks();
-        }));
 
 //        new Trigger (gamepad1.dpad_up, new RunCommand(()->{
 //            arm.setState(ArmSubsystem.State.CLIMB);

@@ -61,8 +61,8 @@ public class IntakeSubsystem extends Subsystem {
                 pixelServo.setPosition(1.0);
                 break;
             case OUTTAKING:
-                cWheel.setPower(1.0);
-                pixelServo.setPosition(0.0);
+                cWheel.setPower(-1.0);
+                pixelServo.setPosition(0.5);
                 break;
             case STILL:
                 cWheel.setPower(0);
