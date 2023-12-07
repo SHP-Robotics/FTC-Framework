@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.shplib.vision;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.opmode.LocalizationTest;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -14,7 +13,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ElementDetectionPipeline extends OpenCvPipeline {
+public class BlueElementDetectionPipeline extends OpenCvPipeline {
     ArrayList<double[]> frameList;
 
     public static double strictLowS = 140; //TODO: Tune in dashboard
@@ -24,7 +23,7 @@ public class ElementDetectionPipeline extends OpenCvPipeline {
     public double rightValue;
     boolean stoneLeft, stoneMiddle;
 
-    public ElementDetectionPipeline() {
+    public BlueElementDetectionPipeline() {
         frameList = new ArrayList<>();
     }
 
@@ -61,8 +60,8 @@ public class ElementDetectionPipeline extends OpenCvPipeline {
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
 
         //Lower and upper bounds for the color to detect
-        Scalar lowHSV = new Scalar(0, 50, 70); //TODO: currently for RED. need to tune
-        Scalar highHSV = new Scalar(15, 255, 255); //bruh red is like 0-15 & 350-360 wtf
+        Scalar lowHSV = new Scalar(210/2, 50, 70); //TODO: currently for RED. need to tune
+        Scalar highHSV = new Scalar(250/2, 255, 255); //bruh red is like 0-15 & 350-360 wtf
 
         Mat detected = new Mat();
         Core.inRange(mat, lowHSV, highHSV, detected); //ONLY returns the pixels in the HSV range

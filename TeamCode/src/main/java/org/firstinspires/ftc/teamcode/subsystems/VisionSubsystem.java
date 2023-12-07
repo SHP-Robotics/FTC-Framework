@@ -9,6 +9,8 @@ import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 import org.firstinspires.ftc.teamcode.shplib.vision.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.shplib.vision.CopyPipeline;
 import org.firstinspires.ftc.teamcode.shplib.vision.ElementDetectionPipeline;
+import org.firstinspires.ftc.teamcode.shplib.vision.BlueElementDetectionPipeline;
+
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -21,6 +23,7 @@ public class VisionSubsystem extends Subsystem {
     static double threshold = 0.2;
     //    CVPipeline pipeline = new CVPipeline();
     ElementDetectionPipeline detector;
+    BlueElementDetectionPipeline blueDetector;
 //    private final AprilTagDetectionPipeline pipeline;
     private ArrayList<AprilTagDetection> tags;
 
@@ -45,17 +48,23 @@ public class VisionSubsystem extends Subsystem {
     }
 
     private State state;
-
-    public VisionSubsystem(HardwareMap hardwareMap) {
+    int color;
+    public VisionSubsystem(HardwareMap hardwareMap, int brcolor) {
 //        detector = new ObjectDetectionPipeline();
-        detector = new ElementDetectionPipeline();
-
+        color = brcolor;
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+        if(color == 0) {
+            detector = new ElementDetectionPipeline();
+            camera.setPipeline(detector);
+        }
+        else {
+            blueDetector = new BlueElementDetectionPipeline();
+            camera.setPipeline(blueDetector);
+        }
 //        pipeline = new AprilTagDetectionPipeline(Constants.Vision.kTagsizeMeters, fx, fy, cx, cy);
 //        tags = new ArrayList<>();
 
-        camera.setPipeline(detector);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
@@ -75,7 +84,12 @@ public class VisionSubsystem extends Subsystem {
     }
 
     public int getLocation(){
-        return detector.getLocation();
+        if(color == 0) {
+            return detector.getLocation();
+        }
+        else {
+            return blueDetector.getLocation();
+        }
     }
 
 //    public boolean detectedTags() {

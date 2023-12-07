@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import static org.firstinspires.ftc.teamcode.Constants.Intake.kIntakeName;
 
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -19,7 +20,8 @@ public class IntakeSubsystem extends Subsystem {
         // ENABLED, DISABLED
         INTAKING,
         OUTTAKING,
-        PAUSED
+        PAUSED,
+        AUTO
     }
 
     private State state;
@@ -28,7 +30,7 @@ public class IntakeSubsystem extends Subsystem {
         // Initialize devices
         // Example:
          intake = new SHPMotor(hardwareMap, kIntakeName);
-
+         intake.setDirection(DcMotorSimple.Direction.REVERSE);
         // Set initial state
         // Example:
          setState(State.PAUSED);
@@ -42,6 +44,7 @@ public class IntakeSubsystem extends Subsystem {
     // Add control methods
     // Example:
     // private void setPower(double power) { motor.setPower(power); }
+
 
     @Override
     public void periodic(Telemetry telemetry) {
@@ -61,6 +64,8 @@ public class IntakeSubsystem extends Subsystem {
             case PAUSED:
                 intake.setPower(0.0);
                 break;
+            case AUTO:
+                intake.setPower(-0.35);
         }
 
         // OR

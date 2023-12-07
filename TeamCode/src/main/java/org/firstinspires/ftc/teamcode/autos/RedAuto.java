@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 @Autonomous(preselectTeleOp = "CommandBasedTeleOp")
-public class CommandBasedAuto extends BaseRobot {
+public class RedAuto extends BaseRobot {
     //    SHPMecanumAutoDrive autoDrive;
     //DriveSubsystem drive;
     VisionSubsystem vision;
@@ -54,7 +54,7 @@ public class CommandBasedAuto extends BaseRobot {
                         //.then(new RunCommand(() -> {location = vision.getLocation();}))
 
                         //.then(new DriveCommand(drive,0.025,0,0,3.5))
-                        .then(new EncoderStraightDriveCommand(drive,"forward",21,false))
+                        .then(new EncoderStraightDriveCommand(drive,"forward",23,false))
                         //.then(new EncoderTurnZeroCommand(drive))
                         .then(new WaitCommand(1))
                         .then(new RunCommand(() -> {

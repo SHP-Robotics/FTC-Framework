@@ -20,13 +20,13 @@ import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 public class CommandBasedTeleOp extends BaseRobot {
     private double debounce;
 
-//    public VisionSubsystem vision;
+    public VisionSubsystem vision;
 
     @Override
     public void init() {
         super.init();
 
-//        vision = new VisionSubsystem(hardwareMap);
+        vision = new VisionSubsystem(hardwareMap, 1);  //0 is red.  1 is blue
         // Default command runs when no other commands are scheduled for the subsystem
         drive.setDefaultCommand(
                 new RunCommand(
@@ -40,6 +40,8 @@ public class CommandBasedTeleOp extends BaseRobot {
         super.start();
 
         debounce = Clock.now();
+        plane.deactivteMissile();
+        plane.resetHexagon();
         // Add anything that needs to be run a single time when the OpMode starts
     }
 
@@ -58,22 +60,32 @@ public class CommandBasedTeleOp extends BaseRobot {
         new Trigger(gamepad1.left_bumper, new RunCommand(()->{
             intake.setState(IntakeSubsystem.State.OUTTAKING);
         }));
+        new Trigger(!gamepad1.left_bumper && ! gamepad1.right_bumper, new RunCommand(()->{
+            intake.setState(IntakeSubsystem.State.PAUSED);
+        }));
+
 //        intake.setState(IntakeSubsystem.State.PAUSED);
 
         //for lifting
-        new Trigger(gamepad1.dpad_up, new RunCommand(() ->{
-            lift.extend();
-        }));
-        new Trigger(gamepad1.dpad_down, new RunCommand(() ->{
-            lift.retract();
-        }));
+//        new Trigger(gamepad1.dpad_up, new RunCommand(() ->{
+//            lift.extend();
+//        }));
+//        new Trigger(gamepad1.dpad_down, new RunCommand(() ->{
+//            lift.retract();
+//        }));
 //        lift.hold();
 
         //plane
-        new Trigger(gamepad1.circle, new RunCommand(() ->{
+        new Trigger(gamepad2.dpad_up, new RunCommand(() ->{
+            plane.prepareMissile();
+        }));
+        new Trigger(gamepad2.dpad_down, new RunCommand(() ->{
+            plane.deactivteMissile();
+        }));
+        new Trigger(gamepad2.circle, new RunCommand(() ->{
             plane.resetPlane();
         }));
-        new Trigger(gamepad1.cross, new RunCommand(() ->{
+        new Trigger(gamepad2.cross, new RunCommand(() ->{
             plane.releasePlane();
         }));
 

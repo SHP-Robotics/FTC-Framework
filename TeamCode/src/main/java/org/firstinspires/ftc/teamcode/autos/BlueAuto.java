@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 @Autonomous(preselectTeleOp = "CommandBasedTeleOp")
-public class CommandBasedAuto extends BaseRobot {
+public class BlueAuto extends BaseRobot {
     //    SHPMecanumAutoDrive autoDrive;
     //DriveSubsystem drive;
     VisionSubsystem vision;
@@ -29,7 +29,8 @@ public class CommandBasedAuto extends BaseRobot {
 //        autoDrive = new SHPMecanumAutoDrive(hardwareMap, kMotorNames, 0.15, 0.0, 0.0);
 //        autoDrive.enableFF(new FFController(0.01));
         //drive = new DriveSubsystem(hardwareMap);
-        vision = new VisionSubsystem(hardwareMap,0);
+        plane.resetHexagon();
+        vision = new VisionSubsystem(hardwareMap,1);
         location = vision.getLocation();
         telemetry.addData("Location: ",location);
     }
@@ -54,16 +55,16 @@ public class CommandBasedAuto extends BaseRobot {
                         //.then(new RunCommand(() -> {location = vision.getLocation();}))
 
                         //.then(new DriveCommand(drive,0.025,0,0,3.5))
-                        .then(new EncoderStraightDriveCommand(drive,"forward",21,false))
+                        .then(new EncoderStraightDriveCommand(drive,"forward",23,false))
                         //.then(new EncoderTurnZeroCommand(drive))
-                        .then(new WaitCommand(1))
+                        .then(new WaitCommand(2))
                         .then(new RunCommand(() -> {
                             if (finalLoc == 1) {
                                 myCommand.scheduleCommand(new EncoderTurnDriveCommand(drive,"ccw",75)
                                 );
                             }
                             if (finalLoc == 3) {
-                                myCommand.scheduleCommand(new EncoderTurnDriveCommand(drive,"cw",75)
+                                myCommand.scheduleCommand(new EncoderTurnDriveCommand(drive,"cw",65)
                                 );
                             }
 
@@ -71,7 +72,7 @@ public class CommandBasedAuto extends BaseRobot {
                         .then(new WaitCommand(5))
 //                      zaj  .then(new EncoderStraightDriveCommand(drive,"backward",5,false))
                         .then(new RunCommand(() -> {
-                            intake.setState(IntakeSubsystem.State.OUTTAKING);
+                            intake.setState(IntakeSubsystem.State.AUTO);
                         }))
                         .then(new WaitCommand(1))
                         .then(new RunCommand(() -> {

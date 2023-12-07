@@ -9,12 +9,17 @@ public class Constants {
     // Target voltage for voltage compensation
     public static final double kNominalVoltage = 12.0;
 
+
+    //DEADWHEELS:
+    //Rightside: Control Pos 3.
+    //Front: Expansion pos 1
+    //leftside: expansion pos 2
     public static final class Drive {
         public static final String[] kMotorNames = new String[]{
                 "leftFront",
                 "leftRear",
-                "rightFront",
-                "rightRear"
+                "rightFront", //control pos 2
+                "rightRear" //control pos 1
         };
 //        public static final FFController[] kFFs = new FFController[]{ //feedforward
 //                new FFController(0.047),
@@ -22,8 +27,8 @@ public class Constants {
 //                new FFController(0.045),
 //                new FFController(0.035)
 //        };
-        public static final double kMinimumBias = 0.3;
-        public static final double kMaximumBias = 0.6;
+        public static final double kMinimumBias = 0.0;
+        public static final double kMaximumBias = 0.15;
     }
 
     public static final class Vision {
@@ -32,13 +37,15 @@ public class Constants {
 
     public static final class Plane {
         public static final String kPlaneName = "planeServo"; //pos 0
+
         public static final String kHexagonName = "hexagonServo"; //pos 1
+        public static final String kMissileLauncherName = "missileServo"; //pos 2
 
     }
-    public static final class Lift {
-        public static final String kLiftName = "lift"; //ExHub pos 0
-
-    }
+//    public static final class Lift {
+//        public static final String kLiftName = "lift"; //ExHub pos 0
+//
+//    }
 
     public static final class Intake {
         public static final String kIntakeName = "intake"; //pos 1

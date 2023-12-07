@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import static org.firstinspires.ftc.teamcode.Constants.Plane.kHexagonName;
+import static org.firstinspires.ftc.teamcode.Constants.Plane.kMissileLauncherName;
 import static org.firstinspires.ftc.teamcode.Constants.Plane.kPlaneName;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -14,6 +15,7 @@ public class PlaneSubsystem extends Subsystem {
     // Declare devices
     // Example:
      private final Servo plane;
+     private final Servo missileLauncher;
      private final Servo hexagon;
 
     public enum State {
@@ -29,6 +31,7 @@ public class PlaneSubsystem extends Subsystem {
         // Example:
         plane = hardwareMap.get(Servo.class, kPlaneName);
         hexagon = hardwareMap.get(Servo.class, kHexagonName);
+        missileLauncher = hardwareMap.get(Servo.class, kMissileLauncherName);
 
         // Set initial state
         // Example:
@@ -44,10 +47,16 @@ public class PlaneSubsystem extends Subsystem {
     // private void setPower(double power) { motor.setPower(power); }
 
     public void resetPlane(){
-        plane.setPosition(0.0);
+        plane.setPosition(0.5);
     }
     public void releasePlane(){
-        plane.setPosition(0.5);
+        plane.setPosition(0.0);
+    }
+    public void deactivteMissile(){
+        missileLauncher.setPosition(0.17);
+    }
+    public void prepareMissile(){
+        missileLauncher.setPosition(0.2175);//0.5 is halfway
     }
 
 
