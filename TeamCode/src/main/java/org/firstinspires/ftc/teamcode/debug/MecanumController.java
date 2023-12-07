@@ -38,10 +38,18 @@ public class MecanumController {
         rightRear.setMode(runMode);
     }
 
+    public void setZeroPowerBehavior(DcMotor.ZeroPowerBehavior zeroPowerBehavior) {
+        leftFront.setZeroPowerBehavior(zeroPowerBehavior);
+        rightFront.setZeroPowerBehavior(zeroPowerBehavior);
+        leftRear.setZeroPowerBehavior(zeroPowerBehavior);
+        rightRear.setZeroPowerBehavior(zeroPowerBehavior);
+    }
+
     public void initIMU(HardwareMap hardwareMap) {
         imu = hardwareMap.get(IMU.class, "imu");
-        RevHubOrientationOnRobot.LogoFacingDirection logo = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
-        RevHubOrientationOnRobot.UsbFacingDirection usb = RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
+        // TODO: Change IMU direction to match reality
+        RevHubOrientationOnRobot.LogoFacingDirection logo = RevHubOrientationOnRobot.LogoFacingDirection.RIGHT;
+        RevHubOrientationOnRobot.UsbFacingDirection usb = RevHubOrientationOnRobot.UsbFacingDirection.UP;
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logo, usb);
         imu.initialize(new IMU.Parameters(orientationOnRobot));
     }

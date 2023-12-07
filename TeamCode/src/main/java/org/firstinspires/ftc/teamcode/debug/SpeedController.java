@@ -73,6 +73,8 @@ public class SpeedController {
                 }
 
                 break;
+            case PID_CONTROLLED_WITH_OVERRIDE:
+
         }
     }
 

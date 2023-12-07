@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.centerstage;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -37,11 +38,13 @@ public class CenterstageFieldOriented extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         SpeedController speedController = new SpeedController.SpeedBuilder(SpeedType.SINGLE_OVERRIDE)
-                .setNaturalSpeed(0.55)
-                .setOverrideSpeed(1)
+                .setNaturalSpeed(0.6)
+                .setOverrideSpeed(0.9)
                 .build();
 
         MecanumController mecanumController = new MecanumController(hardwareMap, speedController);
+        mecanumController.setMotorsRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        mecanumController.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         Servo claw = hardwareMap.get(Servo.class, "claw");
 

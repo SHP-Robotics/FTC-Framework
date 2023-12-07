@@ -10,6 +10,8 @@ public class TestTeleOp extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         Servo claw = hardwareMap.get(Servo.class, "claw");
 
+        waitForStart();
+
         while (opModeIsActive()) {
             claw.setPosition(gamepad1.left_stick_y);
             telemetry.addData("position", gamepad1.left_stick_y);

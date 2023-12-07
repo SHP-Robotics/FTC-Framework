@@ -4,7 +4,9 @@ public final class Constants {
     // Wheels
     public static final double WHEEL_ENCODER_TICKS_PER_INCH_FORWARD = 42.74;
     public static final double WHEEL_ENCODER_TICKS_PER_INCH_SIDEWAYS = 52.36;
-    public static final double MINIMUM_VOLTAGE_APPLIED = 0.044;
+
+    // Use Binary Search if using coasting, else use 0
+    public static final double MINIMUM_VOLTAGE_APPLIED = 0;
 
     // Gear Shifting PID Controller
     public static final double KP = 1.00;
@@ -28,8 +30,8 @@ public final class Constants {
     public static final double HIGH_BONUS_HEIGHT = 0;
 
     // Claw
-    public static final double CLAW_OPEN = 0;
-    public static final double CLAW_CLOSE = 1;
+    public static final double CLAW_OPEN = 0.345;
+    public static final double CLAW_CLOSE = 0.4;
     public static final double CLAW_HEIGHT = 0;
 
     // TODO: Find these values
