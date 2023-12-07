@@ -47,7 +47,7 @@ public class AdjustHolder extends Subsystem {
                 adjustHolder.setPosition(0.2);
                 break;
             case DOWN:
-                adjustHolder.setPosition(0.625);
+                adjustHolder.setPosition(0.575);
                 break;
         }
         telemetry.addData("Position; ", adjustHolder.getPosition());

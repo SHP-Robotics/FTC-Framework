@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.teleops;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.BaseRobot;
-import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.TestBaseRobot;
 import org.firstinspires.ftc.teamcode.commands.LowerArmCommand;
 import org.firstinspires.ftc.teamcode.commands.RaiseArmCommand;
@@ -11,20 +9,15 @@ import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.Trigger;
 import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
-import org.firstinspires.ftc.teamcode.subsystems.AdjustHolder;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.CRWheel;
-import org.firstinspires.ftc.teamcode.subsystems.HookServo1;
-import org.firstinspires.ftc.teamcode.subsystems.HookServo2;
+import org.firstinspires.ftc.teamcode.subsystems.Flap;
 import org.firstinspires.ftc.teamcode.subsystems.HookSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.PixelServo;
 import org.firstinspires.ftc.teamcode.subsystems.PlaneServo;
-import org.firstinspires.ftc.teamcode.subsystems.PracticeArmServo;
-import org.firstinspires.ftc.teamcode.subsystems.SpinningIntake;
 
 @TeleOp
-public class TestTeleop extends TestBaseRobot {
+public class ATestTeleop extends TestBaseRobot {
     private double debounce;
     private double driveBias;
 
@@ -66,11 +59,12 @@ public class TestTeleop extends TestBaseRobot {
         new Trigger (gamepad1.right_bumper,
                 new RaiseArmCommand(arm,wrist,elbow,pixelServo)
         );
-
+        //good
         new Trigger(gamepad1.left_trigger > 0.5,new RunCommand(()->{
             driveBias = 0.5;
         })
         );
+        //good
         new Trigger(gamepad1.left_trigger < 0.5,new RunCommand(()->{
             driveBias = 1;
         })
@@ -98,6 +92,8 @@ public class TestTeleop extends TestBaseRobot {
         new Trigger (gamepad1.a, new RunCommand(()->{
             if (arm.getState() == ArmSubsystem.State.BOTTOM)
                 intake.setState(IntakeSubsystem.State.INTAKING);
+            else if (pixelServo.getState()==PixelServo.State.IN)
+                pixelServo.setState(PixelServo.State.OUT);
             else
                 intake.setState(IntakeSubsystem.State.OUTTAKING);
             })
@@ -121,7 +117,7 @@ public class TestTeleop extends TestBaseRobot {
             .then(new RunCommand(()->{
                 hook.setState(HookSubsystem.State.ENGAGED);
             }))
-            .then(new WaitCommand(1))
+            .then(new WaitCommand(0.25))
             .then(new RunCommand(()->{
                 arm.setState(ArmSubsystem.State.FINISHCLIMB);
             }))

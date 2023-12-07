@@ -15,6 +15,7 @@ import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideD;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideFinishClimb;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideG;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideHigh;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideMidHigh;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideMiddle;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideP;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideS;
@@ -34,7 +35,7 @@ public class ArmSubsystem extends Subsystem {
     private final SHPMotor leftSlide;
     private final SHPMotor rightSlide;
     public enum State {
-        BOTTOM, MIDDLE, HIGH, CLIMB, BOTTOMCLIMB, FINISHCLIMB
+        BOTTOM, MIDDLE, MIDHIGH, HIGH, CLIMB, BOTTOMCLIMB, FINISHCLIMB
     }
     private State state;
     public ArmSubsystem(HardwareMap hardwareMap) {
@@ -86,6 +87,18 @@ public class ArmSubsystem extends Subsystem {
         return (leftSlide.getPosition(unit) + rightSlide.getPosition(unit)) / 2.0;
     }
 
+    public void nextState(){
+        if(state==State.BOTTOM){
+            state=State.MIDDLE;
+        }
+        else if(state==State.MIDDLE){
+            state=State.MIDHIGH;
+        }
+        else if(state==State.MIDHIGH){
+            state=State.HIGH;
+        }
+    }
+
     private double processState() {
         switch (state) {
             case BOTTOM:
@@ -97,6 +110,9 @@ public class ArmSubsystem extends Subsystem {
             case MIDDLE:
                 rightSlide.setPosition(kSlideMiddle);
                 return leftSlide.setPosition(kSlideMiddle);
+            case MIDHIGH:
+                rightSlide.setPosition(kSlideMidHigh);
+                return leftSlide.setPosition(kSlideMidHigh);
             case HIGH:
                 rightSlide.setPosition(kSlideHigh);
                 return leftSlide.setPosition(kSlideHigh);

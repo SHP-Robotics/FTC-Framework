@@ -31,19 +31,20 @@ public class RaiseArmCommand extends Command {
     public void init() {
         startTime = Clock.now();
 
-        arm.setState(ArmSubsystem.State.HIGH);
+//        arm.setState(ArmSubsystem.State.HIGH);
+        arm.nextState();
         wrist.setState(AdjustHolder.State.UP);
         elbow.setState(PracticeArmServo.State.UP);
     }
-    @Override
-    public void end() {
-        pixelServo.setState(PixelServo.State.OUT);
-    }
+//    @Override
+//    public void end() {
+//        pixelServo.setState(PixelServo.State.OUT);
+//    }
 
     // Specifies whether or not the command has finished
     // Returning true causes execute() to be called once
     @Override
     public boolean isFinished() {
-        return Clock.hasElapsed(startTime, 2);
+        return Clock.hasElapsed(startTime, 1);
     }
 }
