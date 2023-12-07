@@ -44,10 +44,10 @@ public class AdjustHolder extends Subsystem {
     public void periodic(Telemetry telemetry) {
         switch (state) {
             case UP:
-                adjustHolder.setPosition(0.65);
+                adjustHolder.setPosition(0.2);
                 break;
             case DOWN:
-                adjustHolder.setPosition(1);
+                adjustHolder.setPosition(0.625);
                 break;
         }
         telemetry.addData("Position; ", adjustHolder.getPosition());

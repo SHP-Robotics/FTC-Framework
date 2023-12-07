@@ -34,7 +34,7 @@ public class TestBaseRobot extends OpMode {
     // Declare subsystems and devices
     public DriveSubsystem drive;
     //public CRWheel crWheel;
-    //public PixelServo pixelServo;
+    public PixelServo pixelServo;
     //public CameraOn vision;
     public VisionSubsystem vision;
     //    public VisionSubsystem vision;
@@ -73,7 +73,7 @@ public class TestBaseRobot extends OpMode {
 //        scoop = new ScoopSubsystem(hardwareMap);
 //        intake = new SHPMotor(hardwareMap, "intake");
         hook = new HookSubsystem(hardwareMap);
-        //pixelServo = new PixelServo(hardwareMap);
+        pixelServo = new PixelServo(hardwareMap);
         wrist = new AdjustHolder(hardwareMap);
         planeServo = new PlaneServo(hardwareMap);
         intake = new IntakeSubsystem(hardwareMap);

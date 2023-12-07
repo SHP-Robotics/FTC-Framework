@@ -51,7 +51,7 @@ public class PixelServo extends Subsystem {
                 pixelServo.setPosition(1.0);
                 break;
             case OUT:
-                pixelServo.setPosition(0.0);
+                pixelServo.setPosition(0.5);
                 break;
         }
     }

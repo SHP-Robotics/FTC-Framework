@@ -49,7 +49,7 @@ public class CRWheel extends Subsystem {
                 cWheel.setPower(kWheelForward);
                 break;
             case BACKWARD:
-                cWheel.setPower(kWheelBackward);
+                cWheel.setPower(kWheelForward);
                 break;
             case STILL:
                 cWheel.setPower(kWheelStill);

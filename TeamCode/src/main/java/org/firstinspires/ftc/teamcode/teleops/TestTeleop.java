@@ -33,7 +33,7 @@ public class TestTeleop extends TestBaseRobot {
         // Default command runs when no other commands are scheduled for the subsystem
         drive.setDefaultCommand(
                 new RunCommand(
-                        () -> drive.robotmecanum(gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x)
+                        () -> drive.mecanum(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x)
                 )
         );
 //        vision.setDefaultCommand(
@@ -60,11 +60,14 @@ public class TestTeleop extends TestBaseRobot {
 ////        drive.setDriveBias(arm.getDriveBias());
 
         //////spinning intake
-        new Trigger (gamepad1.dpad_up,
-                new RaiseArmCommand(arm,wrist,elbow)
+        new Trigger (gamepad1.right_bumper,
+                new RaiseArmCommand(arm,wrist,elbow,pixelServo)
         );
-        new Trigger (gamepad1.dpad_down,
+        new Trigger (gamepad1.left_bumper,
                 new LowerArmCommand(arm,wrist,elbow)
+                        .then(new RunCommand(()->{
+                            pixelServo.setState(PixelServo.State.IN);
+                        }))
         );
         new Trigger ((!gamepad1.a && !gamepad1.y), new RunCommand(()->{
             intake.setState(IntakeSubsystem.State.STILL);
@@ -89,7 +92,7 @@ public class TestTeleop extends TestBaseRobot {
             })
         );
         new Trigger (gamepad1.y, new RunCommand(()->{
-            intake.setState(IntakeSubsystem.State.OUTTAKING);
+            intake.setState(IntakeSubsystem.State.INTAKING);
             })
         );
 
