@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.teleops;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.BaseRobot;
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.TestBaseRobot;
 import org.firstinspires.ftc.teamcode.commands.LowerArmCommand;
 import org.firstinspires.ftc.teamcode.commands.RaiseArmCommand;
@@ -15,6 +16,7 @@ import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.CRWheel;
 import org.firstinspires.ftc.teamcode.subsystems.HookServo1;
 import org.firstinspires.ftc.teamcode.subsystems.HookServo2;
+import org.firstinspires.ftc.teamcode.subsystems.HookSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.PixelServo;
 import org.firstinspires.ftc.teamcode.subsystems.PlaneServo;
@@ -100,6 +102,25 @@ public class TestTeleop extends TestBaseRobot {
         new Trigger (gamepad1.dpad_right, new RunCommand(()->{
             planeServo.setState(PlaneServo.State.OUT);
         })
+        );
+
+        new Trigger (gamepad1.dpad_up, new RunCommand(()->{
+            arm.setState(ArmSubsystem.State.CLIMB);
+        })
+        );
+
+        new Trigger (gamepad1.dpad_down,
+            new RunCommand(()->{
+                arm.setState(ArmSubsystem.State.BOTTOMCLIMB);
+            })
+            .then(new WaitCommand(2))
+            .then(new RunCommand(()->{
+                hook.setState(HookSubsystem.State.ENGAGED);
+            }))
+            .then(new WaitCommand(1))
+            .then(new RunCommand(()->{
+                arm.setState(ArmSubsystem.State.FINISHCLIMB);
+            }))
         );
 
 //        new Trigger (gamepad1.dpad_up, new RunCommand(()->{

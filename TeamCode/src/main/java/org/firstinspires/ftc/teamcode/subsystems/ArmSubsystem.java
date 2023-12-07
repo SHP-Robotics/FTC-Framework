@@ -12,6 +12,7 @@ import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideBottom;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideBottomClimb;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideClimb;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideD;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideFinishClimb;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideG;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideHigh;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideMiddle;
@@ -33,7 +34,7 @@ public class ArmSubsystem extends Subsystem {
     private final SHPMotor leftSlide;
     private final SHPMotor rightSlide;
     public enum State {
-        BOTTOM, MIDDLE, HIGH, CLIMB, BOTTOMCLIMB;
+        BOTTOM, MIDDLE, HIGH, CLIMB, BOTTOMCLIMB, FINISHCLIMB
     }
     private State state;
     public ArmSubsystem(HardwareMap hardwareMap) {
@@ -105,6 +106,9 @@ public class ArmSubsystem extends Subsystem {
             case BOTTOMCLIMB:
                 rightSlide.setPosition(kSlideBottomClimb);
                 return leftSlide.setPosition(kSlideBottomClimb);
+            case FINISHCLIMB:
+                rightSlide.setPosition(kSlideFinishClimb);
+                return leftSlide.setPosition(kSlideFinishClimb);
                                                                                                                                             //
 //                break;
         }

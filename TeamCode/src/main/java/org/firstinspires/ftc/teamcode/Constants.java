@@ -73,7 +73,8 @@ public class Constants {
         public static final String kLeftSlideName = "leftSlide";
         public static final String kRightSlideName = "rightSlide";
         public static final double kSlideClimb = 1800.0;
-        public static final double kSlideBottomClimb = -100.0;
+        public static final double kSlideBottomClimb = 10;
+        public static final double kSlideFinishClimb = 100;
 
         public static final double kSlideBottom = 0.0;
         public static final double kSlideMiddle = 100.0;
