@@ -69,6 +69,7 @@ public class DriveSubsystem extends Subsystem {
     public void incrementButtonClicks(){
         buttonClicks++;
     }
+    public void resetIMUAngle() {imu.resetYaw();}
 
     public void robotmecanum(double leftY, double leftX, double rightX){
         drive.mecanum(leftY, leftX, rightX);

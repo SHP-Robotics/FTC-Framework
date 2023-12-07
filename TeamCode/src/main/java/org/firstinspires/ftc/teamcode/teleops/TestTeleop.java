@@ -90,6 +90,10 @@ public class TestTeleop extends TestBaseRobot {
             intake.setState(IntakeSubsystem.State.REJECT);
         })
         );
+        new Trigger (gamepad1.b,new RunCommand(()->{
+            drive.resetIMUAngle();
+        })
+        );
 
         new Trigger (gamepad1.a, new RunCommand(()->{
             if (arm.getState() == ArmSubsystem.State.BOTTOM)
