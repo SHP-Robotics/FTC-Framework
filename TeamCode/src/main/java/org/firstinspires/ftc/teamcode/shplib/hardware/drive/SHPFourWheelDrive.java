@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class SHPFourWheelDrive {
-    final SHPMotor[] motors;
+    public final SHPMotor[] motors;
     double maxVelocity = 0;
 
     PositionPID positionPID = null;
@@ -28,6 +28,7 @@ public class SHPFourWheelDrive {
         motors = new SHPMotor[4];
         for (int i = 0; i < motors.length; i++) {
             motors[i] = new SHPMotor(hardwareMap, motorNames[i]);
+            //motors[i].enablePositionPID();
         }
         motors[0].setDirection(DcMotorSimple.Direction.REVERSE);
         motors[1].setDirection(DcMotorSimple.Direction.REVERSE);

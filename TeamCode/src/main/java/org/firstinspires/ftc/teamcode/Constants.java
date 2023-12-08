@@ -1,8 +1,9 @@
-package org.firstinspires.ftc.teamcode.shplib;
+package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
 
 import org.firstinspires.ftc.teamcode.shplib.controllers.FFController;
+import org.firstinspires.ftc.teamcode.shplib.controllers.PositionPID;
 
 @Config
 public class Constants {
@@ -16,6 +17,8 @@ public class Constants {
                 "rightFront",
                 "rightRear"
         };
+        public static final double K_DRIVE_P = 5;
+        public static final PositionPID K_DRIVE_P1 = new PositionPID(0.1);
         public static final FFController[] kFFs = new FFController[]{
                 new FFController(0.047),
                 new FFController(0.07),
@@ -28,6 +31,11 @@ public class Constants {
 
     public static final class Vision {
         public static final double kTagsizeMeters = 0.0475;
+    }
+    public static final class Intake {
+        public static final String kIntakeName = "intake"; //pos 1
+        public static final String kLiftName = "lift"; //pos 1
+
     }
 
     public static final class Arm {
@@ -48,6 +56,8 @@ public class Constants {
         public static final double kSlideP = 0.0018;
         public static final double kSlideD = 0;
         public static final double kSlideTolerance = 100;
+
+
 
         public static final double kSlideS = 0.035; // static friction
         public static final double kSlideG = 0.07; // gravity

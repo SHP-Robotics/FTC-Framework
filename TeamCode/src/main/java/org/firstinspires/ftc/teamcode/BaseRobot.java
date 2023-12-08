@@ -1,13 +1,14 @@
-package org.firstinspires.ftc.teamcode.shplib;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
-import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.ShooterSubsystem;
 
 /**
  * Template created by Ayaan Govil on 8/21/2021.
@@ -21,12 +22,6 @@ import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
  */
 
 public class BaseRobot extends OpMode {
-    // Declare subsystems and devices
-    public DriveSubsystem drive;
-    public VisionSubsystem vision;
-    public ArmSubsystem arm;
-//    public ScoopSubsystem scoop;
-
     public double previousTime = 0;
 
     // Called when you press the init button
@@ -34,15 +29,6 @@ public class BaseRobot extends OpMode {
     public void init() {
         // Configures universal clock and scheduler - DO NOT DELETE!
         configure();
-
-        // Initialize your subsystems and devices
-        drive = new DriveSubsystem(hardwareMap);
-//        vision = new VisionSubsystem(hardwareMap);
-        arm = new ArmSubsystem(hardwareMap);
-//        scoop = new ScoopSubsystem(hardwareMap);
-//        intake = new SHPMotor(hardwareMap, "intake");
-
-
     }
 
     // Called when you press the start button

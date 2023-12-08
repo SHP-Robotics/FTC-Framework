@@ -14,7 +14,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BlueSpikeMarkerPipeline extends OpenCvPipeline {
+public class ElementDetectionPipeline extends OpenCvPipeline {
     ArrayList<double[]> frameList;
 
     public static double strictLowS = 140; //TODO: Tune in dashboard
@@ -22,9 +22,8 @@ public class BlueSpikeMarkerPipeline extends OpenCvPipeline {
     Telemetry telemetry;
     public double leftValue;
     public double rightValue;
-    boolean stoneLeft, stoneMiddle;
 
-    public BlueSpikeMarkerPipeline() {
+    public ElementDetectionPipeline() {
         frameList = new ArrayList<>();
     }
 
@@ -38,17 +37,19 @@ public class BlueSpikeMarkerPipeline extends OpenCvPipeline {
     //we can draw rectangles on the screen to find the perfect fit
     //edit as necessary
     static final Rect LEFT_ROI = new Rect(
-            new Point(1, 1), //TODO: MAGIC NUMBERS ;-;
+            new Point(200, 1), //TODO: MAGIC NUMBERS ;-;
+            //new Point(399, 447)
             new Point(500, 447)
     );
 
     static final Rect RIGHT_ROI = new Rect(
+            //new Point(400, 1),
             new Point(501, 1),
             new Point(799, 447)
     );
 
     //threshold(lowest possible) percentage of that color
-    static double THRESHOLD = 0.05; //TODO threshold
+    static double THRESHOLD = 0.4; //TODO threshold
 
     //check if we really need this
 
@@ -96,25 +97,25 @@ public class BlueSpikeMarkerPipeline extends OpenCvPipeline {
         Mat hierarchy = new Mat();
         //find contours, input scaledThresh because it has hard edges
         Imgproc.findContours(scaledThresh, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
-//
-//
+        //
+        //
         Mat left = scaledThresh.submat(LEFT_ROI);
         Mat right = scaledThresh.submat(RIGHT_ROI);
 
         leftValue = Core.sumElems(left).val[0] / LEFT_ROI.area() / 225;
         rightValue = Core.sumElems(right).val[0] / RIGHT_ROI.area() / 225;
 
-        stoneLeft = leftValue>rightValue*10;
-        stoneMiddle = rightValue>leftValue*10;
+        boolean stoneLeft = leftValue > THRESHOLD;
+        boolean stoneRight = rightValue > THRESHOLD;
 
-//        Imgproc.cvtColor(mat, mat, Imgproc.COLOR_GRAY2RGB);
+        //        Imgproc.cvtColor(mat, mat, Imgproc.COLOR_GRAY2RGB);
 
         Scalar colorExists = new Scalar (0, 255, 0);
         Scalar colorInexistant = new Scalar (255, 0, 0);
 
-        Imgproc.rectangle(scaledThresh, LEFT_ROI, stoneLeft? colorInexistant:colorExists, 3);
-        Imgproc.rectangle(scaledThresh, RIGHT_ROI, stoneMiddle? colorInexistant:colorExists, 3);
-//
+        Imgproc.rectangle(scaledThresh, LEFT_ROI, leftValue>rightValue? colorInexistant:colorExists, 3);
+        Imgproc.rectangle(scaledThresh, RIGHT_ROI, leftValue<rightValue? colorInexistant:colorExists, 3);
+        //
 
         //list of frames to reduce inconsistency, not too many so that it is still real-time, change the number from 5 if you want
         if (frameList.size() > 5) {
@@ -139,13 +140,13 @@ public class BlueSpikeMarkerPipeline extends OpenCvPipeline {
 
     }
     public int getLocation(){
-        if(stoneLeft){ //left pos
-            return 1;
-        }
-        if(stoneMiddle){ //middle pos
+        if(leftValue>rightValue && leftValue>0.05){
             return 2;
         }
-        return 3; //right pos
+        if(rightValue>leftValue && rightValue>0.05){
+            return 3;
+        }
+        return 1;
 
     }
 }
