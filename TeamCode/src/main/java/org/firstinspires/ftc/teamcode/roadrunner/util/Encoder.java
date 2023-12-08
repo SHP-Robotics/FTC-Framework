@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.roadrunner.util;
 
 import com.acmerobotics.roadrunner.util.NanoClock;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
@@ -108,6 +109,12 @@ public class Encoder {
         int multiplier = getMultiplier();
         return motor.getVelocity() * multiplier;
     }
+
+    public void resetEncoder() {
+        this.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
+
 
     /**
      * Uses velocity estimates gathered in {@link #getCurrentPosition} to estimate the upper bits of velocity

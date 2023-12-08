@@ -40,8 +40,8 @@ public class EncoderStraightDriveCommand extends Command {
     public void init() {
         //drive.parallelEncoder.resetEncoder();
         //drive.perpendicularEncoder.resetEncoder();
-        //drive.perpendicularEncoder.resetEncoder();
-        //drive.parallelEncoder.resetEncoder();
+        drive.perpendicularEncoder.resetEncoder();
+        drive.parallelEncoder.resetEncoder();
 
     }
     public static double encoderTicksToInches(double ticks) {
