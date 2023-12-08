@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.shplib.vision;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.opmode.LocalizationTest;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -14,7 +13,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ElementDetectionPipeline extends OpenCvPipeline {
+public class ElementDetectionPipelineRed extends OpenCvPipeline {
     ArrayList<double[]> frameList;
 
     public static double strictLowS = 140; //TODO: Tune in dashboard
@@ -23,7 +22,7 @@ public class ElementDetectionPipeline extends OpenCvPipeline {
     public double leftValue;
     public double rightValue;
 
-    public ElementDetectionPipeline() {
+    public ElementDetectionPipelineRed() {
         frameList = new ArrayList<>();
     }
 
@@ -105,9 +104,6 @@ public class ElementDetectionPipeline extends OpenCvPipeline {
         leftValue = Core.sumElems(left).val[0] / LEFT_ROI.area() / 225;
         rightValue = Core.sumElems(right).val[0] / RIGHT_ROI.area() / 225;
 
-        boolean stoneLeft = leftValue > THRESHOLD;
-        boolean stoneRight = rightValue > THRESHOLD;
-
         //        Imgproc.cvtColor(mat, mat, Imgproc.COLOR_GRAY2RGB);
 
         Scalar colorExists = new Scalar (0, 255, 0);
@@ -140,13 +136,13 @@ public class ElementDetectionPipeline extends OpenCvPipeline {
 
     }
     public int getLocation(){
-        if(leftValue>rightValue && leftValue>0.05){
+        if(leftValue>rightValue && leftValue>THRESHOLD){
+            return 1;
+        }
+        if(rightValue>leftValue && rightValue>THRESHOLD){
             return 2;
         }
-        if(rightValue>leftValue && rightValue>0.05){
-            return 3;
-        }
-        return 1;
+        return 3;
 
     }
 }

@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
-import org.firstinspires.ftc.teamcode.shplib.vision.ElementDetectionPipeline;
+import org.firstinspires.ftc.teamcode.shplib.vision.ElementDetectionPipelineRed;
 import org.firstinspires.ftc.teamcode.shplib.vision.ElementDetectionPipelineBlue;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -18,7 +18,7 @@ public class VisionSubsystem extends Subsystem {
     private final OpenCvCamera camera;
     static double threshold = 0.2;
     //    CVPipeline pipeline = new CVPipeline();
-    ElementDetectionPipeline detectorRed;
+    ElementDetectionPipelineRed detectorRed;
     ElementDetectionPipelineBlue detectorBlue;
     //    private final AprilTagDetectionPipeline pipeline;
     private ArrayList<AprilTagDetection> tags;
@@ -47,7 +47,7 @@ public class VisionSubsystem extends Subsystem {
 
     public VisionSubsystem(HardwareMap hardwareMap,String color) {
 //        detector = new ObjectDetectionPipeline();
-        detectorRed = new ElementDetectionPipeline();
+        detectorRed = new ElementDetectionPipelineRed();
         detectorBlue = new ElementDetectionPipelineBlue();
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
