@@ -2,10 +2,11 @@ package org.firstinspires.ftc.teamcode.centerstage;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 @Autonomous(preselectTeleOp = "CenterStage Field Oriented")
-public class BlueAutoRight extends LinearOpMode {
+public class RedAutoLeft extends LinearOpMode {
     VisionSubsystem vision;
 
     public int location;
@@ -13,9 +14,9 @@ public class BlueAutoRight extends LinearOpMode {
     @Override
     public void runOpMode() {
         //vision = new VisionSubsystem(hardwareMap,"blue");
-        vision = new VisionSubsystem(hardwareMap,"blue");
+        vision = new VisionSubsystem(hardwareMap,"red");
         while (opModeInInit() && !isStopRequested()) {
-            location = vision.getLocationBlue();
+            location = vision.getLocationRed();
             telemetry.addData("Location: ", location);
             telemetry.update();
         }

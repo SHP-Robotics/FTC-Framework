@@ -38,18 +38,16 @@ public class ElementDetectionPipelineBlue extends OpenCvPipeline {
     //edit as necessary
     static final Rect LEFT_ROI = new Rect(
             new Point(1, 1), //TODO: MAGIC NUMBERS ;-;
-            //new Point(399, 447)
-            new Point(500, 447)
+            new Point(210, 447)
     );
 
     static final Rect RIGHT_ROI = new Rect(
-            //new Point(400, 1),
-            new Point(501, 1),
-            new Point(799, 447)
+            new Point(400, 10),
+            new Point(700, 447)
     );
 
     //threshold(lowest possible) percentage of that color
-    static double THRESHOLD = 0.4; //TODO threshold
+    static double THRESHOLD = 0.05; //TODO threshold
 
     //check if we really need this
 
