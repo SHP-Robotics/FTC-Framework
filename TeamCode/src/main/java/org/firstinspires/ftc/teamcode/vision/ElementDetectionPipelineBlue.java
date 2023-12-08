@@ -44,7 +44,7 @@ public class ElementDetectionPipelineBlue extends OpenCvPipeline {
     static final Rect RIGHT_ROI = new Rect(
             //new Point(400, 1),
             new Point(400, 10),
-            new Point(700, 220)
+            new Point(700, 447)
     );
 
     //threshold(lowest possible) percentage of that color
@@ -142,13 +142,13 @@ public class ElementDetectionPipelineBlue extends OpenCvPipeline {
 
     }
     public int getLocation(){
-        if(leftValue>rightValue && leftValue>0.05){
+        if(leftValue>rightValue && leftValue>0.1){
+            return 1;
+        }
+        if(rightValue>leftValue && rightValue>0.1){
             return 2;
         }
-        if(rightValue>leftValue && rightValue>0.05){
-            return 3;
-        }
-        return 1;
+        return 3;
 
     }
 }

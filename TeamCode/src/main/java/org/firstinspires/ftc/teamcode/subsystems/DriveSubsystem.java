@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import static org.firstinspires.ftc.teamcode.Constants.Drive.kMaximumBias;
 import static org.firstinspires.ftc.teamcode.Constants.Drive.kMinimumBias;
 import static org.firstinspires.ftc.teamcode.Constants.Drive.kMotorNames;
+import static org.firstinspires.ftc.teamcode.commands.EncoderStraightDriveCommand.encoderTicksToInches;
 
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -58,8 +59,6 @@ public class DriveSubsystem extends Subsystem {
         }
         motors[0].setDirection(DcMotorSimple.Direction.REVERSE);
         motors[1].setDirection(DcMotorSimple.Direction.REVERSE);
-
-        buttonClicks=0;
 
 //        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "leftRear"));
 //        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rightRear"));
@@ -179,8 +178,8 @@ public class DriveSubsystem extends Subsystem {
            // telemetry.addData("Motor " + i + " Position: ", drive.getPositions(MotorUnit.TICKS)[i]);
 //        }
 //        telemetry.addData("Drive at position setpoint: ", drive.atPositionSetpoint() ? "true" : "false");
-//        telemetry.addData("leftEncoderVal:", leftEncoder.getCurrentPosition());
-//        telemetry.addData("rightEncoderVal:", rightEncoder.getCurrentPosition());
+        telemetry.addData("xPos:",  encoderTicksToInches(parallelEncoder.getCurrentPosition()));
+        telemetry.addData("yPos:", encoderTicksToInches(perpendicularEncoder.getCurrentPosition()));
 //        telemetry.addData("frontEncoderVal:", frontEncoder.getCurrentPosition());
         telemetry.addData("IMU ANGLE:", imu.getYaw(AngleUnit.DEGREES));
     }

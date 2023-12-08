@@ -24,7 +24,7 @@ public class ATestTeleop extends TestBaseRobot {
     @Override
     public void init() {
         super.init();
-
+        intake.dropDown.setPosition(0.25);
 
         // Default command runs when no other commands are scheduled for the subsystem
         drive.setDefaultCommand(
