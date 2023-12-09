@@ -37,17 +37,37 @@ public class ElementDetectionPipelineRed extends OpenCvPipeline {
     //edit as necessary
     static final Rect LEFT_ROI = new Rect(
             new Point(1, 1), //TODO: MAGIC NUMBERS ;-;
-            new Point(210, 447)
+            new Point(260, 447)
     );
 
     static final Rect RIGHT_ROI = new Rect(
-            new Point(400, 10),
+            new Point(320, 10),
             new Point(700, 447)
     );
 
     //threshold(lowest possible) percentage of that color
-    static double THRESHOLD = 0.05; //TODO threshold
+    static double THRESHOLD = 0.03; //TODO threshold
 
+    private void inRange(Mat src1, Scalar leftBoundary, Scalar rightBoundary, Mat dst) {
+        if (leftBoundary.val[0] > rightBoundary.val[0]) {
+
+            Mat leftMat = new Mat();
+            Core.inRange(src1, new Scalar(0, leftBoundary.val[1], leftBoundary.val[2]), rightBoundary, leftMat);
+
+            Mat rightMat = new Mat();
+            Core.inRange(src1, leftBoundary, new Scalar(180, rightBoundary.val[1], rightBoundary.val[2]), rightMat);
+
+            Core.bitwise_or(leftMat, rightMat, dst);
+
+            leftMat.release();
+            rightMat.release();
+
+        } else {
+
+            Core.inRange(src1, leftBoundary, rightBoundary, dst); //ONLY returns the pixels in the range
+
+        }
+    }
 
     @Override
     public Mat processFrame(Mat input){
@@ -58,11 +78,15 @@ public class ElementDetectionPipelineRed extends OpenCvPipeline {
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
 
         //Lower and upper bounds for the color to detect
-        Scalar lowHSV = new Scalar(0, 50, 70); //TODO: currently for RED. need to tune
-        Scalar highHSV = new Scalar(15, 255, 255); //bruh red is like 0-15 & 350-360 wtf
+        Scalar lowHSV = new Scalar(350/2, 50, 70); //TODO: currently for RED. need to tune
+        Scalar highHSV = new Scalar(15/2, 255, 255); // red is like 0-15 & 350-360 wtf
+        //                                              aka 350-15
+        //                                              new function to account for values like red
 
         Mat detected = new Mat();
-        Core.inRange(mat, lowHSV, highHSV, detected); //ONLY returns the pixels in the HSV range
+        inRange(mat, lowHSV, highHSV, detected); //ONLY returns the pixels in the HSV range
+        // using inRange (which has wrap around HSV values, I.E. from 175 to 180 and from 0 to 7.5)
+        // instead of Core.inRange (which does not wrap around, and 175-7.5 would result in an error)
 
         Mat masked = new Mat();
         //colors the white portion of detected in with the color and outputs to masked

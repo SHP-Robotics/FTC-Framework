@@ -7,7 +7,6 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 import org.firstinspires.ftc.teamcode.shplib.vision.ElementDetectionPipelineRed;
 import org.firstinspires.ftc.teamcode.shplib.vision.ElementDetectionPipelineBlue;
-import org.firstinspires.ftc.teamcode.shplib.vision.ElementDetectionPipelineRedSimplified;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -20,7 +19,6 @@ public class VisionSubsystem extends Subsystem {
     static double threshold = 0.2;
     //    CVPipeline pipeline = new CVPipeline();
     ElementDetectionPipelineRed detectorRed;
-    ElementDetectionPipelineRedSimplified detectorRedSimplified;
     ElementDetectionPipelineBlue detectorBlue;
     //    private final AprilTagDetectionPipeline pipeline;
     private ArrayList<AprilTagDetection> tags;
@@ -50,7 +48,6 @@ public class VisionSubsystem extends Subsystem {
     public VisionSubsystem(HardwareMap hardwareMap,String color) {
 //        detector = new ObjectDetectionPipeline();
         detectorRed = new ElementDetectionPipelineRed();
-        detectorRedSimplified = new ElementDetectionPipelineRedSimplified();
         detectorBlue = new ElementDetectionPipelineBlue();
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -62,8 +59,6 @@ public class VisionSubsystem extends Subsystem {
             camera.setPipeline(detectorRed);
         else if (color.equals("blue"))
             camera.setPipeline(detectorBlue);
-        else if (color.equals("redSimplified"))
-            camera.setPipeline(detectorRedSimplified);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
@@ -88,7 +83,6 @@ public class VisionSubsystem extends Subsystem {
     public int getLocationBlue(){
         return detectorBlue.getLocation();
     }
-    public int getLocationRedSimplified() { return detectorRedSimplified.getLocation(); }
 
 //    public boolean detectedTags() {
 //        return !tags.isEmpty();

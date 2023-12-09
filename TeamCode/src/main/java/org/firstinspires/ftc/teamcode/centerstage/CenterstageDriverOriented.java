@@ -29,7 +29,12 @@ public class CenterstageDriverOriented extends LinearOpMode {
         mecanumController.setMotorsRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
         mecanumController.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        Servo outtake = hardwareMap.get(Servo.class, "outtake");
+        outtake.setDirection(Servo.Direction.REVERSE);
+
         Servo claw = hardwareMap.get(Servo.class, "claw");
+
+        DcMotor climber = hardwareMap.get(DcMotor.class, "climber");
 
         waitForStart();
 
@@ -41,6 +46,14 @@ public class CenterstageDriverOriented extends LinearOpMode {
             } else if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLOSE_CLAW)) {
                 claw.setPosition(Constants.CLAW_CLOSE);
             }
+
+            if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.OUTTAKE_UP)) {
+                outtake.setPosition(Constants.OUTTAKE_NEUTRAL);
+            } else if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.OUTTAKE_DOWN)) {
+                outtake.setPosition(Constants.OUTTAKE_ACTIVE);
+            }
+
+            climber.setPower(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER));
         }
     }
 }

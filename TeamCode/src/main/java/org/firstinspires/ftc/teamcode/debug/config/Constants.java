@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.debug.config;
 
 public final class Constants {
+    // Oh god no
+    public static final double TILE_LENGTH = 23.3437;
+
     // Wheels
-    public static final double WHEEL_ENCODER_TICKS_PER_INCH_FORWARD = 42.74;
-    public static final double WHEEL_ENCODER_TICKS_PER_INCH_SIDEWAYS = 52.36;
+    public static final double WHEEL_ENCODER_TICKS_PER_INCH_FORWARD = 32.8741735;
+    public static final double WHEEL_ENCODER_TICKS_PER_INCH_SIDEWAYS = 42.36 * 48 / 50;
 
     // Use Binary Search if using coasting, else use 0
     public static final double MINIMUM_VOLTAGE_APPLIED = 0;
@@ -13,21 +16,10 @@ public final class Constants {
     public static final double KI = 0.00;
     public static final double KD = 0.00;
 
-    // Dual Pixel Storage
-    public static final double DEEP_PIXEL_CLAW_HEIGHT = 0;
-    public static final double SHALLOW_PIXEL_CLAW_HEIGHT = 0;
-
-    // Four Bar
-    public static final double BEHIND_DUAL_PIXEL_STORAGE_POSITION = 0;
-    public static final double DUAL_PIXEL_STORAGE_POSITION = 0;
-    public static final double OUTTAKE_POSITION = 0;
-
-    // Lift
-    public static final double LIFT_ENCODER_TICKS_PER_INCH = 1;
-
-    public static final double LOW_BONUS_HEIGHT = 0;
-    public static final double MEDIUM_BONUS_HEIGHT = 0;
-    public static final double HIGH_BONUS_HEIGHT = 0;
+    // Outtake
+    public static final double OUTTAKE_STARTING = 1;
+    public static final double OUTTAKE_NEUTRAL = 0.7;
+    public static final double OUTTAKE_ACTIVE = 0.5;
 
     // Claw
     public static final double CLAW_OPEN = 0.345;
