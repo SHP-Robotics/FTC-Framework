@@ -48,7 +48,7 @@ public class PixelServo extends Subsystem {
     public void periodic(Telemetry telemetry) {
         switch (state) {
             case IN:
-                pixelServo.setPosition(1.0);
+                pixelServo.setPosition(0.9);
                 break;
             case OUT:
                 pixelServo.setPosition(0.5);

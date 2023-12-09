@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
 //import org.firstinspires.ftc.teamcode.commands.DropConeCommand;
 
-@Autonomous(preselectTeleOp = "CommandBasedTeleOp")
+//@Autonomous(preselectTeleOp = "CommandBasedTeleOp")
 public class CommandBasedAuto extends BaseRobot {
 //    SHPMecanumAutoDrive autoDrive;
 

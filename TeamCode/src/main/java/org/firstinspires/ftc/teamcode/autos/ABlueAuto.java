@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
-@Autonomous(preselectTeleOp = "CommandBasedTeleOp")
+@Autonomous(preselectTeleOp = "ATestTeleop")
 public class ABlueAuto extends TestBaseRobot {
     //    SHPMecanumAutoDrive autoDrive;
     //DriveSubsystem drive;
@@ -68,9 +68,10 @@ public class ABlueAuto extends TestBaseRobot {
                             if (location == 1) {
                                 myCommand.scheduleCommand(
                                         new EncoderTurnDriveCommand(drive,"ccw",87)
-                                                .then(new WaitCommand(1))
+                                                .then(new WaitCommand(3))
                                                 .then(new DriveCommand(drive,-0.2,0,0,1,true))
                                                 .then(new DriveCommand(drive,0.2,0,0,1.2,true))
+                                                .then(new WaitCommand(1))
                                                 .then(new DriveCommand(drive,0,-0.3,0,1.9,true))
                                                 .then(new DriveCommand(drive,-0.4,0,0,2.75,true))
                                                 .then(new RaiseArmCommand(arm,wrist,elbow,pixelServo))
@@ -90,7 +91,7 @@ public class ABlueAuto extends TestBaseRobot {
                             else if (location == 3) {
                                 myCommand.scheduleCommand(
                                         new EncoderTurnDriveCommand(drive,"cw",89)
-                                                .then(new WaitCommand(1))
+                                                .then(new WaitCommand(3))
                                                 .then(new DriveCommand(drive,-0.2,0,0,2.1,true))
                                                 .then(new DriveCommand(drive,0.2,0,0,2,true))
                                                 .then(new EncoderTurnDriveCommand(drive,"ccw",87))
@@ -131,7 +132,9 @@ public class ABlueAuto extends TestBaseRobot {
 
                         }))
                         //.then(new DriveCommand(drive,0.3,0,0,2,true))
-                        .then(new WaitCommand(2))
+                        .then(new WaitCommand(1))
+                        .then(new DriveCommand(drive, 0.2, 0,0, 1, true))
+                        .then(new DriveCommand(drive, 0,-0.2, 0,2, true))
                 //.then(new DriveCommand(drive,0.5,0,0,1,true))
 
 

@@ -45,7 +45,7 @@ public class AdjustHolder extends Subsystem {
         switch (state) {
 
             case DOWN:
-                adjustHolder.setPosition(0.695);
+                adjustHolder.setPosition(0.69);
                 break;
             case UP:
                 adjustHolder.setPosition(0.2);

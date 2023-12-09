@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
-@Autonomous(preselectTeleOp = "CommandBasedTeleOp")
+//@Autonomous(preselectTeleOp = "CommandBasedTeleOp")
 public class BlueConeAuto extends BaseRobot {
     //    SHPMecanumAutoDrive autoDrive;
     //DriveSubsystem drive;

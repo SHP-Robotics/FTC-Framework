@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
 //import org.firstinspires.ftc.teamcode.subsystems.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
-@Autonomous(preselectTeleOp = "CommandBasedTeleOp")
+//@Autonomous(preselectTeleOp = "CommandBasedTeleOp")
 public class RedConeAuto extends BaseRobot {
     //    SHPMecanumAutoDrive autoDrive;
     //DriveSubsystem drive;
