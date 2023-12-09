@@ -111,7 +111,7 @@ public class BlueConeParkAuto extends TestBaseRobot {
                             else {
                                 myCommand.scheduleCommand(
                                         new DriveCommand(drive,-0.2,0,0,1.25,true)
-                                                .then(new DriveCommand(drive,0.2,0,0,1,true))
+                                                .then(new DriveCommand(drive,0.2,0,0,1.1,true))
                                                 .then(new EncoderTurnDriveCommand(drive,"cw",90))
                                                 .then(new DriveCommand(drive,-0.4,0,0,3,true))
                                                 .then(new RaiseArmCommand(arm,wrist,elbow,pixelServo))
