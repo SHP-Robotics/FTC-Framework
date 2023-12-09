@@ -117,7 +117,7 @@ public class ATestTeleop extends TestBaseRobot {
             .then(new RunCommand(()->{
                 hook.setState(HookSubsystem.State.ENGAGED);
             }))
-            .then(new WaitCommand(0.25))
+            .then(new WaitCommand(0.5))
             .then(new RunCommand(()->{
                 arm.setState(ArmSubsystem.State.FINISHCLIMB);
             }))

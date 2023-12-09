@@ -35,6 +35,7 @@ public class Constants {
         public static final String kRightAdjust = "rightAdjust";
         public static final double kPositionBottom = 1;
         public static final double kPositionTop = 0;
+        public static final double kPositionMiddle = 0.35;
         public static final String kPixelServo = "PixelServo";
         public static final String kPlaneServo = "PlaneServo";
 
@@ -72,12 +73,12 @@ public class Constants {
 
         public static final String kLeftSlideName = "leftSlide";
         public static final String kRightSlideName = "rightSlide";
-        public static final double kSlideClimb = 2800.0;
+        public static final double kSlideClimb = 3200.0;
         public static final double kSlideBottomClimb = 10;
         public static final double kSlideFinishClimb = 1400;
 
         public static final double kSlideBottom = 0.0;
-        public static final double kSlideMiddle = 700.0;
+        public static final double kSlideMiddle = 500.0;
         public static final double kSlideMidHigh = 1600.0;
         public static final double kSlideHigh = 2100.0;
         public static final double kSlideStackDistance = 150.0;

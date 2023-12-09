@@ -178,8 +178,8 @@ public class DriveSubsystem extends Subsystem {
            // telemetry.addData("Motor " + i + " Position: ", drive.getPositions(MotorUnit.TICKS)[i]);
 //        }
 //        telemetry.addData("Drive at position setpoint: ", drive.atPositionSetpoint() ? "true" : "false");
-        telemetry.addData("xPos:",  encoderTicksToInches(parallelEncoder.getCurrentPosition()));
-        telemetry.addData("yPos:", encoderTicksToInches(perpendicularEncoder.getCurrentPosition()));
+        telemetry.addData("YPos:",  encoderTicksToInches(parallelEncoder.getCurrentPosition()));
+        telemetry.addData("XPos:", encoderTicksToInches(perpendicularEncoder.getCurrentPosition()));
 //        telemetry.addData("frontEncoderVal:", frontEncoder.getCurrentPosition());
         telemetry.addData("IMU ANGLE:", imu.getYaw(AngleUnit.DEGREES));
     }

@@ -28,14 +28,21 @@ public class LowerArmCommand extends Command {
         startTime = Clock.now();
 
         arm.setState(ArmSubsystem.State.BOTTOM);
-        wrist.setState(AdjustHolder.State.DOWN);
         elbow.setState(PracticeArmServo.State.DOWN);
+        wrist.setState(AdjustHolder.State.DOWN);
     }
 
     // Specifies whether or not the command has finished
     // Returning true causes execute() to be called once
+
+    @Override
+    public void end() {
+        //wrist.setState(AdjustHolder.State.DOWN);
+        //elbow.setState(PracticeArmServo.State.DOWN);
+    }
+
     @Override
     public boolean isFinished() {
-        return Clock.hasElapsed(startTime, 2);
+        return Clock.hasElapsed(startTime, 1.5);
     }
 }

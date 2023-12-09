@@ -58,7 +58,7 @@ public class IntakeSubsystem extends Subsystem {
         // Add logging if needed
         // Example:
         // telemetry.addData("Motor Encoder: ", motor.getPosition(MotorUnit.TICKS));
-
+        //dropDown.setPosition(0.5);
         switch (state) {
             case INTAKING:
                 cWheel.setPower(-1.0);

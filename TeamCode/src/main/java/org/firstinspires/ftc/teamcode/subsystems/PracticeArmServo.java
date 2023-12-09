@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import static org.firstinspires.ftc.teamcode.Constants.Intake.kPositionBottom;
+import static org.firstinspires.ftc.teamcode.Constants.Intake.kPositionMiddle;
 import static org.firstinspires.ftc.teamcode.Constants.Intake.kPositionTop;
 import static org.firstinspires.ftc.teamcode.Constants.Intake.kPracticeLeftArmServoName;
 import static org.firstinspires.ftc.teamcode.Constants.Intake.kPracticeRightArmServoName;
@@ -19,7 +20,7 @@ public class PracticeArmServo extends Subsystem {
     public enum State {
         // Define states
         // Example:
-        UP, DOWN
+        UP, DOWN,HALFWAY
     }
 
     private State state;
@@ -51,6 +52,10 @@ public class PracticeArmServo extends Subsystem {
             case DOWN:
                 practiceRightArm.setPosition(kPositionTop);
                 practiceLeftArm.setPosition(1-kPositionTop);
+                break;
+            case HALFWAY:
+                practiceRightArm.setPosition(kPositionMiddle);
+                practiceLeftArm.setPosition(1-kPositionMiddle);
                 break;
         }
         telemetry.addData("Right Arm Posiiton ", practiceRightArm.getPosition());

@@ -22,9 +22,9 @@ public class EncoderStraightDriveCommand extends Command {
         super(drive);
         this.drive = drive;
         if(direction.equals("forward"))
-            this.leftY = 0.2;
+            this.leftY = -0.4;
         else
-            this.leftY = -0.2;
+            this.leftY = 0.4;
         this.leftX = 0;
         this.rightX = 0;
         this.xPos = 0;
@@ -67,23 +67,12 @@ public class EncoderStraightDriveCommand extends Command {
     @Override
     public void execute() {
         if (!robot) {
-            if (drive.parallelEncoder.getCurrentPosition() < 0.2 * Math.abs(yPos))
-                drive.mecanum(leftY, leftX, rightX);
-            else if (drive.parallelEncoder.getCurrentPosition() < 0.8 * Math.abs(yPos))
-                drive.mecanum(1.5 * leftY, leftX, rightX);
-            else
-                drive.mecanum(leftY, leftX, rightX);
+            drive.mecanum(leftY,0,0);
         }
         else {
-            if (drive.parallelEncoder.getCurrentPosition() < 0.2 * Math.abs(yPos))
-                drive.robotmecanum(leftY, leftX, rightX);
-            else if (drive.parallelEncoder.getCurrentPosition() < 0.8 * Math.abs(yPos))
-                drive.robotmecanum(1.5 * leftY, leftX, rightX);
-            else
-                drive.robotmecanum(leftY, leftX, rightX);
+            drive.robotmecanum(leftY,0,0);
         }
 
-        // drive.automecanum(leftY, leftX, rightX);
 
     }
 

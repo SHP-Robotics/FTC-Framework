@@ -13,7 +13,7 @@ public class AdjustHolder extends Subsystem {
     // Example:
     private final Servo adjustHolder;
     public enum State {
-        UP, DOWN
+        UP, DOWN,HALFWAY
 
     }
 
@@ -43,12 +43,18 @@ public class AdjustHolder extends Subsystem {
     @Override
     public void periodic(Telemetry telemetry) {
         switch (state) {
-            case UP:
-                adjustHolder.setPosition(0.2);
-                break;
+
             case DOWN:
                 adjustHolder.setPosition(0.575);
                 break;
+            case UP:
+                adjustHolder.setPosition(0.2);
+                break;
+            case HALFWAY:
+                adjustHolder.setPosition(0.9);
+                break;
+
+
         }
         telemetry.addData("Position; ", adjustHolder.getPosition());
     }
