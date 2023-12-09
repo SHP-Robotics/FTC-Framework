@@ -27,15 +27,15 @@ public class BlueConeAuto extends BaseRobot {
 //        autoDrive = new SHPMecanumAutoDrive(hardwareMap, kMotorNames, 0.15, 0.0, 0.0);
 //        autoDrive.enableFF(new FFController(0.01));
         //drive = new DriveSubsystem(hardwareMap);
-        vision = new VisionSubsystem(hardwareMap,"blue");
-        location = vision.getLocationBlue();
+        vision = new VisionSubsystem(hardwareMap,"red");
+        location = vision.getLocationRed();
         telemetry.addData("Location: ",location);
         drive.resetIMUAngle();
 
     }
     public void init_loop() {
         super.init_loop();
-        location = vision.getLocationBlue();
+        location = vision.getLocationRed();
         telemetry.addData("Location: ", location);
 
     }
