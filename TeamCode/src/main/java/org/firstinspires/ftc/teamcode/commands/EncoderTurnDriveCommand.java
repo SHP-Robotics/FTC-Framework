@@ -46,10 +46,10 @@ public class EncoderTurnDriveCommand extends Command {
     //@Override
     public void execute(){
         if (direction.equals("cw")) {
-            drive.mecanum(0, 0, -0.25);
+            drive.mecanum(0, 0, -0.3);
         }
         else {
-            drive.mecanum(0, 0, 0.25);
+            drive.mecanum(0, 0, 0.3);
         }
     }
 

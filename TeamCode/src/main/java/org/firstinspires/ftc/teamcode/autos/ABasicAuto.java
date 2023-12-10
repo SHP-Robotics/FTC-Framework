@@ -64,7 +64,7 @@ public class ABasicAuto extends TestBaseRobot {
                                 myCommand.scheduleCommand(
                                         new DriveCommand(drive,-0.2,0,0,1,true)
                                                 .then(new EncoderTurnDriveCommand(drive,"ccw",90))
-                                                .then(new WaitCommand(1))
+                                                .then(new WaitCommand(3.5))
                                                 .then(new DriveCommand(drive,-0.2,0,0,1,true))
                                                 .then(new DriveCommand(drive,0.3,0,0,1,true))
 //                                                .then(new DriveCommand(drive,0,-0.2,0,2,true))
@@ -74,7 +74,7 @@ public class ABasicAuto extends TestBaseRobot {
                             else if (location == 3) {
                                 myCommand.scheduleCommand(
                                         new EncoderTurnDriveCommand(drive,"cw",89)
-                                                .then(new WaitCommand(1))
+                                                .then(new WaitCommand(3.25))
                                                 .then(new DriveCommand(drive,-0.2,0,0,1.3,true))
                                                 .then(new DriveCommand(drive,0.2,0,0,1.4,true))
 //                                                .then(new DriveCommand(drive,0,0.3,0,3,true))

@@ -141,12 +141,12 @@ public class ElementDetectionPipelineRed extends OpenCvPipeline {
     }
     public int getLocation(){
         if(leftValue>rightValue && leftValue>0.05){
-            return 2;
+            return 1;
         }
         if(rightValue>leftValue && rightValue>0.05){
-            return 3;
+            return 2;
         }
-        return 1;
+        return 3;
 
     }
 }
