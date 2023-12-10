@@ -42,37 +42,49 @@ public class RedAutoLeft extends LinearOpMode {
         mecanumController.calibrateIMUAngleOffset();
 
         if (location == 1) {
-            mecanumController.moveToPosition(0, 32, true);
 
-            mecanumController.rotateToRadian(Math.toRadians(-90), Math.toRadians(0.5));
-
-            mecanumController.moveToPosition(-15.5, 32, true);
-
-        } else if (location == 2) {
-            mecanumController.moveToPosition(0, 35.75, true);
+            mecanumController.moveToPosition(0, 24.75, true);
+            sleep(100);
             claw.setPosition(Constants.CLAW_OPEN);
             sleep(200);
             outtake.setPosition(Constants.OUTTAKE_NEUTRAL);
 
-            mecanumController.moveToPosition(0, 27.25, true);
-            mecanumController.rotateToRadian(Math.toRadians(90), Math.toRadians(0.25));
+            mecanumController.moveToPosition(0, 19.75, true);
+            mecanumController.rotateToRadianUsingPID(Math.toRadians(-90.2), Math.toRadians(1), 5);
+            mecanumController.moveToPosition(5, 19.75, true);
+            mecanumController.moveToPosition(5, 24.75, true);
+            mecanumController.moveToPosition(-87, 24.25,true);
+            mecanumController.moveToPosition(-87, 28.25,true);
 
-            mecanumController.moveToPosition(-93, 27.25,true);
-            mecanumController.rotateToRadian(Math.toRadians(90), Math.toRadians(0.25));
-
-            mecanumController.moveToPosition(-93, 21.25,true);
-            mecanumController.moveToPosition(-94, 21.25,true);
+            mecanumController.rotateToRadianUsingPID(Math.toRadians(-90.2), Math.toRadians(1), 5);
             outtake.setPosition(Constants.OUTTAKE_ACTIVE);
             sleep(1000);
 
             mecanumController.setDriveSpeed(mecanumController.getDriveSpeed()*0.3);
-            mecanumController.moveToPosition(91, 21.25, true);
+            mecanumController.moveToPosition(-84.5, 28.25, true);
+
+        } else if (location == 2) {
+
+            mecanumController.moveToPosition(0, 33.25, true);
+            sleep(100);
+            claw.setPosition(Constants.CLAW_OPEN);
+            sleep(200);
+            outtake.setPosition(Constants.OUTTAKE_NEUTRAL);
+
+            mecanumController.moveToPosition(0, 24.75, true);
+            mecanumController.rotateToRadianUsingPID(Math.toRadians(-90.2), Math.toRadians(1), 5);
+
+            mecanumController.moveToPosition(-87, 24.25,true);
+
+            mecanumController.rotateToRadianUsingPID(Math.toRadians(-90.2), Math.toRadians(1), 5);
+            outtake.setPosition(Constants.OUTTAKE_ACTIVE);
+            sleep(1000);
+
+            mecanumController.setDriveSpeed(mecanumController.getDriveSpeed()*0.3);
+            mecanumController.moveToPosition(-84.5, 24.25, true);
+
         } else {
-            mecanumController.moveToPosition(0, 32, true);
 
-            mecanumController.rotateToRadian(Math.toRadians(-90), Math.toRadians(0.5));
-
-            mecanumController.moveToPosition(7.5, 32, true);
         }
     }
 }

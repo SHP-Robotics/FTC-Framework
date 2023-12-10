@@ -28,6 +28,9 @@ public class MecanumController {
     private double driveSpeed = 1;
     private double rotationSpeed = 1;
 
+    // setRotationSpeed affects rotationKP also
+    private double rotationKP = 1/Math.PI;
+
     private double positionX = 0;
     private double positionY = 0;
 
@@ -95,10 +98,12 @@ public class MecanumController {
 
     public void setRotationSpeed(double rotationSpeed) {
         this.rotationSpeed = rotationSpeed;
+        this.rotationKP = rotationSpeed / Math.PI;
     }
 
     public void calibrateIMUAngleOffset() {
-        imuAngleOffset = -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+//        imuAngleOffset = -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        imu.resetYaw();
     }
 
     public double getCalibratedIMUAngle() {
@@ -164,7 +169,7 @@ public class MecanumController {
             max = 1;
         }
 
-        if (max * driveSpeed < Constants.MINIMUM_VOLTAGE_APPLIED) {
+        if (speedController.applyMinimumVoltage && max * driveSpeed < Constants.MINIMUM_VOLTAGE_APPLIED) {
             leftFront.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);
             rightFront.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);
             leftRear.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);
@@ -193,7 +198,7 @@ public class MecanumController {
         //    max = 1;
         //}
 
-        if (max * driveSpeed < Constants.MINIMUM_VOLTAGE_APPLIED) {
+        if (speedController.applyMinimumVoltage && max * driveSpeed < Constants.MINIMUM_VOLTAGE_APPLIED) {
             leftFront.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);
             rightFront.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);
             leftRear.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);
@@ -223,7 +228,7 @@ public class MecanumController {
     }
 
     public void rotateToRadian(double targetRadian, double radianTolerance) {
-        this.setMotorsRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        this.setMotorsRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         double currentRadians = this.getCalibratedIMUAngle();
         double relativeRadians = Constants.setToDomain(currentRadians, targetRadian - Math.PI, targetRadian + Math.PI);
@@ -239,6 +244,87 @@ public class MecanumController {
             this.rightFront.setPower(direction * this.rotationSpeed);
             this.leftRear.setPower(-direction * this.rotationSpeed);
             this.rightRear.setPower(direction * this.rotationSpeed);
+
+            currentRadians = this.getCalibratedIMUAngle();
+            relativeRadians = Constants.setToDomain(currentRadians, targetRadian - Math.PI, targetRadian + Math.PI);
+        }
+
+        this.leftFront.setPower(0);
+        this.rightFront.setPower(0);
+        this.leftRear.setPower(0);
+        this.rightRear.setPower(0);
+    }
+
+    public void rotateToRadianUsingPID(double targetRadian, double radianTolerance) {
+        this.setMotorsRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        double currentRadians = this.getCalibratedIMUAngle();
+        double relativeRadians = Constants.setToDomain(currentRadians, targetRadian - Math.PI, targetRadian + Math.PI);
+
+        double error = radianTolerance + 1;
+
+        double power;
+
+        while (!(error > -radianTolerance && error < radianTolerance)) {
+            error = targetRadian - relativeRadians;
+
+            power = error * this.rotationKP;
+
+            if (power < 0) {
+                power = Math.max(Constants.MINIMUM_VOLTAGE_APPLIED, Math.min(1, power));
+            } else {
+                power = Math.min(-Constants.MINIMUM_VOLTAGE_APPLIED, Math.max(-1, power));
+            }
+
+            this.leftFront.setPower(-power);
+            this.rightFront.setPower(power);
+            this.leftRear.setPower(-power);
+            this.rightRear.setPower(power);
+
+            currentRadians = this.getCalibratedIMUAngle();
+            relativeRadians = Constants.setToDomain(currentRadians, targetRadian - Math.PI, targetRadian + Math.PI);
+        }
+
+        this.leftFront.setPower(0);
+        this.rightFront.setPower(0);
+        this.leftRear.setPower(0);
+        this.rightRear.setPower(0);
+    }
+
+    public void rotateToRadianUsingPID(double targetRadian, double radianTolerance, int maxOscillations) {
+        this.setMotorsRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        double currentRadians = this.getCalibratedIMUAngle();
+        double relativeRadians = Constants.setToDomain(currentRadians, targetRadian - Math.PI, targetRadian + Math.PI);
+
+        double lastError = 0.0;
+        double error = radianTolerance + 1;
+
+        double power;
+
+        double numOscillations = 0;
+
+        while (numOscillations < maxOscillations && !(error > -radianTolerance && error < radianTolerance)) {
+            error = targetRadian - relativeRadians;
+
+            if ((lastError < 0 && error > 0) || (lastError > 0 && error < 0)) {
+                numOscillations += 1;
+            }
+
+            power = error * this.rotationKP;
+
+            if (power < 0) {
+                power = Math.max(Constants.MINIMUM_VOLTAGE_APPLIED, Math.min(1, power));
+            } else {
+                power = Math.min(-Constants.MINIMUM_VOLTAGE_APPLIED, Math.max(-1, power));
+            }
+
+            lastError = error;
+
+            this.leftFront.setPower(-power);
+            this.rightFront.setPower(power);
+            this.leftRear.setPower(-power);
+            this.rightRear.setPower(power);
 
             currentRadians = this.getCalibratedIMUAngle();
             relativeRadians = Constants.setToDomain(currentRadians, targetRadian - Math.PI, targetRadian + Math.PI);

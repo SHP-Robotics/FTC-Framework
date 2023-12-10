@@ -78,7 +78,7 @@ public class ElementDetectionPipelineRed extends OpenCvPipeline {
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
 
         //Lower and upper bounds for the color to detect
-        Scalar lowHSV = new Scalar(350/2, 50, 70); //TODO: currently for RED. need to tune
+        Scalar lowHSV = new Scalar(350/2, 50, 60); //TODO: currently for RED. need to tune
         Scalar highHSV = new Scalar(15/2, 255, 255); // red is like 0-15 & 350-360 wtf
         //                                              aka 350-15
         //                                              new function to account for values like red

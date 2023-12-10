@@ -17,6 +17,9 @@ public class SpeedController {
     // currentSpeed
     double currentSpeed;
 
+    // Whether or not to coast
+    boolean applyMinimumVoltage;
+
     private boolean holdingGearUp = false;
     private boolean holdingGearDown = false;
 
@@ -29,6 +32,8 @@ public class SpeedController {
         this.gearSpacing = speedBuilder.gearSpacing;
 
         this.currentSpeed = clampSpeed(speedBuilder.naturalSpeed);
+
+        this.applyMinimumVoltage = speedBuilder.applyMinimumVoltage;
     }
 
     public double clampSpeed(double speed) {
@@ -88,6 +93,8 @@ public class SpeedController {
         // If speedType is a gear type
         double gearSpacing = 0.1;
 
+        boolean applyMinimumVoltage = false;
+
         public SpeedBuilder(SpeedType speedType) {
             this.speedType = speedType;
         }
@@ -104,6 +111,11 @@ public class SpeedController {
 
         public SpeedBuilder setGearSpacing(double gearSpacing) {
             this.gearSpacing = gearSpacing;
+            return this;
+        }
+
+        public SpeedBuilder setApplyMinimumVoltage(boolean applyMinimumVoltage) {
+            this.applyMinimumVoltage = applyMinimumVoltage;
             return this;
         }
 

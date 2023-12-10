@@ -17,34 +17,12 @@ import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 public class TestAuto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-//        MecanumController mecanumController = new MecanumController(hardwareMap);
-//        mecanumController.setDriveSpeed(0.2);
-//
-//        Servo outtake = hardwareMap.get(Servo.class, "outtake");
-//        outtake.setDirection(Servo.Direction.REVERSE);
-        VisionSubsystem visionSubsystem = new VisionSubsystem(hardwareMap, "red");
-        int location = visionSubsystem.getLocationRed();
-        telemetry.addData("Location", location);
-        telemetry.update();
-
-        while (opModeInInit() && !isStopRequested()) {
-            location = visionSubsystem.getLocationRed();
-            telemetry.addData("Location", location);
-            telemetry.update();
-        }
+        MecanumController mecanumController = new MecanumController(hardwareMap);
+        mecanumController.setRotationSpeed(0.2);
 
         waitForStart();
+        mecanumController.calibrateIMUAngleOffset();
 
-//        outtake.setPosition(0.4);
-//        sleep(2000);
-//
-//        outtake.setPosition(0.7);
-//        sleep(2000);
-//
-//        outtake.setPosition(1);
-//        sleep(2000);
-//
-//        mecanumController.moveInches(48, 48, 48, 48, true);
-//        mecanumController.moveInches(48, -48, -48, 48, true);
+        mecanumController.rotateToRadianUsingPID(Math.toRadians(90), Math.toRadians(1), 5);
     }
 }

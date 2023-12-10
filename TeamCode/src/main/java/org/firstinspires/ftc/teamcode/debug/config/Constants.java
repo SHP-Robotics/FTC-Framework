@@ -8,8 +8,7 @@ public final class Constants {
     public static final double WHEEL_ENCODER_TICKS_PER_INCH_FORWARD = 32.8741735;
     public static final double WHEEL_ENCODER_TICKS_PER_INCH_SIDEWAYS = 42.36 * 48 / 50;
 
-    // Use Binary Search if using coasting, else use 0
-    public static final double MINIMUM_VOLTAGE_APPLIED = 0;
+    public static final double MINIMUM_VOLTAGE_APPLIED = 0.0654;
 
     // Gear Shifting PID Controller
     public static final double KP = 1.00;
@@ -17,9 +16,9 @@ public final class Constants {
     public static final double KD = 0.00;
 
     // Outtake
-    public static final double OUTTAKE_STARTING = 1;
-    public static final double OUTTAKE_NEUTRAL = 0.7;
-    public static final double OUTTAKE_ACTIVE = 0.5;
+    public static final double OUTTAKE_STARTING = 0.9;
+    public static final double OUTTAKE_NEUTRAL = 0.77;
+    public static final double OUTTAKE_ACTIVE = 0.52;
 
     // Claw
     public static final double CLAW_OPEN = 0.345;
