@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.centerstage;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
+@Disabled
 @Autonomous(preselectTeleOp = "CenterStage Field Oriented")
 public class BlueAutoLeft extends LinearOpMode {
     VisionSubsystem vision;

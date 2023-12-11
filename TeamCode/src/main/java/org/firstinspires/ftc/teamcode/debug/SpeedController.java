@@ -9,7 +9,8 @@ public class SpeedController {
 
     // If speedType is an override type
     double naturalSpeed;
-    double overrideSpeed;
+    double overrideSpeedOne;
+    double overrideSpeedTwo;
 
     // If speedType is a gear type
     double gearSpacing;
@@ -27,7 +28,8 @@ public class SpeedController {
         this.speedType = speedBuilder.speedType;
 
         this.naturalSpeed = clampSpeed(speedBuilder.naturalSpeed);
-        this.overrideSpeed = clampSpeed(speedBuilder.overrideSpeed);
+        this.overrideSpeedOne = clampSpeed(speedBuilder.overrideSpeedOne);
+        this.overrideSpeedTwo = clampSpeed(speedBuilder.overrideSpeedTwo);
 
         this.gearSpacing = speedBuilder.gearSpacing;
 
@@ -51,13 +53,21 @@ public class SpeedController {
     public void updateSpeed(Gamepad gamepad) {
         switch (this.speedType) {
             case SINGLE_OVERRIDE:
-                if (DrivingConfiguration.getValue(gamepad, DrivingConfiguration.SPEED_OVERRIDE)) {
-                    this.currentSpeed = this.overrideSpeed;
+                if (DrivingConfiguration.getValue(gamepad, DrivingConfiguration.SPEED_OVERRIDE_ONE) > 0) {
+                    this.currentSpeed = this.overrideSpeedOne;
                 } else {
                     this.currentSpeed = this.naturalSpeed;
                 }
 
                 break;
+            case DOUBLE_OVERRIDE:
+                if (DrivingConfiguration.getValue(gamepad, DrivingConfiguration.SPEED_OVERRIDE_ONE) > 0) {
+                    this.currentSpeed = this.overrideSpeedOne;
+                } else if (DrivingConfiguration.getValue(gamepad, DrivingConfiguration.SPEED_OVERRIDE_TWO) > 0) {
+                    this.currentSpeed = this.overrideSpeedTwo;
+                } else {
+                    this.currentSpeed = this.naturalSpeed;
+                }
             case GEAR_SHIFT:
                 if (DrivingConfiguration.getValue(gamepad, DrivingConfiguration.GEAR_UP)) {
                     if (!holdingGearUp) {
@@ -88,7 +98,8 @@ public class SpeedController {
 
         // If speedType is an override type
         double naturalSpeed = 1.0;
-        double overrideSpeed = 0.3;
+        double overrideSpeedOne = 0.6;
+        double overrideSpeedTwo = 0.3;
 
         // If speedType is a gear type
         double gearSpacing = 0.1;
@@ -104,8 +115,13 @@ public class SpeedController {
             return this;
         }
 
-        public SpeedBuilder setOverrideSpeed(double overrideSpeed) {
-            this.overrideSpeed = overrideSpeed;
+        public SpeedBuilder setOverrideOneSpeed(double overrideSpeedOne) {
+            this.overrideSpeedOne = overrideSpeedOne;
+            return this;
+        }
+
+        public SpeedBuilder setOverrideTwoSpeed(double overrideSpeedTwo) {
+            this.overrideSpeedOne = overrideSpeedTwo;
             return this;
         }
 

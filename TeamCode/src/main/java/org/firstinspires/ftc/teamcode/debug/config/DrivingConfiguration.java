@@ -12,7 +12,8 @@ public class DrivingConfiguration {
 
     public static final GamepadAnalog ROTATE_RIGHT = GamepadAnalog.RIGHT_STICK_X;
 
-    public static final GamepadDigital SPEED_OVERRIDE = GamepadDigital.LEFT_STICK_BUTTON;
+    public static final GamepadAnalog SPEED_OVERRIDE_ONE = GamepadAnalog.RIGHT_TRIGGER;
+    public static final GamepadAnalog SPEED_OVERRIDE_TWO = GamepadAnalog.LEFT_TRIGGER;
 
     public static final GamepadDigital GEAR_UP = GamepadDigital.Y;
     public static final GamepadDigital GEAR_DOWN = GamepadDigital.A;
@@ -20,15 +21,16 @@ public class DrivingConfiguration {
     public static final GamepadDigital RESET_IMU = GamepadDigital.B;
 
     // Climber
-    public static final GamepadAnalog CLIMBER_POWER = GamepadAnalog.RIGHT_STICK_Y;
-
-    // Outtake
-    public static final GamepadDigital OUTTAKE_UP = GamepadDigital.DPAD_UP;
-    public static final GamepadDigital OUTTAKE_DOWN = GamepadDigital.DPAD_DOWN;
+    public static final GamepadDigital CLIMBER_POWER_UP = GamepadDigital.DPAD_UP;
+    public static final GamepadDigital CLIMBER_POWER_STAY = GamepadDigital.DPAD_RIGHT;
+    public static final GamepadDigital CLIMBER_POWER_DOWN = GamepadDigital.DPAD_DOWN;
 
     // Claw
     public static final GamepadDigital OPEN_CLAW = GamepadDigital.LEFT_BUMPER;
     public static final GamepadDigital CLOSE_CLAW = GamepadDigital.RIGHT_BUMPER;
+
+    // Air
+    public static final GamepadDigital AIR_POWER = GamepadDigital.X;
 
     public static double getValue(Gamepad gamepad, GamepadAnalog analog) {
         switch (analog) {

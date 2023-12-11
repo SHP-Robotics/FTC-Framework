@@ -22,7 +22,7 @@ public class CenterstageDriverOriented extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         SpeedController speedController = new SpeedController.SpeedBuilder(SpeedType.SINGLE_OVERRIDE)
                 .setNaturalSpeed(0.6)
-                .setOverrideSpeed(0.9)
+                .setOverrideOneSpeed(1)
                 .build();
 
         MecanumController mecanumController = new MecanumController(hardwareMap, speedController);
@@ -31,8 +31,11 @@ public class CenterstageDriverOriented extends LinearOpMode {
 
         Servo outtake = hardwareMap.get(Servo.class, "outtake");
         outtake.setDirection(Servo.Direction.REVERSE);
+        outtake.setPosition(Constants.OUTTAKE_HIDDEN);
 
         Servo claw = hardwareMap.get(Servo.class, "claw");
+        CRServo air = hardwareMap.get(CRServo.class, "air");
+        air.setDirection(DcMotorSimple.Direction.REVERSE);
 
         DcMotor climber = hardwareMap.get(DcMotor.class, "climber");
 
@@ -47,13 +50,17 @@ public class CenterstageDriverOriented extends LinearOpMode {
                 claw.setPosition(Constants.CLAW_CLOSE);
             }
 
-            if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.OUTTAKE_UP)) {
-                outtake.setPosition(Constants.OUTTAKE_NEUTRAL);
-            } else if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.OUTTAKE_DOWN)) {
-                outtake.setPosition(Constants.OUTTAKE_ACTIVE);
+            if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER_UP)) {
+                climber.setPower(1);
+            } else if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER_STAY)) {
+                climber.setPower(-0.5);
+            } else if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER_DOWN)) {
+                climber.setPower(-1);
+            } else {
+                climber.setPower(0);
             }
 
-            climber.setPower(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER));
+            air.setPower(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.AIR_POWER) ? 1: 0);
         }
     }
 }

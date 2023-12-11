@@ -102,8 +102,8 @@ public class MecanumController {
     }
 
     public void calibrateIMUAngleOffset() {
-//        imuAngleOffset = -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-        imu.resetYaw();
+        imuAngleOffset = -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+//        imu.resetYaw();
     }
 
     public double getCalibratedIMUAngle() {
@@ -261,7 +261,7 @@ public class MecanumController {
         double currentRadians = this.getCalibratedIMUAngle();
         double relativeRadians = Constants.setToDomain(currentRadians, targetRadian - Math.PI, targetRadian + Math.PI);
 
-        double error = radianTolerance + 1;
+        double error = targetRadian - relativeRadians;
 
         double power;
 
@@ -276,10 +276,10 @@ public class MecanumController {
                 power = Math.min(-Constants.MINIMUM_VOLTAGE_APPLIED, Math.max(-1, power));
             }
 
-            this.leftFront.setPower(-power);
-            this.rightFront.setPower(power);
-            this.leftRear.setPower(-power);
-            this.rightRear.setPower(power);
+            this.leftFront.setPower(power);
+            this.rightFront.setPower(-power);
+            this.leftRear.setPower(power);
+            this.rightRear.setPower(-power);
 
             currentRadians = this.getCalibratedIMUAngle();
             relativeRadians = Constants.setToDomain(currentRadians, targetRadian - Math.PI, targetRadian + Math.PI);
@@ -298,7 +298,7 @@ public class MecanumController {
         double relativeRadians = Constants.setToDomain(currentRadians, targetRadian - Math.PI, targetRadian + Math.PI);
 
         double lastError = 0.0;
-        double error = radianTolerance + 1;
+        double error = targetRadian - relativeRadians;
 
         double power;
 
@@ -321,10 +321,10 @@ public class MecanumController {
 
             lastError = error;
 
-            this.leftFront.setPower(-power);
-            this.rightFront.setPower(power);
-            this.leftRear.setPower(-power);
-            this.rightRear.setPower(power);
+            this.leftFront.setPower(power);
+            this.rightFront.setPower(-power);
+            this.leftRear.setPower(power);
+            this.rightRear.setPower(-power);
 
             currentRadians = this.getCalibratedIMUAngle();
             relativeRadians = Constants.setToDomain(currentRadians, targetRadian - Math.PI, targetRadian + Math.PI);
