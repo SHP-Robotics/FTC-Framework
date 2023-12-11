@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.debug.WeightedMecanumController;
+import org.firstinspires.ftc.teamcode.debug.ElevatedMecanumController;
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -26,7 +26,7 @@ public class AprilTagCorrection extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        WeightedMecanumController weightedMecanumController = new WeightedMecanumController(hardwareMap);
+        ElevatedMecanumController weightedMecanumController = new ElevatedMecanumController(hardwareMap);
         weightedMecanumController.setDriveSpeed(0.3);
         double tolerance = 0.05;
 

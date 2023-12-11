@@ -22,11 +22,11 @@ public class MecanumController {
     public DcMotor rightRear;
 
     public IMU imu;
-    private double imuAngleOffset = 0;
+    protected double imuAngleOffset = 0;
 
-    private SpeedController speedController;
-    private double driveSpeed = 1;
-    private double rotationSpeed = 1;
+    protected SpeedController speedController;
+    protected double driveSpeed = 1;
+    protected double rotationSpeed = 1;
 
     // setRotationSpeed affects rotationKP also
     private double rotationKP = 1/Math.PI;
