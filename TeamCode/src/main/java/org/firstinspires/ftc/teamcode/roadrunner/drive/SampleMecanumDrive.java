@@ -53,10 +53,13 @@ import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.kV;
  */
 @Config
 public class SampleMecanumDrive extends MecanumDrive {
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(4, 0.001, 0.003);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(2.5, 0, 0.001);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 0);
 
-    public static double LATERAL_MULTIPLIER = 1;
+    // Leave as 1 for now
+    // May cause tiny amounts of strafe undershooting
+    // Strafe undershooting can probs. be accounted for in Y-Multiplier in StandardTrackingWheelLocalizer
+    public static double LATERAL_MULTIPLIER = 1; // TODO: Check if this collides with Y-Multiplier in StandardTrackingWheelLocalizer
 
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;

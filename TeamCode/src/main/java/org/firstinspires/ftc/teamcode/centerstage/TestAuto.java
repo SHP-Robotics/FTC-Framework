@@ -14,7 +14,6 @@ import org.firstinspires.ftc.teamcode.debug.MecanumController;
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
-@Disabled
 @Autonomous(name = "Test Auto")
 public class TestAuto extends LinearOpMode {
     @Override
@@ -23,8 +22,14 @@ public class TestAuto extends LinearOpMode {
         mecanumController.setRotationSpeed(0.2);
 
         waitForStart();
-        mecanumController.calibrateIMUAngleOffset();
 
-        mecanumController.rotateToRadianUsingPID(Math.toRadians(180), Math.toRadians(1));
+        mecanumController.leftFront.setPower(1);
+        sleep(2000);
+        mecanumController.rightFront.setPower(1);
+        sleep(2000);
+        mecanumController.leftRear.setPower(1);
+        sleep(2000);
+        mecanumController.rightRear.setPower(1);
+        sleep(2000);
     }
 }
