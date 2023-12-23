@@ -1,6 +1,7 @@
-package org.firstinspires.ftc.teamcode.centerstage;
+package org.firstinspires.ftc.teamcode.autos.disabled;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -8,8 +9,9 @@ import org.firstinspires.ftc.teamcode.debug.MecanumController;
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
+@Disabled
 @Autonomous(preselectTeleOp = "CenterStage Field Oriented")
-public class JustRed extends LinearOpMode {
+public class RedAutoRight extends LinearOpMode {
     VisionSubsystem vision;
 
     public int location;
@@ -50,7 +52,19 @@ public class JustRed extends LinearOpMode {
             claw.setPosition(Constants.CLAW_OPEN);
             sleep(200);
             outtake.setPosition(Constants.OUTTAKE_NEUTRAL);
-            mecanumController.moveToPosition(0, 26.25, true);
+
+            mecanumController.rotateToRadianUsingPID(Math.toRadians(90.4), Math.toRadians(0), 4);
+            mecanumController.moveToPosition(-38.5, 26.25,true);
+            mecanumController.moveToPosition(-38.5, 24.25,true);
+            mecanumController.moveToPosition(-41.5, 24.25,true);
+
+
+            mecanumController.rotateToRadianUsingPID(Math.toRadians(90.4), Math.toRadians(0), 4);
+            outtake.setPosition(Constants.OUTTAKE_ACTIVE);
+            sleep(1000);
+
+            mecanumController.setDriveSpeed(mecanumController.getDriveSpeed()*0.3);
+            mecanumController.moveToPosition(-34.5, 24.25, true);
 
         } else if (location == 2) {
 
@@ -59,20 +73,43 @@ public class JustRed extends LinearOpMode {
             claw.setPosition(Constants.CLAW_OPEN);
             sleep(200);
             outtake.setPosition(Constants.OUTTAKE_NEUTRAL);
-            mecanumController.moveToPosition(0, 23.25, true);
+
+            mecanumController.moveToPosition(0, 26.25, true);
+            mecanumController.rotateToRadianUsingPID(Math.toRadians(90.4), Math.toRadians(0), 4);
+
+            mecanumController.moveToPosition(-50.5, 26.25,true);
+
+            mecanumController.rotateToRadianUsingPID(Math.toRadians(90.4), Math.toRadians(0), 4);
+            outtake.setPosition(Constants.OUTTAKE_ACTIVE);
+            sleep(1000);
+
+            mecanumController.setDriveSpeed(mecanumController.getDriveSpeed()*0.3);
+            mecanumController.moveToPosition(-36.5, 26.25, true);
 
         } else {
 
             mecanumController.moveToPosition(0, 26.25, true);
             mecanumController.rotateToRadianUsingPID(Math.toRadians(90.4), Math.toRadians(0), 4);
 
-            outtake.setPosition(Constants.OUTTAKE_NEUTRAL);
-
             mecanumController.moveToPosition(-16.5, 26.25,true);
             sleep(100);
             claw.setPosition(Constants.CLAW_OPEN);
             sleep(200);
-            mecanumController.moveToPosition(-18.5, 26.25, true);
+            outtake.setPosition(Constants.OUTTAKE_NEUTRAL);
+
+            mecanumController.rotateToRadianUsingPID(Math.toRadians(90.4), Math.toRadians(0), 4);
+            mecanumController.moveToPosition(-38.5, 26.25,true);
+            mecanumController.moveToPosition(-38.5, 36.25,true);
+            mecanumController.moveToPosition(-41.5, 36.25,true);
+
+
+            mecanumController.rotateToRadianUsingPID(Math.toRadians(90.4), Math.toRadians(0), 4);
+            outtake.setPosition(Constants.OUTTAKE_ACTIVE);
+            sleep(1000);
+
+            mecanumController.setDriveSpeed(mecanumController.getDriveSpeed()*0.3);
+            mecanumController.moveToPosition(-34.5, 36.25, true);
+
         }
     }
 }

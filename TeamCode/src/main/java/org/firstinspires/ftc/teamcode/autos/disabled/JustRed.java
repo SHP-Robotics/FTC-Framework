@@ -1,16 +1,17 @@
-package org.firstinspires.ftc.teamcode.centerstage;
+package org.firstinspires.ftc.teamcode.autos.disabled;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.debug.MecanumController;
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
+@Disabled
 @Autonomous(preselectTeleOp = "CenterStage Field Oriented")
-public class RedAutoLeft extends LinearOpMode {
+public class JustRed extends LinearOpMode {
     VisionSubsystem vision;
 
     public int location;
@@ -51,19 +52,7 @@ public class RedAutoLeft extends LinearOpMode {
             claw.setPosition(Constants.CLAW_OPEN);
             sleep(200);
             outtake.setPosition(Constants.OUTTAKE_NEUTRAL);
-
-            mecanumController.rotateToRadianUsingPID(Math.toRadians(90.4), Math.toRadians(0), 4);
-            mecanumController.moveToPosition(-86.5, 26.25,true);
-            mecanumController.moveToPosition(-86.5, 24.25,true);
-            mecanumController.moveToPosition(-89.5, 24.25,true);
-
-
-            mecanumController.rotateToRadianUsingPID(Math.toRadians(90.4), Math.toRadians(0), 4);
-            outtake.setPosition(Constants.OUTTAKE_ACTIVE);
-            sleep(1000);
-
-            mecanumController.setDriveSpeed(mecanumController.getDriveSpeed()*0.3);
-            mecanumController.moveToPosition(-82.5, 24.25, true);
+            mecanumController.moveToPosition(0, 26.25, true);
 
         } else if (location == 2) {
 
@@ -72,18 +61,7 @@ public class RedAutoLeft extends LinearOpMode {
             claw.setPosition(Constants.CLAW_OPEN);
             sleep(200);
             outtake.setPosition(Constants.OUTTAKE_NEUTRAL);
-
-            mecanumController.moveToPosition(0, 26.25, true);
-            mecanumController.rotateToRadianUsingPID(Math.toRadians(90.4), Math.toRadians(0), 4);
-
-            mecanumController.moveToPosition(-88.5, 26.25,true);
-
-            mecanumController.rotateToRadianUsingPID(Math.toRadians(90.4), Math.toRadians(0), 4);
-            outtake.setPosition(Constants.OUTTAKE_ACTIVE);
-            sleep(1000);
-
-            mecanumController.setDriveSpeed(mecanumController.getDriveSpeed()*0.3);
-            mecanumController.moveToPosition(-84.5, 26.25, true);
+            mecanumController.moveToPosition(0, 23.25, true);
 
         } else {
 
@@ -96,20 +74,7 @@ public class RedAutoLeft extends LinearOpMode {
             sleep(100);
             claw.setPosition(Constants.CLAW_OPEN);
             sleep(200);
-
-            mecanumController.rotateToRadianUsingPID(Math.toRadians(90.4), Math.toRadians(0), 4);
-            mecanumController.moveToPosition(-86.5, 26.25,true);
-            mecanumController.moveToPosition(-86.5, 35.25,true);
-            mecanumController.moveToPosition(-90.5, 35.25,true);
-
-
-            mecanumController.rotateToRadianUsingPID(Math.toRadians(90.4), Math.toRadians(0), 4);
-            outtake.setPosition(Constants.OUTTAKE_ACTIVE);
-            sleep(1000);
-
-            mecanumController.setDriveSpeed(mecanumController.getDriveSpeed()*0.3);
-            mecanumController.moveToPosition(-82.5, 35.25, true);
-
+            mecanumController.moveToPosition(-18.5, 26.25, true);
         }
     }
 }

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.centerstage;
+package org.firstinspires.ftc.teamcode.autos.debugging;
 
 import android.graphics.Color;
 

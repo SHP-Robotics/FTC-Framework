@@ -1,6 +1,7 @@
-package org.firstinspires.ftc.teamcode.centerstage;
+package org.firstinspires.ftc.teamcode.autos.disabled;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -8,8 +9,9 @@ import org.firstinspires.ftc.teamcode.debug.MecanumController;
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
+@Disabled
 @Autonomous(preselectTeleOp = "CenterStage Field Oriented")
-public class JustBlue extends LinearOpMode {
+public class JustRedParking extends LinearOpMode {
     VisionSubsystem vision;
 
     public int location;
@@ -27,12 +29,12 @@ public class JustBlue extends LinearOpMode {
         outtake.setDirection(Servo.Direction.REVERSE);
         outtake.setPosition(Constants.OUTTAKE_STARTING);
 
-        vision = new VisionSubsystem(hardwareMap,"blue");
-        location = vision.getLocationBlue();
+        vision = new VisionSubsystem(hardwareMap,"red");
+        location = vision.getLocationRed();
         telemetry.addData("Location: ", location);
         telemetry.update();
         while (opModeInInit() && !isStopRequested()) {
-            location = vision.getLocationBlue();
+            location = vision.getLocationRed();
             telemetry.addData("Location: ", location);
             telemetry.update();
         }
@@ -40,16 +42,16 @@ public class JustBlue extends LinearOpMode {
         waitForStart();
         mecanumController.calibrateIMUAngleOffset();
 
-        if (location == 3) {
+        if (location == 1) {
 
             mecanumController.moveToPosition(0, 26.25, true);
-            mecanumController.rotateToRadianUsingPID(Math.toRadians(-90.4), Math.toRadians(0), 4);
-            outtake.setPosition(Constants.OUTTAKE_NEUTRAL);
+            mecanumController.rotateToRadianUsingPID(Math.toRadians(90.4), Math.toRadians(0), 4);
 
-            mecanumController.moveToPosition(-6.5, 26.25,true);
+            mecanumController.moveToPosition(6.5, 26.25,true);
             sleep(100);
             claw.setPosition(Constants.CLAW_OPEN);
             sleep(200);
+            outtake.setPosition(Constants.OUTTAKE_NEUTRAL);
             mecanumController.moveToPosition(0, 26.25, true);
 
         } else if (location == 2) {
@@ -59,20 +61,21 @@ public class JustBlue extends LinearOpMode {
             claw.setPosition(Constants.CLAW_OPEN);
             sleep(200);
             outtake.setPosition(Constants.OUTTAKE_NEUTRAL);
-            mecanumController.moveToPosition(0, 27.25, true);
+            mecanumController.moveToPosition(0, 0, true);
+            mecanumController.moveToPosition(48, 0, true);
 
         } else {
 
             mecanumController.moveToPosition(0, 26.25, true);
-            mecanumController.rotateToRadianUsingPID(Math.toRadians(-90.4), Math.toRadians(0), 4);
+            mecanumController.rotateToRadianUsingPID(Math.toRadians(90.4), Math.toRadians(0), 4);
+
             outtake.setPosition(Constants.OUTTAKE_NEUTRAL);
 
-            mecanumController.moveToPosition(15.5, 26.25,true);
+            mecanumController.moveToPosition(-16.5, 26.25,true);
             sleep(100);
             claw.setPosition(Constants.CLAW_OPEN);
             sleep(200);
-            mecanumController.moveToPosition(18.5, 26.25,true);
-
+            mecanumController.moveToPosition(-18.5, 26.25, true);
         }
     }
 }

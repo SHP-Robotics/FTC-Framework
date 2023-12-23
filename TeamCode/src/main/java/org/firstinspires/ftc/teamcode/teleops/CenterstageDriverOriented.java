@@ -1,5 +1,6 @@
-package org.firstinspires.ftc.teamcode.centerstage;
+package org.firstinspires.ftc.teamcode.teleops;
 
+import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -7,9 +8,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.debug.MecanumController;
 import org.firstinspires.ftc.teamcode.debug.OneMotorSystem;
 import org.firstinspires.ftc.teamcode.debug.Side;
@@ -18,17 +16,14 @@ import org.firstinspires.ftc.teamcode.debug.SpeedType;
 import org.firstinspires.ftc.teamcode.debug.Synchronous;
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
 import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
-import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
-import org.firstinspires.ftc.vision.apriltag.AprilTagLibrary;
-import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
-import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
-import java.util.List;
+import java.io.File;
 
-@TeleOp(name = "CenterStage Field Oriented")
-public class CenterstageFieldOriented extends LinearOpMode {
+@TeleOp(name = "CenterStage Driver Oriented")
+public class CenterstageDriverOriented extends LinearOpMode {
+    private String soundPath = "/sdcard/FIRST/blocks/sounds";
+    private File soundFile = new File(soundPath + "/Holy Moley.wav");
+
     @Override
     public void runOpMode() throws InterruptedException {
         SpeedController speedController = new SpeedController.SpeedBuilder(SpeedType.SINGLE_OVERRIDE)
@@ -53,19 +48,14 @@ public class CenterstageFieldOriented extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            telemetry.addData("Radians", mecanumController.getCalibratedIMUAngle());
-            telemetry.update();
-
-            mecanumController.fieldOrientedDrive(gamepad1);
+            mecanumController.drive(gamepad1);
 
             if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.OPEN_CLAW)) {
                 claw.setPosition(Constants.CLAW_OPEN);
+                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, soundFile);
             } else if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLOSE_CLAW)) {
                 claw.setPosition(Constants.CLAW_CLOSE);
-            }
-
-            if (gamepad1.b) {
-                mecanumController.calibrateIMUAngleOffset();
+                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, soundFile);
             }
 
             if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER_UP)) {

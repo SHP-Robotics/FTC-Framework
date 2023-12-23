@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.autos;
 
+import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -9,8 +10,13 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
+import java.io.File;
+
 @Autonomous(preselectTeleOp = "CenterStage Field Oriented")
 public class BlueAutoLeftRR extends LinearOpMode {
+    private String soundPath = "/sdcard/FIRST/blocks/sounds";
+    private File soundFile = new File(soundPath + "/Holy Moley.wav");
+
     @Override
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive sampleMecanumDrive = new SampleMecanumDrive(hardwareMap);
@@ -28,9 +34,8 @@ public class BlueAutoLeftRR extends LinearOpMode {
                 .forward(10)
                 .addDisplacementMarker(() -> {
                     claw.setPosition(Constants.CLAW_OPEN);
-                    // TODO: determine if necessary
-                    sleep(2000);
                 })
+                .waitSeconds(2)
                 .forward(-10)
                 .build();
 
@@ -38,21 +43,28 @@ public class BlueAutoLeftRR extends LinearOpMode {
                 .forward(35)
                 .addDisplacementMarker(() -> {
                     claw.setPosition(Constants.CLAW_OPEN);
-                    // TODO: determine if necessary
-                    sleep(2000);
+                    outtake.setPosition(Constants.OUTTAKE_NEUTRAL);
                 })
-                .forward(-7)
+                .waitSeconds(2)
+                .forward(-9)
                 .turn(Math.toRadians(90))
-                .forward(-10)
+                .forward(-88)
+                .addDisplacementMarker(() -> {
+                    outtake.setPosition(Constants.OUTTAKE_ACTIVE);
+                })
+                .waitSeconds(2)
+                .forward(3)
+                .waitSeconds(1)
+                .strafeLeft(26)
+                .back(12)
                 .build();
 
         TrajectorySequence trajectorySequenceRight = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
                 .forward(10)
                 .addDisplacementMarker(() -> {
                     claw.setPosition(Constants.CLAW_OPEN);
-                    // TODO: determine if necessary
-                    sleep(2000);
                 })
+                .waitSeconds(2)
                 .forward(-10)
                 .build();
 
@@ -81,5 +93,7 @@ public class BlueAutoLeftRR extends LinearOpMode {
                 sampleMecanumDrive.followTrajectorySequence(trajectorySequenceRight);
                 break;
         }
+
+        SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, soundFile);
     }
 }
