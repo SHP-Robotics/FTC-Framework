@@ -20,7 +20,6 @@ import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityCons
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -30,7 +29,7 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
-import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceRunner;
+import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequenceRunnerCancelable;
 import org.firstinspires.ftc.teamcode.roadrunner.util.LynxModuleUtil;
 
 import java.util.ArrayList;
@@ -53,21 +52,20 @@ import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.kV;
  * Simple mecanum drive hardware implementation for REV hardware.
  */
 @Config
-public class SampleMecanumDrive extends MecanumDrive {
-    //public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(2, 0, 0);
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(4, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(4, 0, 0);
+public class SampleMecanumDriveCancelable extends MecanumDrive {
+    public static PIDCoefficients TRANSLATIONAL_PID = SampleMecanumDrive.TRANSLATIONAL_PID;
+    public static PIDCoefficients HEADING_PID = SampleMecanumDrive.HEADING_PID;
 
     // Leave as 1 for now
     // May cause tiny amounts of strafe undershooting
     // Strafe undershooting can probs. be accounted for in Y-Multiplier in StandardTrackingWheelLocalizer
-    public static double LATERAL_MULTIPLIER = 1; // TODO: Check if this collides with Y-Multiplier in StandardTrackingWheelLocalizer
+    public static double LATERAL_MULTIPLIER = SampleMecanumDrive.LATERAL_MULTIPLIER; // TODO: Check if this collides with Y-Multiplier in StandardTrackingWheelLocalizer
 
-    public static double VX_WEIGHT = 1;
-    public static double VY_WEIGHT = 1;
-    public static double OMEGA_WEIGHT = 1;
+    public static double VX_WEIGHT = SampleMecanumDrive.VX_WEIGHT;
+    public static double VY_WEIGHT = SampleMecanumDrive.VY_WEIGHT;
+    public static double OMEGA_WEIGHT = SampleMecanumDrive.OMEGA_WEIGHT;
 
-    private TrajectorySequenceRunner trajectorySequenceRunner;
+    private TrajectorySequenceRunnerCancelable trajectorySequenceRunner;
 
     private static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH);
     private static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT = getAccelerationConstraint(MAX_ACCEL);
@@ -83,7 +81,7 @@ public class SampleMecanumDrive extends MecanumDrive {
     private List<Integer> lastEncPositions = new ArrayList<>();
     private List<Integer> lastEncVels = new ArrayList<>();
 
-    public SampleMecanumDrive(HardwareMap hardwareMap) {
+    public SampleMecanumDriveCancelable(HardwareMap hardwareMap) {
         super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
 
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,
@@ -134,7 +132,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         // Completed Per 2023-08-29
         setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap, lastTrackingEncPositions, lastTrackingEncVels));
 
-        trajectorySequenceRunner = new TrajectorySequenceRunner(
+        trajectorySequenceRunner = new TrajectorySequenceRunnerCancelable(
                 follower, HEADING_PID, batteryVoltageSensor,
                 lastEncPositions, lastEncVels, lastTrackingEncPositions, lastTrackingEncVels
         );
@@ -193,6 +191,10 @@ public class SampleMecanumDrive extends MecanumDrive {
     public void followTrajectorySequence(TrajectorySequence trajectorySequence) {
         followTrajectorySequenceAsync(trajectorySequence);
         waitForIdle();
+    }
+
+    public void breakFollowing() {
+        trajectorySequenceRunner.breakFollowing();
     }
 
     public Pose2d getLastError() {

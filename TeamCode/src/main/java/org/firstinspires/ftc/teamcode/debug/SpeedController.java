@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.debug;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
 
@@ -24,6 +25,11 @@ public class SpeedController {
     private boolean holdingGearUp = false;
     private boolean holdingGearDown = false;
 
+    private ElapsedTime timer;
+    private double dt;
+    private double lastTime = -1;
+    private PIDController speedPIDController = new PIDController(0.1, 0, 0);
+
     private SpeedController(SpeedBuilder speedBuilder) {
         this.speedType = speedBuilder.speedType;
 
@@ -36,6 +42,9 @@ public class SpeedController {
         this.currentSpeed = clampSpeed(speedBuilder.naturalSpeed);
 
         this.applyMinimumVoltage = speedBuilder.applyMinimumVoltage;
+
+        timer = new ElapsedTime();
+        timer.reset();
     }
 
     public double clampSpeed(double speed) {
@@ -50,7 +59,7 @@ public class SpeedController {
         this.currentSpeed = clampSpeed(speed);
     }
 
-    public void updateSpeed(Gamepad gamepad) {
+    public void updateSpeed(Gamepad gamepad, double max) {
         switch (this.speedType) {
             case SINGLE_OVERRIDE:
                 if (DrivingConfiguration.getValue(gamepad, DrivingConfiguration.SPEED_OVERRIDE_ONE) > 0) {
@@ -60,6 +69,7 @@ public class SpeedController {
                 }
 
                 break;
+
             case DOUBLE_OVERRIDE:
                 if (DrivingConfiguration.getValue(gamepad, DrivingConfiguration.SPEED_OVERRIDE_ONE) > 0) {
                     this.currentSpeed = this.overrideSpeedOne;
@@ -68,6 +78,8 @@ public class SpeedController {
                 } else {
                     this.currentSpeed = this.naturalSpeed;
                 }
+
+                break;
             case GEAR_SHIFT:
                 if (DrivingConfiguration.getValue(gamepad, DrivingConfiguration.GEAR_UP)) {
                     if (!holdingGearUp) {
@@ -89,7 +101,37 @@ public class SpeedController {
 
                 break;
             case PID_CONTROLLED_WITH_OVERRIDE:
+                dt = timer.seconds() - lastTime;
 
+                if (lastTime == -1) {
+                    lastTime = timer.seconds();
+                    break;
+                }
+
+                lastTime = timer.seconds();
+
+//                if (DrivingConfiguration.getValue(gamepad, DrivingConfiguration.SPEED_OVERRIDE_ONE) > 0) {
+//                    this.currentSpeed = this.overrideSpeedOne;
+//                } else {
+                this.currentSpeed = clampSpeed(this.currentSpeed + (this.speedPIDController.getOutput(max - currentSpeed) * dt));
+//                }
+
+                break;
+            case PID_CONTROLLED_OVERRIDE:
+                dt = timer.seconds() - lastTime;
+
+                if (lastTime == -1) {
+                    lastTime = timer.seconds();
+                    break;
+                }
+
+                lastTime = timer.seconds();
+
+                if (DrivingConfiguration.getValue(gamepad, DrivingConfiguration.PID_OVERRIDE)) {
+                    this.currentSpeed = clampSpeed(this.currentSpeed + (this.speedPIDController.getOutput(max - currentSpeed) * dt));
+                }
+
+                break;
         }
     }
 

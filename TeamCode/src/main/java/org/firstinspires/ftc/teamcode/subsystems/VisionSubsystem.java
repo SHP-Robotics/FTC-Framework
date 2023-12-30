@@ -7,6 +7,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 import org.firstinspires.ftc.teamcode.shplib.vision.ElementDetectionPipelineRed;
 import org.firstinspires.ftc.teamcode.shplib.vision.ElementDetectionPipelineBlue;
+import org.firstinspires.ftc.teamcode.shplib.vision.NotFieldPipeline;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -20,6 +21,7 @@ public class VisionSubsystem extends Subsystem {
     //    CVPipeline pipeline = new CVPipeline();
     ElementDetectionPipelineRed detectorRed;
     ElementDetectionPipelineBlue detectorBlue;
+    NotFieldPipeline detectorNotField;
     //    private final AprilTagDetectionPipeline pipeline;
     private ArrayList<AprilTagDetection> tags;
 
@@ -49,6 +51,7 @@ public class VisionSubsystem extends Subsystem {
 //        detector = new ObjectDetectionPipeline();
         detectorRed = new ElementDetectionPipelineRed();
         detectorBlue = new ElementDetectionPipelineBlue();
+        detectorNotField = new NotFieldPipeline();
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
@@ -59,6 +62,8 @@ public class VisionSubsystem extends Subsystem {
             camera.setPipeline(detectorRed);
         else if (color.equals("blue"))
             camera.setPipeline(detectorBlue);
+        else if (color.equals("not field"))
+            camera.setPipeline(detectorNotField);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
@@ -82,6 +87,9 @@ public class VisionSubsystem extends Subsystem {
     }
     public int getLocationBlue(){
         return detectorBlue.getLocation();
+    }
+    public double getAmountNotField() {
+        return detectorNotField.getAmountNotField();
     }
 
 //    public boolean detectedTags() {

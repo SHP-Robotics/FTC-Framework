@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.experiments;
+package org.firstinspires.ftc.teamcode.teleops.experimental;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -9,20 +9,20 @@ import org.firstinspires.ftc.teamcode.debug.SpeedController;
 import org.firstinspires.ftc.teamcode.debug.SpeedType;
 
 @Disabled
-@TeleOp(name = "PID Controlled Speed")
-public class PIDControlledSpeed extends LinearOpMode {
+@TeleOp(group = "experimental")
+public class OptionalPIDDrive extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        SpeedController speedController = new SpeedController.SpeedBuilder(SpeedType.PID_CONTROLLED_WITH_OVERRIDE)
+        SpeedController speedController = new SpeedController.SpeedBuilder(SpeedType.PID_CONTROLLED_OVERRIDE)
                 .build();
-
         MecanumController mecanumController = new MecanumController(hardwareMap, speedController);
-        mecanumController.setDriveSpeed(0);
 
         waitForStart();
 
         while (opModeIsActive()) {
             mecanumController.drive(gamepad1);
+            telemetry.addData("current speed", mecanumController.getDriveSpeed());
+            telemetry.update();
         }
     }
 }

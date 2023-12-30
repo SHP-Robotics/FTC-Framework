@@ -25,7 +25,7 @@ import java.util.Objects;
  * <p>
  * Further fine tuning of kF may be desired.
  */
-@Disabled
+//@Disabled
 @Config
 @Autonomous(group = "drive")
 public class MaxVelocityTuner extends LinearOpMode {
@@ -72,8 +72,6 @@ public class MaxVelocityTuner extends LinearOpMode {
 
         double effectiveKf = DriveConstants.getMotorVelocityF(veloInchesToTicks(maxVelocity));
 
-        telemetry.addData("Time", timer.seconds());
-        telemetry.addData("Time under runtime", timer.seconds() < RUNTIME);
         telemetry.addData("Max Velocity", maxVelocity);
         telemetry.addData("Max Recommended Velocity", maxVelocity * 0.8);
         telemetry.addData("Voltage Compensated kF", effectiveKf * batteryVoltageSensor.getVoltage() / 12);

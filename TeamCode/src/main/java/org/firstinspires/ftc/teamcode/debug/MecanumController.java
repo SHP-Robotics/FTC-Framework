@@ -122,14 +122,14 @@ public class MecanumController {
 
         double max = Math.max(Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower)), Math.max(Math.abs(leftRearPower), Math.abs(rightRearPower)));
 
-        speedController.updateSpeed(gamepad);
+        speedController.updateSpeed(gamepad, max);
         this.driveSpeed = speedController.getSpeed();
 
         if (max < 1) {
             max = 1;
         }
 
-        if (max * driveSpeed < Constants.MINIMUM_VOLTAGE_APPLIED) {
+        if (speedController.applyMinimumVoltage && max * driveSpeed < Constants.MINIMUM_VOLTAGE_APPLIED) {
             leftFront.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);
             rightFront.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);
             leftRear.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);
@@ -162,7 +162,7 @@ public class MecanumController {
 
         double max = Math.max(Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower)), Math.max(Math.abs(leftRearPower), Math.abs(rightRearPower)));
 
-        speedController.updateSpeed(gamepad);
+        speedController.updateSpeed(gamepad, max);
         this.driveSpeed = speedController.getSpeed();
 
         if (max < 1) {
@@ -191,7 +191,7 @@ public class MecanumController {
 
         double max = Math.max(Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower)), Math.max(Math.abs(leftRearPower), Math.abs(rightRearPower)));
 
-        speedController.updateSpeed(gamepad);
+        speedController.updateSpeed(gamepad, max);
         this.driveSpeed = speedController.getSpeed();
 
         //if (max < 1) {

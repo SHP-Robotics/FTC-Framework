@@ -62,7 +62,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.StandardTrackingWheelLoca
  * slightly but your heading will still be fine. This does not affect your overall tracking
  * precision. The heading should still line up.
  */
-@Disabled
+//@Disabled
 @Config
 @TeleOp(group = "drive")
 public class TrackingWheelLateralDistanceTuner extends LinearOpMode {
