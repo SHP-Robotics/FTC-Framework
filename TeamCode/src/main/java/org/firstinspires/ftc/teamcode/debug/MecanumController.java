@@ -183,7 +183,7 @@ public class MecanumController {
         rightRear.setPower(rightRearPower * driveSpeed / max);
     }
 
-    public void driveParamsFast(Gamepad gamepad, double x, double y, double r) {
+    public void driveParams(double x, double y, double r) {
         double leftFrontPower = y + x + r;
         double rightFrontPower = y - x - r;
         double leftRearPower = y - x + r;
@@ -191,12 +191,9 @@ public class MecanumController {
 
         double max = Math.max(Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower)), Math.max(Math.abs(leftRearPower), Math.abs(rightRearPower)));
 
-        speedController.updateSpeed(gamepad, max);
-        this.driveSpeed = speedController.getSpeed();
-
-        //if (max < 1) {
-        //    max = 1;
-        //}
+        if (max < 1) {
+            max = 1;
+        }
 
         if (speedController.applyMinimumVoltage && max * driveSpeed < Constants.MINIMUM_VOLTAGE_APPLIED) {
             leftFront.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);

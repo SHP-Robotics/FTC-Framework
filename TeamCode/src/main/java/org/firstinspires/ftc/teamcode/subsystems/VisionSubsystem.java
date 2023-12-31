@@ -7,7 +7,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 import org.firstinspires.ftc.teamcode.shplib.vision.ElementDetectionPipelineRed;
 import org.firstinspires.ftc.teamcode.shplib.vision.ElementDetectionPipelineBlue;
-import org.firstinspires.ftc.teamcode.shplib.vision.NotFieldPipeline;
+import org.firstinspires.ftc.teamcode.shplib.vision.PixelDetectionPipeline;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -21,7 +21,7 @@ public class VisionSubsystem extends Subsystem {
     //    CVPipeline pipeline = new CVPipeline();
     ElementDetectionPipelineRed detectorRed;
     ElementDetectionPipelineBlue detectorBlue;
-    NotFieldPipeline detectorNotField;
+    public PixelDetectionPipeline pixelDetectionPipeline;
     //    private final AprilTagDetectionPipeline pipeline;
     private ArrayList<AprilTagDetection> tags;
 
@@ -47,23 +47,23 @@ public class VisionSubsystem extends Subsystem {
 
     private State state;
 
-    public VisionSubsystem(HardwareMap hardwareMap,String color) {
+    public VisionSubsystem(HardwareMap hardwareMap, String pipeline) {
 //        detector = new ObjectDetectionPipeline();
         detectorRed = new ElementDetectionPipelineRed();
         detectorBlue = new ElementDetectionPipelineBlue();
-        detectorNotField = new NotFieldPipeline();
+        pixelDetectionPipeline = new PixelDetectionPipeline();
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
 //        pipeline = new AprilTagDetectionPipeline(Constants.Vision.kTagsizeMeters, fx, fy, cx, cy);
 //        tags = new ArrayList<>();
 
-        if (color.equals("red"))
+        if (pipeline.equals("red"))
             camera.setPipeline(detectorRed);
-        else if (color.equals("blue"))
+        else if (pipeline.equals("blue"))
             camera.setPipeline(detectorBlue);
-        else if (color.equals("not field"))
-            camera.setPipeline(detectorNotField);
+        else if (pipeline.equals("pixel"))
+            camera.setPipeline(pixelDetectionPipeline);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
@@ -88,8 +88,11 @@ public class VisionSubsystem extends Subsystem {
     public int getLocationBlue(){
         return detectorBlue.getLocation();
     }
-    public double getAmountNotField() {
-        return detectorNotField.getAmountNotField();
+    public double getPixelMass() {
+        return pixelDetectionPipeline.getPixelMass();
+    }
+    public PixelDetectionPipeline.PixelMassLocation getPixelMassLocation() {
+        return pixelDetectionPipeline.getPixelMassLocation();
     }
 
 //    public boolean detectedTags() {

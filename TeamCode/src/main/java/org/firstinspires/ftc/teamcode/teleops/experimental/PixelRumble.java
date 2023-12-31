@@ -18,16 +18,17 @@ public class PixelRumble extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         MecanumController mecanumController = new MecanumController(hardwareMap);
-        VisionSubsystem visionSubsystem = new VisionSubsystem(hardwareMap, "not field");
+        VisionSubsystem visionSubsystem = new VisionSubsystem(hardwareMap, "pixel");
 
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
-            telemetry.addData("amount not field", visionSubsystem.getAmountNotField());
+            telemetry.addData("pixel mass", visionSubsystem.getPixelMass());
             telemetry.update();
 
             mecanumController.drive(gamepad1);
-            rumbleAmount = Math.min(1, visionSubsystem.getAmountNotField()*rumbleScalar);
+            rumbleAmount = Math.min(1/rumbleScalar, visionSubsystem.getPixelMass());
+            rumbleAmount *= rumbleScalar;
             gamepad1.rumble(rumbleAmount, rumbleAmount, 300);
         }
     }
