@@ -16,13 +16,29 @@ import org.firstinspires.ftc.teamcode.debug.SpeedType;
 import org.firstinspires.ftc.teamcode.debug.Synchronous;
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
 import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
+import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 import java.io.File;
 
 @TeleOp(name = "CenterStage Driver Oriented")
 public class CenterstageDriverOriented extends LinearOpMode {
+    MecanumController mecanumController;
+    VisionSubsystem visionSubsystem;
+
     private String soundPath = "/sdcard/FIRST/blocks/sounds";
     private File soundFile = new File(soundPath + "/Holy Moley.wav");
+
+    final double minimumPixelMass = 0.2;
+
+    public void pixelSonar() {
+        while (gamepad1.y && opModeIsActive() && !isStopRequested()) {
+            if (visionSubsystem.getPixelMass() > minimumPixelMass) {
+                mecanumController.driveParams(0, 0, 0);
+                break;
+            }
+            mecanumController.driveParams(0, 0.2, 0);
+        }
+    }
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -31,9 +47,12 @@ public class CenterstageDriverOriented extends LinearOpMode {
                 .setOverrideOneSpeed(1)
                 .build();
 
-        MecanumController mecanumController = new MecanumController(hardwareMap, speedController);
+        mecanumController = new MecanumController(hardwareMap, speedController);
         mecanumController.setMotorsRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
         mecanumController.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        visionSubsystem = new VisionSubsystem(hardwareMap, "pixel");
+        boolean holdingY = false;
 
         Servo outtake = hardwareMap.get(Servo.class, "outtake");
         outtake.setDirection(Servo.Direction.REVERSE);
@@ -69,6 +88,17 @@ public class CenterstageDriverOriented extends LinearOpMode {
             }
 
             air.setPower(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.AIR_POWER) ? 1: 0);
+
+            if (gamepad1.y && !holdingY) {
+                claw.setPosition(Constants.CLAW_OPEN);
+                climber.setPower(0);
+                air.setPower(0);
+
+                pixelSonar();
+                claw.setPosition(Constants.CLAW_CLOSE);
+            }
+
+            holdingY = gamepad1.y;
         }
     }
 }

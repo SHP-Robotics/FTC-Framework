@@ -33,8 +33,10 @@ public class PixelDetectionPipeline extends OpenCvPipeline {
     );
 
     static final Rect CENTER_RECT = new Rect(
-            new Point(220, 170),
-            new Point(620, 348)
+//            new Point(220, 170),
+//            new Point(620, 348)
+            new Point(220, 0),
+            new Point(620, 448)
     );
 
     static final Rect RIGHT_RECT = new Rect(
