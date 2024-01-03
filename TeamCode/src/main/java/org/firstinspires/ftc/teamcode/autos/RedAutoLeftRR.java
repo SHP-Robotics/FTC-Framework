@@ -136,7 +136,10 @@ public class RedAutoLeftRR extends LinearOpMode {
                         claw.setPosition(Constants.CLAW_OPEN);
 
                         TrajectorySequence spikeMarkOneToBackdrop = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
-                                .lineToLinearHeading(new Pose2d(28.75, -88, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(28.75, 0, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(47, 0, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(47, -84, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(32, -84, Math.toRadians(90)))
                                 .lineToLinearHeading(new Pose2d(32, -88, Math.toRadians(90)))
                                 .build();
 
