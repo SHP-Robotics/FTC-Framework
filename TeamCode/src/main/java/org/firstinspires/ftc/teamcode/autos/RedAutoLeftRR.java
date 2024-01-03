@@ -29,8 +29,9 @@ public class RedAutoLeftRR extends LinearOpMode {
         TO_BACKDROP_1,
 
         TO_LOCATION_2,
-        BACKING_UP_2,
         TURNING_2,
+        BACKING_UP_2,
+        TURNING_TO_DROP_PIXEL_2,
         TO_BACKDROP_2,
 
         FORWARD_3,
@@ -88,7 +89,7 @@ public class RedAutoLeftRR extends LinearOpMode {
                 break;
             case 2:
                 Trajectory pixelToSpikeMarkTwo = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
-                        .lineToLinearHeading(new Pose2d(35.75, 0, Math.toRadians(0)))
+                        .lineToLinearHeading(new Pose2d(44.5, 0, Math.toRadians(0)))
                         .build();
 
                 sampleMecanumDrive.followTrajectoryAsync(pixelToSpikeMarkTwo);
@@ -165,36 +166,45 @@ public class RedAutoLeftRR extends LinearOpMode {
                 // Path series 2
                 case TO_LOCATION_2:
                     if (!sampleMecanumDrive.isBusy()) {
-                        claw.setPosition(Constants.CLAW_OPEN);
-                        outtake.setPosition(Constants.OUTTAKE_NEUTRAL);
-                        sleep(200);
-
-                        Trajectory spikeMarkTwoBackingUp = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
-                                .lineToLinearHeading(new Pose2d(28.75, 0, Math.toRadians(0)))
-                                .build();
-
-                        sampleMecanumDrive.followTrajectoryAsync(spikeMarkTwoBackingUp);
-
-                        currentState = State.BACKING_UP_2;
-                    }
-                    break;
-                case BACKING_UP_2:
-                    if (!sampleMecanumDrive.isBusy()) {
-                        sampleMecanumDrive.turnAsync(Math.toRadians(90));
+                        sampleMecanumDrive.turnAsync(Math.toRadians(180));
 
                         currentState = State.TURNING_2;
                     }
                     break;
                 case TURNING_2:
                     if (!sampleMecanumDrive.isBusy()) {
-                        Trajectory spikeMarkTwoToBackdrop = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
-                                .lineToLinearHeading(new Pose2d(28.75, -88, Math.toRadians(90)))
+                        claw.setPosition(Constants.CLAW_OPEN);
+                        outtake.setPosition(Constants.OUTTAKE_NEUTRAL);
+                        sleep(200);
+
+                        Trajectory spikeMarkTwoBackingUp = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
+                                .lineToLinearHeading(new Pose2d(47, 0, Math.toRadians(180)))
                                 .build();
 
-                        sampleMecanumDrive.followTrajectoryAsync(spikeMarkTwoToBackdrop);
+                        sampleMecanumDrive.followTrajectoryAsync(spikeMarkTwoBackingUp);
+
+                        currentState = State.BACKING_UP_2;
+                    }
+                case BACKING_UP_2:
+                    if (!sampleMecanumDrive.isBusy()) {
+                        sampleMecanumDrive.turnAsync(Math.toRadians(-90));
+
+                        currentState = State.TURNING_TO_DROP_PIXEL_2;
+                    }
+                    break;
+                case TURNING_TO_DROP_PIXEL_2:
+                    if (!sampleMecanumDrive.isBusy()) {
+                        TrajectorySequence spikeMarkTwoToBackdrop = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
+                                .lineToLinearHeading(new Pose2d(47, -80, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(28.75, -80, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(28.75, -87, Math.toRadians(90)))
+                                .build();
+
+                        sampleMecanumDrive.followTrajectorySequenceAsync(spikeMarkTwoToBackdrop);
 
                         currentState = State.TO_BACKDROP_2;
                     }
+                    break;
                 case TO_BACKDROP_2:
                     if (!sampleMecanumDrive.isBusy()) {
                         outtake.setPosition(Constants.OUTTAKE_ACTIVE);
