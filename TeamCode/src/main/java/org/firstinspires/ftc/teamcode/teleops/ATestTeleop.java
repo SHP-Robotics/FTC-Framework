@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.teleops;
 
+import static org.firstinspires.ftc.teamcode.Constants.offset;
+
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.R;
 import org.firstinspires.ftc.teamcode.TestBaseRobot;
 import org.firstinspires.ftc.teamcode.commands.LowerArmCommand;
 import org.firstinspires.ftc.teamcode.commands.RaiseArmCommand;
@@ -59,8 +62,13 @@ public class ATestTeleop extends TestBaseRobot {
         new Trigger (gamepad1.right_bumper,
                 new RaiseArmCommand(arm,wrist,elbow,pixelServo)
         );
+        new Trigger(gamepad1.square, new RunCommand(() -> {
+            if (!Clock.hasElapsed(debounce, 0.1)) return;
+            offset -= 0.002;
+        }));
         //good
         new Trigger(gamepad1.left_trigger > 0.5,new RunCommand(()->{
+            if (!Clock.hasElapsed(debounce, 0.5)) return;
             driveBias = 0.5;
         })
         );
@@ -82,6 +90,7 @@ public class ATestTeleop extends TestBaseRobot {
 
         new Trigger (gamepad1.y, new RunCommand(()->{
             intake.setState(IntakeSubsystem.State.REJECT);
+            offset = 0;
         })
         );
         new Trigger (gamepad1.b,new RunCommand(()->{
@@ -99,7 +108,7 @@ public class ATestTeleop extends TestBaseRobot {
             })
         );
 
-        new Trigger (gamepad1.dpad_right, new RunCommand(()->{
+        new Trigger (gamepad1.dpad_left, new RunCommand(()->{
             planeServo.setState(PlaneServo.State.OUT);
         })
         );

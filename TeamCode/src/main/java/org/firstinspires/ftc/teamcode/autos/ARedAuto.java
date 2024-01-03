@@ -57,7 +57,7 @@ public class ARedAuto extends TestBaseRobot {
                         //.then(new RunCommand(() -> {location = vision.getLocation();}))
 
                         //.then(new DriveCommand(drive,0.025,0,0,3.5))
-                        .then(new DriveCommand(drive,-0.3,0,0,3,false))
+                        .then(new DriveCommand(drive,-0.5,0,0,1.4,false))
                         .then(new WaitCommand(1))
                         //.then(new EncoderTurnZeroCommand(drive))
 
@@ -65,11 +65,11 @@ public class ARedAuto extends TestBaseRobot {
                         .then(new RunCommand(() -> {
                             if (location == 1) {
                                 myCommand.scheduleCommand(
-                                        new DriveCommand(drive,-0.2,0,0,1,true)
+                                        new DriveCommand(drive,-0.2,0,0,0.9,true)
                                                 .then(new EncoderTurnDriveCommand(drive,"ccw",90))
-                                                .then(new WaitCommand(3.5))
+                                                .then(new WaitCommand(1))
                                                 .then(new DriveCommand(drive,-0.2,0,0,1,true))
-                                                .then(new DriveCommand(drive,0.425,0,0,2.9,true))
+                                                .then(new DriveCommand(drive,0.5,0,0,2.5,true))
                                                 .then(new EncoderTurnDriveCommand(drive,"cw",90))
                                                 .then(new DriveCommand(drive,0,-0.325,0,1,true))
                                                 .then(new RaiseArmCommand(arm,wrist,elbow,pixelServo))
@@ -83,17 +83,20 @@ public class ARedAuto extends TestBaseRobot {
                                                     intake.setState(IntakeSubsystem.State.STILL);
                                                 }))
                                                 .then(new LowerArmCommand(arm,wrist,elbow))
+                                                .then(new DriveCommand(drive,0.2,0,0,1,true))
+                                                .then(new WaitCommand(1))
+                                                .then(new DriveCommand(drive,0,0.7,0,1.2,true))
 
                                 );
                             }
                             else if (location == 3) {
                                 myCommand.scheduleCommand(
                                         new EncoderTurnDriveCommand(drive,"cw",90)
-                                                .then(new WaitCommand(3))
+                                                .then(new WaitCommand(1))
                                                 .then(new DriveCommand(drive,-0.2,0,0,1.7,true))
                                                 .then(new DriveCommand(drive,0.2,0,0,1.6,true))
-                                                .then(new DriveCommand(drive,0,0.3,0,2.7,true))
-                                                .then(new DriveCommand(drive,-0.4,0,0,3.4,true))
+                                                .then(new DriveCommand(drive,0,0.5,0,2.3,true))
+                                                .then(new DriveCommand(drive,-0.4,0,0,3,true))
                                                 .then(new RaiseArmCommand(arm,wrist,elbow,pixelServo))
                                                 //.then(new RaiseArmCommand(arm,wrist,elbow,pixelServo))
                                                 .then(new DriveCommand(drive,-0.2,0,0,1.3,true))
@@ -105,6 +108,9 @@ public class ARedAuto extends TestBaseRobot {
                                                     intake.setState(IntakeSubsystem.State.STILL);
                                                 }))
                                                 .then(new LowerArmCommand(arm,wrist,elbow))
+                                                .then(new DriveCommand(drive,0.2,0,0,1,true))
+                                                .then(new WaitCommand(1))
+                                                .then(new DriveCommand(drive,0,0.7,0,1.2,true))
                                 );
                             }
                             else {
@@ -112,7 +118,7 @@ public class ARedAuto extends TestBaseRobot {
                                         new DriveCommand(drive,-0.2,0,0,1.8,true)
                                                 .then(new DriveCommand(drive,0.2,0,0,1.8,true))
                                                 .then(new EncoderTurnDriveCommand(drive,"cw",87))
-                                                .then(new DriveCommand(drive,-0.4,0,0,3.2,true))
+                                                .then(new DriveCommand(drive,-0.5,0,0,2.3,true))
                                                 .then(new RaiseArmCommand(arm,wrist,elbow,pixelServo))
                                                 //.then(new RaiseArmCommand(arm,wrist,elbow,pixelServo))
                                                 .then(new DriveCommand(drive,-0.2,0,0,1,true))
@@ -123,7 +129,10 @@ public class ARedAuto extends TestBaseRobot {
                                                 .then(new RunCommand(() -> {
                                                     intake.setState(IntakeSubsystem.State.STILL);
                                                 }))
+                                                .then(new DriveCommand(drive,0.2,0,0,1,true))
                                                 .then(new LowerArmCommand(arm,wrist,elbow))
+                                                .then(new WaitCommand(1))
+                                                .then(new DriveCommand(drive,0,0.7,0,1.2,true))
                                 );
                             }
 

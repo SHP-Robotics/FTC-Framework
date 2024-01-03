@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 @Autonomous(preselectTeleOp = "ATestTeleop")
-public class ABasicAuto extends TestBaseRobot {
+public class ABasicRedAuto extends TestBaseRobot {
     //    SHPMecanumAutoDrive autoDrive;
     //DriveSubsystem drive;
     VisionSubsystem vision;
@@ -65,7 +65,7 @@ public class ABasicAuto extends TestBaseRobot {
                                         new DriveCommand(drive,-0.2,0,0,1,true)
                                                 .then(new EncoderTurnDriveCommand(drive,"ccw",90))
                                                 .then(new WaitCommand(3.5))
-                                                .then(new DriveCommand(drive,-0.2,0,0,1,true))
+                                                .then(new DriveCommand(drive,-0.2,0,0,.9,true))
                                                 .then(new DriveCommand(drive,0.3,0,0,1,true))
 //                                                .then(new DriveCommand(drive,0,-0.2,0,2,true))
 //                                                .then(new DriveCommand(drive,0.3,0,0,2,true))
@@ -94,9 +94,9 @@ public class ABasicAuto extends TestBaseRobot {
 
                         }))
                         //.then(new DriveCommand(drive,0.3,0,0,2,true))
-                        .then(new WaitCommand(1))
-                        .then(new DriveCommand(drive, 0.2, 0,0, 1, true))
-                        .then(new DriveCommand(drive, 0,-0.2, 0,2, true))
+//                        .then(new WaitCommand(1))
+//                        .then(new DriveCommand(drive, 0.2, 0,0, 1, true))
+//                        .then(new DriveCommand(drive, 0,-0.2, 0,2, true))
                 //.then(new DriveCommand(drive,0.5,0,0,1,true))
 
 

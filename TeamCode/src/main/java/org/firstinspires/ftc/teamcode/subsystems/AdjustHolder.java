@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 
 public class AdjustHolder extends Subsystem {
@@ -45,10 +46,10 @@ public class AdjustHolder extends Subsystem {
         switch (state) {
 
             case DOWN:
-                adjustHolder.setPosition(0.69);
+                adjustHolder.setPosition(0.672 + Constants.offset);
                 break;
             case UP:
-                adjustHolder.setPosition(0.2);
+                adjustHolder.setPosition(0.15);
                 break;
             case HALFWAY:
                 adjustHolder.setPosition(0.9);

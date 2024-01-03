@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.shplib.controllers.FFController;
 public class Constants {
     // Target voltage for voltage compensation
     public static final double kNominalVoltage = 12.0;
-
+    public static double offset = 0;
     public static final class Drive {
         public static final String[] kMotorNames = new String[]{
                 "leftFront",
