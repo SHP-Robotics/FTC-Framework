@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.autos;
+package org.firstinspires.ftc.teamcode.autos.AAA;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 @Autonomous(preselectTeleOp = "ATestTeleop")
-public class ABasicBlueAuto extends TestBaseRobot {
+public class ABasicRedAuto extends TestBaseRobot {
     //    SHPMecanumAutoDrive autoDrive;
     //DriveSubsystem drive;
     VisionSubsystem vision;
@@ -26,15 +26,15 @@ public class ABasicBlueAuto extends TestBaseRobot {
 //        autoDrive = new SHPMecanumAutoDrive(hardwareMap, kMotorNames, 0.15, 0.0, 0.0);
 //        autoDrive.enableFF(new FFController(0.01));
         //drive = new DriveSubsystem(hardwareMap);
-        vision = new VisionSubsystem(hardwareMap,"blue");
-        location = vision.getLocationBlue();
+        vision = new VisionSubsystem(hardwareMap,"red");
+        location = vision.getLocationRed();
         telemetry.addData("Location: ",location);
         drive.resetIMUAngle();
 
     }
     public void init_loop() {
         super.init_loop();
-        location = vision.getLocationBlue();
+        location = vision.getLocationRed();
         telemetry.addData("Location: ", location);
 
     }
@@ -65,7 +65,7 @@ public class ABasicBlueAuto extends TestBaseRobot {
                                         new DriveCommand(drive,-0.2,0,0,1,true)
                                                 .then(new EncoderTurnDriveCommand(drive,"ccw",90))
                                                 .then(new WaitCommand(3.5))
-                                                .then(new DriveCommand(drive,-0.2,0,0,1,true))
+                                                .then(new DriveCommand(drive,-0.2,0,0,.9,true))
                                                 .then(new DriveCommand(drive,0.3,0,0,1,true))
 //                                                .then(new DriveCommand(drive,0,-0.2,0,2,true))
 //                                                .then(new DriveCommand(drive,0.3,0,0,2,true))

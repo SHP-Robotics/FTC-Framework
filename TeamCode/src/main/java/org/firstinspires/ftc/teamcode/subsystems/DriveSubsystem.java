@@ -32,7 +32,7 @@ public class DriveSubsystem extends Subsystem {
     private double bias = kMaximumBias; // will always be between kMinimumBias and 1.0
     final SHPMotor[] motors;
     final String[] motorNames = kMotorNames;
-    //private Encoder leftEncoder, rightEncoder, frontEncoder;
+//    private Encoder leftEncoder, rightEncoder, frontEncoder;
     //    private SHPIMU imu;
     //tracks - mod 2
     //odd is speed down - 0.3 factor
@@ -59,6 +59,11 @@ public class DriveSubsystem extends Subsystem {
         }
         motors[0].setDirection(DcMotorSimple.Direction.REVERSE);
         motors[1].setDirection(DcMotorSimple.Direction.REVERSE);
+
+        motors[0].disableEncoder();
+        motors[1].disableEncoder();
+        motors[2].disableEncoder();
+        motors[3].disableEncoder();
 
 //        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "leftRear"));
 //        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rightRear"));
@@ -178,8 +183,8 @@ public class DriveSubsystem extends Subsystem {
            // telemetry.addData("Motor " + i + " Position: ", drive.getPositions(MotorUnit.TICKS)[i]);
 //        }
 //        telemetry.addData("Drive at position setpoint: ", drive.atPositionSetpoint() ? "true" : "false");
-        telemetry.addData("YPos:",  encoderTicksToInches(parallelEncoder.getCurrentPosition()));
-        telemetry.addData("XPos:", encoderTicksToInches(perpendicularEncoder.getCurrentPosition()));
+//        telemetry.addData("YPos:",  encoderTicksToInches(parallelEncoder.getCurrentPosition()));
+//        telemetry.addData("XPos:", encoderTicksToInches(perpendicularEncoder.getCurrentPosition()));
 //        telemetry.addData("frontEncoderVal:", frontEncoder.getCurrentPosition());
         telemetry.addData("IMU ANGLE:", imu.getYaw(AngleUnit.DEGREES));
     }

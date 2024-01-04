@@ -49,6 +49,7 @@ public class ArmSubsystem extends Subsystem {
         leftSlide.setPositionErrorTolerance(kSlideTolerance);
         leftSlide.enableFF(new ElevatorFFController(kSlideS, kSlideG));
 
+
         rightSlide = new SHPMotor(hardwareMap, kRightSlideName);
 //        rightSlide.reverseDirection();
         rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -56,6 +57,7 @@ public class ArmSubsystem extends Subsystem {
         rightSlide.resetEncoder();
         rightSlide.setPositionErrorTolerance(kSlideTolerance);
         rightSlide.enableFF(new ElevatorFFController(kSlideS, kSlideG));
+
 
         setState(State.BOTTOM);
     }

@@ -94,9 +94,9 @@ public class Constants {
         public static final double kSlideHub = 200.0;
         public static final double kSlideLow = 1000.0;
 //        public static final double kSlideMiddle = 2500.0;
-        public static final String kClawName = "claw";
-        public static final double kClawOpen = 0.4;
-        public static final double kClawClosed = 0.7;
+//        public static final String kClawName = "claw";
+//        public static final double kClawOpen = 0.4;
+//        public static final double kClawClosed = 0.7;
 
 
 

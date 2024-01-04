@@ -185,27 +185,6 @@ public class ATestTeleop extends TestBaseRobot {
 //            pixelServo.setState(PixelServo.State.OUT);
 //        }));
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         /*
         new Trigger (gamepad1.a, new RunCommand(()->{
             if(spinningIntake.getState()==SpinningIntake.State.IN){

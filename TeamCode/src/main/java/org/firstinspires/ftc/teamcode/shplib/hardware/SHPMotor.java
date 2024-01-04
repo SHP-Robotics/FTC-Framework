@@ -316,4 +316,8 @@ public class SHPMotor {
         if (runUsingBuiltInControl) setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         else setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
+
+    public void disableEncoder(){
+        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
 }
