@@ -9,7 +9,6 @@ import org.firstinspires.ftc.teamcode.shplib.vision.PIDFollower;
 import org.firstinspires.ftc.teamcode.shplib.vision.PixelDetectionPipeline;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
-import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Autonomous()
@@ -17,7 +16,6 @@ public class AdvancedPixelTracking extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         VisionSubsystem visionSubsystem = new VisionSubsystem(hardwareMap, "pixel");
-        visionSubsystem.pixelDetectionPipeline.setTrackingCenters(true);
         visionSubsystem.pixelDetectionPipeline.setPipelineMode(PixelDetectionPipeline.PipelineMode.PURPLE_ONLY);
 
         MecanumController mecanumController = new MecanumController(hardwareMap);
