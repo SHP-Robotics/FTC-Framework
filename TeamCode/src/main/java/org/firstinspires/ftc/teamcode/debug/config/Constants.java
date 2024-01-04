@@ -10,11 +10,6 @@ public final class Constants {
 
     public static final double MINIMUM_VOLTAGE_APPLIED = 0.0654;
 
-    // Gear Shifting PID Controller
-    public static final double KP = 1.00;
-    public static final double KI = 0.00;
-    public static final double KD = 0.00;
-
     // Outtake
     public static final double OUTTAKE_STARTING = 0.9;
     public static final double OUTTAKE_NEUTRAL = 0.66;
@@ -24,7 +19,24 @@ public final class Constants {
     // Claw
     public static final double CLAW_OPEN = 0.345;
     public static final double CLAW_CLOSE = 0.4;
-    public static final double CLAW_HEIGHT = 0;
+
+    // Camera
+    // TODO: tune servo position for camera
+    public enum CameraMode {
+        DETECTING(0),
+        SONAR(0),
+        CLAW(0);
+
+        private double position;
+
+        private CameraMode(double position) {
+            this.position = position;
+        }
+
+        public double getPosition() {
+            return this.position;
+        }
+    }
 
     // TODO: Find these values
     // Camera Focal Length, used for to estimate Object Location

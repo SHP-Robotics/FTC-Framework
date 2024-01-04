@@ -1,31 +1,71 @@
 package org.firstinspires.ftc.teamcode.shplib.vision;
 
+import static org.opencv.core.Core.max;
+import static org.opencv.imgproc.Imgproc.moments;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.checkerframework.checker.units.qual.A;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
+import org.opencv.imgproc.Moments;
 import org.openftc.easyopencv.OpenCvPipeline;
+import org.openftc.easyopencv.OpenCvTracker;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class PixelDetectionPipeline extends OpenCvPipeline {
+    public enum PipelineMode {
+        WHITE_ONLY,
+        GREEN_ONLY,
+        YELLOW_ONLY,
+        PURPLE_ONLY,
+        ALL_PIXELS
+    }
+
+    private PipelineMode pipelineMode = PipelineMode.ALL_PIXELS;
+    private boolean trackingCenters = false;
+
+    CopyOnWriteArrayList<double[]> lastObjects;
+    CopyOnWriteArrayList<double[]> objects;
+
+    int patience = 0;
+    int breakingPoint = 5;
+
+    public void setPipelineMode(PipelineMode pipelineMode) {
+        this.pipelineMode = pipelineMode;
+    }
+
+    public void setTrackingCenters(boolean trackingCenters) {
+        this.trackingCenters = trackingCenters;
+    }
+
     ArrayList<double[]> frameList;
 
-    public static Scalar lowWhite = new Scalar(0, 0, 170);
+    public static Scalar lowWhite = new Scalar(0, 0, 159);
     public static Scalar highWhite = new Scalar(180, 30, 255);
 
     public static Scalar lowGreen = new Scalar(42, 105, 108);
-    public static Scalar highGreen = new Scalar(255, 255, 255);
+    public static Scalar highGreen = new Scalar(57, 219, 222);
 
     public static Scalar lowYellow = new Scalar(0, 108, 102);
     public static Scalar highYellow = new Scalar(36, 255, 255);
 
     public static Scalar lowPurple = new Scalar(120, 48, 110);
-    public static Scalar highPurple = new Scalar(255, 255, 255);
+    public static Scalar highPurple = new Scalar(138, 102, 255);
 
     static final Rect LEFT_RECT = new Rect(
             new Point(1, 1), //TODO: MAGIC NUMBERS ;-;
@@ -66,6 +106,7 @@ public class PixelDetectionPipeline extends OpenCvPipeline {
 
     public PixelDetectionPipeline() {
         frameList = new ArrayList<>();
+        objects = new CopyOnWriteArrayList<>();
     }
 
     @Override
@@ -77,26 +118,78 @@ public class PixelDetectionPipeline extends OpenCvPipeline {
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
 
         Mat whiteDetected = new Mat();
-        Core.inRange(mat, lowWhite, highWhite, whiteDetected); //ONLY returns the white pixels
-
         Mat greenDetected = new Mat();
-        Core.inRange(mat, lowGreen, highGreen, greenDetected); //ONLY returns the colored pixels
-
         Mat purpleDetected = new Mat();
-        Core.inRange(mat, lowPurple, highPurple, purpleDetected); //ONLY returns the colored pixels
-
         Mat yellowDetected = new Mat();
-        Core.inRange(mat, lowYellow, highYellow, yellowDetected); //ONLY returns the colored pixels
 
         Mat detected = new Mat();
 
         Mat i1 = new Mat();
-        Core.bitwise_or(whiteDetected, greenDetected, i1);
-
         Mat i2 = new Mat();
-        Core.bitwise_or(yellowDetected, purpleDetected, i2);
 
-        Core.bitwise_or(i1, i2, detected);
+        switch (pipelineMode) {
+            case WHITE_ONLY:
+                Core.inRange(mat, lowWhite, highWhite, detected);
+                break;
+            case GREEN_ONLY:
+                Core.inRange(mat, lowGreen, highGreen, detected);
+                break;
+            case PURPLE_ONLY:
+                Core.inRange(mat, lowPurple, highPurple, detected);
+                break;
+            case YELLOW_ONLY:
+                Core.inRange(mat, lowYellow, highYellow, detected);
+                break;
+            default:
+                Core.inRange(mat, lowWhite, highWhite, whiteDetected); //ONLY returns the white pixels
+                Core.inRange(mat, lowGreen, highGreen, greenDetected); //ONLY returns the colored pixels
+                Core.inRange(mat, lowPurple, highPurple, purpleDetected); //ONLY returns the colored pixels
+                Core.inRange(mat, lowYellow, highYellow, yellowDetected); //ONLY returns the colored pixels
+
+                Core.bitwise_or(whiteDetected, greenDetected, i1);
+                Core.bitwise_or(yellowDetected, purpleDetected, i2);
+                Core.bitwise_or(i1, i2, detected);
+                break;
+        }
+
+        if (trackingCenters) {
+            if (!(objects == null || objects.size() == 0) || patience > breakingPoint) {
+                lastObjects = objects;
+                patience = 0;
+            } else {
+                patience++;
+            }
+
+            objects = new CopyOnWriteArrayList<>();
+
+            List<MatOfPoint> contours = new ArrayList<>();
+            Mat hierarchy = new Mat();
+            //find contours, input scaledThresh because it has hard edges
+            Imgproc.findContours(detected, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+
+//            double largestArea = 0;
+//            MatOfPoint largestContour = new MatOfPoint();
+//            for (MatOfPoint contour: contours) {
+//                Moments moments = Imgproc.moments(contour);
+//                double area = moments.m00/(contour.cols()*contour.rows()*255);
+//                if (moments.m00 >= largestArea && area > THRESHOLD) {
+//                    largestContour = contour;
+//                    largestArea = area;
+//                }
+//            }
+//
+//            if (largestArea > 0) {
+//                objects.add(getObject(largestContour, largestArea));
+//            }
+
+            for (MatOfPoint contour: contours) {
+                Moments moments = Imgproc.moments(contour);
+                double area = moments.m00/(contour.cols()*contour.rows()*255);
+                if (area > THRESHOLD) {
+                    objects.add(getObject(contour, area));
+                }
+            }
+        }
 
         Mat left = detected.submat(LEFT_RECT);
         Mat center = detected.submat(CENTER_RECT);
@@ -165,5 +258,26 @@ public class PixelDetectionPipeline extends OpenCvPipeline {
         }
 
         return PixelMassLocation.CENTER;
+    }
+
+    public CopyOnWriteArrayList<double[]> getLastObjects() {
+        return this.lastObjects;
+    }
+
+    private double[] getObject(MatOfPoint contour, double area) {
+        Moments moments = Imgproc.moments(contour);
+        if (moments.m00 != 0) {
+            return new double[]{
+                    (moments.m10/moments.m00),
+                    (moments.m01/moments.m00),
+                    area
+            };
+        }
+
+        return null;
+    }
+
+    public CopyOnWriteArrayList<double[]> getObjects() {
+        return this.objects;
     }
 }

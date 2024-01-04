@@ -14,7 +14,7 @@ public class PipelineSettingsTuner extends LinearOpMode {
     boolean holdingUp, holdingDown, holdingLeft, holdingRight = false;
     VisionSubsystem visionSubsystem;
 
-    double hue = 0, sat = 0, val = 0;
+    double hue = 255, sat = 255, val = 255;
 
     enum TuningVar {
         Hue,
@@ -35,12 +35,14 @@ public class PipelineSettingsTuner extends LinearOpMode {
                 break;
         }
 
-        PixelDetectionPipeline.lowPurple = new Scalar(hue, sat, val);
+        PixelDetectionPipeline.highYellow = new Scalar(hue, sat, val);
     }
 
     @Override
     public void runOpMode() throws InterruptedException {
         visionSubsystem = new VisionSubsystem(hardwareMap, "pixel");
+        visionSubsystem.pixelDetectionPipeline.setPipelineMode(PixelDetectionPipeline.PipelineMode.YELLOW_ONLY);
+
         TuningVar tuningVar = TuningVar.Hue;
 
         while (opModeInInit() && !isStopRequested()) {
