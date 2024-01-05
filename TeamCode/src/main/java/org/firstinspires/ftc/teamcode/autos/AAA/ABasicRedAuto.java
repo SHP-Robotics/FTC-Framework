@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
-@Autonomous(preselectTeleOp = "ATestTeleop")
+//@Autonomous(preselectTeleOp = "ATestTeleop")
 public class ABasicRedAuto extends TestBaseRobot {
     //    SHPMecanumAutoDrive autoDrive;
     //DriveSubsystem drive;

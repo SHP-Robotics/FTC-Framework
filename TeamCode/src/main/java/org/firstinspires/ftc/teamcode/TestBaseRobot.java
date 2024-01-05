@@ -64,7 +64,7 @@ public class TestBaseRobot extends OpMode {
         //crWheel = new CRWheel(hardwareMap);
         //spinningIntake = new SpinningIntake(hardwareMap);
         //vision = new CameraOn(hardwareMap);
-//        vision = new VisionSubsystem(hardwareMap);
+        vision = new VisionSubsystem(hardwareMap, "blue");
         arm = new ArmSubsystem(hardwareMap);
         elbow = new PracticeArmServo(hardwareMap);
 //        spinningIntake = new SpinningIntake(hardwareMap);

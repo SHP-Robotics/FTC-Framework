@@ -1,16 +1,11 @@
 package org.firstinspires.ftc.teamcode.autos.rr;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.debug.config.Constants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.AutonomousStorage;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.PoseStorage;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
@@ -18,7 +13,7 @@ import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 import java.io.File;
 
 @Autonomous(preselectTeleOp = "CenterStage Field Oriented")
-public class RedAutoLeftRR extends LinearOpMode {
+public class WIlliamExampleRR extends LinearOpMode {
     private String soundPath = "/sdcard/FIRST/blocks/sounds";
     private File soundFile = new File(soundPath + "/Holy Moley.wav");
 

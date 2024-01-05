@@ -28,8 +28,8 @@ import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 import java.io.File;
 
-@Autonomous(preselectTeleOp = "CenterStage Field Oriented")
-public class TestAuto extends LinearOpMode {
+@Autonomous(preselectTeleOp = "ATestTeleOp")
+public class RedAutoLeft2 extends LinearOpMode {
     public enum State {
         LOCATION_1,
         DEPOSIT_1,
