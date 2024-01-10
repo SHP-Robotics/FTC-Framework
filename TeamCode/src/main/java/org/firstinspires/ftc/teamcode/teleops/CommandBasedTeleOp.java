@@ -56,7 +56,7 @@ public class CommandBasedTeleOp extends BaseRobot {
 ////        drive.setDriveBias(arm.getDriveBias());
 
         //////spinning intake
-        new Trigger (gamepad1.a, new RunCommand(()->{
+        new Trigger (gamepad2.a, new RunCommand(()->{
             spinningIntake.setState(SpinningIntake.State.IN);})
             .then(new RunCommand(()->{
                 crWheel.setState(CRWheel.State.BACKWARD);
@@ -113,6 +113,7 @@ public class CommandBasedTeleOp extends BaseRobot {
             crWheel.setState(CRWheel.State.BACKWARD);
         }));
 
+//
 //        new Trigger (gamepad2.dpad_up, new RunCommand(()->{
 //            crWheel.setState(CRWheel.State.FORWARD);
 //        }));
