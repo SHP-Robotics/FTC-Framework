@@ -90,15 +90,12 @@ public class ArmSubsystem extends Subsystem {
     }
 
     public void nextState(){
-        if(state==State.BOTTOM){
-            state=State.MIDDLE;
-        }
-        else if(state==State.MIDDLE){
-            state=State.MIDHIGH;
-        }
-        else if(state==State.MIDHIGH){
-            state=State.HIGH;
-        }
+        if(state == State.BOTTOM)
+            state = State.MIDDLE;
+        else if(state==State.MIDDLE)
+            state = State.MIDHIGH;
+        else if(state == State.MIDHIGH)
+            state = State.HIGH;
     }
 
     private double processState() {

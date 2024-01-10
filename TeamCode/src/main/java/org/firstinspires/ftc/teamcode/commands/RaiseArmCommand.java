@@ -31,7 +31,6 @@ public class RaiseArmCommand extends Command {
     public void init() {
         startTime = Clock.now();
 
-//        arm.setState(ArmSubsystem.State.HIGH);
         arm.nextState();
         wrist.setState(AdjustHolder.State.UP);
         elbow.setState(PracticeArmServo.State.UP);

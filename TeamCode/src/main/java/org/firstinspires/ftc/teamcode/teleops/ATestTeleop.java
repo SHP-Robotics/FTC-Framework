@@ -99,12 +99,12 @@ public class ATestTeleop extends TestBaseRobot {
         );
 
         new Trigger (gamepad1.a, new RunCommand(()->{
-            if (arm.getState() == ArmSubsystem.State.BOTTOM)
-                intake.setState(IntakeSubsystem.State.INTAKING);
-            else if (pixelServo.getState()==PixelServo.State.IN)
-                pixelServo.setState(PixelServo.State.OUT);
-            else
-                intake.setState(IntakeSubsystem.State.OUTTAKING);
+            if (arm.getState() == ArmSubsystem.State.BOTTOM)       //1. if arm is at bottom
+                intake.setState(IntakeSubsystem.State.INTAKING);   //   intake pixels
+            else if (pixelServo.getState() == PixelServo.State.IN) //2. if no pixels have been released
+                pixelServo.setState(PixelServo.State.OUT);         //   release pixel #1
+            else                                                   //3. if pixel #1 has been released
+                intake.setState(IntakeSubsystem.State.OUTTAKING);  //   release pixel #2
             })
         );
 
