@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.autos.experimental;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.debug.MecanumController;
 import org.firstinspires.ftc.teamcode.debug.PIDController;
@@ -19,11 +21,18 @@ public class AdvancedPixelTracking extends LinearOpMode {
         visionSubsystem.pixelDetectionPipeline.setPipelineMode(PixelDetectionPipeline.PipelineMode.PURPLE_ONLY);
 
         MecanumController mecanumController = new MecanumController(hardwareMap);
-        PIDFollower pidFollower = new PIDFollower.PIDFollowerBuilder(mecanumController,
-                new PIDController(0.4, 0, 0.2),
-                new PIDController(0, 0, 0),
+        CRServo cameraServo = hardwareMap.get(CRServo.class, "cameraServo");
+
+        PIDFollower pidFollower = new PIDFollower.PIDFollowerBuilder(
+                mecanumController,
+                cameraServo,
+                new PIDController(0.30, 0, 0),
+                new PIDController(0.18, 0, 0),
                 new PIDController(0, 0, 0))
                 .build();
+
+        telemetry.addLine("initialized");
+        telemetry.update();
 
         waitForStart();
 
@@ -37,15 +46,17 @@ public class AdvancedPixelTracking extends LinearOpMode {
             if (objects != null && objects.size() > 0) {
                 for (double[] object : objects) {
                     if (object != null && object.length >= 2) {
-                        pidFollower.update((((double)object[0])/400)-1, 0, 0);
+                        pidFollower.update((object[0] / 400) - 1,
+                                1 - (object[1] / 244),
+                                0);
 
-                        telemetry.addData("Object x", object[0]);
-                        telemetry.addData("Object y", object[1]);
+                        telemetry.addData("Object x", (object[0] / 400) - 1);
+                        telemetry.addData("Object y", 1 - (object[1] / 244));
                         telemetry.addData("Object area", object[2]);
-                    } else {
-                        mecanumController.driveParams(0, 0, 0);
                     }
                 }
+            } else {
+                mecanumController.driveParams(0, 0, 0);
             }
 
             telemetry.update();

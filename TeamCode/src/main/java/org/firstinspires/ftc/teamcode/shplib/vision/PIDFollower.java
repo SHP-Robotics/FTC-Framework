@@ -1,10 +1,14 @@
 package org.firstinspires.ftc.teamcode.shplib.vision;
 
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.Servo;
+
 import org.firstinspires.ftc.teamcode.debug.MecanumController;
 import org.firstinspires.ftc.teamcode.debug.PIDController;
 
 public class PIDFollower {
     private MecanumController mecanumController;
+    private CRServo cameraServo;
 
     private PIDController yawPID;
     private PIDController pitchPID;
@@ -16,6 +20,7 @@ public class PIDFollower {
 
     public PIDFollower(PIDFollowerBuilder pidFollowerBuilder) {
         this.mecanumController = pidFollowerBuilder.mecanumController;
+        this.cameraServo = pidFollowerBuilder.cameraServo;
 
         this.yawPID = pidFollowerBuilder.yawPID;
         this.pitchPID = pidFollowerBuilder.pitchPID;
@@ -28,10 +33,12 @@ public class PIDFollower {
 
     public void update(double xError, double yError, double area) {
         mecanumController.driveParams(0, 0, yawPID.getOutput(xError - idealXError));
+        cameraServo.setPower(pitchPID.getOutput(yError - idealYError));
     }
 
     public static class PIDFollowerBuilder {
         private MecanumController mecanumController;
+        private CRServo cameraServo;
 
         private PIDController yawPID;
         private PIDController pitchPID;
@@ -42,11 +49,13 @@ public class PIDFollower {
         private double idealArea;
 
         public PIDFollowerBuilder(MecanumController mecanumController,
+                                  CRServo cameraServo,
                                   PIDController yawPID,
                                   PIDController pitchPID,
                                   PIDController translationalPID) {
 
             this.mecanumController = mecanumController;
+            this.cameraServo = cameraServo;
 
             this.yawPID = yawPID;
             this.pitchPID = pitchPID;

@@ -19,8 +19,8 @@ public class VisionSubsystem extends Subsystem {
     private final OpenCvCamera camera;
     static double threshold = 0.2;
     //    CVPipeline pipeline = new CVPipeline();
-    ElementDetectionPipelineRed detectorRed;
-    ElementDetectionPipelineBlue detectorBlue;
+    public ElementDetectionPipelineRed detectorRed;
+    public ElementDetectionPipelineBlue detectorBlue;
     public PixelDetectionPipeline pixelDetectionPipeline;
     //    private final AprilTagDetectionPipeline pipeline;
     private ArrayList<AprilTagDetection> tags;
@@ -82,17 +82,14 @@ public class VisionSubsystem extends Subsystem {
         this.state = state;
     }
 
-    public int getLocationRed(){
+    public ElementDetectionPipelineRed.LocationPosition getLocationRed(){
         return detectorRed.getLocation();
     }
-    public int getLocationBlue(){
+    public ElementDetectionPipelineBlue.LocationPosition getLocationBlue(){
         return detectorBlue.getLocation();
     }
     public double getPixelMass() {
         return pixelDetectionPipeline.getPixelMass();
-    }
-    public PixelDetectionPipeline.PixelMassLocation getPixelMassLocation() {
-        return pixelDetectionPipeline.getPixelMassLocation();
     }
 
 //    public boolean detectedTags() {

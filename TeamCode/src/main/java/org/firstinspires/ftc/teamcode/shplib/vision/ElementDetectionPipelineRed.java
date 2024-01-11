@@ -26,12 +26,12 @@ public class ElementDetectionPipelineRed extends OpenCvPipeline {
         frameList = new ArrayList<>();
     }
 
-    public enum loc{
+    public enum LocationPosition {
         RIGHT,
         LEFT,
         NONE
-    };
-    //loc location;
+    }
+
     //sub matrices to divide image
     //we can draw rectangles on the screen to find the perfect fit
     //edit as necessary
@@ -46,7 +46,7 @@ public class ElementDetectionPipelineRed extends OpenCvPipeline {
     );
 
     //threshold(lowest possible) percentage of that color
-    static double THRESHOLD = 0.03; //TODO threshold
+    static double THRESHOLD = 0.08; //TODO threshold
 
     private void inRange(Mat src1, Scalar leftBoundary, Scalar rightBoundary, Mat dst) {
         if (leftBoundary.val[0] > rightBoundary.val[0]) {
@@ -156,14 +156,14 @@ public class ElementDetectionPipelineRed extends OpenCvPipeline {
         return input;
 
     }
-    public int getLocation(){
+    public LocationPosition getLocation(){
         if(leftValue>rightValue && leftValue>THRESHOLD){
-            return 1;
+            return LocationPosition.LEFT;
         }
         if(rightValue>leftValue && rightValue>THRESHOLD){
-            return 2;
+            return LocationPosition.RIGHT;
         }
-        return 3;
+        return LocationPosition.NONE;
 
     }
 }

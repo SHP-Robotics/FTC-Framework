@@ -124,7 +124,7 @@ public class PixelDetectionPipeline extends OpenCvPipeline {
             double area = moments.m00/(contour.cols()*contour.rows()*255);
             pixelMass += area;
             if (area > THRESHOLD) {
-                objects.add(getObjectFromContour(contour, area));
+                objects.add(getObjectFromContour(moments, area));
             }
         }
 
@@ -158,12 +158,7 @@ public class PixelDetectionPipeline extends OpenCvPipeline {
         return pixelMassReadable;
     }
 
-    public CopyOnWriteArrayList<double[]> getLastObjects() {
-        return this.lastObjects;
-    }
-
-    private double[] getObjectFromContour(MatOfPoint contour, double area) {
-        Moments moments = Imgproc.moments(contour);
+    private double[] getObjectFromContour(Moments moments, double area) {
         if (moments.m00 != 0) {
             return new double[]{
                     (moments.m10/moments.m00),
@@ -173,6 +168,10 @@ public class PixelDetectionPipeline extends OpenCvPipeline {
         }
 
         return null;
+    }
+
+    public CopyOnWriteArrayList<double[]> getLastObjects() {
+        return this.lastObjects;
     }
 
     public CopyOnWriteArrayList<double[]> getObjects() {

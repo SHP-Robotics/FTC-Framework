@@ -22,32 +22,33 @@ public class ElementDetectionPipelineBlue extends OpenCvPipeline {
     Telemetry telemetry;
     public double leftValue;
     public double rightValue;
+    public double totalValue;
 
     public ElementDetectionPipelineBlue() {
         frameList = new ArrayList<>();
     }
 
-    public enum loc{
-        RIGHT,
+    public enum LocationPosition {
         LEFT,
+        RIGHT,
         NONE
-    };
-    //loc location;
+    }
+
     //sub matrices to divide image
     //we can draw rectangles on the screen to find the perfect fit
     //edit as necessary
     static final Rect LEFT_ROI = new Rect(
             new Point(1, 1), //TODO: MAGIC NUMBERS ;-;
-            new Point(260, 447)
+            new Point(200, 447)
     );
 
     static final Rect RIGHT_ROI = new Rect(
-            new Point(360, 10),
-            new Point(700, 447)
+            new Point(200, 1),
+            new Point(500, 300)
     );
 
     //threshold(lowest possible) percentage of that color
-    static double THRESHOLD = 0.03; //TODO threshold
+    static double THRESHOLD = 0.08; //TODO threshold
 
     //check if we really need this
 
@@ -66,50 +67,20 @@ public class ElementDetectionPipelineBlue extends OpenCvPipeline {
         Mat detected = new Mat();
         Core.inRange(mat, lowHSV, highHSV, detected); //ONLY returns the pixels in the HSV range
 
-        Mat masked = new Mat();
-        //colors the white portion of detected in with the color and outputs to masked
-        Core.bitwise_and(mat, mat, masked, detected);
-        Scalar average = Core.mean(masked, detected);
-
-        Mat scaledMask = new Mat();
-        //scale the average saturation to 150
-        masked.convertTo(scaledMask, -1, 150 / average.val[1], 0);
-
-        Mat scaledThresh = new Mat();
-        //you probably want to tune this
-        Scalar strictLowHSV = new Scalar(0, strictLowS, 0); //strict lower bound HSV for yellow
-        Scalar strictHighHSV = new Scalar(255, strictHighS, 255); //strict higher bound HSV for yellow
-        //apply strict HSV filter onto scaledMask to get rid of any yellow other than pole
-        Core.inRange(scaledMask, strictLowHSV, strictHighHSV, scaledThresh);
-
-        Mat finalMask = new Mat();
-
-        Core.bitwise_and(mat, mat, finalMask, scaledThresh);
-
-        Mat edges = new Mat();
-        //detect edges(only useful for showing result)(you can delete)
-        Imgproc.Canny(scaledThresh, edges, 100, 200);
-
-        //contours, apply post processing to information
-        List<MatOfPoint> contours = new ArrayList<>();
-        Mat hierarchy = new Mat();
-        //find contours, input scaledThresh because it has hard edges
-        Imgproc.findContours(scaledThresh, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
-        //
-        //
-        Mat left = scaledThresh.submat(LEFT_ROI);
-        Mat right = scaledThresh.submat(RIGHT_ROI);
+        Mat left = detected.submat(LEFT_ROI);
+        Mat right = detected.submat(RIGHT_ROI);
 
         leftValue = Core.sumElems(left).val[0] / LEFT_ROI.area() / 225;
         rightValue = Core.sumElems(right).val[0] / RIGHT_ROI.area() / 225;
+        totalValue = Core.sumElems(detected).val[0] / (detected.rows() * detected.cols() * 225);
 
         //        Imgproc.cvtColor(mat, mat, Imgproc.COLOR_GRAY2RGB);
 
         Scalar colorExists = new Scalar (0, 255, 0);
         Scalar colorInexistant = new Scalar (255, 0, 0);
 
-        Imgproc.rectangle(scaledThresh, LEFT_ROI, leftValue>rightValue? colorInexistant:colorExists, 3);
-        Imgproc.rectangle(scaledThresh, RIGHT_ROI, leftValue<rightValue? colorInexistant:colorExists, 3);
+        Imgproc.rectangle(detected, LEFT_ROI, leftValue>rightValue? colorInexistant:colorExists, 3);
+        Imgproc.rectangle(detected, RIGHT_ROI, leftValue<rightValue? colorInexistant:colorExists, 3);
         //
 
         //list of frames to reduce inconsistency, not too many so that it is still real-time, change the number from 5 if you want
@@ -119,29 +90,23 @@ public class ElementDetectionPipelineBlue extends OpenCvPipeline {
 
         //RELEASE EVERYTHING
         input.release();
-        scaledThresh.copyTo(input);
-        scaledThresh.release();
-        scaledMask.release();
         mat.release();
-        masked.release();
-        edges.release();
+        detected.copyTo(input);
         detected.release();
-        finalMask.release();
-        hierarchy.release();
         left.release();
         right.release();
 
         return input;
 
     }
-    public int getLocation(){
+    public LocationPosition getLocation(){
         if(leftValue>rightValue && leftValue > THRESHOLD){
-            return 1;
+            return LocationPosition.LEFT;
         }
         if(rightValue>leftValue && rightValue > THRESHOLD){
-            return 2;
+            return LocationPosition.RIGHT;
         }
-        return 3;
+        return LocationPosition.NONE;
 
     }
 }
