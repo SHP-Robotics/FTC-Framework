@@ -38,7 +38,7 @@ public class ElementDetectionPipelineRed extends OpenCvPipeline {
     static final Rect LEFT_ROI = new Rect(
             new Point(0, 1), //TODO: MAGIC NUMBERS ;-;
             //new Point(399, 447)
-            new Point(230, 447)
+            new Point(150, 447)
     );
 
     static final Rect RIGHT_ROI = new Rect(
@@ -147,6 +147,5 @@ public class ElementDetectionPipelineRed extends OpenCvPipeline {
             return 2;
         }
         return 3;
-
     }
 }

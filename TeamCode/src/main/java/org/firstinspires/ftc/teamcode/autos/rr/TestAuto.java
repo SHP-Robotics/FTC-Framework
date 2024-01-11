@@ -28,11 +28,12 @@ import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 import java.io.File;
 
-@Autonomous(preselectTeleOp = "CenterStage Field Oriented")
+@Autonomous(preselectTeleOp = "ATestTeleOp")
 public class TestAuto extends LinearOpMode {
     public enum State {
         LOCATION_1,
         DEPOSIT_1,
+        STACK_1,
         TO_BACKDROP_1,
 
         LOCATION_2,
@@ -72,7 +73,7 @@ public class TestAuto extends LinearOpMode {
         telemetry.addData("Location: ", location);
         telemetry.update();
         while (opModeInInit() && !isStopRequested()) {
-            location = visionSubsystem.getLocationBlue();
+            location = visionSubsystem.getLocationRed();
             telemetry.addLine("Trajectory Sequence Ready");
             telemetry.addData("Location: ", location);
             telemetry.update();
@@ -97,7 +98,7 @@ public class TestAuto extends LinearOpMode {
                         .build();
 
                 sampleMecanumDrive.followTrajectoryAsync(pixelToSpikeMarkTwo);
-                currentState = State.DEPOSIT_2;
+                currentState = State.IDLE;
                 break;
             default:
                 Trajectory pixelToSpikeMarkThree = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
@@ -105,7 +106,7 @@ public class TestAuto extends LinearOpMode {
                         .build();
 
                 sampleMecanumDrive.followTrajectoryAsync(pixelToSpikeMarkThree);
-                currentState = State.DEPOSIT_3; //TODO: FOR TESTING
+                currentState = State.IDLE; //TODO: FOR TESTING
                 break;
         }
         //TODO: CURRENT AUTO 2+0 RIGHT RED
@@ -124,7 +125,17 @@ public class TestAuto extends LinearOpMode {
                                 .lineToLinearHeading(new Pose2d(-28.75, 4, Math.toRadians(90)))
                                 .build();
                         sampleMecanumDrive.followTrajectoryAsync(spikeMarkOneBackingUp);
-                        currentState = State.TO_BACKDROP_1;
+                        //change this
+                        currentState = State.STACK_1;
+                    }
+                    break;
+                case STACK_1:
+                    if(!sampleMecanumDrive.isBusy()){
+                        Trajectory stackOne = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
+                                .lineToLinearHeading(new Pose2d(0, 0, Math.toRadians(180)))
+                                .build();
+                        sampleMecanumDrive.followTrajectoryAsync(stackOne);
+                        currentState = State.IDLE;
                     }
                     break;
                 case TO_BACKDROP_1:

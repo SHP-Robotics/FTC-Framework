@@ -49,7 +49,7 @@ public class AdjustHolder extends Subsystem {
                 adjustHolder.setPosition(0.672 + Constants.offset);
                 break;
             case UP:
-                adjustHolder.setPosition(0.15);
+                adjustHolder.setPosition(0.4);
                 break;
             case HALFWAY:
                 adjustHolder.setPosition(0.9);

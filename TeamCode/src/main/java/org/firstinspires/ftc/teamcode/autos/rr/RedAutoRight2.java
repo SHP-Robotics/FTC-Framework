@@ -65,14 +65,14 @@ public class RedAutoRight2 extends LinearOpMode {
 
         //vision
         //TODO: SWITCH PIPELINE LATER
-        VisionSubsystem visionSubsystem = new VisionSubsystem(hardwareMap,"blue");
+        VisionSubsystem visionSubsystem = new VisionSubsystem(hardwareMap,"red");
         location = visionSubsystem.getLocationRed();
 
         telemetry.addLine("Trajectory Sequence Ready");
         telemetry.addData("Location: ", location);
         telemetry.update();
         while (opModeInInit() && !isStopRequested()) {
-            location = visionSubsystem.getLocationBlue();
+            location = visionSubsystem.getLocationRed();
             telemetry.addLine("Trajectory Sequence Ready");
             telemetry.addData("Location: ", location);
             telemetry.update();

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.commands;
 
 import org.firstinspires.ftc.teamcode.shplib.commands.Command;
+import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
 import org.firstinspires.ftc.teamcode.subsystems.AdjustHolder;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
@@ -26,9 +27,6 @@ public class LowerArmCommand extends Command {
     @Override
     public void init() {
         startTime = Clock.now();
-
-        arm.setState(ArmSubsystem.State.BOTTOM);
-        elbow.setState(PracticeArmServo.State.DOWN);
         wrist.setState(AdjustHolder.State.DOWN);
     }
 
@@ -39,6 +37,8 @@ public class LowerArmCommand extends Command {
     public void end() {
         //wrist.setState(AdjustHolder.State.DOWN);
         //elbow.setState(PracticeArmServo.State.DOWN);
+        arm.setState(ArmSubsystem.State.BOTTOM);
+        elbow.setState(PracticeArmServo.State.DOWN);
     }
 
     @Override

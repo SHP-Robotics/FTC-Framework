@@ -77,7 +77,7 @@ public class Constants {
         public static final double kSlideBottomClimb = 10;
         public static final double kSlideFinishClimb = 1400;
 
-        public static final double kSlideConeStack = 200.0;
+        public static final double kSlideConeStack = 1000.0;
 
         public static final double kSlideBottom = 0.0;
         public static final double kSlideMiddle = 500.0;
@@ -85,7 +85,8 @@ public class Constants {
         public static final double kSlideHigh = 2100.0;
         public static final double kSlideStackDistance = 150.0;
         //0.002
-        public static final double kSlideP = 0.0025;
+        public static final double kSlideP = 0.001;
+        //0.0025
         public static final double kSlideD = 0;
         public static final double kSlideTolerance = 100;
 

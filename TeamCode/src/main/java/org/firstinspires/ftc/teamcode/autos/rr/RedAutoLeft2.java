@@ -72,7 +72,7 @@ public class RedAutoLeft2 extends LinearOpMode {
         telemetry.addData("Location: ", location);
         telemetry.update();
         while (opModeInInit() && !isStopRequested()) {
-            location = visionSubsystem.getLocationBlue();
+            location = visionSubsystem.getLocationRed();
             telemetry.addLine("Trajectory Sequence Ready");
             telemetry.addData("Location: ", location);
             telemetry.update();
