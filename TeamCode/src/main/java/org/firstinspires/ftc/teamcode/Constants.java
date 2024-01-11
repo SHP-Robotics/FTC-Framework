@@ -31,25 +31,48 @@ public class Constants {
     }
 
     public static final class Arm {
-        public static final String kClawName = "claw";
-        public static final double kClawOpen = 0.4;
-        public static final double kClawClosed = 0.7;
 
-        public static final String kLeftSlideName = "leftSlide";
-        public static final String kRightSlideName = "rightSlide";
+        public static final String kElbowName = "elbow";
+        public static final String kWristName = "wrist";
+        public static final double kElbowDown = 0;
+        public static final double kElbowUp = 0;
 
-        public static final double kSlideBottom = 10.0;
-        public static final double kSlideHub = 200.0;
-        public static final double kSlideLow = 1000.0;
-        public static final double kSlideMiddle = 2500.0;
-        public static final double kSlideHigh = 4000.0;
-        public static final double kSlideStackDistance = 150.0;
+        public static final double kWristDrive = 0;
+        public static final double kWristDown = 0;
+        public static final double kWristDeposit = 0;
 
-        public static final double kSlideP = 0.0018;
-        public static final double kSlideD = 0;
-        public static final double kSlideTolerance = 100;
 
-        public static final double kSlideS = 0.035; // static friction
-        public static final double kSlideG = 0.07; // gravity
+
+        public static final double kElbowP = 0.0018;
+        public static final double kElbowD = 0;
+        public static final double kElbowTolerance = 10;
+
+        public static final double kElbowS = 0.035; // static friction
+        public static final double kElbowG = 0.07; // gravity
+    }
+
+    public static final class Claw {
+        public static final String kLeftClawName = "leftClaw";
+        public static final double kLeftClawOpen = 0.4;
+        public static final double kLeftClawClosed = 0.7;
+        public static final String kRightClawName = "rightClaw";
+        public static final double kRightClawOpen = 0.4;
+        public static final double kRightClawClosed = 0.7;
+
+    }
+    public static final class Plane {
+        public static final String kPlaneName = "plane";
+        public static final double kPlaneLaunch = 0.0475;
+        public static final double kPlaneLoad = 0.0475;
+
+    }
+    public static final class Lift {
+        public static final String kLeftLiftName = "leftLift";
+        public static final String kRightLiftName = "rightLift";
+
+        public static final double kLiftDisable = 0.0475;
+        public static final double kLiftPrepare = 0.0475;
+        public static final double kLiftClimb = 0.0475;
+
     }
 }

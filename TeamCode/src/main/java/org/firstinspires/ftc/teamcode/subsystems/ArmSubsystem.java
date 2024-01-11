@@ -1,21 +1,17 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kClawClosed;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kClawName;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kClawOpen;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kLeftSlideName;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kRightSlideName;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideBottom;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideD;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideG;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideHigh;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideHub;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideLow;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideMiddle;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideP;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideS;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideStackDistance;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideTolerance;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kElbowD;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kElbowDown;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kElbowG;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kElbowName;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kElbowP;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kElbowS;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kElbowTolerance;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kElbowUp;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kWristDeposit;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kWristDown;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kWristDrive;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kWristName;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -29,124 +25,83 @@ import org.firstinspires.ftc.teamcode.shplib.hardware.SHPMotor;
 import org.firstinspires.ftc.teamcode.shplib.hardware.units.MotorUnit;
 
 public class ArmSubsystem extends Subsystem {
-    private final Servo claw;
-    //    private final DistanceSensor poleSensor;
-    private final SHPMotor leftSlide;
-    private final SHPMotor rightSlide;
 
-    private double clawPosition;
-
-    private int stackIndex = 4;
+    private final SHPMotor elbow;
+    private final Servo wrist;
 
     public enum State {
-        BOTTOM, HUB, LOW, MIDDLE, HIGH, STACK
+        INTAKE,
+        DRIVE,
+        OUTTAKE,
+        UNKNOWN
     }
 
     private State state;
 
     public ArmSubsystem(HardwareMap hardwareMap) {
-        claw = hardwareMap.get(Servo.class, kClawName);
-
 //        poleSensor = hardwareMap.get(DistanceSensor.class, "coneSensor");
 
-        leftSlide = new SHPMotor(hardwareMap, kLeftSlideName);
-        leftSlide.reverseDirection();
-        leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        leftSlide.enablePositionPID(new PositionPID(kSlideP, 0.0, kSlideD));
-        leftSlide.setPositionErrorTolerance(kSlideTolerance);
-        leftSlide.enableFF(new ElevatorFFController(kSlideS, kSlideG));
+        elbow = new SHPMotor(hardwareMap, kElbowName);
+        //leftSlide.reverseDirection();
+        elbow.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        elbow.enablePositionPID(new PositionPID(kElbowP, 0.0, kElbowD));
+        elbow.setPositionErrorTolerance(kElbowTolerance);
+        elbow.enableFF(new ElevatorFFController(kElbowS, kElbowG));
 
-        rightSlide = new SHPMotor(hardwareMap, kRightSlideName);
-//        rightSlide.reverseDirection();
-        rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rightSlide.enablePositionPID(new PositionPID(kSlideP, 0.0, kSlideD));
-        rightSlide.setPositionErrorTolerance(kSlideTolerance);
-        rightSlide.enableFF(new ElevatorFFController(kSlideS, kSlideG));
+        wrist = hardwareMap.get(Servo.class, kWristName);
 
-        setState(State.BOTTOM);
+        setState(State.DRIVE);
     }
 
     public void setState(State state) {
         this.state = state;
     }
-
+    public State getState(){ return state;}
     public double getDriveBias() {
-        return Math.abs(getSlidePosition(MotorUnit.TICKS) / kSlideHigh - 1.0);
-    }
-
-    public void openClaw() {
-        claw.setPosition(kClawOpen);
-        clawPosition = kClawOpen;
-        if (atStacks()) stackIndex++;
-    }
-
-    public void closeClaw() {
-        claw.setPosition(kClawClosed);
-        clawPosition = kClawClosed;
-        if (atStacks() && stackIndex > 0) stackIndex--;
-    }
-
-    public boolean clawClosed() {
-        return clawPosition == kClawClosed;
+        return Math.abs(getElbowPosition(MotorUnit.TICKS) / kElbowUp - 1.0);
     }
 
 //    public boolean isOverPole() {
 //        return poleSensor.getDistance(DistanceUnit.INCH) <= 6.0;
 //    }
 
-    public boolean atStacks() {
-        return state == State.STACK;
-    }
-
-    public boolean atHub() {
-        return state == State.HUB;
-    }
+//    public boolean atStacks() {
+//        return state == State.STACK;
+//    }
+//
+//    public boolean atHub() {
+//        return state == State.HUB;
+//    }
 
     public boolean atSetpoint() {
-        return leftSlide.atPositionSetpoint() && rightSlide.atPositionSetpoint();
+        return elbow.atPositionSetpoint();
     }
 
-    public double getSlidePosition(MotorUnit unit) {
-        return (leftSlide.getPosition(unit) + rightSlide.getPosition(unit)) / 2.0;
+    public double getElbowPosition(MotorUnit unit) {
+        return elbow.getPosition(unit);
     }
 
-    private double processState() {
+    private State processState() {
         switch (state) {
-            case BOTTOM:
-//                telemetry.addData("Power: ", slide.setPosition(10.0));
-                leftSlide.setPosition(kSlideBottom);
-                return rightSlide.setPosition(kSlideBottom);
-//                break;
-            case HUB:
-                leftSlide.setPosition(kSlideHub);
-                return rightSlide.setPosition(kSlideHub);
-            case LOW:
-                leftSlide.setPosition(kSlideLow);
-                return rightSlide.setPosition(kSlideLow);
-//                break;
-            case MIDDLE:
-                leftSlide.setPosition(kSlideMiddle);
-                return rightSlide.setPosition(kSlideMiddle);
-//                break;
-            case HIGH:
-                leftSlide.setPosition(kSlideHigh);
-                return rightSlide.setPosition(kSlideHigh);
-//                break;
-            case STACK:
-                leftSlide.setPosition(stackIndex * kSlideStackDistance + kSlideBottom);
-                return rightSlide.setPosition(stackIndex * kSlideStackDistance + kSlideBottom);
+            case DRIVE:
+                elbow.setPosition(kElbowDown);
+                wrist.setPosition(kWristDrive);
+                return state;
+            case INTAKE:
+                elbow.setPosition(kElbowDown);
+                wrist.setPosition(kWristDown);
+                return state;
+            case OUTTAKE:
+                elbow.setPosition(kElbowUp);
+                wrist.setPosition(kWristDeposit);
+                return state;
         }
-        return 0.0;
+        return State.UNKNOWN;
     }
 
     @Override
     public void periodic(Telemetry telemetry) {
-        telemetry.addData("Claw Position: ", claw.getPosition());
-//        telemetry.addData("Slide State: ", state.toString());
-        telemetry.addData("Num Cones Stacked: ", stackIndex + 1);
-        telemetry.addData("Left Slide Position: ", leftSlide.getPosition(MotorUnit.TICKS));
-        telemetry.addData("Right Slide Position: ", rightSlide.getPosition(MotorUnit.TICKS));
-//        telemetry.addData("Pole Distance (in): ", poleSensor.getDistance(DistanceUnit.INCH));
-        telemetry.addData("Right Slide PID Output: ", processState());
+        telemetry.addData("Elbow Position: ", elbow.getPosition(MotorUnit.TICKS));
+        telemetry.addData("ArmState: ", processState());
     }
 }
