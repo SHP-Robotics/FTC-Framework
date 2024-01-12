@@ -9,6 +9,7 @@ import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
+import org.opencv.imgproc.Moments;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
@@ -23,6 +24,9 @@ public class ElementDetectionPipelineBlue extends OpenCvPipeline {
     public double leftValue;
     public double rightValue;
     public double totalValue;
+
+    public boolean isReadable = true;
+    public int maxHeightReadable = 0;
 
     public ElementDetectionPipelineBlue() {
         frameList = new ArrayList<>();
@@ -67,6 +71,21 @@ public class ElementDetectionPipelineBlue extends OpenCvPipeline {
         Mat detected = new Mat();
         Core.inRange(mat, lowHSV, highHSV, detected); //ONLY returns the pixels in the HSV range
 
+        List<MatOfPoint> contours = new ArrayList<>();
+        Mat hierarchy = new Mat();
+        Imgproc.findContours(detected, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+
+        int maxHeight = 0;
+        for (MatOfPoint contour: contours) {
+            int height = contour.rows();
+            if (height > maxHeight) {
+                maxHeight = height;
+            }
+        }
+        isReadable = false;
+        maxHeightReadable = maxHeight;
+        isReadable = true;
+
         Mat left = detected.submat(LEFT_ROI);
         Mat right = detected.submat(RIGHT_ROI);
 
@@ -108,5 +127,10 @@ public class ElementDetectionPipelineBlue extends OpenCvPipeline {
         }
         return LocationPosition.NONE;
 
+    }
+
+    public int getMaxHeightReadable() {
+        while (!isReadable) {}
+        return maxHeightReadable;
     }
 }
