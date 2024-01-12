@@ -58,11 +58,6 @@ public class ATestTeleop extends TestBaseRobot {
 //
 ////        drive.setDriveBias(arm.getDriveBias());
         ///testing intack for stack
-        new Trigger(gamepad2.a,
-            new RunCommand(()->{
-                arm.setState(ArmSubsystem.State.CONESTACK);
-            })
-        );
 
 
         //////spinning intake

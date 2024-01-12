@@ -34,6 +34,7 @@ public class RaiseArmCommand extends Command {
         arm.nextState();
         wrist.setState(AdjustHolder.State.UP);
         elbow.setState(PracticeArmServo.State.UP);
+        pixelServo.setState(PixelServo.State.OUT);
     }
 //    @Override
 //    public void end() {
