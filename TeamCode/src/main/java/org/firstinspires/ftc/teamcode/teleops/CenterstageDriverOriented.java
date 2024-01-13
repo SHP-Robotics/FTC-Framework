@@ -9,11 +9,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.debug.MecanumController;
-import org.firstinspires.ftc.teamcode.debug.OneMotorSystem;
-import org.firstinspires.ftc.teamcode.debug.Side;
 import org.firstinspires.ftc.teamcode.debug.SpeedController;
 import org.firstinspires.ftc.teamcode.debug.SpeedType;
-import org.firstinspires.ftc.teamcode.debug.Synchronous;
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
 import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
@@ -25,20 +22,20 @@ public class CenterstageDriverOriented extends LinearOpMode {
     MecanumController mecanumController;
     VisionSubsystem visionSubsystem;
 
-    private String soundPath = "/sdcard/FIRST/blocks/sounds";
-    private File soundFile = new File(soundPath + "/Holy Moley.wav");
+    private final String soundPath = "/sdcard/FIRST/blocks/sounds";
+    private final File soundFile = new File(soundPath + "/Holy Moley.wav");
 
-    final double minimumPixelMass = 0.2;
+//    final double minimumPixelMass = 0.2;
 
-    public void pixelSonar() {
-        while (gamepad1.y && opModeIsActive() && !isStopRequested()) {
-            if (visionSubsystem.getPixelMass() > minimumPixelMass) {
-                mecanumController.driveParams(0, 0, 0);
-                break;
-            }
-            mecanumController.driveParams(0, 0.2, 0);
-        }
-    }
+//    public void pixelSonar() {
+//        while (gamepad1.y && opModeIsActive() && !isStopRequested()) {
+//            if (visionSubsystem.getPixelMass() > minimumPixelMass) {
+//                mecanumController.driveParams(0, 0, 0);
+//                break;
+//            }
+//            mecanumController.driveParams(0, 0.2, 0);
+//        }
+//    }
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -52,53 +49,42 @@ public class CenterstageDriverOriented extends LinearOpMode {
         mecanumController.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         visionSubsystem = new VisionSubsystem(hardwareMap, "pixel");
-        boolean holdingY = false;
+//        boolean holdingY = false;
 
-//        Servo outtake = hardwareMap.get(Servo.class, "outtake");
-//        outtake.setDirection(Servo.Direction.REVERSE);
-//        outtake.setPosition(Constants.OUTTAKE_HIDDEN);
+        Servo outtake = hardwareMap.get(Servo.class, "outtake");
+        outtake.setDirection(Servo.Direction.REVERSE);
+        outtake.setPosition(Constants.OUTTAKE_HIDDEN);
 
-//        Servo claw = hardwareMap.get(Servo.class, "claw");
-//        CRServo air = hardwareMap.get(CRServo.class, "air");
-//        air.setDirection(DcMotorSimple.Direction.REVERSE);
+        Servo claw = hardwareMap.get(Servo.class, "claw");
+        CRServo air = hardwareMap.get(CRServo.class, "air");
+        air.setDirection(DcMotorSimple.Direction.REVERSE);
 
-//        DcMotor climber = hardwareMap.get(DcMotor.class, "climber");
+        DcMotor climber = hardwareMap.get(DcMotor.class, "climber");
 
         waitForStart();
 
         while (opModeIsActive()) {
             mecanumController.drive(gamepad1);
 
-//            if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.OPEN_CLAW)) {
-//                claw.setPosition(Constants.CLAW_OPEN);
-//                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, soundFile);
-//            } else if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLOSE_CLAW)) {
-//                claw.setPosition(Constants.CLAW_CLOSE);
-//                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, soundFile);
-//            }
+            if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.OPEN_CLAW)) {
+                claw.setPosition(Constants.CLAW_OPEN);
+                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, soundFile);
+            } else if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLOSE_CLAW)) {
+                claw.setPosition(Constants.CLAW_CLOSE);
+                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, soundFile);
+            }
 
-//            if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER_UP)) {
-//                climber.setPower(1);
-//            } else if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER_STAY)) {
-//                climber.setPower(-0.5);
-//            } else if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER_DOWN)) {
-//                climber.setPower(-1);
-//            } else {
-//                climber.setPower(0);
-//            }
+            if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER_UP)) {
+                climber.setPower(1);
+            } else if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER_STAY)) {
+                climber.setPower(-0.5);
+            } else if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER_DOWN)) {
+                climber.setPower(-1);
+            } else {
+                climber.setPower(0);
+            }
 
-//            air.setPower(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.AIR_POWER) ? 1: 0);
-
-//            if (gamepad1.y && !holdingY) {
-//                claw.setPosition(Constants.CLAW_OPEN);
-//                climber.setPower(0);
-//                air.setPower(0);
-//
-//                pixelSonar();
-//                claw.setPosition(Constants.CLAW_CLOSE);
-//            }
-
-//            holdingY = gamepad1.y;
+            air.setPower(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.AIR_POWER) ? 1: 0);
         }
     }
 }

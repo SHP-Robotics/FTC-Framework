@@ -8,31 +8,18 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.debug.MecanumController;
-import org.firstinspires.ftc.teamcode.debug.OneMotorSystem;
-import org.firstinspires.ftc.teamcode.debug.Side;
 import org.firstinspires.ftc.teamcode.debug.SpeedController;
 import org.firstinspires.ftc.teamcode.debug.SpeedType;
-import org.firstinspires.ftc.teamcode.debug.Synchronous;
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
 import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
-import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
-import org.firstinspires.ftc.vision.apriltag.AprilTagLibrary;
-import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
-import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.io.File;
-import java.util.List;
 
 @TeleOp(name = "CenterStage Field Oriented")
 public class CenterstageFieldOriented extends LinearOpMode {
-    private String soundPath = "/sdcard/FIRST/blocks/sounds";
-    private File soundFile = new File(soundPath + "/Holy Moley.wav");
+    private final String soundPath = "/sdcard/FIRST/blocks/sounds";
+    private final File soundFile = new File(soundPath + "/Holy Moley.wav");
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -45,15 +32,15 @@ public class CenterstageFieldOriented extends LinearOpMode {
         mecanumController.setMotorsRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
         mecanumController.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-//        Servo outtake = hardwareMap.get(Servo.class, "outtake");
-//        outtake.setDirection(Servo.Direction.REVERSE);
-//        outtake.setPosition(Constants.OUTTAKE_HIDDEN);
+        Servo outtake = hardwareMap.get(Servo.class, "outtake");
+        outtake.setDirection(Servo.Direction.REVERSE);
+        outtake.setPosition(Constants.OUTTAKE_HIDDEN);
 
-//        Servo claw = hardwareMap.get(Servo.class, "claw");
-//        CRServo air = hardwareMap.get(CRServo.class, "air");
-//        air.setDirection(DcMotorSimple.Direction.REVERSE);
+        Servo claw = hardwareMap.get(Servo.class, "claw");
+        CRServo air = hardwareMap.get(CRServo.class, "air");
+        air.setDirection(DcMotorSimple.Direction.REVERSE);
 
-//        DcMotor climber = hardwareMap.get(DcMotor.class, "climber");
+        DcMotor climber = hardwareMap.get(DcMotor.class, "climber");
 
         waitForStart();
 
@@ -63,29 +50,29 @@ public class CenterstageFieldOriented extends LinearOpMode {
 
             mecanumController.fieldOrientedDrive(gamepad1);
 
-//            if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.OPEN_CLAW)) {
-//                claw.setPosition(Constants.CLAW_OPEN);
-//                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, soundFile);
-//            } else if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLOSE_CLAW)) {
-//                claw.setPosition(Constants.CLAW_CLOSE);
-//                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, soundFile);
-//            }
+            if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.OPEN_CLAW)) {
+                claw.setPosition(Constants.CLAW_OPEN);
+                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, soundFile);
+            } else if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLOSE_CLAW)) {
+                claw.setPosition(Constants.CLAW_CLOSE);
+                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, soundFile);
+            }
 
             if (gamepad1.b) {
                 mecanumController.calibrateIMUAngleOffset();
             }
 
-//            if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER_UP)) {
-//                climber.setPower(1);
-//            } else if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER_STAY)) {
-//                climber.setPower(-0.5);
-//            } else if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER_DOWN)) {
-//                climber.setPower(-1);
-//            } else {
-//                climber.setPower(0);
-//            }
-//
-//            air.setPower(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.AIR_POWER) ? 1: 0);
+            if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER_UP)) {
+                climber.setPower(1);
+            } else if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER_STAY)) {
+                climber.setPower(-0.5);
+            } else if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER_DOWN)) {
+                climber.setPower(-1);
+            } else {
+                climber.setPower(0);
+            }
+
+            air.setPower(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.AIR_POWER) ? 1: 0);
         }
     }
 }
