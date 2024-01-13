@@ -19,7 +19,7 @@ public class ElementDetectionPipelineBlue extends OpenCvPipeline {
     public double rightValue;
     public double totalValue;
 
-    public boolean isReadable = true;
+//    public boolean isReadable = true;
     public int maxHeightReadable = 0;
 
     public ElementDetectionPipelineBlue() {
@@ -70,9 +70,9 @@ public class ElementDetectionPipelineBlue extends OpenCvPipeline {
                 maxHeight = height;
             }
         }
-        isReadable = false;
+//        isReadable = false;
         maxHeightReadable = maxHeight;
-        isReadable = true;
+//        isReadable = true;
 
         Mat left = detected.submat(LEFT_ROI);
         Mat right = detected.submat(RIGHT_ROI);
@@ -119,7 +119,7 @@ public class ElementDetectionPipelineBlue extends OpenCvPipeline {
     }
 
     public int getMaxHeightReadable() {
-        while (!isReadable) {}
+//        while (!isReadable) {}
         return maxHeightReadable;
     }
 }
