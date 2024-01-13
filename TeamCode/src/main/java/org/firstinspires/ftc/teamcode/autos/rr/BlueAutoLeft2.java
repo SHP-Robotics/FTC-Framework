@@ -78,6 +78,7 @@ public class BlueAutoLeft2 extends LinearOpMode {
             telemetry.addLine("Trajectory Sequence Ready");
             telemetry.addData("Location: ", location);
             telemetry.update();
+            arm.nextState();
         }
 
         waitForStart();
