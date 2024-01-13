@@ -16,8 +16,8 @@ import java.io.File;
 
 @Autonomous(preselectTeleOp = "CenterStage Field Oriented")
 public class BlueAutoLeftRR extends LinearOpMode {
-    private String soundPath = "/sdcard/FIRST/blocks/sounds";
-    private File soundFile = new File(soundPath + "/Holy Moley.wav");
+    private final String soundPath = "/sdcard/FIRST/blocks/sounds";
+    private final File soundFile = new File(soundPath + "/Holy Moley.wav");
 
     public enum State {
         GEN_LEFT,
