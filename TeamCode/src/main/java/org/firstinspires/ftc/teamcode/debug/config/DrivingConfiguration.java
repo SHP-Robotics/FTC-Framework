@@ -27,8 +27,8 @@ public class DrivingConfiguration {
     public static final GamepadDigital CLIMBER_POWER_DOWN = GamepadDigital.DPAD_DOWN;
 
     // Claw
-    public static final GamepadDigital OPEN_CLAW = GamepadDigital.LEFT_BUMPER;
-    public static final GamepadDigital CLOSE_CLAW = GamepadDigital.RIGHT_BUMPER;
+    public static final GamepadDigital OPEN_CLAW = GamepadDigital.RIGHT_BUMPER;
+    public static final GamepadDigital CLOSE_CLAW = GamepadDigital.LEFT_BUMPER;
 
     // Air
     public static final GamepadDigital AIR_POWER = GamepadDigital.X;

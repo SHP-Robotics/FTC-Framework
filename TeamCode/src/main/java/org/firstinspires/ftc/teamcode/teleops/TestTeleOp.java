@@ -11,14 +11,14 @@ import org.firstinspires.ftc.teamcode.R;
 public class TestTeleOp extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        Servo claw = hardwareMap.get(Servo.class, "outtake");
+        Servo claw = hardwareMap.get(Servo.class, "claw");
         claw.setDirection(Servo.Direction.REVERSE);
 
         waitForStart();
 
         while (opModeIsActive()) {
             claw.setPosition(gamepad1.left_stick_y);
-            telemetry.addData("position", gamepad1.left_stick_y);
+            telemetry.addData("claw", gamepad1.left_stick_y);
             telemetry.update();
             sleep(20);
         }

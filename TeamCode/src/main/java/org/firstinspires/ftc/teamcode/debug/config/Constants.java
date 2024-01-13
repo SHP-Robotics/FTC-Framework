@@ -11,15 +11,15 @@ public final class Constants {
     public static final double MINIMUM_VOLTAGE_APPLIED = 0.0654;
 
     // Outtake
-    public static final double OUTTAKE_STARTING = 0.9;
-    public static final double OUTTAKE_NEUTRAL = 0.66;
-    public static final double OUTTAKE_LOWERED = 0.56;
-    public static final double OUTTAKE_ACTIVE = 0.50;
-    public static final double OUTTAKE_HIDDEN = 0.27;
+//    public static final double OUTTAKE_STARTING = 0.9;
+//    public static final double OUTTAKE_NEUTRAL = 0.66;
+//    public static final double OUTTAKE_LOWERED = 0.56;
+//    public static final double OUTTAKE_ACTIVE = 0.50;
+//    public static final double OUTTAKE_HIDDEN = 0.27;
 
     // Claw
-    public static final double CLAW_OPEN = 0.345;
-    public static final double CLAW_CLOSE = 0.4;
+    public static final double CLAW_OPEN = 0;
+    public static final double CLAW_CLOSE = 1;
 
     // Camera
     // TODO: tune servo position for camera
