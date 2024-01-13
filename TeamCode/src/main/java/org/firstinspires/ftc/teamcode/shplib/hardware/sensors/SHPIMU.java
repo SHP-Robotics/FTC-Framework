@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.shplib.hardware.sensors;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -20,5 +21,15 @@ public class SHPIMU {
 
     public double getYaw(AngleUnit unit) {
         return imu.getRobotYawPitchRollAngles().getYaw(unit);
+    }
+    public void initialize(HardwareMap hardwareMap, RevHubOrientationOnRobot.LogoFacingDirection logoDirection,
+                           RevHubOrientationOnRobot.UsbFacingDirection usbDirection) {
+        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                logoDirection,
+                usbDirection));
+        imu.initialize(parameters);
+    }
+    public void resetYaw() {
+        imu.resetYaw();
     }
 }

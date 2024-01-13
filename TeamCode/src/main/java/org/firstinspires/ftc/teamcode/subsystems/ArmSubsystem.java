@@ -28,12 +28,13 @@ public class ArmSubsystem extends Subsystem {
 
     private final SHPMotor elbow;
     private final Servo wrist;
-
+    private int elbowManual, wristManual;
     public enum State {
         INTAKE,
         DRIVE,
         OUTTAKE,
-        UNKNOWN
+        UNKNOWN,
+        MANUAL
     }
 
     private State state;
@@ -72,7 +73,14 @@ public class ArmSubsystem extends Subsystem {
 //    public boolean atHub() {
 //        return state == State.HUB;
 //    }
-
+    public double setElbow(){
+        elbowManual += 10;
+        return elbowManual;
+    }
+    public double setWrist(){
+        wristManual += 0.05;
+        return wristManual;
+    }
     public boolean atSetpoint() {
         return elbow.atPositionSetpoint();
     }
@@ -95,6 +103,9 @@ public class ArmSubsystem extends Subsystem {
                 elbow.setPosition(kElbowUp);
                 wrist.setPosition(kWristDeposit);
                 return state;
+            case MANUAL:
+                elbow.setPosition(elbowManual);
+                wrist.setPosition(wristManual);
         }
         return State.UNKNOWN;
     }

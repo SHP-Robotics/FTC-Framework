@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
+//import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.PlaneSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
@@ -30,7 +30,7 @@ public class BaseRobot extends OpMode {
     public ArmSubsystem arm;
     public ClawSubsystem claw;
     public PlaneSubsystem plane;
-    public LiftSubsystem lift;
+//    public LiftSubsystem lift;
 
 
 //    public ScoopSubsystem scoop;
@@ -47,6 +47,9 @@ public class BaseRobot extends OpMode {
         drive = new DriveSubsystem(hardwareMap);
 //        vision = new VisionSubsystem(hardwareMap);
         arm = new ArmSubsystem(hardwareMap);
+        claw = new ClawSubsystem(hardwareMap);
+        plane = new PlaneSubsystem(hardwareMap);
+//
 //        scoop = new ScoopSubsystem(hardwareMap);
 //        intake = new SHPMotor(hardwareMap, "intake");
 

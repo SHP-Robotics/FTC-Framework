@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.shplib.hardware.units.MotorUnit;
 
 public class DriveSubsystem extends Subsystem {
     private final SHPMecanumDrive drive;
+    private final SHPIMU imu;
 //    private final SHPIMU imu;
 
     private double bias = kMaximumBias; // will always be between kMinimumBias and 1.0
@@ -27,9 +28,9 @@ public class DriveSubsystem extends Subsystem {
 
         // Change logo direction and USB direction according to your hub orientation
         // Reference pictures: https://ftc-docs.firstinspires.org/programming_resources/imu/imu.html#orthogonal-mounting
-//        imu = new SHPIMU(hardwareMap,
-//                RevHubOrientationOnRobot.LogoFacingDirection.UP,
-//                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD);
+        imu = new SHPIMU(hardwareMap,
+                RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                RevHubOrientationOnRobot.UsbFacingDirection.LEFT);
     }
 
     public void mecanum(double leftY, double leftX, double rightX) {
@@ -61,6 +62,8 @@ public class DriveSubsystem extends Subsystem {
     public void setInitialPositions() {
         drive.setInitialPositions(MotorUnit.TICKS);
     }
+
+    public void resetIMUAngle() {imu.resetYaw();}
 //
 //    public void driveTo(boolean usingPID, double ticks) {
 //        if (usingPID) {

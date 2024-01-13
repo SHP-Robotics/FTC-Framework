@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.PlaneSubsystem;
 
 @TeleOp
-public class CommandBasedTeleOp extends BaseRobot {
+public class TestTeleOp extends BaseRobot {
     private double debounce;
     private double drivebias;
 
@@ -42,41 +42,20 @@ public class CommandBasedTeleOp extends BaseRobot {
 
         drive.setDriveBias(arm.getDriveBias());
 
-        //TODO: Open/close macro to circle DONE
-        new Trigger(gamepad1.circle, new RunCommand(()->{
-            if (!Clock.hasElapsed(debounce, 0.5)) return;
-
-            claw.nextState();
-            debounce = Clock.now();
-        }));
 
         new Trigger(gamepad1.left_trigger>0.5, new RunCommand(()->{ //all downward stuff
-            if (!Clock.hasElapsed(debounce, 0.5)) return;
+            if (!Clock.hasElapsed(debounce, 0.01)) return;
 
-            if(claw.closed() && arm.getState() == ArmSubsystem.State.INTAKE){
-                arm.setState(ArmSubsystem.State.DRIVE);
-                drivebias = 1.0;
-            }
-            else if(arm.getState() == ArmSubsystem.State.DRIVE){
-                arm.setState(ArmSubsystem.State.OUTTAKE);
-                drivebias = 0.5;
-            }
+            arm.setState(ArmSubsystem.State.MANUAL);
+            arm.setElbow();
 
             debounce = Clock.now();
         }));
         new Trigger(gamepad1.right_trigger>0.5, new RunCommand(()->{ //all upward stuff
-            if (!Clock.hasElapsed(debounce, 0.5)) return;
+            if (!Clock.hasElapsed(debounce, 0.01)) return;
 
-            if(arm.getState() == ArmSubsystem.State.OUTTAKE){
-                claw.close();
-                drivebias = 1.0;
-                arm.setState(ArmSubsystem.State.DRIVE);
-            }
-            else if(arm.getState() == ArmSubsystem.State.DRIVE){
-                arm.setState(ArmSubsystem.State.INTAKE);
-                drivebias = 0.5;
-                claw.open();
-            }
+            arm.setState(ArmSubsystem.State.MANUAL);
+            arm.setElbow();
 
             debounce = Clock.now();
         }));
@@ -90,7 +69,7 @@ public class CommandBasedTeleOp extends BaseRobot {
                 plane.setState(PlaneSubsystem.State.LAUNCH);
         }));
 
-        new Trigger(gamepad1.dpad_up, new RunCommand(() -> {
+        new Trigger(gamepad1.x, new RunCommand(() -> {
             drive.resetIMUAngle();
         }));
 

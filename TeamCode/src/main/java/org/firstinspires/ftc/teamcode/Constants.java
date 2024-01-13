@@ -66,13 +66,13 @@ public class Constants {
         public static final double kPlaneLoad = 0.0475;
 
     }
-    public static final class Lift {
-        public static final String kLeftLiftName = "leftLift";
-        public static final String kRightLiftName = "rightLift";
-
-        public static final double kLiftDisable = 0.0475;
-        public static final double kLiftPrepare = 0.0475;
-        public static final double kLiftClimb = 0.0475;
-
-    }
+//    public static final class Lift {
+//        public static final String kLeftLiftName = "leftLift";
+//        public static final String kRightLiftName = "rightLift";
+//
+//        public static final double kLiftDisable = 0.0475;
+//        public static final double kLiftPrepare = 0.0475;
+//        public static final double kLiftClimb = 0.0475;
+//
+//    }
 }
