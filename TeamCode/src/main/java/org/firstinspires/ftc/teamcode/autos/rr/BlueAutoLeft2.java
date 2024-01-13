@@ -41,6 +41,7 @@ public class BlueAutoLeft2 extends LinearOpMode {
         TO_BACKDROP_2,
 
         LOCATION_3,
+        LOCATION_3_POS,
         DEPOSIT_3,
         TO_BACKDROP_3,
         DEPOSIT_TO_BACKDROP,
@@ -78,6 +79,7 @@ public class BlueAutoLeft2 extends LinearOpMode {
             telemetry.addLine("Trajectory Sequence Ready");
             telemetry.addData("Location: ", location);
             telemetry.update();
+            telemetry.addData("arm state", arm.getState());
             arm.nextState();
         }
 
@@ -88,7 +90,7 @@ public class BlueAutoLeft2 extends LinearOpMode {
         switch (location) {
             case 1:
                 Trajectory pixelToSpikeMarkOne = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
-                        .lineToLinearHeading(new Pose2d(-28.75, -2, Math.toRadians(90)))
+                        .lineToLinearHeading(new Pose2d(-28.75, -5, Math.toRadians(90)))
                         .build();
 
                 sampleMecanumDrive.followTrajectoryAsync(pixelToSpikeMarkOne);
@@ -104,11 +106,11 @@ public class BlueAutoLeft2 extends LinearOpMode {
                 break;
             default:
                 Trajectory pixelToSpikeMarkThree = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
-                        .lineToLinearHeading(new Pose2d(-28.75, 8.5, Math.toRadians(-90)))
+                        .lineToLinearHeading(new Pose2d(-28.75, 0, Math.toRadians(-90)))
                         .build();
 
                 sampleMecanumDrive.followTrajectoryAsync(pixelToSpikeMarkThree);
-                currentState = State.DEPOSIT_3; //TODO: FOR TESTING
+                currentState = State.LOCATION_3_POS; //TODO: FOR TESTING
                 break;
         }
         //TODO: CURRENT AUTO 2+0 RIGHT RED
@@ -124,10 +126,10 @@ public class BlueAutoLeft2 extends LinearOpMode {
                 case DEPOSIT_1:
                     if (!sampleMecanumDrive.isBusy()) {
                         Trajectory spikeMarkOneBackingUp = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
-                                .lineToLinearHeading(new Pose2d(-28.75, 4, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(-32, 4, Math.toRadians(90)))
                                 .build();
                         sampleMecanumDrive.followTrajectoryAsync(spikeMarkOneBackingUp);
-                        currentState = State.TO_BACKDROP_1;
+                        currentState = State.IDLE;
                     }
                     break;
                 case TO_BACKDROP_1:
@@ -149,7 +151,7 @@ public class BlueAutoLeft2 extends LinearOpMode {
                                 .lineToLinearHeading(new Pose2d(-24, 0, Math.toRadians(0)))
                                 .build();
                         sampleMecanumDrive.followTrajectoryAsync(spikeMarkTwoBackingUp);
-                        currentState = State.TO_BACKDROP_2;
+                        currentState = State.IDLE;
                     }
                     break;
                 case TO_BACKDROP_2:
@@ -163,6 +165,16 @@ public class BlueAutoLeft2 extends LinearOpMode {
                         currentState = State.TO_PARKING;
                     }
                     break;
+                case LOCATION_3_POS:
+                if (!sampleMecanumDrive.isBusy()) {
+
+                    Trajectory pixelAllTheWay = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
+                            .lineToLinearHeading(new Pose2d(-28.75, 7, Math.toRadians(-90)))
+                            .build();
+                    sampleMecanumDrive.followTrajectoryAsync(pixelAllTheWay);
+                    currentState = State.DEPOSIT_3;
+                }
+                break;
 
                 // Path series 3
                 case DEPOSIT_3:
@@ -171,7 +183,7 @@ public class BlueAutoLeft2 extends LinearOpMode {
                                 .lineToLinearHeading(new Pose2d(-28.75, 0, Math.toRadians(-90)))
                                 .build();
                         sampleMecanumDrive.followTrajectoryAsync(spikeMarkThreeBackingUp);
-                        currentState = State.TO_BACKDROP_3;
+                        currentState = State.IDLE;
                     }
                     break;
 

@@ -60,7 +60,7 @@ public class ArmSubsystem extends Subsystem {
         rightSlide.enableFF(new ElevatorFFController(kSlideS, kSlideG));
 
 
-        setState(State.HIGH);
+        setState(State.BOTTOM);
     }
 
     public void setState(State state) {

@@ -43,8 +43,8 @@ public class ElementDetectionPipelineBlue extends OpenCvPipeline {
 
     static final Rect RIGHT_ROI = new Rect(
             //new Point(400, 1),
-            new Point(400, 100),
-            new Point(700, 300)
+            new Point(250, 100),
+            new Point(550, 300)
     );
 
     //threshold(lowest possible) percentage of that color

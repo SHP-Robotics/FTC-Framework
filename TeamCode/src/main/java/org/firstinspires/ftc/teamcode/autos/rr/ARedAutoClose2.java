@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.autos.rr;
 
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kLeftSlideName;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kRightSlideName;
+import static org.firstinspires.ftc.teamcode.Constants.Intake.kAdjustHolder;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
@@ -9,6 +10,7 @@ import com.qualcomm.hardware.ams.AMSColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.commands.DriveCommand;
 import org.firstinspires.ftc.teamcode.commands.EncoderTurnDriveCommand;
@@ -63,6 +65,7 @@ public class ARedAutoClose2 extends LinearOpMode {
         IntakeSubsystem intake = new IntakeSubsystem(hardwareMap);
         DcMotor leftSlide = hardwareMap.get(DcMotor.class, kLeftSlideName);
         DcMotor rightSlide = hardwareMap.get(DcMotor.class, kRightSlideName);
+        Servo adjustHolder = hardwareMap.get(Servo.class, kAdjustHolder);
 
         //vision
         //TODO: SWITCH PIPELINE LATER
@@ -77,6 +80,7 @@ public class ARedAutoClose2 extends LinearOpMode {
             telemetry.addLine("Trajectory Sequence Ready");
             telemetry.addData("Location: ", location);
             telemetry.update();
+            adjustHolder.setPosition(0.6);
         }
 
         waitForStart();
@@ -125,7 +129,7 @@ public class ARedAutoClose2 extends LinearOpMode {
                                 .lineToLinearHeading(new Pose2d(-28.75, 4, Math.toRadians(90)))
                                 .build();
                         sampleMecanumDrive.followTrajectoryAsync(spikeMarkOneBackingUp);
-                        currentState = State.TO_BACKDROP_1;
+                        currentState = State.IDLE;
                     }
                     break;
                 case TO_BACKDROP_1:
@@ -141,14 +145,16 @@ public class ARedAutoClose2 extends LinearOpMode {
                     break;
                 case ARM_1:
                     if (!sampleMecanumDrive.isBusy()) {
-                        leftSlide.setPower(-0.5);
-                        rightSlide.setPower(-0.5);
-                        sleep(10000);
-//                        leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                        leftSlide.setPower(-0.8);
+//                        rightSlide.setPower(0.5);
+                        sleep(500);
+                        leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 //                        rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                        adjustHolder.setPosition(0.2);
+                        sleep(5);
 
+                        currentState = State.IDLE;
                     }
-                    currentState = State.IDLE;
                     break;
 
                 // Path series 2
@@ -158,7 +164,7 @@ public class ARedAutoClose2 extends LinearOpMode {
                                 .lineToLinearHeading(new Pose2d(-24, 0, Math.toRadians(0)))
                                 .build();
                         sampleMecanumDrive.followTrajectoryAsync(spikeMarkTwoBackingUp);
-                        currentState = State.TO_BACKDROP_2;
+                        currentState = State.IDLE;
                     }
                     break;
                 case TO_BACKDROP_2:
@@ -180,7 +186,7 @@ public class ARedAutoClose2 extends LinearOpMode {
                                 .lineToLinearHeading(new Pose2d(-28.75, 0, Math.toRadians(-90)))
                                 .build();
                         sampleMecanumDrive.followTrajectoryAsync(spikeMarkThreeBackingUp);
-                        currentState = State.TO_BACKDROP_3;
+                        currentState = State.IDLE;
                     }
                     break;
 

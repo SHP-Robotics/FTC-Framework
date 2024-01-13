@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
-//@Autonomous(preselectTeleOp = "ATestTeleop")
+@Autonomous(preselectTeleOp = "ATestTeleop")
 public class ARedAuto extends TestBaseRobot {
     //    SHPMecanumAutoDrive autoDrive;
     //DriveSubsystem drive;
