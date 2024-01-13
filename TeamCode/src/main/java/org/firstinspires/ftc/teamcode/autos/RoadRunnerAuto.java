@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
  */
 
 
-@Autonomous
+//@Autonomous
 
 public class RoadRunnerAuto extends LinearOpMode {
 

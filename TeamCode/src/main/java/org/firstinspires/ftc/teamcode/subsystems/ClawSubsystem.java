@@ -104,6 +104,18 @@ public class ClawSubsystem extends Subsystem {
         return rightState;
     }
 
+    public void nextState(){
+        if(getRightState() == State.OPEN
+            && getRightState() == State.OPEN){
+            leftState = State.CLOSED;
+            rightState = State.CLOSED;
+        }
+        else {
+            leftState = State.OPEN;
+            rightState = State.OPEN;
+        }
+    }
+
     public boolean closed(){
         return getRightState() == State.CLOSED && getLeftState() == State.CLOSED;
     }

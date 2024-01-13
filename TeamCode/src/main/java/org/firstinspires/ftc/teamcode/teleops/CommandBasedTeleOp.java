@@ -4,15 +4,10 @@ package org.firstinspires.ftc.teamcode.teleops;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.BaseRobot;
-import org.firstinspires.ftc.teamcode.R;
-import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
 import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.Trigger;
-import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.ClawSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.PlaneSubsystem;
 
 @TeleOp
@@ -46,22 +41,14 @@ public class CommandBasedTeleOp extends BaseRobot {
 
         drive.setDriveBias(arm.getDriveBias());
 
-        new Trigger(gamepad1.right_bumper, new RunCommand(()->{
+        //TODO: Open/close macro to circle DONE
+        new Trigger(gamepad1.circle, new RunCommand(()->{
             if (!Clock.hasElapsed(debounce, 0.5)) return;
-
-            claw.nextRight();
-
-            debounce = Clock.now();
-        }));
-        new Trigger(gamepad1.left_bumper, new RunCommand(()->{
-            if (!Clock.hasElapsed(debounce, 0.5)) return;
-
-            claw.nextLeft();
-
+                claw.nextState();
             debounce = Clock.now();
         }));
 
-        new Trigger(gamepad1.x, new RunCommand(()->{ //all downward stuff
+        new Trigger(gamepad1.left_trigger>0.5, new RunCommand(()->{ //all downward stuff
             if (!Clock.hasElapsed(debounce, 0.5)) return;
 
             if(claw.closed() && arm.getState() == ArmSubsystem.State.INTAKE){
@@ -73,7 +60,7 @@ public class CommandBasedTeleOp extends BaseRobot {
 
             debounce = Clock.now();
         }));
-        new Trigger(gamepad1.triangle, new RunCommand(()->{ //all upward stuff
+        new Trigger(gamepad1.right_trigger>0.5, new RunCommand(()->{ //all upward stuff
             if (!Clock.hasElapsed(debounce, 0.5)) return;
 
             if(arm.getState() == ArmSubsystem.State.OUTTAKE){
@@ -88,18 +75,29 @@ public class CommandBasedTeleOp extends BaseRobot {
             debounce = Clock.now();
         }));
 
-        new Trigger(gamepad1.dpad_left, new RunCommand(() -> {
-            plane.setState(PlaneSubsystem.State.LAUNCH);
-        }));
-        new Trigger(gamepad1.circle, new RunCommand(() -> {
+        //TODO: PLANE LAUNCH BOTH BUMPERS
+        new Trigger(gamepad1.dpad_down, new RunCommand(() -> {
             plane.setState(PlaneSubsystem.State.LOAD);
         }));
-        new Trigger(gamepad1.dpad_up, new RunCommand(() -> {
-            lift.setState(LiftSubsystem.State.PREPARE);
+        new Trigger(gamepad1.left_bumper, new RunCommand(() -> {
+            if(gamepad1.right_bumper)
+                plane.setState(PlaneSubsystem.State.LAUNCH);
         }));
+
         new Trigger(gamepad1.dpad_up, new RunCommand(() -> {
-            lift.setState(LiftSubsystem.State.CLIMB);
+            drive.resetIMUAngle();
         }));
+
+        //TODO: reset heading dpad up
+        //TODO: fast speed when in drive mode
+        //TODO: slow speed when in intake/outtake mode
+
+//        new Trigger(gamepad1.dpad_up, new RunCommand(() -> {
+//            lift.setState(LiftSubsystem.State.PREPARE);
+//        }));
+//        new Trigger(gamepad1.dpad_up, new RunCommand(() -> {
+//            lift.setState(LiftSubsystem.State.CLIMB);
+//        }));
 
 //        new Trigger(gamepad1.a, new RunCommand(() -> {
 //            if (!Clock.hasElapsed(debounce, 0.5)) return;
