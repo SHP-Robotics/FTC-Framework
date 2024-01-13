@@ -74,7 +74,7 @@ public class ABlueAuto extends TestBaseRobot {
                                                 .then(new WaitCommand(1))
                                                 .then(new DriveCommand(drive,0,-0.3,0,2.2,true))
                                                 .then(new DriveCommand(drive,-0.425,0,0,2.75,true))
-                                                .then(new RaiseArmCommand(arm,wrist,elbow,pixelServo))
+                                                .then(new RaiseArmCommand(arm,wrist,elbow))
                                                 //.then(new RaiseArmCommand(arm,wrist,elbow,pixelServo))
                                                 .then(new DriveCommand(drive,-0.2,0,0,1.3,true))
                                                 .then(new RunCommand(() -> {
@@ -99,7 +99,7 @@ public class ABlueAuto extends TestBaseRobot {
                                                 .then(new EncoderTurnDriveCommand(drive,"ccw",88))
                                                 .then(new DriveCommand(drive,-0.425,0,0,2.7,true))
                                                 .then(new DriveCommand(drive,0,0.325,0,1.2,true))
-                                                .then(new RaiseArmCommand(arm,wrist,elbow,pixelServo))
+                                                .then(new RaiseArmCommand(arm,wrist,elbow))
                                                 //.then(new RaiseArmCommand(arm,wrist,elbow,pixelServo))
                                                 .then(new DriveCommand(drive,-0.2,0,0,1.1,true))
                                                 .then(new RunCommand(() -> {
@@ -121,7 +121,7 @@ public class ABlueAuto extends TestBaseRobot {
                                                 .then(new DriveCommand(drive,0.2,0,0,1.45,true))
                                                 .then(new EncoderTurnDriveCommand(drive,"ccw",87))
                                                 .then(new DriveCommand(drive,-0.4,0,0,3,true))
-                                                .then(new RaiseArmCommand(arm,wrist,elbow,pixelServo))
+                                                .then(new RaiseArmCommand(arm,wrist,elbow))
                                                 //.then(new RaiseArmCommand(arm,wrist,elbow,pixelServo))
                                                 .then(new DriveCommand(drive,-0.2,0,0,0.9,true))
                                                 .then(new RunCommand(() -> {

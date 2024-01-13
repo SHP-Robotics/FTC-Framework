@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.AutonomousStorage;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.PoseStorage;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 import org.firstinspires.ftc.teamcode.subsystems.AdjustHolder;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
@@ -62,6 +63,7 @@ public class BlueAutoLeft2 extends LinearOpMode {
         PixelServo pixelServo = new PixelServo(hardwareMap);
         AdjustHolder wrist = new AdjustHolder(hardwareMap);
         IntakeSubsystem intake = new IntakeSubsystem(hardwareMap);
+        CommandScheduler myCommand = CommandScheduler.getInstance();
 
         //vision
         //TODO: SWITCH PIPELINE LATER

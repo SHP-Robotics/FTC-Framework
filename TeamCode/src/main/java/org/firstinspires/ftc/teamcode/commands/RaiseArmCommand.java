@@ -11,18 +11,15 @@ public class RaiseArmCommand extends Command {
     private final ArmSubsystem arm;
     private final AdjustHolder wrist;
     private final PracticeArmServo elbow;
-
-    private final PixelServo pixelServo;
     private  double startTime;
 
-    public RaiseArmCommand(ArmSubsystem arm, AdjustHolder wrist, PracticeArmServo elbow, PixelServo pixelServo) {
+    public RaiseArmCommand(ArmSubsystem arm, AdjustHolder wrist, PracticeArmServo elbow) {
         // You MUST call the parent class constructor and pass through any subsystems you use
-        super(arm, wrist, elbow, pixelServo);
+        super(arm, wrist, elbow);
 
         this.arm = arm;
         this.wrist = wrist;
         this.elbow = elbow;
-        this.pixelServo = pixelServo;
 
     }
 
@@ -34,7 +31,6 @@ public class RaiseArmCommand extends Command {
         arm.nextState();
         wrist.setState(AdjustHolder.State.UP);
         elbow.setState(PracticeArmServo.State.UP);
-        pixelServo.setState(PixelServo.State.OUT);
     }
 //    @Override
 //    public void end() {

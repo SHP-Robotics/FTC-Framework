@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.teamcode.Constants.offset;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.R;
 import org.firstinspires.ftc.teamcode.TestBaseRobot;
 import org.firstinspires.ftc.teamcode.commands.LowerArmCommand;
@@ -58,11 +59,9 @@ public class ATestTeleop extends TestBaseRobot {
 //
 ////        drive.setDriveBias(arm.getDriveBias());
         ///testing intack for stack
-
-
         //////spinning intake
         new Trigger (gamepad1.right_bumper,
-                new RaiseArmCommand(arm,wrist,elbow,pixelServo)
+                new RaiseArmCommand(arm,wrist,elbow)
         );
         new Trigger(gamepad1.square, new RunCommand(() -> {
             if (!Clock.hasElapsed(debounce, 0.1)) return;
@@ -79,14 +78,16 @@ public class ATestTeleop extends TestBaseRobot {
             driveBias = 1;
         })
         );
+        // TODO fix servo
         new Trigger (gamepad1.left_bumper,
                 new LowerArmCommand(arm,wrist,elbow)
                         .then(new RunCommand(()->{
-                            pixelServo.setState(PixelServo.State.IN);
+                            intake.putPixelServoBack();
                         }))
         );
         new Trigger ((!gamepad1.a && !gamepad1.y), new RunCommand(()->{
-            intake.setState(IntakeSubsystem.State.STILL);
+            if(intake.getState()!=IntakeSubsystem.State.OUTAKE1){
+            intake.setState(IntakeSubsystem.State.STILL);}
         })
         );
 
@@ -100,13 +101,20 @@ public class ATestTeleop extends TestBaseRobot {
         })
         );
 
+        // TODO fix servo
         new Trigger (gamepad1.a, new RunCommand(()->{
-            if (arm.getState() == ArmSubsystem.State.BOTTOM)       //1. if arm is at bottom
+            if (arm.getState() == ArmSubsystem.State.BOTTOM) {      //1. if arm is at bottom
                 intake.setState(IntakeSubsystem.State.INTAKING);   //   intake pixels
-            else if (pixelServo.getState() == PixelServo.State.IN) //2. if no pixels have been released
-                pixelServo.setState(PixelServo.State.OUT);         //   release pixel #1
-            else                                                   //3. if pixel #1 has been released
+                telemetry.addData("State1", 0);
+            }
+            else if (intake.getState() == IntakeSubsystem.State.STILL) { //2. if no pixels have been released
+                intake.setState(IntakeSubsystem.State.OUTAKE1);       //   release pixel #1
+                telemetry.addData("State2", 1);
+            }
+            else {                                                   //3. if pixel #1 has been released
                 intake.setState(IntakeSubsystem.State.OUTTAKING);  //   release pixel #2
+                telemetry.addData("state3", 2);
+            }
             })
         );
 

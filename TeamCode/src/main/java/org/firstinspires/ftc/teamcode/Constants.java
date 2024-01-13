@@ -33,9 +33,9 @@ public class Constants {
     public static final class Intake{
         public static final String kLeftAdjust = "leftAdjust";
         public static final String kRightAdjust = "rightAdjust";
-        public static final double kPositionBottom = 1.05;
-        public static final double kPositionTop = 0.53;
-        public static final double kPositionMiddle = 0.35;
+        public static final double kPositionBottom = 0.6;
+        public static final double kPositionTop = 0;
+        public static final double kPositionMiddle = 0.28;
         public static final String kPixelServo = "PixelServo";
         public static final String kPlaneServo = "PlaneServo";
 

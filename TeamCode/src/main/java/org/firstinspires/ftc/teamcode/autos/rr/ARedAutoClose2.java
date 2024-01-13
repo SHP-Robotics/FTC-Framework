@@ -1,39 +1,38 @@
 package org.firstinspires.ftc.teamcode.autos.rr;
 
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kLeftSlideName;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kRightSlideName;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.qualcomm.ftccommon.SoundPlayer;
+import com.qualcomm.hardware.ams.AMSColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.commands.DriveCommand;
+import org.firstinspires.ftc.teamcode.commands.EncoderTurnDriveCommand;
 import org.firstinspires.ftc.teamcode.commands.LowerArmCommand;
 import org.firstinspires.ftc.teamcode.commands.RaiseArmCommand;
-import org.firstinspires.ftc.teamcode.debug.config.Constants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.AutonomousStorage;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.PoseStorage;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
+import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
+import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
 import org.firstinspires.ftc.teamcode.subsystems.AdjustHolder;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.HookSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.PixelServo;
-import org.firstinspires.ftc.teamcode.subsystems.PlaneServo;
 import org.firstinspires.ftc.teamcode.subsystems.PracticeArmServo;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
-import java.io.File;
-
 @Autonomous(preselectTeleOp = "ATestTeleOp")
-public class RedAutoRight2 extends LinearOpMode {
+public class ARedAutoClose2 extends LinearOpMode {
     public enum State {
         LOCATION_1,
         DEPOSIT_1,
         TO_BACKDROP_1,
+        ARM_1,
 
         LOCATION_2,
         DEPOSIT_2,
@@ -57,11 +56,13 @@ public class RedAutoRight2 extends LinearOpMode {
         int location = 1;
 
         //subsystems
-        ArmSubsystem arm = new ArmSubsystem(hardwareMap);
+//        ArmSubsystem arm = new ArmSubsystem(hardwareMap);
         PracticeArmServo elbow = new PracticeArmServo(hardwareMap);
         PixelServo pixelServo = new PixelServo(hardwareMap);
         AdjustHolder wrist = new AdjustHolder(hardwareMap);
         IntakeSubsystem intake = new IntakeSubsystem(hardwareMap);
+        DcMotor leftSlide = hardwareMap.get(DcMotor.class, kLeftSlideName);
+        DcMotor rightSlide = hardwareMap.get(DcMotor.class, kRightSlideName);
 
         //vision
         //TODO: SWITCH PIPELINE LATER
@@ -130,13 +131,24 @@ public class RedAutoRight2 extends LinearOpMode {
                 case TO_BACKDROP_1:
                     if (!sampleMecanumDrive.isBusy()) {
                         TrajectorySequence spikeMarkOneToBackdrop = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
-                                .lineToLinearHeading(new Pose2d(-42, 40, Math.toRadians(-90)))
+                                .lineToLinearHeading(new Pose2d(-45, 40, Math.toRadians(-90)))
                                 .build();
 
                         sampleMecanumDrive.followTrajectorySequenceAsync(spikeMarkOneToBackdrop);
 
-                        currentState = State.TO_PARKING;
+                        currentState = State.ARM_1;
                     }
+                    break;
+                case ARM_1:
+                    if (!sampleMecanumDrive.isBusy()) {
+                        leftSlide.setPower(-0.5);
+                        rightSlide.setPower(-0.5);
+                        sleep(10000);
+//                        leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//                        rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+                    }
+                    currentState = State.IDLE;
                     break;
 
                 // Path series 2

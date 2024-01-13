@@ -25,7 +25,8 @@ public class IntakeSubsystem extends Subsystem {
     public final Servo dropDown;
     //private final Servo pixelThing; // Need better name
     public enum State {
-        INTAKING, OUTTAKING, STILL, REJECT
+        INTAKING, OUTTAKING, STILL, REJECT,OUTAKE1,
+//        PIXELIN, PIXELOUT
 //        STILL, PIXELON, PIXELOFF
     }
 
@@ -43,11 +44,23 @@ public class IntakeSubsystem extends Subsystem {
         // Example:
         setState(State.STILL);
         dropDown.setPosition(0.5);
+        pixelServo.setPosition(0.9);
     }
 
+    public void putPixelServoBack(){
+        pixelServo.setPosition(0.9);
+    }
+
+    public boolean firstPixel(){
+        return (pixelServo.getPosition()==0.5);
+    }
     public void setState(State state) {
         this.state = state;
     }
+
+    public State getState(){return state;}
+
+
 
     // Add control methods
     // Example:
@@ -57,13 +70,13 @@ public class IntakeSubsystem extends Subsystem {
     public void periodic(Telemetry telemetry) {
         // Add logging if needed
         // Example:
-        // telemetry.addData("Motor Encoder: ", motor.getPosition(MotorUnit.TICKS));
+         telemetry.addData("Intake: ", state);
         //dropDown.setPosition(0.5);
         switch (state) {
             case INTAKING:
                 cWheel.setPower(-1.0);
                 spinner.setPower(1);
-                pixelServo.setPosition(1.0);
+                pixelServo.setPosition(0.9);
                 break;
             case OUTTAKING:
                 cWheel.setPower(-1.0);
@@ -77,6 +90,13 @@ public class IntakeSubsystem extends Subsystem {
                 cWheel.setPower(1.0);
                 spinner.setPower(-1);
                 break;
+            case OUTAKE1:
+                pixelServo.setPosition(0.5);
+//                pixelServo.setPosition(1.0);
+                break;
+//            case PIXELOUT:
+////                pixelServo.setPosition(0.5);
+//                break;
 
 //            case PIXELOFF:
 //                pixelThing.setPosition(kPixelDisengaged);
