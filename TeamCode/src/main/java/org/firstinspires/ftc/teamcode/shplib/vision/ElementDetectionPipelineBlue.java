@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.shplib.vision;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.opmode.LocalizationTest;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -9,7 +7,6 @@ import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
-import org.opencv.imgproc.Moments;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
@@ -18,9 +15,6 @@ import java.util.List;
 public class ElementDetectionPipelineBlue extends OpenCvPipeline {
     ArrayList<double[]> frameList;
 
-    public static double strictLowS = 140; //TODO: Tune in dashboard
-    public static double strictHighS = 255;
-    Telemetry telemetry;
     public double leftValue;
     public double rightValue;
     public double totalValue;
@@ -38,9 +32,6 @@ public class ElementDetectionPipelineBlue extends OpenCvPipeline {
         NONE
     }
 
-    //sub matrices to divide image
-    //we can draw rectangles on the screen to find the perfect fit
-    //edit as necessary
     static final Rect LEFT_ROI = new Rect(
             new Point(1, 1), //TODO: MAGIC NUMBERS ;-;
             new Point(200, 447)
@@ -51,10 +42,7 @@ public class ElementDetectionPipelineBlue extends OpenCvPipeline {
             new Point(500, 300)
     );
 
-    //threshold(lowest possible) percentage of that color
     static double THRESHOLD = 0.08; //TODO threshold
-
-    //check if we really need this
 
     @Override
     public Mat processFrame(Mat input){
@@ -65,8 +53,8 @@ public class ElementDetectionPipelineBlue extends OpenCvPipeline {
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
 
         //Lower and upper bounds for the color to detect
-        Scalar lowHSV = new Scalar(210/2, 50, 70); //TODO: currently for RED. need to tune
-        Scalar highHSV = new Scalar(250/2, 255, 255); //bruh red is like 0-15 & 350-360 wtf
+        Scalar lowHSV = new Scalar(210/2, 50, 70);
+        Scalar highHSV = new Scalar(250/2, 255, 255);
 
         Mat detected = new Mat();
         Core.inRange(mat, lowHSV, highHSV, detected); //ONLY returns the pixels in the HSV range
@@ -91,7 +79,7 @@ public class ElementDetectionPipelineBlue extends OpenCvPipeline {
 
         leftValue = Core.sumElems(left).val[0] / LEFT_ROI.area() / 225;
         rightValue = Core.sumElems(right).val[0] / RIGHT_ROI.area() / 225;
-        totalValue = Core.sumElems(detected).val[0] / (detected.rows() * detected.cols() * 225);
+        totalValue = Core.sumElems(detected).val[0] / (detected.rows() * detected.cols() * 255);
 
         //        Imgproc.cvtColor(mat, mat, Imgproc.COLOR_GRAY2RGB);
 
@@ -118,6 +106,7 @@ public class ElementDetectionPipelineBlue extends OpenCvPipeline {
         return input;
 
     }
+
     public LocationPosition getLocation(){
         if(leftValue>rightValue && leftValue > THRESHOLD){
             return LocationPosition.LEFT;
