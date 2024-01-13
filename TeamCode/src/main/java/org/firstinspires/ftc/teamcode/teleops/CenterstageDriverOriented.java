@@ -54,51 +54,51 @@ public class CenterstageDriverOriented extends LinearOpMode {
         visionSubsystem = new VisionSubsystem(hardwareMap, "pixel");
         boolean holdingY = false;
 
-        Servo outtake = hardwareMap.get(Servo.class, "outtake");
-        outtake.setDirection(Servo.Direction.REVERSE);
-        outtake.setPosition(Constants.OUTTAKE_HIDDEN);
+//        Servo outtake = hardwareMap.get(Servo.class, "outtake");
+//        outtake.setDirection(Servo.Direction.REVERSE);
+//        outtake.setPosition(Constants.OUTTAKE_HIDDEN);
 
-        Servo claw = hardwareMap.get(Servo.class, "claw");
-        CRServo air = hardwareMap.get(CRServo.class, "air");
-        air.setDirection(DcMotorSimple.Direction.REVERSE);
+//        Servo claw = hardwareMap.get(Servo.class, "claw");
+//        CRServo air = hardwareMap.get(CRServo.class, "air");
+//        air.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        DcMotor climber = hardwareMap.get(DcMotor.class, "climber");
+//        DcMotor climber = hardwareMap.get(DcMotor.class, "climber");
 
         waitForStart();
 
         while (opModeIsActive()) {
             mecanumController.drive(gamepad1);
 
-            if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.OPEN_CLAW)) {
-                claw.setPosition(Constants.CLAW_OPEN);
-                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, soundFile);
-            } else if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLOSE_CLAW)) {
-                claw.setPosition(Constants.CLAW_CLOSE);
-                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, soundFile);
-            }
+//            if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.OPEN_CLAW)) {
+//                claw.setPosition(Constants.CLAW_OPEN);
+//                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, soundFile);
+//            } else if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLOSE_CLAW)) {
+//                claw.setPosition(Constants.CLAW_CLOSE);
+//                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, soundFile);
+//            }
 
-            if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER_UP)) {
-                climber.setPower(1);
-            } else if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER_STAY)) {
-                climber.setPower(-0.5);
-            } else if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER_DOWN)) {
-                climber.setPower(-1);
-            } else {
-                climber.setPower(0);
-            }
+//            if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER_UP)) {
+//                climber.setPower(1);
+//            } else if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER_STAY)) {
+//                climber.setPower(-0.5);
+//            } else if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER_DOWN)) {
+//                climber.setPower(-1);
+//            } else {
+//                climber.setPower(0);
+//            }
 
-            air.setPower(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.AIR_POWER) ? 1: 0);
+//            air.setPower(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.AIR_POWER) ? 1: 0);
 
-            if (gamepad1.y && !holdingY) {
-                claw.setPosition(Constants.CLAW_OPEN);
-                climber.setPower(0);
-                air.setPower(0);
+//            if (gamepad1.y && !holdingY) {
+//                claw.setPosition(Constants.CLAW_OPEN);
+//                climber.setPower(0);
+//                air.setPower(0);
+//
+//                pixelSonar();
+//                claw.setPosition(Constants.CLAW_CLOSE);
+//            }
 
-                pixelSonar();
-                claw.setPosition(Constants.CLAW_CLOSE);
-            }
-
-            holdingY = gamepad1.y;
+//            holdingY = gamepad1.y;
         }
     }
 }
