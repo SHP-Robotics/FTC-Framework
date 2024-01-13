@@ -134,8 +134,10 @@ public class BlueAutoLeftRR extends LinearOpMode {
                             claw.setPosition(Constants.CLAW_OPEN);
 
                             TrajectorySequence unknownToBackdropOne = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
-                                    .lineToLinearHeading(new Pose2d(28.75, 42, Math.toRadians(-90)))
-                                    .lineToLinearHeading(new Pose2d(23, 42, Math.toRadians(-90)))
+                                    .lineToLinearHeading(new Pose2d(28.75, 43, Math.toRadians(-90)))
+                                    .lineToLinearHeading(new Pose2d(28.75, 43.5, Math.toRadians(-90)))
+                                    .lineToLinearHeading(new Pose2d(23, 43.5, Math.toRadians(-90)))
+                                    .lineToLinearHeading(new Pose2d(23, 44, Math.toRadians(-90)))
                                     .build();
 
                             sampleMecanumDrive.followTrajectorySequenceAsync(unknownToBackdropOne);
