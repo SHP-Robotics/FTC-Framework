@@ -200,7 +200,8 @@ public class RedAutoRightRR extends LinearOpMode {
                     if (!sampleMecanumDrive.isBusy()) {
                         TrajectorySequence spikeMarkTwoToBackdrop = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
                                 .lineToLinearHeading(new Pose2d(28.75, -42, Math.toRadians(90)))
-                                .lineToLinearHeading(new Pose2d(28.75, -45, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(26, -42, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(26, -45, Math.toRadians(90)))
                                 .build();
 
                         sampleMecanumDrive.followTrajectorySequenceAsync(spikeMarkTwoToBackdrop);
@@ -213,7 +214,7 @@ public class RedAutoRightRR extends LinearOpMode {
                         sleep(1000);
 
                         TrajectorySequence spikeMarkTwoToParking = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
-                                .lineToLinearHeading(new Pose2d(28.75, -39, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(26, -39, Math.toRadians(90)))
                                 .addDisplacementMarker(() -> outtake.setPosition(Constants.OUTTAKE_HIDDEN))
                                 .lineToLinearHeading(new Pose2d(3, -39, Math.toRadians(90)))
                                 .lineToLinearHeading(new Pose2d(3, -50, Math.toRadians(90)))
@@ -233,7 +234,7 @@ public class RedAutoRightRR extends LinearOpMode {
                         TrajectorySequence forwardThreeToBackdropThree = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
                                 .lineToLinearHeading(new Pose2d(28.75, -43, Math.toRadians(90)))
                                 .lineToLinearHeading(new Pose2d(28.75, -44.5, Math.toRadians(90)))
-                                .lineToLinearHeading(new Pose2d(32, -44.5, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(31, -44.5, Math.toRadians(90)))
                                 .build();
 
                         sampleMecanumDrive.followTrajectorySequenceAsync(forwardThreeToBackdropThree);
@@ -247,7 +248,7 @@ public class RedAutoRightRR extends LinearOpMode {
                         sleep(1000);
 
                         TrajectorySequence spikeMarkThreeToParking = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
-                                .lineToLinearHeading(new Pose2d(32, -37, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(31, -37, Math.toRadians(90)))
                                 .addDisplacementMarker(() -> outtake.setPosition(Constants.OUTTAKE_HIDDEN))
                                 .lineToLinearHeading(new Pose2d(3, -37, Math.toRadians(90)))
                                 .lineToLinearHeading(new Pose2d(3, -50, Math.toRadians(90)))
