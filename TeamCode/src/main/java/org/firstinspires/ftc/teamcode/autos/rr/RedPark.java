@@ -29,7 +29,7 @@ import org.firstinspires.ftc.teamcode.subsystems.PracticeArmServo;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 @Autonomous(preselectTeleOp = "ATestTeleOp")
-public class ARedAutoClose2 extends LinearOpMode {
+public class RedPark extends LinearOpMode {
     public enum State {
         LOCATION_1,
         DEPOSIT_1,
@@ -44,6 +44,8 @@ public class ARedAutoClose2 extends LinearOpMode {
         DEPOSIT_3,
         TO_BACKDROP_3,
         DEPOSIT_TO_BACKDROP,
+
+        MOVE_INIT,
 
         TO_PARKING,
         IDLE
@@ -129,7 +131,7 @@ public class ARedAutoClose2 extends LinearOpMode {
                                 .lineToLinearHeading(new Pose2d(-28.75, 4, Math.toRadians(90)))
                                 .build();
                         sampleMecanumDrive.followTrajectoryAsync(spikeMarkOneBackingUp);
-                        currentState = State.IDLE;
+                        currentState = State.MOVE_INIT;
                     }
                     break;
                 case TO_BACKDROP_1:
@@ -164,7 +166,7 @@ public class ARedAutoClose2 extends LinearOpMode {
                                 .lineToLinearHeading(new Pose2d(-24, 0, Math.toRadians(0)))
                                 .build();
                         sampleMecanumDrive.followTrajectoryAsync(spikeMarkTwoBackingUp);
-                        currentState = State.IDLE;
+                        currentState = State.MOVE_INIT;
                     }
                     break;
                 case TO_BACKDROP_2:
@@ -186,7 +188,7 @@ public class ARedAutoClose2 extends LinearOpMode {
                                 .lineToLinearHeading(new Pose2d(-28.75, 0, Math.toRadians(-90)))
                                 .build();
                         sampleMecanumDrive.followTrajectoryAsync(spikeMarkThreeBackingUp);
-                        currentState = State.IDLE;
+                        currentState = State.MOVE_INIT;
                     }
                     break;
 
@@ -199,6 +201,19 @@ public class ARedAutoClose2 extends LinearOpMode {
                                 .build();
 
                         sampleMecanumDrive.followTrajectorySequenceAsync(spikeMarkThreeToParking);
+
+                        currentState = State.TO_PARKING;
+                    }
+
+                    break;
+                case MOVE_INIT:
+                    if (!sampleMecanumDrive.isBusy()) {
+
+                        TrajectorySequence toInit = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
+                                .lineToLinearHeading(new Pose2d(0, 0, Math.toRadians(0)))
+                                .build();
+
+                        sampleMecanumDrive.followTrajectorySequenceAsync(toInit);
 
                         currentState = State.TO_PARKING;
                     }
@@ -220,9 +235,7 @@ public class ARedAutoClose2 extends LinearOpMode {
                 case TO_PARKING:
                     if (!sampleMecanumDrive.isBusy()) {
                         TrajectorySequence backdropToPark = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
-                                .forward(5)
-                                .lineToLinearHeading(new Pose2d(-2,45,Math.toRadians(-85)))
-                                .back(5)
+                                .lineToLinearHeading(new Pose2d(0,45,Math.toRadians(0)))
                                 .build();
                         sampleMecanumDrive.followTrajectorySequenceAsync(backdropToPark);
                         currentState = State.IDLE;

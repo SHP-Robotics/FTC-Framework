@@ -128,6 +128,11 @@ public class ATestTeleop extends TestBaseRobot {
         })
         );
 
+        new Trigger (gamepad1.dpad_right, new RunCommand(()->{
+            arm.setState(ArmSubsystem.State.SAFETY);
+        })
+        );
+
         new Trigger (gamepad1.dpad_down,
             new RunCommand(()->{
                 arm.setState(ArmSubsystem.State.BOTTOMCLIMB);

@@ -169,7 +169,7 @@ public class BlueAutoLeft2 extends LinearOpMode {
                 if (!sampleMecanumDrive.isBusy()) {
 
                     Trajectory pixelAllTheWay = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-28.75, 7, Math.toRadians(-90)))
+                            .lineToLinearHeading(new Pose2d(-28.75, 6.5, Math.toRadians(-90)))
                             .build();
                     sampleMecanumDrive.followTrajectoryAsync(pixelAllTheWay);
                     currentState = State.DEPOSIT_3;

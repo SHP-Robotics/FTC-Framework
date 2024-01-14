@@ -20,6 +20,7 @@ import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideMidHigh;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideMiddle;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideP;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideS;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideSafety;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideTolerance;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -36,7 +37,7 @@ public class ArmSubsystem extends Subsystem {
     private final SHPMotor leftSlide;
     private final SHPMotor rightSlide;
     public enum State {
-        BOTTOM, MIDDLE, MIDHIGH, HIGH, CLIMB, BOTTOMCLIMB, FINISHCLIMB, CONESTACK
+        BOTTOM, MIDDLE, MIDHIGH, HIGH, CLIMB, BOTTOMCLIMB, FINISHCLIMB, CONESTACK, SAFETY
     }
     private State state;
     public ArmSubsystem(HardwareMap hardwareMap) {
@@ -128,6 +129,9 @@ public class ArmSubsystem extends Subsystem {
             case CONESTACK:
                 rightSlide.setPosition(kSlideConeStack);
                 return leftSlide.setPosition(kSlideConeStack);
+            case SAFETY:
+                rightSlide.setPosition(kSlideSafety);
+                return leftSlide.setPosition(kSlideSafety);
 
                                                                                                                                             //
 //                break;

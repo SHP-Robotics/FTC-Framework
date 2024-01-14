@@ -43,6 +43,6 @@ public class LowerArmCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return Clock.hasElapsed(startTime, 1.5);
+        return Clock.hasElapsed(startTime, 0.75);
     }
 }
