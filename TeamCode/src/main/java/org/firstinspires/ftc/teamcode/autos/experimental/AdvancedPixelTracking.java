@@ -15,6 +15,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @Autonomous()
 public class AdvancedPixelTracking extends LinearOpMode {
+    private double euclidianDistance(double[] point1, double[] point2) {
+        return Math.sqrt((point1[0] - point2[0])*(point1[0] - point2[0]) + (point1[1] - point2[1])*(point1[1] - point2[1]));
+    }
+
     @Override
     public void runOpMode() throws InterruptedException {
         VisionSubsystem visionSubsystem = new VisionSubsystem(hardwareMap, "pixel");
@@ -31,6 +35,8 @@ public class AdvancedPixelTracking extends LinearOpMode {
                 new PIDController(0, 0, 0))
                 .build();
 
+        double[] lastObject = null;
+
         telemetry.addLine("initialized");
         telemetry.update();
 
@@ -43,20 +49,39 @@ public class AdvancedPixelTracking extends LinearOpMode {
                 objects = visionSubsystem.pixelDetectionPipeline.getLastObjects();
             }
 
+            double[] closestObject = null;
+            double distance = -1;
             if (objects != null && objects.size() > 0) {
                 for (double[] object : objects) {
                     if (object != null && object.length >= 2) {
-                        pidFollower.update((object[0] / 400) - 1,
-                                1 - (object[1] / 244),
-                                0);
+                        if (lastObject == null) {
+                            lastObject = object;
+                            break;
+                        }
 
-                        telemetry.addData("Object x", (object[0] / 400) - 1);
-                        telemetry.addData("Object y", 1 - (object[1] / 244));
-                        telemetry.addData("Object area", object[2]);
+                        if (distance == -1 || euclidianDistance(object, lastObject) < distance) {
+                            distance = euclidianDistance(object, lastObject);
+                            closestObject = object;
+                        }
                     }
+                }
+
+                if (closestObject != null) {
+                    pidFollower.update((closestObject[0] / 400) - 1,
+                            1 - (closestObject[1] / 244),
+                            0);
+
+                    telemetry.addData("Object x", (closestObject[0] / 400) - 1);
+                    telemetry.addData("Object y", 1 - (closestObject[1] / 244));
+                    telemetry.addData("Object area", closestObject[2]);
+
+                    lastObject = closestObject;
+                } else {
+                    cameraServo.setPower(0);
                 }
             } else {
                 mecanumController.driveParams(0, 0, 0);
+                cameraServo.setPower(0);
             }
 
             telemetry.update();

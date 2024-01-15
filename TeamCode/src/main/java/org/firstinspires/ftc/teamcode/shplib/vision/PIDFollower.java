@@ -32,8 +32,13 @@ public class PIDFollower {
     }
 
     public void update(double xError, double yError, double area) {
-        mecanumController.driveParams(0, 0, yawPID.getOutput(xError - idealXError));
-        cameraServo.setPower(pitchPID.getOutput(yError - idealYError));
+        if (mecanumController != null) {
+            mecanumController.driveParams(0, 0, yawPID.getOutput(xError - idealXError));
+        }
+
+        if (cameraServo != null) {
+            cameraServo.setPower(pitchPID.getOutput(yError - idealYError));
+        }
     }
 
     public static class PIDFollowerBuilder {

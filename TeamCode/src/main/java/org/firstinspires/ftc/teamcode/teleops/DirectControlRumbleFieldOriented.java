@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.teleops;
 
-import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -9,20 +8,33 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.debug.MecanumController;
+import org.firstinspires.ftc.teamcode.debug.PIDController;
 import org.firstinspires.ftc.teamcode.debug.SpeedController;
 import org.firstinspires.ftc.teamcode.debug.SpeedType;
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
 import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
+import org.firstinspires.ftc.teamcode.shplib.vision.PIDFollower;
+import org.firstinspires.ftc.teamcode.shplib.vision.PixelDetectionPipeline;
+import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
-import java.io.File;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-@TeleOp(name = "CenterStage Field Oriented")
-public class CenterstageFieldOriented extends LinearOpMode {
-//    private final String soundPath = "/sdcard/FIRST/blocks/sounds";
-//    private final File soundFile = new File(soundPath + "/Holy Moley.wav");
+@TeleOp()
+public class DirectControlRumbleFieldOriented extends LinearOpMode {
+    private double euclidianDistance(double[] point1, double[] point2) {
+        return Math.sqrt((point1[0] - point2[0])*(point1[0] - point2[0]) + (point1[1] - point2[1])*(point1[1] - point2[1]));
+    }
 
     @Override
     public void runOpMode() throws InterruptedException {
+        VisionSubsystem visionSubsystem = new VisionSubsystem(hardwareMap, "pixel");
+        visionSubsystem.pixelDetectionPipeline.setPipelineMode(PixelDetectionPipeline.PipelineMode.ALL_PIXELS);
+        boolean rumbleEnabled;
+
+        CRServo cameraServo = hardwareMap.get(CRServo.class, "cameraServo");
+
+        double[] lastObject = null;
+
         SpeedController speedController = new SpeedController.SpeedBuilder(SpeedType.SINGLE_OVERRIDE)
                 .setNaturalSpeed(0.6)
                 .setOverrideOneSpeed(1)
@@ -42,9 +54,12 @@ public class CenterstageFieldOriented extends LinearOpMode {
 
         DcMotor climber = hardwareMap.get(DcMotor.class, "climber");
 
+        telemetry.addLine("initialized");
+        telemetry.update();
+
         waitForStart();
 
-        while (opModeIsActive()) {
+        while (opModeIsActive() && !isStopRequested()) {
             telemetry.addData("Radians", mecanumController.getCalibratedIMUAngle());
             telemetry.update();
 
@@ -70,7 +85,49 @@ public class CenterstageFieldOriented extends LinearOpMode {
                 climber.setPower(0);
             }
 
+            if (gamepad1.a) {
+                cameraServo.setPower(-0.2);
+            } else if (gamepad1.y) {
+                cameraServo.setPower(0.2);
+            } else {
+                cameraServo.setPower(0);
+            }
+
+            rumbleEnabled = gamepad1.left_trigger > 0.1;
+
             air.setPower(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.AIR_POWER) ? 1: 0);
+
+            CopyOnWriteArrayList<double[]> objects = visionSubsystem.pixelDetectionPipeline.getObjects();
+
+            if ((objects == null || objects.size() == 0)) {
+                objects = visionSubsystem.pixelDetectionPipeline.getLastObjects();
+            }
+
+            double[] closestObject = null;
+            double distance = -1;
+            if (objects != null && objects.size() > 0) {
+                for (double[] object : objects) {
+                    if (object != null && object.length >= 2) {
+                        if (lastObject == null) {
+                            lastObject = object;
+                            break;
+                        }
+
+                        if (distance == -1 || euclidianDistance(object, lastObject) < distance) {
+                            distance = euclidianDistance(object, lastObject);
+                            closestObject = object;
+                        }
+                    }
+                }
+
+                if (closestObject != null) {
+                    lastObject = closestObject;
+
+                    if (rumbleEnabled) {
+                        gamepad1.rumble(closestObject[2], closestObject[2], 50);
+                    }
+                }
+            }
         }
     }
 }

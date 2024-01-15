@@ -14,7 +14,7 @@ public final class Constants {
     public static final double OUTTAKE_STARTING = 0.9;
     public static final double OUTTAKE_NEUTRAL = 0.66;
     public static final double OUTTAKE_LOWERED = 0.58;
-    public static final double OUTTAKE_ACTIVE = 0.50;
+    public static final double OUTTAKE_ACTIVE = 0.51;
     public static final double OUTTAKE_HIDDEN = 0.27;
 
     // Claw
@@ -23,21 +23,21 @@ public final class Constants {
 
     // Camera
     // TODO: tune servo position for camera
-    public enum CameraMode {
-        DETECTING(0),
-        SONAR(0),
-        CLAW(0);
-
-        private double position;
-
-        private CameraMode(double position) {
-            this.position = position;
-        }
-
-        public double getPosition() {
-            return this.position;
-        }
-    }
+//    public enum CameraMode {
+//        DETECTING(0),
+//        SONAR(0),
+//        CLAW(0);
+//
+//        private double position;
+//
+//        private CameraMode(double position) {
+//            this.position = position;
+//        }
+//
+//        public double getPosition() {
+//            return this.position;
+//        }
+//    }
 
     // TODO: Find these values
     // Camera Focal Length, used for to estimate Object Location

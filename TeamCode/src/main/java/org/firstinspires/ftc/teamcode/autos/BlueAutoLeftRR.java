@@ -101,7 +101,7 @@ public class BlueAutoLeftRR extends LinearOpMode {
                 case GEN_LEFT:
                     if (!sampleMecanumDrive.isBusy()) {
                         Trajectory genForward = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
-                                .lineToLinearHeading(new Pose2d(28.75, 8, Math.toRadians(0)))
+                                .lineToLinearHeading(new Pose2d(30, 7, Math.toRadians(0)))
                                 .build();
 
                         sampleMecanumDrive.followTrajectoryAsync(genForward);
@@ -118,7 +118,7 @@ public class BlueAutoLeftRR extends LinearOpMode {
                 case GEN_TURN:
                     if (!sampleMecanumDrive.isBusy()) {
                         Trajectory genBack = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
-                                .lineToLinearHeading(new Pose2d(28.75, 18, Math.toRadians(-90)))
+                                .lineToLinearHeading(new Pose2d(30, 17, Math.toRadians(-90)))
                                 .build();
 
                         sampleMecanumDrive.followTrajectoryAsync(genBack);
@@ -130,12 +130,13 @@ public class BlueAutoLeftRR extends LinearOpMode {
                     if (!sampleMecanumDrive.isBusy()) {
                         sleep(500);
 
-                        if (visionSubsystem.detectorBlue.getMaxHeightReadable() < 230) {
+                        if (visionSubsystem.detectorBlue.getMaxHeightReadable() < 500) {
                             claw.setPosition(Constants.CLAW_OPEN);
+                            sleep(2000);
 
                             TrajectorySequence unknownToBackdropOne = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
-                                    .lineToLinearHeading(new Pose2d(28.75, 43, Math.toRadians(-90)))
-                                    .lineToLinearHeading(new Pose2d(28.75, 43.5, Math.toRadians(-90)))
+                                    .lineToLinearHeading(new Pose2d(30, 43, Math.toRadians(-90)))
+                                    .lineToLinearHeading(new Pose2d(30, 43.5, Math.toRadians(-90)))
                                     .lineToLinearHeading(new Pose2d(23, 43.5, Math.toRadians(-90)))
                                     .lineToLinearHeading(new Pose2d(23, 44, Math.toRadians(-90)))
                                     .build();
@@ -145,7 +146,7 @@ public class BlueAutoLeftRR extends LinearOpMode {
                             currentState = State.TO_BACKDROP_1;
                         } else {
                             Trajectory unknownForwardThree = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
-                                    .lineToLinearHeading(new Pose2d(28.75, -7.25, Math.toRadians(-90)))
+                                    .lineToLinearHeading(new Pose2d(30, -7.25, Math.toRadians(-90)))
                                     .build();
 
                             sampleMecanumDrive.followTrajectoryAsync(unknownForwardThree);
@@ -180,7 +181,7 @@ public class BlueAutoLeftRR extends LinearOpMode {
                     if (!sampleMecanumDrive.isBusy()) {
                         claw.setPosition(Constants.CLAW_OPEN);
                         outtake.setPosition(Constants.OUTTAKE_NEUTRAL);
-                        sleep(200);
+                        sleep(2000);
 
                         Trajectory spikeMarkTwoBackingUp = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
                                 .lineToLinearHeading(new Pose2d(28.75, 0, Math.toRadians(0)))
@@ -200,7 +201,7 @@ public class BlueAutoLeftRR extends LinearOpMode {
                     if (!sampleMecanumDrive.isBusy()) {
                         TrajectorySequence spikeMarkTwoToBackdrop = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
                                 .lineToLinearHeading(new Pose2d(28.75, 42, Math.toRadians(-90)))
-                                .lineToLinearHeading(new Pose2d(28.75, 45, Math.toRadians(-90)))
+                                .lineToLinearHeading(new Pose2d(28.75, 43.5, Math.toRadians(-90)))
                                 .build();
 
                         sampleMecanumDrive.followTrajectorySequenceAsync(spikeMarkTwoToBackdrop);
@@ -210,12 +211,12 @@ public class BlueAutoLeftRR extends LinearOpMode {
                 case TO_BACKDROP_2:
                     if (!sampleMecanumDrive.isBusy()) {
                         outtake.setPosition(Constants.OUTTAKE_ACTIVE);
-                        sleep(1000);
+                        sleep(2000);
 
                         TrajectorySequence spikeMarkTwoToParking = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
-                                .lineToLinearHeading(new Pose2d(28.75, 39, Math.toRadians(-90)))
+                                .lineToLinearHeading(new Pose2d(28.75, 37, Math.toRadians(-90)))
                                 .addDisplacementMarker(() -> outtake.setPosition(Constants.OUTTAKE_HIDDEN))
-                                .lineToLinearHeading(new Pose2d(3, 39, Math.toRadians(-90)))
+                                .lineToLinearHeading(new Pose2d(3, 37, Math.toRadians(-90)))
                                 .lineToLinearHeading(new Pose2d(3, 50, Math.toRadians(-90)))
                                 .build();
 
@@ -229,11 +230,12 @@ public class BlueAutoLeftRR extends LinearOpMode {
                 case FORWARD_3:
                     if (!sampleMecanumDrive.isBusy()) {
                         claw.setPosition(Constants.CLAW_OPEN);
+                        sleep(2000);
 
                         TrajectorySequence forwardThreeToBackdropThree = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
                                 .lineToLinearHeading(new Pose2d(28.75, 43, Math.toRadians(-90)))
                                 .lineToLinearHeading(new Pose2d(28.75, 44.5, Math.toRadians(-90)))
-                                .lineToLinearHeading(new Pose2d(32, 44.5, Math.toRadians(-90)))
+                                .lineToLinearHeading(new Pose2d(36, 44.5, Math.toRadians(-90)))
                                 .build();
 
                         sampleMecanumDrive.followTrajectorySequenceAsync(forwardThreeToBackdropThree);
@@ -244,10 +246,10 @@ public class BlueAutoLeftRR extends LinearOpMode {
                 case TO_BACKDROP_3:
                     if (!sampleMecanumDrive.isBusy()) {
                         outtake.setPosition(Constants.OUTTAKE_ACTIVE);
-                        sleep(1000);
+                        sleep(2000);
 
                         TrajectorySequence spikeMarkThreeToParking = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
-                                .lineToLinearHeading(new Pose2d(32, 37, Math.toRadians(-90)))
+                                .lineToLinearHeading(new Pose2d(36, 37, Math.toRadians(-90)))
                                 .addDisplacementMarker(() -> outtake.setPosition(Constants.OUTTAKE_HIDDEN))
                                 .lineToLinearHeading(new Pose2d(3, 37, Math.toRadians(-90)))
                                 .lineToLinearHeading(new Pose2d(3, 50, Math.toRadians(-90)))
