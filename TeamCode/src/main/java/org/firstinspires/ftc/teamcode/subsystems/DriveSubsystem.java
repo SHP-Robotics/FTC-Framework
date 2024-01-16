@@ -2,11 +2,13 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import static org.firstinspires.ftc.teamcode.Constants.Drive.*;
 
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 import org.firstinspires.ftc.teamcode.shplib.controllers.GainSchedule;
@@ -24,7 +26,7 @@ public class DriveSubsystem extends Subsystem {
 
     public DriveSubsystem(HardwareMap hardwareMap) {
         drive = new SHPMecanumDrive(hardwareMap, kMotorNames);
-        drive.enableBuiltInVelocityControl();
+//        drive.enableBuiltInVelocityControl();
 
         // Change logo direction and USB direction according to your hub orientation
         // Reference pictures: https://ftc-docs.firstinspires.org/programming_resources/imu/imu.html#orthogonal-mounting
@@ -34,13 +36,13 @@ public class DriveSubsystem extends Subsystem {
     }
 
     public void mecanum(double leftY, double leftX, double rightX) {
-//        Vector2d vector = new Vector2d(
-//                leftY,
-//                leftX
-//        ).rotated(-imu.getYaw());
+        Vector2d vector = new Vector2d(
+                leftY,
+                leftX
+        ).rotated(-imu.getYaw(AngleUnit.RADIANS));
 
-//        drive.mecanum(vector.getX(), vector.getY(), rightX); // field oriented
-        drive.mecanum(leftY * bias, leftX * bias, rightX * bias); // robot oriented
+        drive.mecanum(vector.getX() * bias, vector.getY() * bias, rightX * bias); // field oriented
+//        drive.mecanum(leftY * bias, leftX * bias, rightX * bias); // robot oriented
     }
 
     public void setDriveBias(double driveBias) {

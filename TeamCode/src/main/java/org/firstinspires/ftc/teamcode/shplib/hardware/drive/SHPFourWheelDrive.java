@@ -31,6 +31,8 @@ public class SHPFourWheelDrive {
         }
         motors[0].setDirection(DcMotorSimple.Direction.REVERSE);
         motors[1].setDirection(DcMotorSimple.Direction.REVERSE);
+//        motors[2].setDirection(DcMotorSimple.Direction.REVERSE);
+
     }
 
     public void setMaxOutput(double maxOutput) {

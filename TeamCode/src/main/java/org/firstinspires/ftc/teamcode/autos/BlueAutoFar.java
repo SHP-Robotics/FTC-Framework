@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.autos;
 
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kElbowName;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kWristName;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
@@ -12,6 +15,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.PoseStorage;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
+import org.firstinspires.ftc.teamcode.shplib.hardware.SHPMotor;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
@@ -50,6 +54,9 @@ public class BlueAutoFar extends LinearOpMode {
         //subsystems
         ArmSubsystem arm = new ArmSubsystem(hardwareMap);
         ClawSubsystem claw = new ClawSubsystem(hardwareMap);
+
+//        DCMotor elbow = hardwareMap.get(DCMotor.class, kElbowName);
+        Servo wrist = hardwareMap.get(Servo.class, kWristName);
 
         //vision
         //TODO: SWITCH PIPELINE LATER

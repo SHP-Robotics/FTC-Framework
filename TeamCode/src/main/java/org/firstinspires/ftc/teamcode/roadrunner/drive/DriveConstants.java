@@ -21,7 +21,7 @@ public class DriveConstants {
     /*
      * These are motor constants that should be listed online for your motors.
      */
-    public static final double TICKS_PER_REV = 537.6;
+    public static final double TICKS_PER_REV = 537.7;
     public static final double MAX_RPM = 312;
 
     /*
@@ -32,12 +32,11 @@ public class DriveConstants {
      * If using the built-in motor velocity PID, update MOTOR_VELO_PID with the tuned coefficients
      * from DriveVelocityPIDTuner.
      */
-    public static final boolean RUN_USING_ENCODER = false;
-    //public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0, 0, 0,
-    //        16.065281971066806);
-
-    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0, 0, 0,
-            0);
+    public static final boolean RUN_USING_ENCODER = true;
+    // TODO: Run MaxVelocityTuner and set f to Voltage Compensated kF
+    // TODO: Tune P, D, and F in the DriveVelocityPIDTuner to optimize for phase lag and oscillations
+    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(22, 0, 8,
+            10.7);
 
     /*
      * These are physical constants that can be determined from your robot (including the track
@@ -49,7 +48,7 @@ public class DriveConstants {
      */
     public static double WHEEL_RADIUS = 1.8898; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 14.49; // in
+    public static double TRACK_WIDTH = 14.72; // in
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using
@@ -68,16 +67,20 @@ public class DriveConstants {
      * small and gradually increase them later after everything is working. All distance units are
      * inches.
      */
-    public static double MAX_VEL = 35.531014725773574*0.8;
+
+    // easier to tune than a higher max_vel
+    public static double MAX_VEL = 45;
+    //                               rec....    max
+    //public static double MAX_VEL = 65.233; // 81.542
     public static double MAX_ACCEL = 30;
-    public static double MAX_ANG_VEL = MAX_VEL / TRACK_WIDTH;
+    public static double MAX_ANG_VEL = 3.631; //4.5385 //MAX_VEL / TRACK_WIDTH;
     public static double MAX_ANG_ACCEL = Math.toRadians(60);
 
     /*
      * Adjust the orientations here to match your robot. See the FTC SDK documentation for details.
      */
     public static RevHubOrientationOnRobot.LogoFacingDirection LOGO_FACING_DIR =
-            RevHubOrientationOnRobot.LogoFacingDirection.RIGHT;
+            RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
     public static RevHubOrientationOnRobot.UsbFacingDirection USB_FACING_DIR =
             RevHubOrientationOnRobot.UsbFacingDirection.UP;
 

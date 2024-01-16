@@ -47,31 +47,46 @@ public class TestTeleOp extends BaseRobot {
             if (!Clock.hasElapsed(debounce, 0.01)) return;
 
             arm.setState(ArmSubsystem.State.MANUAL);
-            arm.setElbow();
+            arm.downElbow();
 
             debounce = Clock.now();
         }));
-        new Trigger(gamepad1.right_trigger>0.5, new RunCommand(()->{ //all upward stuff
+        new Trigger(gamepad1.right_trigger>0.5, new RunCommand(()->{ //all downward stuff
             if (!Clock.hasElapsed(debounce, 0.01)) return;
 
             arm.setState(ArmSubsystem.State.MANUAL);
-            arm.setElbow();
+            arm.upElbow();
+
+            debounce = Clock.now();
+        }));
+        new Trigger(gamepad1.dpad_up, new RunCommand(()->{ //all upward stuff
+            if (!Clock.hasElapsed(debounce, 0.5)) return;
+
+            arm.upWrist();
+
+            debounce = Clock.now();
+        }));
+        new Trigger(gamepad1.dpad_down, new RunCommand(()->{ //all upward stuff
+            if (!Clock.hasElapsed(debounce, 0.5)) return;
+
+            arm.downWrist();
 
             debounce = Clock.now();
         }));
 
+
         //TODO: PLANE LAUNCH BOTH BUMPERS
-        new Trigger(gamepad1.dpad_down, new RunCommand(() -> {
-            plane.setState(PlaneSubsystem.State.LOAD);
-        }));
+//        new Trigger(gamepad1.dpad_down, new RunCommand(() -> {
+//            plane.setState(PlaneSubsystem.State.LOAD);
+//        }));
         new Trigger(gamepad1.left_bumper, new RunCommand(() -> {
             if(gamepad1.right_bumper)
                 plane.setState(PlaneSubsystem.State.LAUNCH);
         }));
 
-        new Trigger(gamepad1.x, new RunCommand(() -> {
-            drive.resetIMUAngle();
-        }));
+//        new Trigger(gamepad1.x, new RunCommand(() -> {
+//            drive.resetIMUAngle();
+//        }));
 
         //TODO: reset heading dpad up
         //TODO: fast speed when in drive mode

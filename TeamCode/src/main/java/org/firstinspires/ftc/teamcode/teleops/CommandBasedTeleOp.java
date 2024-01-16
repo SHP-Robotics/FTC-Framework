@@ -19,6 +19,9 @@ public class CommandBasedTeleOp extends BaseRobot {
     public void init() {
         super.init();
         drivebias = 1.0;
+        claw.close();
+        arm.setState(ArmSubsystem.State.DRIVE);
+
         // Default command runs when no other commands are scheduled for the subsystem
         drive.setDefaultCommand(
                 new RunCommand(
@@ -50,47 +53,61 @@ public class CommandBasedTeleOp extends BaseRobot {
             debounce = Clock.now();
         }));
 
-        new Trigger(gamepad1.left_trigger>0.5, new RunCommand(()->{ //all downward stuff
+        new Trigger(gamepad1.right_trigger>0.5, new RunCommand(()->{ //all upward stuff
             if (!Clock.hasElapsed(debounce, 0.5)) return;
 
-            if(claw.closed() && arm.getState() == ArmSubsystem.State.INTAKE){
+            if((claw.closed() && arm.getState() == ArmSubsystem.State.INTAKE)
+            || arm.getState() == ArmSubsystem.State.MANUAL
+                    || arm.getState() == ArmSubsystem.State.UNKNOWN){
+                claw.close();
                 arm.setState(ArmSubsystem.State.DRIVE);
                 drivebias = 1.0;
             }
             else if(arm.getState() == ArmSubsystem.State.DRIVE){
                 arm.setState(ArmSubsystem.State.OUTTAKE);
-                drivebias = 0.5;
+                drivebias = 0.75;
             }
+
+
 
             debounce = Clock.now();
         }));
-        new Trigger(gamepad1.right_trigger>0.5, new RunCommand(()->{ //all upward stuff
+        new Trigger(gamepad1.left_trigger>0.5, new RunCommand(()->{ //all downward stuff
             if (!Clock.hasElapsed(debounce, 0.5)) return;
 
-            if(arm.getState() == ArmSubsystem.State.OUTTAKE){
+            if(arm.getState() == ArmSubsystem.State.OUTTAKE
+                    || arm.getState() == ArmSubsystem.State.MANUAL
+                    || arm.getState() == ArmSubsystem.State.UNKNOWN){
                 claw.close();
                 drivebias = 1.0;
                 arm.setState(ArmSubsystem.State.DRIVE);
             }
             else if(arm.getState() == ArmSubsystem.State.DRIVE){
                 arm.setState(ArmSubsystem.State.INTAKE);
-                drivebias = 0.5;
+                drivebias = 0.75;
                 claw.open();
             }
 
             debounce = Clock.now();
         }));
 
-        //TODO: PLANE LAUNCH BOTH BUMPERS
-        new Trigger(gamepad1.dpad_down, new RunCommand(() -> {
-            plane.setState(PlaneSubsystem.State.LOAD);
+        new Trigger(gamepad1.dpad_up, new RunCommand(() -> {
+            arm.setState(ArmSubsystem.State.MANUAL);
+
+            arm.upElbow();
         }));
+        new Trigger(gamepad1.dpad_down, new RunCommand(() -> {
+            arm.setState(ArmSubsystem.State.MANUAL);
+
+            arm.downElbow();
+        }));
+
+        //TODO: PLANE LAUNCH BOTH BUMPERS
         new Trigger(gamepad1.left_bumper, new RunCommand(() -> {
-            if(gamepad1.right_bumper)
                 plane.setState(PlaneSubsystem.State.LAUNCH);
         }));
 
-        new Trigger(gamepad1.dpad_up, new RunCommand(() -> {
+        new Trigger(gamepad1.square, new RunCommand(() -> {
             drive.resetIMUAngle();
         }));
 

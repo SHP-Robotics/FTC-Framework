@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kElbowD;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kElbowDown;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kElbowDrive;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kElbowG;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kElbowName;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kElbowP;
@@ -28,7 +29,7 @@ public class ArmSubsystem extends Subsystem {
 
     private final SHPMotor elbow;
     private final Servo wrist;
-    private int elbowManual, wristManual;
+    private double elbowManual, wristManual;
     public enum State {
         INTAKE,
         DRIVE,
@@ -43,14 +44,15 @@ public class ArmSubsystem extends Subsystem {
 //        poleSensor = hardwareMap.get(DistanceSensor.class, "coneSensor");
 
         elbow = new SHPMotor(hardwareMap, kElbowName);
-        //leftSlide.reverseDirection();
+        elbow.reverseDirection();
+        elbow.resetEncoder();
         elbow.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         elbow.enablePositionPID(new PositionPID(kElbowP, 0.0, kElbowD));
         elbow.setPositionErrorTolerance(kElbowTolerance);
         elbow.enableFF(new ElevatorFFController(kElbowS, kElbowG));
 
         wrist = hardwareMap.get(Servo.class, kWristName);
-
+        wristManual = 0.5;
         setState(State.DRIVE);
     }
 
@@ -73,12 +75,20 @@ public class ArmSubsystem extends Subsystem {
 //    public boolean atHub() {
 //        return state == State.HUB;
 //    }
-    public double setElbow(){
-        elbowManual += 10;
+    public double upElbow(){
+        elbowManual += 20;
         return elbowManual;
     }
-    public double setWrist(){
-        wristManual += 0.05;
+    public double downElbow(){
+        elbowManual -= 20;
+        return elbowManual;
+    }
+    public double upWrist(){
+        wristManual += 0.005;
+        return wristManual;
+    }
+    public double downWrist(){
+        wristManual -= 0.005;
         return wristManual;
     }
     public boolean atSetpoint() {
@@ -92,7 +102,7 @@ public class ArmSubsystem extends Subsystem {
     private State processState() {
         switch (state) {
             case DRIVE:
-                elbow.setPosition(kElbowDown);
+                elbow.setPosition(kElbowDrive);
                 wrist.setPosition(kWristDrive);
                 return state;
             case INTAKE:
@@ -112,7 +122,12 @@ public class ArmSubsystem extends Subsystem {
 
     @Override
     public void periodic(Telemetry telemetry) {
+        processState();
         telemetry.addData("Elbow Position: ", elbow.getPosition(MotorUnit.TICKS));
+        telemetry.addData("Wrist State: ", wrist.getPosition());
+        telemetry.addData("Wrist manual: ", wristManual);
+
+
         telemetry.addData("ArmState: ", processState());
     }
 }

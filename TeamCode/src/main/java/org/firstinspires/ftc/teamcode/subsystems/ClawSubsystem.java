@@ -20,7 +20,8 @@ public class ClawSubsystem extends Subsystem {
      private final Servo rightClaw;
      private double leftClawPosition;
      private double rightClawPosition;
-
+     private double leftManual =0;
+    private double rightManual =0;
 
 
     public enum State {
@@ -28,7 +29,8 @@ public class ClawSubsystem extends Subsystem {
         // Example:
         // ENABLED, DISABLED
         OPEN,
-        CLOSED
+        CLOSED,
+        MANUAL
     }
 
     private State leftState;
@@ -42,6 +44,8 @@ public class ClawSubsystem extends Subsystem {
         leftClaw = hardwareMap.get(Servo.class, kLeftClawName);
         rightClaw = hardwareMap.get(Servo.class, kRightClawName);
 
+        setRightState(State.CLOSED);
+        setLeftState(State.CLOSED);
         // Set initial state
         // Example:
         // setState(State.TOP);
@@ -83,7 +87,26 @@ public class ClawSubsystem extends Subsystem {
         closeRightClaw();
         closeLeftClaw();
     }
-
+    public double upLeft(){
+        setLeftState(State.MANUAL);
+        leftManual += 0.01;
+        return leftManual;
+    }
+    public double downLeft(){
+        setLeftState(State.MANUAL);
+        leftManual -= 0.01;
+        return leftManual;
+    }
+    public double upRight(){
+        setRightState(State.MANUAL);
+        rightManual += 0.01;
+        return rightManual;
+    }
+    public double downRight(){
+        setRightState(State.MANUAL);
+        rightManual -= 0.01;
+        return rightManual;
+    }
     public void nextLeft(){
         if(getLeftState() == State.CLOSED)
             setLeftState(State.OPEN);
@@ -134,6 +157,9 @@ public class ClawSubsystem extends Subsystem {
             case CLOSED:
                 closeLeftClaw();
                 break;
+            case MANUAL:
+                rightClaw.setPosition(rightManual);
+                break;
         }
 
         switch (leftState) {
@@ -142,6 +168,9 @@ public class ClawSubsystem extends Subsystem {
                 break;
             case CLOSED:
                 closeRightClaw();
+                break;
+            case MANUAL:
+                leftClaw.setPosition(leftManual);
                 break;
         }
 
