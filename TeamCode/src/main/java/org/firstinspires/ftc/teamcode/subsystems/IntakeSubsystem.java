@@ -25,7 +25,7 @@ public class IntakeSubsystem extends Subsystem {
     public final Servo dropDown;
     //private final Servo pixelThing; // Need better name
     public enum State {
-        INTAKING, OUTTAKING, STILL, REJECT,OUTAKE1,
+        INTAKING, OUTTAKING, STILL, REJECT,OUTAKE1, OUTNOWHEEL
 //        PIXELIN, PIXELOUT
 //        STILL, PIXELON, PIXELOFF
     }
@@ -81,6 +81,9 @@ public class IntakeSubsystem extends Subsystem {
             case OUTTAKING:
                 cWheel.setPower(-1.0);
                 pixelServo.setPosition(0.5);
+                break;
+            case OUTNOWHEEL:
+                spinner.setPower(-1);
                 break;
             case STILL:
                 cWheel.setPower(0);
