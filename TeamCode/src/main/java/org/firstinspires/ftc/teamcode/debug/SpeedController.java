@@ -28,7 +28,7 @@ public class SpeedController {
     private ElapsedTime timer;
     private double dt;
     private double lastTime = -1;
-    private PIDController speedPIDController = new PIDController(0.1, 0, 0);
+    private PIDController speedPIDController = new PIDController(0.02, 0, 0);
 
     private SpeedController(SpeedBuilder speedBuilder) {
         this.speedType = speedBuilder.speedType;
