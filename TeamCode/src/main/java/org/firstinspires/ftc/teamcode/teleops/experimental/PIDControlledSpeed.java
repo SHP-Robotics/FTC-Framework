@@ -1,6 +1,7 @@
-package org.firstinspires.ftc.teamcode.teleops;
+package org.firstinspires.ftc.teamcode.teleops.experimental;
 
 import com.qualcomm.ftccommon.SoundPlayer;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -17,6 +18,7 @@ import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 import java.io.File;
 
+@Disabled
 @TeleOp()
 public class PIDControlledSpeed extends LinearOpMode {
     MecanumController mecanumController;

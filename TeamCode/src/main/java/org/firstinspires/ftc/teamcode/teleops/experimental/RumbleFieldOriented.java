@@ -1,7 +1,5 @@
-package org.firstinspires.ftc.teamcode.teleops;
+package org.firstinspires.ftc.teamcode.teleops.experimental;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -10,38 +8,29 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.debug.MecanumController;
-import org.firstinspires.ftc.teamcode.debug.PIDController;
 import org.firstinspires.ftc.teamcode.debug.SpeedController;
 import org.firstinspires.ftc.teamcode.debug.SpeedType;
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
 import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
-import org.firstinspires.ftc.teamcode.shplib.vision.PIDFollower;
 import org.firstinspires.ftc.teamcode.shplib.vision.PixelDetectionPipeline;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
-@Disabled
 @TeleOp()
-public class PixelTrackingRumbleFieldOriented extends LinearOpMode {
-    private double euclidianDistance(double[] point1, double[] point2) {
+public class RumbleFieldOriented extends LinearOpMode {
+    private double euclideanDistance(double[] point1, double[] point2) {
         return Math.sqrt((point1[0] - point2[0])*(point1[0] - point2[0]) + (point1[1] - point2[1])*(point1[1] - point2[1]));
     }
 
     @Override
     public void runOpMode() throws InterruptedException {
         VisionSubsystem visionSubsystem = new VisionSubsystem(hardwareMap, "pixel");
-        visionSubsystem.pixelDetectionPipeline.setPipelineMode(PixelDetectionPipeline.PipelineMode.PURPLE_ONLY);
+        visionSubsystem.pixelDetectionPipeline.setPipelineMode(PixelDetectionPipeline.PipelineMode.ALL_PIXELS);
+        boolean rumbleEnabled;
 
-        CRServo cameraServo = hardwareMap.get(CRServo.class, "cameraServo");
-
-        PIDFollower pidFollower = new PIDFollower.PIDFollowerBuilder(
-                null,
-                cameraServo,
-                new PIDController(0.30, 0, 0),
-                new PIDController(0.18, 0, 0),
-                new PIDController(0, 0, 0))
-                .build();
+        Servo cameraServo = hardwareMap.get(Servo.class, "cameraServo");
+        cameraServo.setPosition(Constants.CameraMode.FACING_CLAW.getPosition());
 
         double[] lastObject = null;
 
@@ -95,6 +84,8 @@ public class PixelTrackingRumbleFieldOriented extends LinearOpMode {
                 climber.setPower(0);
             }
 
+            rumbleEnabled = gamepad1.left_trigger > 0.1;
+
             air.setPower(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.AIR_POWER) ? 1: 0);
 
             CopyOnWriteArrayList<double[]> objects = visionSubsystem.pixelDetectionPipeline.getObjects();
@@ -113,32 +104,20 @@ public class PixelTrackingRumbleFieldOriented extends LinearOpMode {
                             break;
                         }
 
-                        if (distance == -1 || euclidianDistance(object, lastObject) < distance) {
-                            distance = euclidianDistance(object, lastObject);
+                        if (distance == -1 || euclideanDistance(object, lastObject) < distance) {
+                            distance = euclideanDistance(object, lastObject);
                             closestObject = object;
                         }
                     }
                 }
 
                 if (closestObject != null) {
-                    if (gamepad1.a) {
-                        pidFollower.update((closestObject[0] / 400) - 1,
-                                1 - (closestObject[1] / 244),
-                                0);
-                    } else {
-                        cameraServo.setPower(0);
-                    }
-
                     lastObject = closestObject;
 
-                    gamepad1.rumble(closestObject[2], closestObject[2], 50);
-                } else {
-                    cameraServo.setPower(0);
+                    if (rumbleEnabled) {
+                        gamepad1.rumble(closestObject[2], closestObject[2], 50);
+                    }
                 }
-
-
-            } else {
-                cameraServo.setPower(0);
             }
         }
     }

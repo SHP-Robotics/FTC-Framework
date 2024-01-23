@@ -23,21 +23,21 @@ public final class Constants {
 
     // Camera
     // TODO: tune servo position for camera
-//    public enum CameraMode {
-//        DETECTING(0),
-//        SONAR(0),
-//        CLAW(0);
-//
-//        private double position;
-//
-//        private CameraMode(double position) {
-//            this.position = position;
-//        }
-//
-//        public double getPosition() {
-//            return this.position;
-//        }
-//    }
+    public enum CameraMode {
+        FACING_TEAM_PROP(0),
+        SONAR(0),
+        FACING_CLAW(0);
+
+        private double position;
+
+        CameraMode(double position) {
+            this.position = position;
+        }
+
+        public double getPosition() {
+            return this.position;
+        }
+    }
 
     // TODO: Find these values
     // Camera Focal Length, used for to estimate Object Location

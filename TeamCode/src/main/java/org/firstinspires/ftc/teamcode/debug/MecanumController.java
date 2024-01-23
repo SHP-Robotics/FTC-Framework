@@ -6,14 +6,11 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 import org.firstinspires.ftc.teamcode.debug.config.*;
-
-import java.util.concurrent.TimeUnit;
 
 public class MecanumController {
     public DcMotor leftFront;
@@ -71,49 +68,14 @@ public class MecanumController {
         rightRear.setDirection(DcMotor.Direction.FORWARD);
     }
 
-    private void initPID(HardwareMap hardwareMap) {
-        leftFront = new DcMotorPIDControlled(hardwareMap.get(DcMotor.class, "leftFront"));
-        rightFront = new DcMotorPIDControlled(hardwareMap.get(DcMotor.class, "rightFront"));
-        leftRear = new DcMotorPIDControlled(hardwareMap.get(DcMotor.class, "leftRear"));
-        rightRear = new DcMotorPIDControlled(hardwareMap.get(DcMotor.class, "rightRear"));
-
-        initIMU(hardwareMap);
-
-        leftFront.setDirection(DcMotor.Direction.REVERSE);
-        rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
-        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightRear.setDirection(DcMotor.Direction.FORWARD);
-    }
-
     public MecanumController(HardwareMap hardwareMap) {
         init(hardwareMap);
         this.speedController = new SpeedController.SpeedBuilder(SpeedType.NO_CHANGE)
                 .build();
     }
 
-    public MecanumController(HardwareMap hardwareMap, boolean pidControlled) {
-        if (pidControlled) {
-            initPID(hardwareMap);
-        } else {
-            init(hardwareMap);
-        }
-
-        this.speedController = new SpeedController.SpeedBuilder(SpeedType.NO_CHANGE)
-                .build();
-    }
-
     public MecanumController(HardwareMap hardwareMap, SpeedController speedController) {
         init(hardwareMap);
-        this.speedController = speedController;
-    }
-
-    public MecanumController(HardwareMap hardwareMap, SpeedController speedController, boolean pidControlled) {
-        if (pidControlled) {
-            initPID(hardwareMap);
-        } else {
-            init(hardwareMap);
-        }
-
         this.speedController = speedController;
     }
 
