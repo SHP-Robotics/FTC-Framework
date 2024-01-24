@@ -86,7 +86,7 @@ public class ATestTeleop extends TestBaseRobot {
                         }))
         );
         new Trigger ((!gamepad1.a && !gamepad1.y), new RunCommand(()->{
-            if(intake.getState()!=IntakeSubsystem.State.OUTAKE1){
+            if(intake.getState()!=IntakeSubsystem.State.DEPOSIT1){
             intake.setState(IntakeSubsystem.State.STILL);}
         })
         );
@@ -104,15 +104,15 @@ public class ATestTeleop extends TestBaseRobot {
         // TODO fix servo
         new Trigger (gamepad1.a, new RunCommand(()->{
             if (arm.getState() == ArmSubsystem.State.BOTTOM) {      //1. if arm is at bottom
-                intake.setState(IntakeSubsystem.State.INTAKING);   //   intake pixels
+                intake.setState(IntakeSubsystem.State.INTAKE);   //   intake pixels
                 telemetry.addData("State1", 0);
             }
             else if (intake.getState() == IntakeSubsystem.State.STILL) { //2. if no pixels have been released
-                intake.setState(IntakeSubsystem.State.OUTAKE1);       //   release pixel #1
+                intake.setState(IntakeSubsystem.State.DEPOSIT1);       //   release pixel #1
                 telemetry.addData("State2", 1);
             }
             else {                                                   //3. if pixel #1 has been released
-                intake.setState(IntakeSubsystem.State.OUTTAKING);  //   release pixel #2
+                intake.setState(IntakeSubsystem.State.DEPOSIT1);  //   release pixel #2
                 telemetry.addData("state3", 2);
             }
             })

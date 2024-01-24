@@ -1,32 +1,19 @@
 package org.firstinspires.ftc.teamcode.autos.rr;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.commands.LowerArmCommand;
-import org.firstinspires.ftc.teamcode.commands.RaiseArmCommand;
-import org.firstinspires.ftc.teamcode.debug.config.Constants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.AutonomousStorage;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.PoseStorage;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 import org.firstinspires.ftc.teamcode.subsystems.AdjustHolder;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.HookSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.PixelServo;
-import org.firstinspires.ftc.teamcode.subsystems.PlaneServo;
 import org.firstinspires.ftc.teamcode.subsystems.PracticeArmServo;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
-
-import java.io.File;
 
 @Autonomous(preselectTeleOp = "ATestTeleOp")
 public class RedAutoLeft2 extends LinearOpMode {

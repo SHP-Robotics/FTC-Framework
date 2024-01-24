@@ -7,12 +7,15 @@ package org.firstinspires.ftc.teamcode.subsystems;
 //import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideLow;
 //import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideMiddle;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kLeftSlideName;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kMaxHeight;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kPixelHeight;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kRightSlideName;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideBottom;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideBottomClimb;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideClimb;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideConeStack;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideD;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideExtended;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideFinishClimb;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideG;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideHigh;
@@ -36,12 +39,15 @@ import org.firstinspires.ftc.teamcode.shplib.hardware.units.MotorUnit;
 public class ArmSubsystem extends Subsystem {
     private final SHPMotor leftSlide;
     private final SHPMotor rightSlide;
+    private int slidePos;
+
     public enum State {
-        BOTTOM, MIDDLE, MIDHIGH, HIGH, CLIMB, BOTTOMCLIMB, FINISHCLIMB, CONESTACK, SAFETY
+        BOTTOM, EXTENDED, MIDDLE, MIDHIGH, HIGH, CLIMB, BOTTOMCLIMB, FINISHCLIMB, CONESTACK, SAFETY
     }
     private State state;
     public ArmSubsystem(HardwareMap hardwareMap) {
 
+        slidePos = 0;
 
         leftSlide = new SHPMotor(hardwareMap, kLeftSlideName);
         leftSlide.reverseDirection();
@@ -100,14 +106,27 @@ public class ArmSubsystem extends Subsystem {
             state = State.HIGH;
     }
 
+    public void incrementState(){
+        if(slidePos <= kMaxHeight-kPixelHeight)
+             slidePos += kPixelHeight;
+    }
+    public void decrementState(){
+        if(slidePos >= kPixelHeight)
+            slidePos -= kPixelHeight;
+    }
+
     private double processState() {
         switch (state) {
+
             case BOTTOM:
 //                telemetry.addData("Power: ", slide.setPosition(10.0))
 //                  leftSlide.setPosition(kSlideBottom);
                 rightSlide.setPosition(kSlideBottom);
                 return leftSlide.setPosition(kSlideBottom);
 //                break;
+            case EXTENDED:
+                rightSlide.setPosition(kSlideExtended+slidePos);
+                return leftSlide.setPosition(kSlideExtended+slidePos);
             case MIDDLE:
                 rightSlide.setPosition(kSlideMiddle);
                 return leftSlide.setPosition(kSlideMiddle);

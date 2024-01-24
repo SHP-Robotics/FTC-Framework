@@ -76,7 +76,7 @@ public class ARedAuto extends TestBaseRobot {
                                                 //.then(new RaiseArmCommand(arm,wrist,elbow,pixelServo))
                                                 .then(new DriveCommand(drive,-0.25,0,0,3.2,true))
                                                 .then(new RunCommand(() -> {
-                                                    intake.setState(IntakeSubsystem.State.OUTTAKING);
+                                                    intake.setState(IntakeSubsystem.State.DEPOSIT1);
                                                 }))
                                                 .then(new WaitCommand(1))
                                                 .then(new RunCommand(() -> {
@@ -101,7 +101,7 @@ public class ARedAuto extends TestBaseRobot {
                                                 //.then(new RaiseArmCommand(arm,wrist,elbow,pixelServo))
                                                 .then(new DriveCommand(drive,-0.2,0,0,1.3,true))
                                                 .then(new RunCommand(() -> {
-                                                    intake.setState(IntakeSubsystem.State.OUTTAKING);
+                                                    intake.setState(IntakeSubsystem.State.DEPOSIT1);
                                                 }))
                                                 .then(new WaitCommand(1))
                                                 .then(new RunCommand(() -> {
@@ -123,7 +123,7 @@ public class ARedAuto extends TestBaseRobot {
                                                 //.then(new RaiseArmCommand(arm,wrist,elbow,pixelServo))
                                                 .then(new DriveCommand(drive,-0.2,0,0,1,true))
                                                 .then(new RunCommand(() -> {
-                                                    intake.setState(IntakeSubsystem.State.OUTTAKING);
+                                                    intake.setState(IntakeSubsystem.State.DEPOSIT1);
                                                 }))
                                                 .then(new WaitCommand(1))
                                                 .then(new RunCommand(() -> {

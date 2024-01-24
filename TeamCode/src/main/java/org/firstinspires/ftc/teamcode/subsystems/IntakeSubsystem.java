@@ -25,7 +25,7 @@ public class IntakeSubsystem extends Subsystem {
     public final Servo dropDown;
     //private final Servo pixelThing; // Need better name
     public enum State {
-        INTAKING, OUTTAKING, STILL, REJECT,OUTAKE1, OUTNOWHEEL
+        INTAKE, DEPOSIT1, DEPOSIT2, STILL, REJECT, REJECTALL
 //        PIXELIN, PIXELOUT
 //        STILL, PIXELON, PIXELOFF
     }
@@ -73,27 +73,27 @@ public class IntakeSubsystem extends Subsystem {
          telemetry.addData("Intake: ", state);
         //dropDown.setPosition(0.5);
         switch (state) {
-            case INTAKING:
+            case INTAKE:
                 cWheel.setPower(-1.0);
                 spinner.setPower(1);
                 pixelServo.setPosition(0.9);
                 break;
-            case OUTTAKING:
+            case DEPOSIT2:
                 cWheel.setPower(-1.0);
                 pixelServo.setPosition(0.5);
                 break;
-            case OUTNOWHEEL:
+            case REJECT:
                 spinner.setPower(-1);
                 break;
             case STILL:
                 cWheel.setPower(0);
                 spinner.setPower(0.0);
                 break;
-            case REJECT:
+            case REJECTALL:
                 cWheel.setPower(1.0);
                 spinner.setPower(-1);
                 break;
-            case OUTAKE1:
+            case DEPOSIT1:
                 pixelServo.setPosition(0.5);
 //                pixelServo.setPosition(1.0);
                 break;

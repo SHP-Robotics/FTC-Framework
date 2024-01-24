@@ -1,11 +1,7 @@
 package org.firstinspires.ftc.teamcode.commands;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.shplib.commands.Command;
-import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.robotcore.util.Range;
 
 public class EncoderTurnDriveCommand extends Command {
     private final DriveSubsystem drive;
