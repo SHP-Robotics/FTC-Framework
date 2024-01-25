@@ -26,10 +26,11 @@ public class RumbleFieldOriented extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         VisionSubsystem visionSubsystem = new VisionSubsystem(hardwareMap, "pixel");
-        visionSubsystem.pixelDetectionPipeline.setPipelineMode(PixelDetectionPipeline.PipelineMode.ALL_PIXELS);
+        visionSubsystem.pixelDetectionPipeline.setPipelineMode(PixelDetectionPipeline.PipelineMode.PURPLE_ONLY);
         boolean rumbleEnabled;
 
         Servo cameraServo = hardwareMap.get(Servo.class, "cameraServo");
+        cameraServo.setDirection(Servo.Direction.REVERSE);
         cameraServo.setPosition(Constants.CameraMode.FACING_CLAW.getPosition());
 
         double[] lastObject = null;
@@ -115,7 +116,7 @@ public class RumbleFieldOriented extends LinearOpMode {
                     lastObject = closestObject;
 
                     if (rumbleEnabled) {
-                        gamepad1.rumble(closestObject[2], closestObject[2], 50);
+                        gamepad1.rumble(Math.min(closestObject[2]*2.5, 1), Math.min(closestObject[2]*2.5, 1), 50);
                     }
                 }
             }

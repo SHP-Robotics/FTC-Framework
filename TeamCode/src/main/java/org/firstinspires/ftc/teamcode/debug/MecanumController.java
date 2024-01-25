@@ -31,6 +31,13 @@ public class MecanumController {
     private double positionX = 0;
     private double positionY = 0;
 
+    public static int sign(float num) {
+        if (num == 0) {
+            return 0;
+        }
+        return (int)(Math.abs(num)/num);
+    }
+
     public void setMotorsRunMode(DcMotor.RunMode runMode) {
         leftFront.setMode(runMode);
         rightFront.setMode(runMode);
@@ -126,18 +133,56 @@ public class MecanumController {
             max = 1;
         }
 
-        if (speedController.applyMinimumVoltage && max * driveSpeed < Constants.MINIMUM_VOLTAGE_APPLIED) {
-            leftFront.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);
-            rightFront.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);
-            leftRear.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);
-            rightRear.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);
-            return;
-        }
-
         leftFront.setPower(leftFrontPower * driveSpeed / max);
         rightFront.setPower(rightFrontPower * driveSpeed / max);
         leftRear.setPower(leftRearPower * driveSpeed / max);
         rightRear.setPower(rightRearPower * driveSpeed / max);
+    }
+
+    public void drivePID(Gamepad gamepad) {
+        double x = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.STRAFE_RIGHT);
+        double y = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.STRAFE_UP);
+        double r = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.ROTATE_RIGHT);
+
+        double leftFrontPower = y + x + r;
+        double rightFrontPower = y - x - r;
+        double leftRearPower = y - x + r;
+        double rightRearPower = y + x - r;
+
+        double max = Math.max(Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower)), Math.max(Math.abs(leftRearPower), Math.abs(rightRearPower)));
+
+        speedController.updateSpeed(gamepad, max);
+        this.driveSpeed = speedController.getSpeed();
+
+        if (max < 1) {
+            max = 1;
+        }
+
+        boolean deceleration = x == 0 && y == 0 && r == 0;
+
+        if (this.leftFront instanceof PIDControlledDcMotor) {
+            ((PIDControlledDcMotor) leftFront).setPower(leftFrontPower * driveSpeed / max, deceleration);
+        } else {
+            leftFront.setPower(leftFrontPower * driveSpeed / max);
+        }
+
+        if (this.rightFront instanceof PIDControlledDcMotor) {
+            ((PIDControlledDcMotor) rightFront).setPower(rightFrontPower * driveSpeed / max, deceleration);
+        } else {
+            rightFront.setPower(leftFrontPower * driveSpeed / max);
+        }
+
+        if (this.leftRear instanceof PIDControlledDcMotor) {
+            ((PIDControlledDcMotor) leftRear).setPower(leftRearPower * driveSpeed / max, deceleration);
+        } else {
+            leftRear.setPower(leftFrontPower * driveSpeed / max);
+        }
+
+        if (this.rightRear instanceof PIDControlledDcMotor) {
+            ((PIDControlledDcMotor) rightRear).setPower(rightRearPower * driveSpeed / max, deceleration);
+        } else {
+            rightRear.setPower(leftFrontPower * driveSpeed / max);
+        }
     }
 
     public void fieldOrientedDrive(Gamepad gamepad) {
@@ -166,18 +211,63 @@ public class MecanumController {
             max = 1;
         }
 
-        if (speedController.applyMinimumVoltage && max * driveSpeed < Constants.MINIMUM_VOLTAGE_APPLIED) {
-            leftFront.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);
-            rightFront.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);
-            leftRear.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);
-            rightRear.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);
-            return;
-        }
-
         leftFront.setPower(leftFrontPower * driveSpeed / max);
         rightFront.setPower(rightFrontPower * driveSpeed / max);
         leftRear.setPower(leftRearPower * driveSpeed / max);
         rightRear.setPower(rightRearPower * driveSpeed / max);
+    }
+
+    public void fieldOrientedDrivePID(Gamepad gamepad) {
+        double x = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.STRAFE_RIGHT);
+        double y = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.STRAFE_UP);
+        double r = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.ROTATE_RIGHT);
+
+        // cos * y = how much right if gamepad forward
+        // cos * x = how much right if gamepad right
+        // sin * y = how much forward if gamepad forward
+        // sin * x = how much forward if gamepad right
+        double xOriented = (Math.cos(getCalibratedIMUAngle()) * x) + (Math.sin(getCalibratedIMUAngle()) * y);
+        double yOriented = (Math.cos(getCalibratedIMUAngle()) * y) - (Math.sin(getCalibratedIMUAngle()) * x);
+
+        double leftFrontPower = yOriented + xOriented + r;
+        double rightFrontPower = yOriented - xOriented - r;
+        double leftRearPower = yOriented - xOriented + r;
+        double rightRearPower = yOriented + xOriented - r;
+
+        double max = Math.max(Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower)), Math.max(Math.abs(leftRearPower), Math.abs(rightRearPower)));
+
+        speedController.updateSpeed(gamepad, max);
+        this.driveSpeed = speedController.getSpeed();
+
+        if (max < 1) {
+            max = 1;
+        }
+
+        boolean deceleration = xOriented == 0 && yOriented == 0 && r == 0;
+
+        if (this.leftFront instanceof PIDControlledDcMotor) {
+            ((PIDControlledDcMotor) leftFront).setPower(leftFrontPower * driveSpeed / max, deceleration);
+        } else {
+            leftFront.setPower(leftFrontPower * driveSpeed / max);
+        }
+
+        if (this.rightFront instanceof PIDControlledDcMotor) {
+            ((PIDControlledDcMotor) rightFront).setPower(rightFrontPower * driveSpeed / max, deceleration);
+        } else {
+            rightFront.setPower(leftFrontPower * driveSpeed / max);
+        }
+
+        if (this.leftRear instanceof PIDControlledDcMotor) {
+            ((PIDControlledDcMotor) leftRear).setPower(leftRearPower * driveSpeed / max, deceleration);
+        } else {
+            leftRear.setPower(leftFrontPower * driveSpeed / max);
+        }
+
+        if (this.rightRear instanceof PIDControlledDcMotor) {
+            ((PIDControlledDcMotor) rightRear).setPower(rightRearPower * driveSpeed / max, deceleration);
+        } else {
+            rightRear.setPower(leftFrontPower * driveSpeed / max);
+        }
     }
 
     public void driveParams(double x, double y, double r) {

@@ -10,13 +10,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 public class PIDControlledDcMotor extends DcMotorImplEx {
     // if too low, increasing kP will not speed up anymore, and may oscillate
     // should record the max velocity with kP = 1, and then use preferred values of kP
-    private final double MAX_VELOCITY = 15;
+    private final double MAX_VELOCITY = 12;
 
     private ElapsedTime elapsedTime;
 
     private double lastError = 0;
     private double lastTime = -1;
-    private double lastEstimatedVelocity = 0;
 
     // kP controls topSpeed
     private double kP = 1;
@@ -58,21 +57,19 @@ public class PIDControlledDcMotor extends DcMotorImplEx {
         return Math.min(Math.max(-1, power), 1);
     }
 
-    public void setPower(double power) {
+    public void setPower(double power, boolean decelerate) {
         double targetVelocity = MAX_VELOCITY*power;
-        double currentVelocity = this.getVelocity(AngleUnit.RADIANS);
+        double currentVelocity = -this.getVelocity(AngleUnit.RADIANS);
         double error = targetVelocity - currentVelocity;
         double time = elapsedTime.seconds();
         double deltaTime = time - lastTime;
         double slope = error - lastError / (deltaTime);
 
-        if (lastEstimatedVelocity != 0 && targetVelocity / lastEstimatedVelocity <= 0) {
-            super.setPower(-clamp((error * kP*gamma * deltaTime) + (slope * kD*gamma * deltaTime)));
+        if (decelerate) {
+            super.setPower(clamp(getPower()*gamma - (error * kP*gamma * deltaTime) - (slope * kD*gamma * deltaTime)));
         } else {
-            super.setPower(-clamp((error * kP * deltaTime) + (slope * kD * deltaTime)));
+            super.setPower(clamp(getPower() - (error * kP * deltaTime) - (slope * kD * deltaTime)));
         }
-
-        lastEstimatedVelocity = currentVelocity;
 
         lastError = error;
         lastTime = time;

@@ -38,36 +38,35 @@ public class PIDControlledWheels extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        SpeedController speedController = new SpeedController.SpeedBuilder(SpeedType.PID_CONTROLLED_WITH_OVERRIDE)
-                .setNaturalSpeed(0.6)
+        SpeedController speedController = new SpeedController.SpeedBuilder(SpeedType.SINGLE_OVERRIDE)
+                .setNaturalSpeed(0.45)
                 .setOverrideOneSpeed(1)
                 .build();
 
         mecanumController = new MecanumController(hardwareMap, speedController);
 
         mecanumController.leftFront = new PIDControlledDcMotor.PIDControlledDcMotorBuilder(mecanumController.leftFront)
-                .setkP(1)
-                .setkD(-0.005)
-                .setGamma(0.1)
+                .setkP(0.7)
+                .setkD(-0.003)
+                .setGamma(0)
                 .build();
 
         mecanumController.rightFront = new PIDControlledDcMotor.PIDControlledDcMotorBuilder(mecanumController.rightFront)
-//                .setkP(0.985)
-                .setkP(1)
-                .setkD(-0.005)
-                .setGamma(0.1)
+                .setkP(0.7)
+                .setkD(-0.003)
+                .setGamma(0)
                 .build();
 
         mecanumController.leftRear = new PIDControlledDcMotor.PIDControlledDcMotorBuilder(mecanumController.leftRear)
-                .setkP(1)
-                .setkD(-0.005)
-                .setGamma(0.1)
+                .setkP(0.7)
+                .setkD(-0.003)
+                .setGamma(0)
                 .build();
 
         mecanumController.rightRear = new PIDControlledDcMotor.PIDControlledDcMotorBuilder(mecanumController.rightRear)
-                .setkP(1)
-                .setkD(-0.005)
-                .setGamma(0.1)
+                .setkP(0.7)
+                .setkD(-0.003)
+                .setGamma(0)
                 .build();
 
         mecanumController.setMotorsRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -89,28 +88,30 @@ public class PIDControlledWheels extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
-            mecanumController.drive(gamepad1);
+            mecanumController.fieldOrientedDrivePID(gamepad1);
 
-//            telemetry.addData("radians", mecanumController.getCalibratedIMUAngle());
+            telemetry.addData("radians", mecanumController.getCalibratedIMUAngle());
 
-//            if (gamepad1.b) {
-//                mecanumController.calibrateIMUAngleOffset();
-//            }
+            telemetry.addData("driveSpeed", mecanumController.getDriveSpeed());
+
+            if (gamepad1.b) {
+                mecanumController.calibrateIMUAngleOffset();
+            }
 
             if (mecanumController.leftFront instanceof PIDControlledDcMotor) {
-                telemetry.addData("velo fl", ((PIDControlledDcMotor) mecanumController.leftFront).getVelocity(AngleUnit.RADIANS));
+                telemetry.addData("velo fl", -((PIDControlledDcMotor) mecanumController.leftFront).getVelocity(AngleUnit.RADIANS));
             }
 
             if (mecanumController.rightFront instanceof PIDControlledDcMotor) {
-                telemetry.addData("velo fr", ((PIDControlledDcMotor) mecanumController.rightFront).getVelocity(AngleUnit.RADIANS));
+                telemetry.addData("velo fr", -((PIDControlledDcMotor) mecanumController.rightFront).getVelocity(AngleUnit.RADIANS));
             }
 
             if (mecanumController.leftRear instanceof PIDControlledDcMotor) {
-                telemetry.addData("velo rl", ((PIDControlledDcMotor) mecanumController.leftRear).getVelocity(AngleUnit.RADIANS));
+                telemetry.addData("velo rl", -((PIDControlledDcMotor) mecanumController.leftRear).getVelocity(AngleUnit.RADIANS));
             }
 
             if (mecanumController.rightRear instanceof PIDControlledDcMotor) {
-                telemetry.addData("velo rr", ((PIDControlledDcMotor) mecanumController.rightRear).getVelocity(AngleUnit.RADIANS));
+                telemetry.addData("velo rr", -((PIDControlledDcMotor) mecanumController.rightRear).getVelocity(AngleUnit.RADIANS));
             }
 
             telemetry.update();

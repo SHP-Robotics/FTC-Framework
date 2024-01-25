@@ -100,38 +100,6 @@ public class SpeedController {
                 }
 
                 break;
-            case PID_CONTROLLED_WITH_OVERRIDE:
-                dt = timer.seconds() - lastTime;
-
-                if (lastTime == -1) {
-                    lastTime = timer.seconds();
-                    break;
-                }
-
-                lastTime = timer.seconds();
-
-//                if (DrivingConfiguration.getValue(gamepad, DrivingConfiguration.SPEED_OVERRIDE_ONE) > 0) {
-//                    this.currentSpeed = this.overrideSpeedOne;
-//                } else {
-                this.currentSpeed = clampSpeed(this.currentSpeed + (this.speedPIDController.getOutput(max - currentSpeed) * dt));
-//                }
-
-                break;
-            case PID_CONTROLLED_OVERRIDE:
-                dt = timer.seconds() - lastTime;
-
-                if (lastTime == -1) {
-                    lastTime = timer.seconds();
-                    break;
-                }
-
-                lastTime = timer.seconds();
-
-                if (DrivingConfiguration.getValue(gamepad, DrivingConfiguration.PID_OVERRIDE)) {
-                    this.currentSpeed = clampSpeed(this.currentSpeed + (this.speedPIDController.getOutput(max - currentSpeed) * dt));
-                }
-
-                break;
         }
     }
 

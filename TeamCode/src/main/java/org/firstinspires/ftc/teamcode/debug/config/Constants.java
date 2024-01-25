@@ -26,7 +26,7 @@ public final class Constants {
     public enum CameraMode {
         FACING_TEAM_PROP(0),
         SONAR(0),
-        FACING_CLAW(0);
+        FACING_CLAW(0.59);
 
         private double position;
 
