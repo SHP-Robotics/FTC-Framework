@@ -22,7 +22,6 @@ public class ANewControlSystem extends TestBaseRobot {
     @Override
     public void init() {
         super.init();
-        intake.dropDown.setPosition(0.25);
 
         // Default command runs when no other commands are scheduled for the subsystem
         drive.setDefaultCommand(
@@ -30,9 +29,9 @@ public class ANewControlSystem extends TestBaseRobot {
                         () -> drive.mecanum(-gamepad1.left_stick_y*driveBias, -gamepad1.left_stick_x*driveBias, -gamepad1.right_stick_x*driveBias)
                 )
         );
-        intake.setDefaultCommand(new RunCommand(
-                () -> intake.setState(IntakeSubsystem.State.STILL)
-        ));
+//        intake.setDefaultCommand(new RunCommand(
+//                () -> intake.setState(IntakeSubsystem.State.STILL)
+//        ));
 //        vision.setDefaultCommand(
 //                new RunCommand(
 //                        () -> vision.showRes(telemetry)
@@ -75,8 +74,16 @@ TODO:
             else
                 driveBias = 0.3;
         }));
-        new Trigger(gamepad1.x, new RunCommand(() -> {
-            new LowerArmCommand(arm, wrist, elbow);
+        new Trigger(gamepad1.left_bumper,
+            new LowerArmCommand(arm, wrist, elbow)
+        );
+        new Trigger(gamepad1.right_trigger>0.5, new RunCommand(() -> {
+            intake.setState(IntakeSubsystem.State.INTAKE);
+            telemetry.addData("INTAKING", 0);
+
+        }));
+        new Trigger((gamepad1.right_trigger<0.5 && gamepad1.left_trigger<0.5), new RunCommand(() -> {
+            intake.setState(IntakeSubsystem.State.STILL);
         }));
         new Trigger(gamepad1.right_trigger>0.5, new RunCommand(() -> {
             intake.setState(IntakeSubsystem.State.INTAKE);
@@ -97,22 +104,16 @@ TODO:
         new Trigger(gamepad1.square, new RunCommand(() -> {
             drive.resetIMUAngle();
         }));
-        new Trigger(gamepad1.right_bumper,new RunCommand(()->{
-            if (!Clock.hasElapsed(debounce, 0.5)) return;
-
-            new IncrementUpArmCommand(arm,wrist,elbow);
-        })
+        new Trigger(gamepad1.right_bumper,
+            new IncrementUpArmCommand(arm,wrist,elbow)
         );
-        new Trigger(gamepad1.left_bumper,new RunCommand(()->{
-            if (!Clock.hasElapsed(debounce, 0.5)) return;
-
-            new DecrementDownArmCommand(arm,wrist,elbow);
-        })
+        new Trigger(gamepad1.cross,
+            new DecrementDownArmCommand(arm,wrist,elbow)
         );
 
         new Trigger (gamepad2.triangle, new RunCommand(()->{
             if (!Clock.hasElapsed(debounce, 60)) return;//TODO: TEST
-                planeServo.setState(PlaneServo.State.OUT);
+            planeServo.setState(PlaneServo.State.OUT);
         })
         );
         new Trigger (gamepad2.x, new RunCommand(()->{

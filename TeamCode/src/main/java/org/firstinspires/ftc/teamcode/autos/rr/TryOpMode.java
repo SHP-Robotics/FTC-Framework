@@ -3,32 +3,12 @@ package org.firstinspires.ftc.teamcode.autos.rr;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kLeftSlideName;
 import static org.firstinspires.ftc.teamcode.Constants.Intake.kAdjustHolder;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.qualcomm.hardware.ams.AMSColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.Constants;
-import org.firstinspires.ftc.teamcode.commands.DriveCommand;
-import org.firstinspires.ftc.teamcode.commands.EncoderTurnDriveCommand;
-import org.firstinspires.ftc.teamcode.commands.LowerArmCommand;
-import org.firstinspires.ftc.teamcode.commands.RaiseArmCommand;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.AutonomousStorage;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
-import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
-import org.firstinspires.ftc.teamcode.shplib.hardware.SHPMotor;
-import org.firstinspires.ftc.teamcode.subsystems.AdjustHolder;
-import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.PixelServo;
-import org.firstinspires.ftc.teamcode.subsystems.PracticeArmServo;
-import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 @Autonomous(preselectTeleOp = "ATestTeleOp")
 public class TryOpMode extends LinearOpMode {

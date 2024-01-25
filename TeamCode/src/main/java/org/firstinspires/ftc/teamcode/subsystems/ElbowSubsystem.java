@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 
-public class PracticeArmServo extends Subsystem {
+public class ElbowSubsystem extends Subsystem {
     // Declare devices
     // Example:
     private final Servo practiceLeftArm;
@@ -25,9 +25,11 @@ public class PracticeArmServo extends Subsystem {
 
     private State state;
 
-    public PracticeArmServo(HardwareMap hardwareMap) {
+    public ElbowSubsystem(HardwareMap hardwareMap) {
         practiceLeftArm = hardwareMap.get(Servo.class, kPracticeLeftArmServoName);
+
         practiceRightArm = hardwareMap.get(Servo.class, kPracticeRightArmServoName);
+
         state = State.DOWN;
     }
 
@@ -46,12 +48,16 @@ public class PracticeArmServo extends Subsystem {
         // telemetry.addData("Motor Encoder: ", motor.getPosition(MotorUnit.TICKS));
         switch (state) {
             case UP:
-                practiceLeftArm.setPosition(1-kPositionBottom);
-                practiceRightArm.setPosition(kPositionBottom);
-                break;
-            case DOWN:
                 practiceRightArm.setPosition(kPositionTop);
                 practiceLeftArm.setPosition(1-kPositionTop);
+//                practiceLeftArm.setPosition(1-kPositionBottom);
+//                practiceRightArm.setPosition(kPositionBottom);
+                break;
+            case DOWN:
+//                practiceRightArm.setPosition(kPositionTop);
+//                practiceLeftArm.setPosition(1-kPositionTop);
+                practiceLeftArm.setPosition(1-kPositionBottom);
+                practiceRightArm.setPosition(kPositionBottom);
                 break;
             case HALFWAY:
                 practiceRightArm.setPosition(kPositionMiddle);

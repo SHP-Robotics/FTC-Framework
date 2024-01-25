@@ -9,7 +9,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 
-public class AdjustHolder extends Subsystem {
+public class WristSubsystem extends Subsystem {
     // Declare devices
     // Example:
     private final Servo adjustHolder;
@@ -20,7 +20,7 @@ public class AdjustHolder extends Subsystem {
 
     private State state;
 
-    public AdjustHolder(HardwareMap hardwareMap) {
+    public WristSubsystem(HardwareMap hardwareMap) {
         // Initialize devices
         // Example:
 
@@ -46,13 +46,13 @@ public class AdjustHolder extends Subsystem {
         switch (state) {
 
             case DOWN:
-                adjustHolder.setPosition(0.6 + Constants.offset);
+                adjustHolder.setPosition(0.625);
                 break;
             case UP:
-                adjustHolder.setPosition(0.2);
+                adjustHolder.setPosition(0.3);
                 break;
             case HALFWAY:
-                adjustHolder.setPosition(0.9);
+                adjustHolder.setPosition(1);
                 break;
 
 

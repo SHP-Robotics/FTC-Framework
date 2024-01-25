@@ -1,19 +1,18 @@
 package org.firstinspires.ftc.teamcode.commands;
 
 import org.firstinspires.ftc.teamcode.shplib.commands.Command;
-import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
-import org.firstinspires.ftc.teamcode.subsystems.AdjustHolder;
+import org.firstinspires.ftc.teamcode.subsystems.WristSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.PracticeArmServo;
+import org.firstinspires.ftc.teamcode.subsystems.ElbowSubsystem;
 
 public class LowerArmCommand extends Command {
     private final ArmSubsystem arm;
-    private final AdjustHolder wrist;
-    private final PracticeArmServo elbow;
+    private final WristSubsystem wrist;
+    private final ElbowSubsystem elbow;
     private  double startTime;
 
-    public LowerArmCommand(ArmSubsystem arm, AdjustHolder wrist, PracticeArmServo elbow) {
+    public LowerArmCommand(ArmSubsystem arm, WristSubsystem wrist, ElbowSubsystem elbow) {
         // You MUST call the parent class constructor and pass through any subsystems you use
         super(arm, wrist, elbow);
 
@@ -27,7 +26,7 @@ public class LowerArmCommand extends Command {
     @Override
     public void init() {
         startTime = Clock.now();
-        wrist.setState(AdjustHolder.State.DOWN);
+        wrist.setState(WristSubsystem.State.DOWN);
     }
 
     // Specifies whether or not the command has finished
@@ -38,7 +37,7 @@ public class LowerArmCommand extends Command {
         //wrist.setState(AdjustHolder.State.DOWN);
         //elbow.setState(PracticeArmServo.State.DOWN);
         arm.setState(ArmSubsystem.State.BOTTOM);
-        elbow.setState(PracticeArmServo.State.DOWN);
+        elbow.setState(ElbowSubsystem.State.DOWN);
     }
 
     @Override

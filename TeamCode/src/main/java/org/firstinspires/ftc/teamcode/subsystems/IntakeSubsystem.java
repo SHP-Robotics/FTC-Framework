@@ -22,7 +22,6 @@ public class IntakeSubsystem extends Subsystem {
     private final Servo pixelServo;
     private final SHPMotor spinner;
 
-    public final Servo dropDown;
     //private final Servo pixelThing; // Need better name
     public enum State {
         INTAKE, DEPOSIT1, DEPOSIT2, STILL, REJECT, REJECTALL
@@ -36,14 +35,12 @@ public class IntakeSubsystem extends Subsystem {
         cWheel = hardwareMap.get(CRServo.class, kCRWheelName);
         pixelServo = hardwareMap.get(Servo.class, kPixelServo);
         spinner = new SHPMotor(hardwareMap, kSpinningIntakeName);
-        dropDown = hardwareMap.get(Servo.class, "dropDown");
 
 
 //        pixelThing = hardwareMap.get(Servo.class, kPixelThingName);
         // Set initial state
         // Example:
         setState(State.STILL);
-        dropDown.setPosition(0.5);
         pixelServo.setPosition(0.9);
     }
 

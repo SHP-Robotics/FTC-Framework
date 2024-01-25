@@ -4,8 +4,6 @@ import static org.firstinspires.ftc.teamcode.Constants.offset;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Constants;
-import org.firstinspires.ftc.teamcode.R;
 import org.firstinspires.ftc.teamcode.TestBaseRobot;
 import org.firstinspires.ftc.teamcode.commands.LowerArmCommand;
 import org.firstinspires.ftc.teamcode.commands.RaiseArmCommand;
@@ -14,10 +12,8 @@ import org.firstinspires.ftc.teamcode.shplib.commands.Trigger;
 import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.Flap;
 import org.firstinspires.ftc.teamcode.subsystems.HookSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.PixelServo;
 import org.firstinspires.ftc.teamcode.subsystems.PlaneServo;
 
 @TeleOp
@@ -28,7 +24,6 @@ public class ATestTeleop extends TestBaseRobot {
     @Override
     public void init() {
         super.init();
-        intake.dropDown.setPosition(0.25);
 
         // Default command runs when no other commands are scheduled for the subsystem
         drive.setDefaultCommand(

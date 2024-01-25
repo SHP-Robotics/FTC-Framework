@@ -2,18 +2,17 @@ package org.firstinspires.ftc.teamcode.commands;
 
 import org.firstinspires.ftc.teamcode.shplib.commands.Command;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
-import org.firstinspires.ftc.teamcode.subsystems.AdjustHolder;
+import org.firstinspires.ftc.teamcode.subsystems.WristSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.PixelServo;
-import org.firstinspires.ftc.teamcode.subsystems.PracticeArmServo;
+import org.firstinspires.ftc.teamcode.subsystems.ElbowSubsystem;
 
 public class RaiseArmCommand extends Command {
     private final ArmSubsystem arm;
-    private final AdjustHolder wrist;
-    private final PracticeArmServo elbow;
+    private final WristSubsystem wrist;
+    private final ElbowSubsystem elbow;
     private  double startTime;
 
-    public RaiseArmCommand(ArmSubsystem arm, AdjustHolder wrist, PracticeArmServo elbow) {
+    public RaiseArmCommand(ArmSubsystem arm, WristSubsystem wrist, ElbowSubsystem elbow) {
         // You MUST call the parent class constructor and pass through any subsystems you use
         super(arm, wrist, elbow);
 
@@ -29,8 +28,8 @@ public class RaiseArmCommand extends Command {
         startTime = Clock.now();
 
         arm.nextState();
-        wrist.setState(AdjustHolder.State.UP);
-        elbow.setState(PracticeArmServo.State.UP);
+        wrist.setState(WristSubsystem.State.UP);
+        elbow.setState(ElbowSubsystem.State.UP);
     }
 //    @Override
 //    public void end() {

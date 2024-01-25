@@ -7,14 +7,14 @@ import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.Trigger;
 import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
-import org.firstinspires.ftc.teamcode.subsystems.AdjustHolder;
+import org.firstinspires.ftc.teamcode.subsystems.WristSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.CRWheel;
 import org.firstinspires.ftc.teamcode.subsystems.HookServo1;
 import org.firstinspires.ftc.teamcode.subsystems.HookServo2;
 import org.firstinspires.ftc.teamcode.subsystems.PixelServo;
 import org.firstinspires.ftc.teamcode.subsystems.PlaneServo;
-import org.firstinspires.ftc.teamcode.subsystems.PracticeArmServo;
+import org.firstinspires.ftc.teamcode.subsystems.ElbowSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.SpinningIntake;
 
 @TeleOp
@@ -78,22 +78,22 @@ public class CommandBasedTeleOp extends BaseRobot {
         );
         //////right trigger
         new Trigger (gamepad1.right_trigger>0.5, new RunCommand(()->{
-            adjustHolder.setState(AdjustHolder.State.UP);
+            adjustHolder.setState(WristSubsystem.State.UP);
         })
                 .then(new RunCommand(()->{
                     arm.setState(ArmSubsystem.State.HIGH);
 
                 }))
                 .then(new RunCommand(()->{
-                    slideServos.setState(PracticeArmServo.State.UP);
+                    slideServos.setState(ElbowSubsystem.State.UP);
                 }))
 //
         );
         new Trigger (gamepad1.left_trigger>0.5, new RunCommand(()->{
-            adjustHolder.setState(AdjustHolder.State.DOWN);
+            adjustHolder.setState(WristSubsystem.State.DOWN);
         })
                 .then(new RunCommand(()->{
-                    slideServos.setState(PracticeArmServo.State.DOWN);
+                    slideServos.setState(ElbowSubsystem.State.DOWN);
                 }))
                 .then(new WaitCommand(1))
                 .then(new RunCommand(()->{

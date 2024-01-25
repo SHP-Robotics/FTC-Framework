@@ -2,18 +2,17 @@ package org.firstinspires.ftc.teamcode.commands;
 
 import org.firstinspires.ftc.teamcode.shplib.commands.Command;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
-import org.firstinspires.ftc.teamcode.subsystems.AdjustHolder;
+import org.firstinspires.ftc.teamcode.subsystems.WristSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.PixelServo;
-import org.firstinspires.ftc.teamcode.subsystems.PracticeArmServo;
+import org.firstinspires.ftc.teamcode.subsystems.ElbowSubsystem;
 
 public class IncrementUpArmCommand extends Command {
     private final ArmSubsystem arm;
-    private final AdjustHolder wrist;
-    private final PracticeArmServo elbow;
+    private final WristSubsystem wrist;
+    private final ElbowSubsystem elbow;
     private  double startTime;
 
-    public IncrementUpArmCommand(ArmSubsystem arm, AdjustHolder wrist, PracticeArmServo elbow) {
+    public IncrementUpArmCommand(ArmSubsystem arm, WristSubsystem wrist, ElbowSubsystem elbow) {
         // You MUST call the parent class constructor and pass through any subsystems you use
         super(arm, wrist, elbow);
 
@@ -28,13 +27,13 @@ public class IncrementUpArmCommand extends Command {
     public void init() {
         startTime = Clock.now();
 
-        if(arm.getState() != ArmSubsystem.State.EXTENDED)
+        if(arm.getState() == ArmSubsystem.State.BOTTOM)
             arm.setState(ArmSubsystem.State.EXTENDED);
         else
             arm.incrementState();
-
-        wrist.setState(AdjustHolder.State.UP);
-        elbow.setState(PracticeArmServo.State.UP);
+//        arm.nextState();
+        wrist.setState(WristSubsystem.State.UP);
+        elbow.setState(ElbowSubsystem.State.UP);
     }
 //    @Override
 //    public void end() {

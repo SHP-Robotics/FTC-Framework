@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
-import org.firstinspires.ftc.teamcode.subsystems.AdjustHolder;
+import org.firstinspires.ftc.teamcode.subsystems.WristSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 //import org.firstinspires.ftc.teamcode.subsystems.testfuck;
@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.subsystems.HookServo1;
 import org.firstinspires.ftc.teamcode.subsystems.HookServo2;
 import org.firstinspires.ftc.teamcode.subsystems.PixelServo;
 import org.firstinspires.ftc.teamcode.subsystems.PlaneServo;
-import org.firstinspires.ftc.teamcode.subsystems.PracticeArmServo;
+import org.firstinspires.ftc.teamcode.subsystems.ElbowSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.SpinningIntake;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
@@ -39,12 +39,12 @@ public class BaseRobot extends OpMode {
     //public CameraOn vision;
     public VisionSubsystem visiona;
 //    public VisionSubsystem vision;
-    public PracticeArmServo slideServos;
+    public ElbowSubsystem slideServos;
     public HookServo1 rightPlane;
     public HookServo2 leftPlane;
     public ArmSubsystem arm;
     public SpinningIntake spinningIntake;
-    public AdjustHolder adjustHolder;
+    public WristSubsystem adjustHolder;
     public PlaneServo planeServo;
 //    public SpinningIntake spinningIntake;
 //    public CRWheel cWheel;
@@ -66,7 +66,7 @@ public class BaseRobot extends OpMode {
         //vision = new CameraOn(hardwareMap);
 //        visiona = new VisionSubsystem(hardwareMap);
         arm = new ArmSubsystem(hardwareMap);
-        slideServos = new PracticeArmServo(hardwareMap);
+        slideServos = new ElbowSubsystem(hardwareMap);
 //        spinningIntake = new SpinningIntake(hardwareMap);
 //        cWheel = new CRWheel(hardwareMap);
 //        flap = new Flap(hardwareMap);
@@ -75,7 +75,7 @@ public class BaseRobot extends OpMode {
         rightPlane = new HookServo1(hardwareMap);
         leftPlane = new HookServo2(hardwareMap);
         pixelServo = new PixelServo(hardwareMap);
-        adjustHolder = new AdjustHolder(hardwareMap);
+        adjustHolder = new WristSubsystem(hardwareMap);
         planeServo = new PlaneServo(hardwareMap);
 
 

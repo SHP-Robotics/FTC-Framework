@@ -9,11 +9,11 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.AutonomousStorage;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
-import org.firstinspires.ftc.teamcode.subsystems.AdjustHolder;
+import org.firstinspires.ftc.teamcode.subsystems.WristSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.PixelServo;
-import org.firstinspires.ftc.teamcode.subsystems.PracticeArmServo;
+import org.firstinspires.ftc.teamcode.subsystems.ElbowSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 @Autonomous(preselectTeleOp = "ATestTeleOp")
@@ -47,9 +47,9 @@ public class BlueAutoLeft2 extends LinearOpMode {
 
         //subsystems
         ArmSubsystem arm = new ArmSubsystem(hardwareMap);
-        PracticeArmServo elbow = new PracticeArmServo(hardwareMap);
+        ElbowSubsystem elbow = new ElbowSubsystem(hardwareMap);
         PixelServo pixelServo = new PixelServo(hardwareMap);
-        AdjustHolder wrist = new AdjustHolder(hardwareMap);
+        WristSubsystem wrist = new WristSubsystem(hardwareMap);
         IntakeSubsystem intake = new IntakeSubsystem(hardwareMap);
         CommandScheduler myCommand = CommandScheduler.getInstance();
 

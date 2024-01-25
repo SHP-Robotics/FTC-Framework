@@ -5,13 +5,13 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
-import org.firstinspires.ftc.teamcode.subsystems.AdjustHolder;
+import org.firstinspires.ftc.teamcode.subsystems.WristSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.HookSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.PlaneServo;
-import org.firstinspires.ftc.teamcode.subsystems.PracticeArmServo;
+import org.firstinspires.ftc.teamcode.subsystems.ElbowSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 /**
@@ -33,11 +33,11 @@ public class TestBaseRobot extends OpMode {
     //public CameraOn vision;
     public VisionSubsystem vision;
     //    public VisionSubsystem vision;
-    public PracticeArmServo elbow;
+    public ElbowSubsystem elbow;
     public HookSubsystem hook;
     public ArmSubsystem arm;
     //public SpinningIntake spinningIntake;
-    public AdjustHolder wrist;
+    public WristSubsystem wrist;
     public PlaneServo planeServo;
 
     public IntakeSubsystem intake;
@@ -61,7 +61,7 @@ public class TestBaseRobot extends OpMode {
         //vision = new CameraOn(hardwareMap);
         vision = new VisionSubsystem(hardwareMap, "blue");
         arm = new ArmSubsystem(hardwareMap);
-        elbow = new PracticeArmServo(hardwareMap);
+        elbow = new ElbowSubsystem(hardwareMap);
 //        spinningIntake = new SpinningIntake(hardwareMap);
 //        cWheel = new CRWheel(hardwareMap);
 //        flap = new Flap(hardwareMap);
@@ -69,7 +69,7 @@ public class TestBaseRobot extends OpMode {
 //        intake = new SHPMotor(hardwareMap, "intake");
         hook = new HookSubsystem(hardwareMap);
 //        pixelServo = new PixelServo(hardwareMap);
-        wrist = new AdjustHolder(hardwareMap);
+        wrist = new WristSubsystem(hardwareMap);
         planeServo = new PlaneServo(hardwareMap);
         intake = new IntakeSubsystem(hardwareMap);
 

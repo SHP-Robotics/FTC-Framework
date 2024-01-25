@@ -31,11 +31,11 @@ public class Constants {
     }
 
     public static final class Intake{
-        public static final String kLeftAdjust = "LeftAxon";
-        public static final String kRightAdjust = "RightAxon";
+//        public static final String kLeftAdjust = "LeftAxon";
+//        public static final String kRightAdjust = "RightAxon";
         public static final double kPositionBottom = 0.6;
-        public static final double kPositionTop = 0;
-        public static final double kPositionMiddle = 0.28;
+        public static final double kPositionTop = 0.05;
+        public static final double kPositionMiddle = 0.3;
         public static final String kPixelServo = "MiniServo";
         public static final String kPlaneServo = "plane";
 
@@ -61,11 +61,11 @@ public class Constants {
         public static final double kHookRightEngaged = 0.0;
         public static final double kHookRightDisengaged = 0.5;
 
-        public static final String kPracticeLeftArmServoName = "leftAdjust";
-        public static final String kPracticeRightArmServoName = "rightAdjust";
-        public static final String kPixelThingName = "Pixel Thing Name";
-        public static final double kPixelEngaged = 0.75;
-        public static final double kPixelDisengaged = 0.25;
+        public static final String kPracticeLeftArmServoName = "LeftAxon";
+        public static final String kPracticeRightArmServoName = "RightAxon";
+//        public static final String kPixelThingName = "Pixel Thing Name";
+//        public static final double kPixelEngaged = 0.75;
+//        public static final double kPixelDisengaged = 0.25;
 
     }
 
@@ -81,7 +81,7 @@ public class Constants {
         public static final double kSlideConeStack = 1000.0;
 
         public static final double kSlideBottom = 0.0;
-        public static final double kSlideExtended = 200.0;
+        public static final double kSlideExtended = 300.0;
 
         public static final double kSlideMiddle = 500.0;
         public static final double kSlideMidHigh = 1600.0;
@@ -97,7 +97,7 @@ public class Constants {
 
         public static final double kSlideS = 0.035; // static friction
         public static final double kSlideG = 0.07; // gravity
-        public static final double kPixelHeight = 50;
+        public static final double kPixelHeight = 500;
 
         //used in template subsystem
         public static final double kSlideHub = 200.0;
