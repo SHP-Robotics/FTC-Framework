@@ -27,9 +27,10 @@ import org.firstinspires.ftc.teamcode.shplib.hardware.units.MotorUnit;
 
 public class ArmSubsystem extends Subsystem {
 
-    private final SHPMotor elbow;
-    private final Servo wrist;
-    private double elbowManual, wristManual;
+    // tee hee
+//    private final SHPMotor elbow;
+//    private final Servo wrist;
+//    private double elbowManual, wristManual;
     public enum State {
         INTAKE,
         DRIVE,
@@ -43,26 +44,29 @@ public class ArmSubsystem extends Subsystem {
     public ArmSubsystem(HardwareMap hardwareMap) {
 //        poleSensor = hardwareMap.get(DistanceSensor.class, "coneSensor");
 
-        elbow = new SHPMotor(hardwareMap, kElbowName);
-        elbow.reverseDirection();
-        elbow.resetEncoder();
-        elbow.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        elbow.enablePositionPID(new PositionPID(kElbowP, 0.0, kElbowD));
-        elbow.setPositionErrorTolerance(kElbowTolerance);
-        elbow.enableFF(new ElevatorFFController(kElbowS, kElbowG));
+        // tee hee
+//        elbow = new SHPMotor(hardwareMap, kElbowName);
+//        elbow.reverseDirection();
+//        elbow.resetEncoder();
+//        elbow.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+//        elbow.enablePositionPID(new PositionPID(kElbowP, 0.0, kElbowD));
+//        elbow.setPositionErrorTolerance(kElbowTolerance);
+//        elbow.enableFF(new ElevatorFFController(kElbowS, kElbowG));
 
-        wrist = hardwareMap.get(Servo.class, kWristName);
-        wristManual = 0.5;
-        setState(State.DRIVE);
+//        wrist = hardwareMap.get(Servo.class, kWristName);
+//        wristManual = 0.5;
+//        setState(State.DRIVE);
     }
 
     public void setState(State state) {
         this.state = state;
     }
     public State getState(){ return state;}
-    public double getDriveBias() {
-        return Math.abs(getElbowPosition(MotorUnit.TICKS) / kElbowUp - 1.0);
-    }
+
+    // tee hee
+//    public double getDriveBias() {
+//        return Math.abs(getElbowPosition(MotorUnit.TICKS) / kElbowUp - 1.0);
+//    }
 
 //    public boolean isOverPole() {
 //        return poleSensor.getDistance(DistanceUnit.INCH) <= 6.0;
@@ -75,59 +79,60 @@ public class ArmSubsystem extends Subsystem {
 //    public boolean atHub() {
 //        return state == State.HUB;
 //    }
-    public double upElbow(){
-        elbowManual += 20;
-        return elbowManual;
-    }
-    public double downElbow(){
-        elbowManual -= 20;
-        return elbowManual;
-    }
-    public double upWrist(){
-        wristManual += 0.005;
-        return wristManual;
-    }
-    public double downWrist(){
-        wristManual -= 0.005;
-        return wristManual;
-    }
-    public boolean atSetpoint() {
-        return elbow.atPositionSetpoint();
-    }
 
-    public double getElbowPosition(MotorUnit unit) {
-        return elbow.getPosition(unit);
-    }
+    // tee hee
+//    public double upElbow(){
+//        elbowManual += 20;
+//        return elbowManual;
+//    }
+//    public double downElbow(){
+//        elbowManual -= 20;
+//        return elbowManual;
+//    }
+//    public double upWrist(){
+//        wristManual += 0.005;
+//        return wristManual;
+//    }
+//    public double downWrist(){
+//        wristManual -= 0.005;
+//        return wristManual;
+//    }
+//    public boolean atSetpoint() {
+//        return elbow.atPositionSetpoint();
+//    }
+
+//    public double getElbowPosition(MotorUnit unit) {
+//        return elbow.getPosition(unit);
+//    }
 
     private State processState() {
-        switch (state) {
-            case DRIVE:
-                elbow.setPosition(kElbowDrive);
-                wrist.setPosition(kWristDrive);
-                return state;
-            case INTAKE:
-                elbow.setPosition(kElbowDown);
-                wrist.setPosition(kWristDown);
-                return state;
-            case OUTTAKE:
-                elbow.setPosition(kElbowUp);
-                wrist.setPosition(kWristDeposit);
-                return state;
-            case MANUAL:
-                elbow.setPosition(elbowManual);
-                wrist.setPosition(wristManual);
-        }
-        return State.UNKNOWN;
+        // tee hee
+//        switch (state) {
+//            case DRIVE:
+//                elbow.setPosition(kElbowDrive);
+//                wrist.setPosition(kWristDrive);
+//            case INTAKE:
+//                elbow.setPosition(kElbowDown);
+//                wrist.setPosition(kWristDown);
+//            case OUTTAKE:
+//                elbow.setPosition(kElbowUp);
+//                wrist.setPosition(kWristDeposit);
+//            case MANUAL:
+//                elbow.setPosition(elbowManual);
+//                wrist.setPosition(wristManual);
+//        }
+        return state;
     }
 
     @Override
     public void periodic(Telemetry telemetry) {
         processState();
-        telemetry.addData("Elbow Position: ", elbow.getPosition(MotorUnit.TICKS));
-        telemetry.addData("Wrist State: ", wrist.getPosition());
-        telemetry.addData("Wrist manual: ", wristManual);
+        // tee hee
+//        telemetry.addData("Elbow Position: ", elbow.getPosition(MotorUnit.TICKS));
+//        telemetry.addData("Wrist State: ", wrist.getPosition());
+//        telemetry.addData("Wrist manual: ", wristManual);
 
 
-        telemetry.addData("ArmState: ", processState());
+//        telemetry.addData("ArmState: ", processState());
     }
 }

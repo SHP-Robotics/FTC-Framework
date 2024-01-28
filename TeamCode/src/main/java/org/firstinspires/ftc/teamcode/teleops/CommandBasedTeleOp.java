@@ -2,9 +2,12 @@ package org.firstinspires.ftc.teamcode.teleops;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.BaseRobot;
+import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.debug.OneMotorSystem;
 import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.Trigger;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
@@ -16,6 +19,8 @@ public class CommandBasedTeleOp extends BaseRobot {
     private double debounce;
     private double drivebias;
     // tee hee
+    private OneMotorSystem elbow;
+    private Servo wrist;
     private Servo plane;
 
     @Override
@@ -34,6 +39,15 @@ public class CommandBasedTeleOp extends BaseRobot {
 
         // tee hee
         plane = hardwareMap.get(Servo.class, "plane");
+
+        elbow = new OneMotorSystem.OneMotorSystemBuilder(hardwareMap, "elbow")
+                .setDirection(DcMotorSimple.Direction.FORWARD)
+                .setUseBrakes(false)
+                .setUseEncoders(true)
+                .setStaticPower(0)
+                .build();
+
+        wrist = hardwareMap.get(Servo.class, "wrist");
     }
 
     @Override
@@ -49,7 +63,9 @@ public class CommandBasedTeleOp extends BaseRobot {
         // Allows CommandScheduler.run() to be called - DO NOT DELETE!
         super.loop();
 
-        drive.setDriveBias(arm.getDriveBias());
+        // tee hee
+        // sus :|
+//        drive.setDriveBias(arm.getDriveBias());
 
         //TODO: Open/close macro to circle DONE
         new Trigger(gamepad1.circle, new RunCommand(()->{
@@ -66,7 +82,13 @@ public class CommandBasedTeleOp extends BaseRobot {
             || arm.getState() == ArmSubsystem.State.MANUAL
                     || arm.getState() == ArmSubsystem.State.UNKNOWN){
                 claw.close();
-                arm.setState(ArmSubsystem.State.DRIVE);
+
+                //tee hee
+//                arm.setState(ArmSubsystem.State.DRIVE);
+
+                elbow.setPosition((int)Constants.Arm.kElbowDrive, false);
+                wrist.setPosition((int)Constants.Arm.kWristDrive);
+
                 drivebias = 1.0;
             }
             else if(arm.getState() == ArmSubsystem.State.DRIVE){
@@ -87,6 +109,9 @@ public class CommandBasedTeleOp extends BaseRobot {
                 claw.close();
                 drivebias = 1.0;
                 arm.setState(ArmSubsystem.State.DRIVE);
+
+                // tee hee
+                elbow.setPosition((int)Constants.Arm.kElbowDown, false);
             }
             else if(arm.getState() == ArmSubsystem.State.DRIVE){
                 arm.setState(ArmSubsystem.State.INTAKE);
@@ -98,14 +123,20 @@ public class CommandBasedTeleOp extends BaseRobot {
         }));
 
         new Trigger(gamepad1.dpad_up, new RunCommand(() -> {
-            arm.setState(ArmSubsystem.State.MANUAL);
+            // tee hee
+            elbow.setLiftPower(0.5);
 
-            arm.upElbow();
+//            arm.setState(ArmSubsystem.State.MANUAL);
+//
+//            arm.upElbow();
         }));
         new Trigger(gamepad1.dpad_down, new RunCommand(() -> {
-            arm.setState(ArmSubsystem.State.MANUAL);
+            // tee hee
+            elbow.setLiftPower(-0.5);
 
-            arm.downElbow();
+//            arm.setState(ArmSubsystem.State.MANUAL);
+//
+//            arm.downElbow();
         }));
 
         //TODO: PLANE LAUNCH BOTH BUMPERS
