@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.teleops;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -46,6 +47,8 @@ public class CommandBasedTeleOp extends BaseRobot {
                 .setUseEncoders(true)
                 .setStaticPower(0)
                 .build();
+
+        elbow.setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         wrist = hardwareMap.get(Servo.class, "wrist");
     }
