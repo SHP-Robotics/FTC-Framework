@@ -1,16 +1,42 @@
-package org.firstinspires.ftc.teamcode.autos.rr;
-
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-
-import org.firstinspires.ftc.teamcode.BaseRobot;
-
-@Autonomous(preselectTeleOp = "ATestTeleOp")
-public class TestAuto extends BaseRobot {
+//package org.firstinspires.ftc.teamcode.autos.rr;
+//
+//import static org.firstinspires.ftc.teamcode.Constants.Arm.kLeftSlideName;
+//import static org.firstinspires.ftc.teamcode.Constants.Arm.kRightSlideName;
+//import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideD;
+//import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideExtended;
+//import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideG;
+//import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideP;
+//import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideS;
+//import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideTolerance;
+//import static org.firstinspires.ftc.teamcode.Constants.Intake.kAdjustHolder;
+//
+//import com.acmerobotics.roadrunner.geometry.Pose2d;
+//import com.acmerobotics.roadrunner.trajectory.Trajectory;
+//import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+//import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+//import com.qualcomm.robotcore.hardware.DcMotor;
+//import com.qualcomm.robotcore.hardware.Servo;
+//
+//import org.firstinspires.ftc.teamcode.roadrunner.drive.AutonomousStorage;
+//import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+//import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
+//import org.firstinspires.ftc.teamcode.shplib.controllers.ElevatorFFController;
+//import org.firstinspires.ftc.teamcode.shplib.controllers.PositionPID;
+//import org.firstinspires.ftc.teamcode.shplib.hardware.SHPMotor;
+//import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
+//import org.firstinspires.ftc.teamcode.subsystems.WristSubsystem;
+//import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+//import org.firstinspires.ftc.teamcode.subsystems.PixelServo;
+//import org.firstinspires.ftc.teamcode.subsystems.ElbowSubsystem;
+//import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
+//
+//@Autonomous(preselectTeleOp = "ATestTeleOp")
+//public class TestAuto extends LinearOpMode {
 //    public enum State {
 //        LOCATION_1,
 //        DEPOSIT_1,
-//        STACK_1,
 //        TO_BACKDROP_1,
+//        ARM_1,
 //
 //        LOCATION_2,
 //        DEPOSIT_2,
@@ -26,40 +52,63 @@ public class TestAuto extends BaseRobot {
 //    }
 //
 //    @Override
-//    public void init() {
+//    public void runOpMode() throws InterruptedException {
 //        AutonomousStorage.autonomousType = AutonomousStorage.AutonomousType.RedAutoLeftRR;
 //
 //        SampleMecanumDrive sampleMecanumDrive = new SampleMecanumDrive(hardwareMap);
-//        State currentState;
-//        int location = 1;
+//        SHPMotor leftSlide;
 //
-//        //subsystems
-//        ArmSubsystem arm = new ArmSubsystem(hardwareMap);
-//        PracticeArmServo elbow = new PracticeArmServo(hardwareMap);
-//        PixelServo pixelServo = new PixelServo(hardwareMap);
-//        AdjustHolder wrist = new AdjustHolder(hardwareMap);
-//        IntakeSubsystem intake = new IntakeSubsystem(hardwareMap);
+////        ArmSubsystem armSubsystem = new ArmSubsystem(hardwareMap);
+//
+//        leftSlide = new SHPMotor(hardwareMap, kLeftSlideName);
+////        leftSlide.reverseDirection();
+//        leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+//        leftSlide.enablePositionPID(new PositionPID(kSlideP, 0.0, kSlideD));
+//        leftSlide.resetEncoder();
+//        leftSlide.setPositionErrorTolerance(kSlideTolerance);
+//        leftSlide.enableFF(new ElevatorFFController(kSlideS, kSlideG));
+//
+//
+//        SHPMotor rightSlide;
+//        rightSlide = new SHPMotor(hardwareMap, kRightSlideName);
+//        rightSlide.reverseDirection();
+//        rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+//        rightSlide.enablePositionPID(new PositionPID(kSlideP, 0.0, kSlideD));
+//        rightSlide.resetEncoder();
+//        rightSlide.setPositionErrorTolerance(kSlideTolerance);
+//        rightSlide.enableFF(new ElevatorFFController(kSlideS, kSlideG));
+//
+//
+//        State currentState;
+//        int location = 0;
 //
 //        //vision
 //        //TODO: SWITCH PIPELINE LATER
-//        VisionSubsystem visionSubsystem = new VisionSubsystem(hardwareMap,"red");
-//        location = visionSubsystem.getLocationRed();
+////        VisionSubsystem visionSubsystem = new VisionSubsystem(hardwareMap,"blue");
+////        location = visionSubsystem.getLocationBlue();
 //
 //        telemetry.addLine("Trajectory Sequence Ready");
 //        telemetry.addData("Location: ", location);
 //        telemetry.update();
-////        while (opModeInInit() && !isStopRequested()) {
-//            location = visionSubsystem.getLocationRed();
+//        while (opModeInInit() && !isStopRequested()) {
+////            location = visionSubsystem.getLocationBlue();
 //            telemetry.addLine("Trajectory Sequence Ready");
 //            telemetry.addData("Location: ", location);
 //            telemetry.update();
-////        }
+//        }
 //
-////        waitForStart();
+//        waitForStart();
 //
-////        if (isStopRequested()) return;
+//        if (isStopRequested()) return;
 //
 //        switch (location) {
+//            case 0:
+//                leftSlide.setPosition(kSlideExtended);
+//
+//                rightSlide.setPosition(kSlideExtended);
+//
+//                currentState = State.IDLE;
+//                return;
 //            case 1:
 //                Trajectory pixelToSpikeMarkOne = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
 //                        .lineToLinearHeading(new Pose2d(-28.75, -2, Math.toRadians(90)))
@@ -70,23 +119,24 @@ public class TestAuto extends BaseRobot {
 //                break;
 //            case 2:
 //                Trajectory pixelToSpikeMarkTwo = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
-//                        .lineToLinearHeading(new Pose2d(-31, 0, Math.toRadians(0)))
+//                        .lineToLinearHeading(new Pose2d(-32, 0, Math.toRadians(0)))
 //                        .build();
 //
 //                sampleMecanumDrive.followTrajectoryAsync(pixelToSpikeMarkTwo);
-//                currentState = State.IDLE;
+//                currentState = State.DEPOSIT_2;
 //                break;
 //            default:
-//                Trajectory pixelToSpikeMarkThree = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
-//                        .lineToLinearHeading(new Pose2d(-28.75, 8.5, Math.toRadians(-90)))
+//                TrajectorySequence pixelToSpikeMarkThree = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
+//                        .lineToLinearHeading(new Pose2d(-28.75, 0, Math.toRadians(-90)))
+//                        .lineToLinearHeading(new Pose2d(-28.75, 6.5, Math.toRadians(-90)))
 //                        .build();
 //
-//                sampleMecanumDrive.followTrajectoryAsync(pixelToSpikeMarkThree);
-//                currentState = State.IDLE; //TODO: FOR TESTING
+//                sampleMecanumDrive.followTrajectorySequenceAsync(pixelToSpikeMarkThree);
+//                currentState = State.DEPOSIT_3; //TODO: FOR TESTING
 //                break;
 //        }
 //        //TODO: CURRENT AUTO 2+0 RIGHT RED
-////        while (opModeIsActive() && !isStopRequested()) {
+//        while (opModeIsActive() && !isStopRequested()) {
 //            sampleMecanumDrive.update();
 //
 //            telemetry.addData("Current State", currentState);
@@ -101,29 +151,34 @@ public class TestAuto extends BaseRobot {
 //                                .lineToLinearHeading(new Pose2d(-28.75, 4, Math.toRadians(90)))
 //                                .build();
 //                        sampleMecanumDrive.followTrajectoryAsync(spikeMarkOneBackingUp);
-//                        //change this
-//                        currentState = State.STACK_1;
-//                    }
-//                    break;
-//                case STACK_1:
-//                    if(!sampleMecanumDrive.isBusy()){
-//                        Trajectory stackOne = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
-//                                .lineToLinearHeading(new Pose2d(0, 0, Math.toRadians(180)))
-//                                .build();
-//                        sampleMecanumDrive.followTrajectoryAsync(stackOne);
-//                        currentState = State.IDLE;
+//                        currentState = State.TO_BACKDROP_1;
 //                    }
 //                    break;
 //                case TO_BACKDROP_1:
 //                    if (!sampleMecanumDrive.isBusy()) {
-//                        TrajectorySequence spikeMarkOneToParking = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
-//                                .lineToLinearHeading(new Pose2d(-3, 0, Math.toRadians(-90)))
-//                                .lineToLinearHeading(new Pose2d(-3, 75, Math.toRadians(-90)))
-//                                .lineToLinearHeading(new Pose2d(-40, 80, Math.toRadians(-90)))
+//                        TrajectorySequence spikeMarkOneToBackdrop = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
+//                                .lineToLinearHeading(new Pose2d(-15, 0, Math.toRadians(90)))
+//                                .lineToLinearHeading(new Pose2d(-22, -38.5, Math.toRadians(90)))
 //                                .build();
 //
-//                        sampleMecanumDrive.followTrajectorySequenceAsync(spikeMarkOneToParking);
-//                        currentState = State.TO_PARKING;
+//                        sampleMecanumDrive.followTrajectorySequenceAsync(spikeMarkOneToBackdrop);
+//
+//                        currentState = State.DEPOSIT_TO_BACKDROP;
+//
+////                        currentState = State.ARM_1;
+//                    }
+//                    break;
+//                case ARM_1:
+//                    if (!sampleMecanumDrive.isBusy()) {
+////                        leftSlide.setPower(-0.8);
+//////                        rightSlide.setPower(0.5);
+////                        sleep(500);
+////                        leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//////                        rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+////                        adjustHolder.setPosition(0.2);
+////                        sleep(5);
+////                        arm.setState(ArmSubsystem.State.EXTENDED);
+//                        currentState = State.IDLE;
 //                    }
 //                    break;
 //
@@ -140,14 +195,12 @@ public class TestAuto extends BaseRobot {
 //                case TO_BACKDROP_2:
 //                    if (!sampleMecanumDrive.isBusy()) {
 //                        TrajectorySequence spikeMarkTwoToBackdrop = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
-//                                .lineToLinearHeading(new Pose2d(-3, 0, Math.toRadians(-90)))
-//                                .lineToLinearHeading(new Pose2d(-3, 75, Math.toRadians(-90)))
-//                                .lineToLinearHeading(new Pose2d(-28, 80, Math.toRadians(-90)))
+//                                .lineToLinearHeading(new Pose2d(-26, -38.5, Math.toRadians(90)))
 //                                .build();
 //
 //                        sampleMecanumDrive.followTrajectorySequenceAsync(spikeMarkTwoToBackdrop);
 //
-//                        currentState = State.TO_PARKING;
+//                        currentState = State.DEPOSIT_TO_BACKDROP;
 //                    }
 //                    break;
 //
@@ -164,15 +217,16 @@ public class TestAuto extends BaseRobot {
 //
 //                case TO_BACKDROP_3:
 //                    if (!sampleMecanumDrive.isBusy()) {
-//                        TrajectorySequence spikeMarkThreeToBackdrop = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
-//                                .lineToLinearHeading(new Pose2d(-3, 0, Math.toRadians(-90)))
-//                                .lineToLinearHeading(new Pose2d(-3, 75, Math.toRadians(-90)))
-//                                .lineToLinearHeading(new Pose2d(-25, 80, Math.toRadians(-90)))
+//
+//                        TrajectorySequence spikeMarkThreeToParking = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
+////                                .lineToLinearHeading(new Pose2d(-15, 0, Math.toRadians(-90)))
+//                                .turn(90)
+//                                .lineToLinearHeading(new Pose2d(-30, -38.5, Math.toRadians(90)))
 //                                .build();
 //
-//                        sampleMecanumDrive.followTrajectorySequenceAsync(spikeMarkThreeToBackdrop);
+//                        sampleMecanumDrive.followTrajectorySequenceAsync(spikeMarkThreeToParking);
 //
-//                        currentState = State.TO_PARKING;
+//                        currentState = State.DEPOSIT_TO_BACKDROP;
 //                    }
 //
 //                    break;
@@ -181,19 +235,19 @@ public class TestAuto extends BaseRobot {
 //                case DEPOSIT_TO_BACKDROP:
 //                    if (!sampleMecanumDrive.isBusy()) {
 ////                        sleep(1000);
-//////                        new RaiseArmCommand(arm,wrist,elbow,pixelServo);
-////                        sleep(1000);
-//////                        pixelServo.setState(PixelServo.State.OUT);
-////                        sleep(1000);
-//////                        new LowerArmCommand(arm,wrist,elbow);
-//                        currentState = State.TO_PARKING;
+////                        new RaiseArmCommand(arm,wrist,elbow,pixelServo);
+//                        sleep(1000);
+////                        intake.setState(IntakeSubsystem.State.DEPOSIT2);
+//                        sleep(1000);
+////                        new LowerArmCommand(arm,wrist,elbow);
+//                        currentState = State.IDLE;
 //                    }
 //                    break;
 //                case TO_PARKING:
 //                    if (!sampleMecanumDrive.isBusy()) {
 //                        TrajectorySequence backdropToPark = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
 //                                .forward(5)
-//                                .lineToLinearHeading(new Pose2d(-2,80,Math.toRadians(-90)))
+//                                .lineToLinearHeading(new Pose2d(-2,45,Math.toRadians(-85)))
 //                                .back(5)
 //                                .build();
 //                        sampleMecanumDrive.followTrajectorySequenceAsync(backdropToPark);
@@ -205,4 +259,4 @@ public class TestAuto extends BaseRobot {
 //            }
 //        }
 //    }
-}
+//}

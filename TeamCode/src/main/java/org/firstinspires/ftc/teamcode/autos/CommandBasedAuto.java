@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.shplib.controllers.FFController;
 import org.firstinspires.ftc.teamcode.shplib.controllers.PositionPID;
 import org.firstinspires.ftc.teamcode.shplib.hardware.drive.SHPRunnerMecanumDrive;
 
-@Autonomous(preselectTeleOp = "CommandBasedTeleOp")
+//@Autonomous(preselectTeleOp = "CommandBasedTeleOp")
 public class CommandBasedAuto extends BaseRobot {
     SHPRunnerMecanumDrive autoDrive;
 

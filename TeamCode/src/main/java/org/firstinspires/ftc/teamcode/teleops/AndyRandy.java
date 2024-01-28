@@ -9,13 +9,14 @@ import org.firstinspires.ftc.teamcode.commands.LowerArmCommand;
 import org.firstinspires.ftc.teamcode.commands.PrepareClimbCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.Trigger;
+import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.PlaneServo;
 
 @TeleOp
-public class ANewControlSystem extends TestBaseRobot {
+public class AndyRandy extends TestBaseRobot {
     private double debounce;
     private double driveBias;
 
@@ -65,10 +66,10 @@ TODO:
 
  */
 
-////        drive.setDriveBias(arm.getDriveBias());
-        //////spinning intake
+        drive.setDriveBias(arm.getDriveBias());
+        ////spinning intake
         new Trigger(gamepad1.left_stick_button, new RunCommand(() -> {
-            if (!Clock.hasElapsed(debounce, 0.25)) return;
+            if (!Clock.hasElapsed(debounce, 0.5)) return;
             if(driveBias == 0.3)
                 driveBias = 1.0;
             else
@@ -77,28 +78,30 @@ TODO:
         new Trigger(gamepad1.left_bumper,
             new LowerArmCommand(arm, wrist, elbow)
         );
-        new Trigger(gamepad1.right_trigger>0.5, new RunCommand(() -> {
+//        new Trigger(gamepad1.right_trigger>0.5, new RunCommand(() -> {
+//            intake.setState(IntakeSubsystem.State.INTAKE);
+//            telemetry.addData("INTAKING", 0);
+//
+//        }));
+        new Trigger((gamepad1.right_trigger<0.5 && gamepad1.left_trigger<0.5&&!gamepad1.triangle), new RunCommand(() -> {
+            if(intake.getState() != IntakeSubsystem.State.DEPOSIT1)
+                intake.setState(IntakeSubsystem.State.STILL);
+        }));
+        new Trigger((gamepad1.right_trigger>0.5 && arm.getState() == ArmSubsystem.State.BOTTOM), new RunCommand(() -> {
             intake.setState(IntakeSubsystem.State.INTAKE);
-            telemetry.addData("INTAKING", 0);
-
         }));
-        new Trigger((gamepad1.right_trigger<0.5 && gamepad1.left_trigger<0.5), new RunCommand(() -> {
-            intake.setState(IntakeSubsystem.State.STILL);
-        }));
-        new Trigger(gamepad1.right_trigger>0.5, new RunCommand(() -> {
-            intake.setState(IntakeSubsystem.State.INTAKE);
-        }));
-        new Trigger(gamepad1.left_trigger>0.5, new RunCommand(() -> {
+        new Trigger((gamepad1.left_trigger>0.5 && arm.getState() == ArmSubsystem.State.BOTTOM), new RunCommand(() -> {
             intake.setState(IntakeSubsystem.State.REJECTALL);
         }));
         new Trigger(gamepad1.triangle, new RunCommand(() -> {
-            if (intake.getState() == IntakeSubsystem.State.STILL) { //2. if no pixels have been released
-                intake.setState(IntakeSubsystem.State.DEPOSIT1);       //   release pixel #1
-                telemetry.addData("Pixels Deposited: ", 1);
+//            if (!Clock.hasElapsed(debounce, 0.1)) return;
+            if (intake.getState() != IntakeSubsystem.State.STILL) { //2. if no pixels have been released
+                intake.setState(IntakeSubsystem.State.DEPOSIT2);       //   release pixel #1
+                telemetry.addData("Pixels Deposited: ", 2);
             }
             else {                                                //3. if pixel #1 has been released
-                intake.setState(IntakeSubsystem.State.DEPOSIT2);  //   release pixel #2
-                telemetry.addData("Pixels Deposited: ", 2);
+                intake.setState(IntakeSubsystem.State.DEPOSIT1);  //   release pixel #2
+                telemetry.addData("Pixels Deposited: ", 1);
             }
         }));
         new Trigger(gamepad1.square, new RunCommand(() -> {
@@ -111,7 +114,7 @@ TODO:
             new DecrementDownArmCommand(arm,wrist,elbow)
         );
 
-        new Trigger (gamepad2.triangle, new RunCommand(()->{
+        new Trigger (gamepad1.dpad_left, new RunCommand(()->{
             if (!Clock.hasElapsed(debounce, 60)) return;//TODO: TEST
             planeServo.setState(PlaneServo.State.OUT);
         })
@@ -120,12 +123,10 @@ TODO:
             intake.setState(IntakeSubsystem.State.REJECT);
         })
         );
-        new Trigger (gamepad2.right_trigger > 0.5,
-                new RunCommand(()->{
-                    new PrepareClimbCommand(arm, wrist, elbow);
-                })
+        new Trigger (gamepad1.dpad_up,
+                    new PrepareClimbCommand(arm, wrist, elbow)
         );
-        new Trigger (gamepad2.left_trigger > 0.5,
+        new Trigger (gamepad1.dpad_down,
                 new RunCommand(()->{
                     arm.setState(ArmSubsystem.State.FINISHCLIMB);
                 })

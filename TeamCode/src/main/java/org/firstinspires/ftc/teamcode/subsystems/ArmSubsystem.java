@@ -43,7 +43,8 @@ public class ArmSubsystem extends Subsystem {
     private int slidePos;
 
     public enum State {
-        BOTTOM, EXTENDED, MIDDLE, MIDHIGH, HIGH, CLIMB, BOTTOMCLIMB, FINISHCLIMB, CONESTACK, SAFETY
+        BOTTOM, EXTENDED, AUTOBOTTOM, MIDDLE, MIDHIGH, HIGH, CLIMB, BOTTOMCLIMB, FINISHCLIMB, CONESTACK, SAFETY,
+        NOPOWER,
     }
     private State state;
     public ArmSubsystem(HardwareMap hardwareMap) {
@@ -89,7 +90,10 @@ public class ArmSubsystem extends Subsystem {
     }
 
     public double getDriveBias() {
-        return Math.abs(getSlidePosition(MotorUnit.TICKS) / kSlideHigh - 1.0);
+        if(state != State.BOTTOM){
+            return 0.75;
+        }
+        return 1.0;
     }
 
     public boolean atSetpoint() {
@@ -117,10 +121,23 @@ public class ArmSubsystem extends Subsystem {
         if(slidePos >= kPixelHeight)
             slidePos -= kPixelHeight;
     }
+    public void setPosition(double position){
+        rightSlide.setPosition(position);
+        rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightSlide.setPower(0.5);
+        leftSlide.setPosition(position);
+    }
 
     private double processState() {
         switch (state) {
 
+            case NOPOWER:
+                rightSlide.setPower(0.0);
+                leftSlide.setPower(0.0);
+                return leftSlide.getPosition(MotorUnit.TICKS);
+            case AUTOBOTTOM:
+                rightSlide.setPosition(kSlideBottom-30);
+                return leftSlide.setPosition(kSlideBottom-30);
             case BOTTOM:
 //                telemetry.addData("Power: ", slide.setPosition(10.0))
 //                  leftSlide.setPosition(kSlideBottom);

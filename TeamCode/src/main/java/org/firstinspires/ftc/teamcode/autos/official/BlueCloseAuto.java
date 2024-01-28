@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.autos.rr;
+package org.firstinspires.ftc.teamcode.autos.official;
 
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideExtended;
 
@@ -21,15 +21,14 @@ import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
-//@Autonomous
-public class ARedAutoClose2 extends TestBaseRobot {
+@Autonomous
+public class BlueCloseAuto extends TestBaseRobot {
 
     public enum State {
         PIXEL_1, PIXEL_2, PIXEL_3,
         LOCATION_1,
         DEPOSIT_1,
         TO_BACKDROP_1,
-        ARM_1,
 
         LOCATION_2,
         DEPOSIT_2,
@@ -52,6 +51,7 @@ public class ARedAutoClose2 extends TestBaseRobot {
         super.init();
         AutonomousStorage.autonomousType = AutonomousStorage.AutonomousType.RedAutoLeftRR;
         sampleMecanumDrive = new SampleMecanumDrive(hardwareMap);
+        vision = new VisionSubsystem(hardwareMap, "blue");
 
         location = 2;
 //        vision = new VisionSubsystem(hardwareMap,"blue");

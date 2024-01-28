@@ -34,6 +34,9 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.StandardTrackingWheelLoca
  * for the forward offset. You can run this procedure as many times as necessary until a
  * satisfactory result is produced.
  */
+
+// -3.4 (SE = 0.062)
+
 @Config
 @Autonomous(group="drive")
 public class TrackingWheelForwardOffsetTuner extends LinearOpMode {

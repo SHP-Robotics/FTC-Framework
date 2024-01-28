@@ -29,6 +29,7 @@ public class ABasicBlueAuto extends TestBaseRobot {
         vision = new VisionSubsystem(hardwareMap,"blue");
         location = vision.getLocationBlue();
         telemetry.addData("Location: ",location);
+        telemetry.update();
         drive.resetIMUAngle();
 
     }

@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 import java.io.File;
 
-@Autonomous(preselectTeleOp = "CenterStage Field Oriented")
+//@Autonomous(preselectTeleOp = "CenterStage Field Oriented")
 public class WIlliamExampleRR extends LinearOpMode {
     private String soundPath = "/sdcard/FIRST/blocks/sounds";
     private File soundFile = new File(soundPath + "/Holy Moley.wav");

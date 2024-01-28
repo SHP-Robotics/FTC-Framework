@@ -37,8 +37,8 @@ public class BaseRobot extends OpMode {
     public CRWheel crWheel;
     public PixelServo pixelServo;
     //public CameraOn vision;
-    public VisionSubsystem visiona;
-//    public VisionSubsystem vision;
+//    public VisionSubsystem visiona;
+    public VisionSubsystem vision;
     public ElbowSubsystem slideServos;
     public HookServo1 rightPlane;
     public HookServo2 leftPlane;
@@ -64,7 +64,7 @@ public class BaseRobot extends OpMode {
         crWheel = new CRWheel(hardwareMap);
         spinningIntake = new SpinningIntake(hardwareMap);
         //vision = new CameraOn(hardwareMap);
-//        visiona = new VisionSubsystem(hardwareMap);
+        vision = new VisionSubsystem(hardwareMap, "blue");
         arm = new ArmSubsystem(hardwareMap);
         slideServos = new ElbowSubsystem(hardwareMap);
 //        spinningIntake = new SpinningIntake(hardwareMap);

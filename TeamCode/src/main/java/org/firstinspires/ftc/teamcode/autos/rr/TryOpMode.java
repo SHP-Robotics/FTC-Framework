@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.roadrunner.drive.AutonomousStorage;
 
-@Autonomous(preselectTeleOp = "ATestTeleOp")
+//@Autonomous(preselectTeleOp = "ATestTeleOp")
 public class TryOpMode extends LinearOpMode {
     public enum State {
         LOCATION_1,

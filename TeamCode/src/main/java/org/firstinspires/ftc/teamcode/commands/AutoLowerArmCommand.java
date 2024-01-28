@@ -6,13 +6,13 @@ import org.firstinspires.ftc.teamcode.subsystems.WristSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ElbowSubsystem;
 
-public class PrepareClimbCommand extends Command {
+public class AutoLowerArmCommand extends Command {
     private final ArmSubsystem arm;
     private final WristSubsystem wrist;
     private final ElbowSubsystem elbow;
     private  double startTime;
 
-    public PrepareClimbCommand(ArmSubsystem arm, WristSubsystem wrist, ElbowSubsystem elbow) {
+    public AutoLowerArmCommand(ArmSubsystem arm, WristSubsystem wrist, ElbowSubsystem elbow) {
         // You MUST call the parent class constructor and pass through any subsystems you use
         super(arm, wrist, elbow);
 
@@ -26,20 +26,25 @@ public class PrepareClimbCommand extends Command {
     @Override
     public void init() {
         startTime = Clock.now();
-
-        arm.setState(ArmSubsystem.State.CLIMB);
+        arm.setState(ArmSubsystem.State.AUTOBOTTOM);
+        wrist.setState(WristSubsystem.State.HALFWAY);
         elbow.setState(ElbowSubsystem.State.DOWN);
-    }
-    @Override
-    public void end() {
-        wrist.setState(WristSubsystem.State.CLIMB);
+
 
     }
 
     // Specifies whether or not the command has finished
     // Returning true causes execute() to be called once
+
+    @Override
+    public void end() {
+        //wrist.setState(AdjustHolder.State.DOWN);
+        //elbow.setState(PracticeArmServo.State.DOWN);
+        wrist.setState(WristSubsystem.State.DOWN);
+    }
+
     @Override
     public boolean isFinished() {
-        return Clock.hasElapsed(startTime, 1);
+        return Clock.hasElapsed(startTime, 0.75);
     }
 }

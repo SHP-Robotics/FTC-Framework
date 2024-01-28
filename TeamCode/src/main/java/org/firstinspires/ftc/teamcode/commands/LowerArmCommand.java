@@ -26,7 +26,11 @@ public class LowerArmCommand extends Command {
     @Override
     public void init() {
         startTime = Clock.now();
-        wrist.setState(WristSubsystem.State.DOWN);
+        arm.setState(ArmSubsystem.State.BOTTOM);
+        wrist.setState(WristSubsystem.State.HALFWAY);
+        elbow.setState(ElbowSubsystem.State.DOWN);
+
+
     }
 
     // Specifies whether or not the command has finished
@@ -36,8 +40,7 @@ public class LowerArmCommand extends Command {
     public void end() {
         //wrist.setState(AdjustHolder.State.DOWN);
         //elbow.setState(PracticeArmServo.State.DOWN);
-        arm.setState(ArmSubsystem.State.BOTTOM);
-        elbow.setState(ElbowSubsystem.State.DOWN);
+        wrist.setState(WristSubsystem.State.DOWN);
     }
 
     @Override

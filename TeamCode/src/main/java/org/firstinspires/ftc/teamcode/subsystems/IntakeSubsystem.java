@@ -8,6 +8,7 @@ import static org.firstinspires.ftc.teamcode.Constants.Intake.kWheelForward;
 import static org.firstinspires.ftc.teamcode.Constants.Intake.kWheelStill;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -35,7 +36,7 @@ public class IntakeSubsystem extends Subsystem {
         cWheel = hardwareMap.get(CRServo.class, kCRWheelName);
         pixelServo = hardwareMap.get(Servo.class, kPixelServo);
         spinner = new SHPMotor(hardwareMap, kSpinningIntakeName);
-
+        spinner.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
 //        pixelThing = hardwareMap.get(Servo.class, kPixelThingName);
         // Set initial state
@@ -72,15 +73,20 @@ public class IntakeSubsystem extends Subsystem {
         switch (state) {
             case INTAKE:
                 cWheel.setPower(-1.0);
-                spinner.setPower(1);
+                spinner.setPower(1.0);
                 pixelServo.setPosition(0.9);
+                break;
+            case DEPOSIT1:
+                pixelServo.setPosition(0.5);
+//                pixelServo.setPosition(1.0);
                 break;
             case DEPOSIT2:
                 cWheel.setPower(-1.0);
                 pixelServo.setPosition(0.5);
                 break;
             case REJECT:
-                spinner.setPower(-1);
+                cWheel.setPower(0);
+                spinner.setPower(-1.0);
                 break;
             case STILL:
                 cWheel.setPower(0);
@@ -88,12 +94,9 @@ public class IntakeSubsystem extends Subsystem {
                 break;
             case REJECTALL:
                 cWheel.setPower(1.0);
-                spinner.setPower(-1);
+                spinner.setPower(-0.8);
                 break;
-            case DEPOSIT1:
-                pixelServo.setPosition(0.5);
-//                pixelServo.setPosition(1.0);
-                break;
+
 //            case PIXELOUT:
 ////                pixelServo.setPosition(0.5);
 //                break;

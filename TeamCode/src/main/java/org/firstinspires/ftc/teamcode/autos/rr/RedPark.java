@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.subsystems.PixelServo;
 import org.firstinspires.ftc.teamcode.subsystems.ElbowSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
-@Autonomous(preselectTeleOp = "ATestTeleOp")
+//@Autonomous(preselectTeleOp = "ATestTeleOp")
 public class RedPark extends LinearOpMode {
     public enum State {
         LOCATION_1,

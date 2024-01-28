@@ -53,8 +53,8 @@ import static org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants.kV;
  */
 @Config
 public class SampleMecanumDrive extends MecanumDrive {
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(5, 0.001, 0.003);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(2.5, 0, 0.001);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(33, 0.001, 0.7);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(38, 0, 0.4);
 
     public static double LATERAL_MULTIPLIER = 1.111111111111111;
 
@@ -119,7 +119,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         // Completed Per 2023-08-29
         leftFront.setDirection(DcMotor.Direction.REVERSE);
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightRear.setDirection(DcMotor.Direction.FORWARD);
+        rightRear.setDirection(DcMotor.Direction.REVERSE);
         rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
 
         List<Integer> lastTrackingEncPositions = new ArrayList<>();

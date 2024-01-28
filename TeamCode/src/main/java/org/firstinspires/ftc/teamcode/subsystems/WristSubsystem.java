@@ -14,7 +14,7 @@ public class WristSubsystem extends Subsystem {
     // Example:
     private final Servo adjustHolder;
     public enum State {
-        UP, DOWN,HALFWAY
+        UP, DOWN,HALFWAY, CLIMB,
 
     }
 
@@ -46,7 +46,7 @@ public class WristSubsystem extends Subsystem {
         switch (state) {
 
             case DOWN:
-                adjustHolder.setPosition(0.625);
+                adjustHolder.setPosition(0.615);
                 break;
             case UP:
                 adjustHolder.setPosition(0.3);
@@ -54,6 +54,9 @@ public class WristSubsystem extends Subsystem {
             case HALFWAY:
                 adjustHolder.setPosition(1);
                 break;
+            case CLIMB:
+                adjustHolder.setPosition(0.4);
+
 
 
         }

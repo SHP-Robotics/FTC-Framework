@@ -34,7 +34,7 @@ public class Constants {
 //        public static final String kLeftAdjust = "LeftAxon";
 //        public static final String kRightAdjust = "RightAxon";
         public static final double kPositionBottom = 0.6;
-        public static final double kPositionTop = 0.05;
+        public static final double kPositionTop = 0.05; //0.05
         public static final double kPositionMiddle = 0.3;
         public static final String kPixelServo = "MiniServo";
         public static final String kPlaneServo = "plane";
@@ -73,27 +73,27 @@ public class Constants {
 
         public static final String kLeftSlideName = "leftSlide";
         public static final String kRightSlideName = "rightSlide";
-        public static final double kSlideClimb = 4000.0;
-        public static final double kSlideBottomClimb = -10;
-        public static final double kSlideFinishClimb = 1400;
+        public static final double kSlideClimb = 3300.0;
+        public static final double kSlideBottomClimb = 10;
+        public static final double kSlideFinishClimb = 200;
 
         public static final double kSlideSafety = -860;
         public static final double kSlideConeStack = 1000.0;
 
         public static final double kSlideBottom = 0.0;
-        public static final double kSlideExtended = 300.0;
+        public static final double kSlideExtended = 250.0;
 
         public static final double kSlideMiddle = 500.0;
         public static final double kSlideMidHigh = 1600.0;
         public static final double kSlideHigh = 2100.0;
-        public static final double kMaxHeight = 2100.0;
+        public static final double kMaxHeight = 4000.0;
 
         public static final double kSlideStackDistance = 150.0;
         //0.002
         public static final double kSlideP = 0.001;
         //0.0025
         public static final double kSlideD = 0;
-        public static final double kSlideTolerance = 100;
+        public static final double kSlideTolerance = 2;
 
         public static final double kSlideS = 0.035; // static friction
         public static final double kSlideG = 0.07; // gravity

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.autos.rr;
+package org.firstinspires.ftc.teamcode.autos.official;
 
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideExtended;
 
@@ -21,15 +21,14 @@ import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
-//@Autonomous
-public class ARedAutoClose2 extends TestBaseRobot {
+@Autonomous
+public class RedCloseAuto extends TestBaseRobot {
 
     public enum State {
         PIXEL_1, PIXEL_2, PIXEL_3,
         LOCATION_1,
         DEPOSIT_1,
         TO_BACKDROP_1,
-        ARM_1,
 
         LOCATION_2,
         DEPOSIT_2,
@@ -40,6 +39,7 @@ public class ARedAutoClose2 extends TestBaseRobot {
         TO_BACKDROP_3,
         DEPOSIT_TO_BACKDROP,
 
+        DRIVE_TO_BACKDROP,
         TO_PARKING,
         IDLE
     }
@@ -52,10 +52,10 @@ public class ARedAutoClose2 extends TestBaseRobot {
         super.init();
         AutonomousStorage.autonomousType = AutonomousStorage.AutonomousType.RedAutoLeftRR;
         sampleMecanumDrive = new SampleMecanumDrive(hardwareMap);
+        vision = new VisionSubsystem(hardwareMap, "red");
 
         location = 2;
-//        vision = new VisionSubsystem(hardwareMap,"blue");
-        location = vision.getLocationBlue();
+        location = vision.getLocationRed();
 
         telemetry.addLine("Trajectory Sequence Ready");
         telemetry.addData("Location: ", location);
@@ -64,7 +64,7 @@ public class ARedAutoClose2 extends TestBaseRobot {
     }
     public void init_loop() {
         super.init_loop();
-        location = vision.getLocationBlue();
+        location = vision.getLocationRed();
         telemetry.addData("Location: ", location);
 
     }
@@ -159,8 +159,7 @@ public class ARedAutoClose2 extends TestBaseRobot {
             case TO_BACKDROP_1:
                 if (!sampleMecanumDrive.isBusy()) {
                     TrajectorySequence spikeMarkOneToBackdrop = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-15, 0, Math.toRadians(90)))
-                            .lineToLinearHeading(new Pose2d(-17, -39.5, Math.toRadians(90)))
+                            .lineToLinearHeading(new Pose2d(-35, 40, Math.toRadians(-90)))
                             .build();
 
                     sampleMecanumDrive.followTrajectorySequenceAsync(spikeMarkOneToBackdrop);
@@ -193,7 +192,7 @@ public class ARedAutoClose2 extends TestBaseRobot {
             case TO_BACKDROP_2:
                 if (!sampleMecanumDrive.isBusy()) {
                     TrajectorySequence spikeMarkTwoToBackdrop = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-24, -39.5, Math.toRadians(90)))
+                            .lineToLinearHeading(new Pose2d(-28.5, 40, Math.toRadians(-90)))
                             .build();
 
                     sampleMecanumDrive.followTrajectorySequenceAsync(spikeMarkTwoToBackdrop);
@@ -227,8 +226,8 @@ public class ARedAutoClose2 extends TestBaseRobot {
                 if (!sampleMecanumDrive.isBusy()) {
 
                     TrajectorySequence spikeMarkThreeToParking = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
-//                                .lineToLinearHeading(new Pose2d(-15, 0, Math.toRadians(-90)))
-                            .lineToLinearHeading(new Pose2d(-33, -39.5, Math.toRadians(90)))
+                            .lineToLinearHeading(new Pose2d(-15, 0, Math.toRadians(-90)))
+                            .lineToLinearHeading(new Pose2d(-21, 40, Math.toRadians(-90)))
                             .build();
 
                     sampleMecanumDrive.followTrajectorySequenceAsync(spikeMarkThreeToParking);
@@ -264,7 +263,7 @@ public class ARedAutoClose2 extends TestBaseRobot {
                 if (!sampleMecanumDrive.isBusy()) {
                     TrajectorySequence backdropToPark = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
                             .forward(5)
-                            .lineToLinearHeading(new Pose2d(-2, -38, Math.toRadians(90)))
+                            .lineToLinearHeading(new Pose2d(-4, 38, Math.toRadians(-90)))
                             .back(5)
                             .build();
                     sampleMecanumDrive.followTrajectorySequenceAsync(backdropToPark);

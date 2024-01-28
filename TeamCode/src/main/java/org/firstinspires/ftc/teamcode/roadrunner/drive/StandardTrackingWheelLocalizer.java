@@ -31,11 +31,12 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
     public static final double WHEEL_RADIUS = 0.94; // in
     public static final double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
-    public static double LATERAL_DISTANCE = -7.44857649999999705; // in; distance between the left and right wheels
-    public static double FORWARD_OFFSET = -4; // in; offset of the lateral wheel
+    public static double LATERAL_DISTANCE = 7.67023; //7.6485 // in; distance between the left and right wheels
+    public static double FORWARD_OFFSET = -3.4; //-3.875; // in; offset of the lateral wheel
 
-    public static double X_MULTIPLIER = 89.25/88.38; // Multiplier in the X direction
-    public static double Y_MULTIPLIER = 88.5/83.45; // Multiplier in the Y direction
+    public static double X_MULTIPLIER = (90.91646/90.0)*(60.0/60.2)*(56.88192017234809/56.75); // Multiplier in the X direction
+        //X: (90.71370563695714+91.11921491102154)/2.0
+    public static double Y_MULTIPLIER = (95.74868072012363/90.0)*(60.0/56)*(55.20521476963561/63.75); // Multiplier in the Y direction
 
     private Encoder leftEncoder, rightEncoder, frontEncoder;
 
@@ -51,9 +52,9 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
         lastEncPositions = lastTrackingEncPositions;
         lastEncVels = lastTrackingEncVels;
 
-        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rightFront"));
-        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rightOdo"));
-        frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "SpinningIntake"));
+        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "leftRear"));
+        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "SpinningIntake"));
+        frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "leftFront"));
 
         // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
         leftEncoder.setDirection(Encoder.Direction.REVERSE);
