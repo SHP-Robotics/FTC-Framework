@@ -29,7 +29,7 @@ public class CommandBasedTeleOp extends BaseRobot {
         super.init();
         drivebias = 1.0;
         claw.close();
-        arm.setState(ArmSubsystem.State.DRIVE);
+        arm.setState(ArmSubsystem.State.INTAKE);
 
         // Default command runs when no other commands are scheduled for the subsystem
         drive.setDefaultCommand(
@@ -42,7 +42,7 @@ public class CommandBasedTeleOp extends BaseRobot {
         plane = hardwareMap.get(Servo.class, "plane");
 
         elbow = new OneMotorSystem.OneMotorSystemBuilder(hardwareMap, "elbow")
-                .setDirection(DcMotorSimple.Direction.FORWARD)
+                .setDirection(DcMotorSimple.Direction.REVERSE)
                 .setUseBrakes(false)
                 .setUseEncoders(true)
                 .setStaticPower(0)
@@ -65,10 +65,15 @@ public class CommandBasedTeleOp extends BaseRobot {
     public void loop() {
         // Allows CommandScheduler.run() to be called - DO NOT DELETE!
         super.loop();
+        telemetry.addData("Arm state: ", arm.getState());
+        telemetry.addData("Arm pos: ", elbow.getMotorPosition());
+        telemetry.update();
 
         // tee hee
         // sus :|
 //        drive.setDriveBias(arm.getDriveBias());
+
+        elbow.update((int)Constants.Arm.kElbowTolerance);
 
         //TODO: Open/close macro to circle DONE
         new Trigger(gamepad1.circle, new RunCommand(()->{
@@ -86,16 +91,20 @@ public class CommandBasedTeleOp extends BaseRobot {
                     || arm.getState() == ArmSubsystem.State.UNKNOWN){
                 claw.close();
 
-                //tee hee
-//                arm.setState(ArmSubsystem.State.DRIVE);
+//                tee hee
+                arm.setState(ArmSubsystem.State.DRIVE);
 
-                elbow.setPosition((int)Constants.Arm.kElbowDrive, false);
+                elbow.setPosition((int)Constants.Arm.kElbowDrive, false, (int)Constants.Arm.kElbowTolerance);
                 wrist.setPosition((int)Constants.Arm.kWristDrive);
 
                 drivebias = 1.0;
             }
             else if(arm.getState() == ArmSubsystem.State.DRIVE){
                 arm.setState(ArmSubsystem.State.OUTTAKE);
+
+                elbow.setPosition((int)Constants.Arm.kElbowUp, false, (int)Constants.Arm.kElbowTolerance);
+
+
                 drivebias = 0.75;
             }
 
@@ -114,10 +123,12 @@ public class CommandBasedTeleOp extends BaseRobot {
                 arm.setState(ArmSubsystem.State.DRIVE);
 
                 // tee hee
-                elbow.setPosition((int)Constants.Arm.kElbowDown, false);
+                elbow.setPosition((int)Constants.Arm.kElbowDrive, false, (int)Constants.Arm.kElbowTolerance);
             }
             else if(arm.getState() == ArmSubsystem.State.DRIVE){
                 arm.setState(ArmSubsystem.State.INTAKE);
+                elbow.setPosition((int)Constants.Arm.kElbowDown, false, (int)Constants.Arm.kElbowTolerance);
+
                 drivebias = 0.75;
                 claw.open();
             }

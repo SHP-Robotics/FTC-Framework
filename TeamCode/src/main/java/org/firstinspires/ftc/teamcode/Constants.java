@@ -35,9 +35,9 @@ public class Constants {
         public static final String kElbowName = "elbow";
         public static final String kWristName = "wrist";
         public static final double kElbowDown = 0;
-        public static final double kElbowDrive = 300;
+        public static final double kElbowDrive = 100;
 
-        public static final double kElbowUp = 5200;
+        public static final double kElbowUp = 1300;
 
         public static final double kWristDrive = 0.2;
         public static final double kWristDown = 0.5;
@@ -47,19 +47,20 @@ public class Constants {
 
         public static final double kElbowP = 0.0018;
         public static final double kElbowD = 0;
-        public static final double kElbowTolerance = 5;
+        public static final double kElbowTolerance = 20;
 
         public static final double kElbowS = 0.035; // static friction
         public static final double kElbowG = 0.07; // gravity
+
     }
 
     public static final class Claw {
         public static final String kLeftClawName = "leftClaw";
-        public static final double kLeftClawOpen = 0.2; //FINAL
-        public static final double kLeftClawClosed = 0.37; //bigger in
+        public static final double kLeftClawOpen = 0.8; //FINAL
+        public static final double kLeftClawClosed = 1; //bigger in
         public static final String kRightClawName = "rightClaw";
-        public static final double kRightClawOpen = 0.2; //FINAL
-        public static final double kRightClawClosed = 0.08; //smaller in
+        public static final double kRightClawOpen = 0.37; //FINAL
+        public static final double kRightClawClosed = 0.15; //smaller in
 
     }
     public static final class Plane {

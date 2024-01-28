@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.debug.config.Constants;
 public class OneMotorSystem {
     private DcMotor motor;
 
-    private double power = 0.7;
+    private double power = 1;
     private double staticPower;
 
     private boolean shouldUseEncoders;
@@ -32,6 +32,13 @@ public class OneMotorSystem {
         }
 
         this.motor.setDirection(oneMotorSystemBuilder.direction);
+    }
+
+    public void update( int tolerance) {
+        if (Math.abs(motor.getTargetPosition()-motor.getCurrentPosition()) < tolerance){
+            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            applyBrakes();
+        }
     }
 
     public void setRunMode(DcMotor.RunMode runMode) {
@@ -76,7 +83,10 @@ public class OneMotorSystem {
         motor.setPower(0);
     }
 
-    public void setPosition(int position, boolean wait) {
+    public void setPosition(int position, boolean wait, int tolerance) {
+        double curr = getMotorPosition();
+
+
         motor.setTargetPosition((int) (position));
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor.setPower(power);
@@ -120,5 +130,9 @@ public class OneMotorSystem {
         public OneMotorSystem build() {
             return new OneMotorSystem(this);
         }
+    }
+
+    public double getMotorPosition() {
+        return motor.getCurrentPosition();
     }
 }
