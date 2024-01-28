@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.teleops;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.BaseRobot;
 import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
@@ -14,6 +15,8 @@ import org.firstinspires.ftc.teamcode.subsystems.PlaneSubsystem;
 public class CommandBasedTeleOp extends BaseRobot {
     private double debounce;
     private double drivebias;
+    // tee hee
+    private Servo plane;
 
     @Override
     public void init() {
@@ -28,6 +31,9 @@ public class CommandBasedTeleOp extends BaseRobot {
                         () -> drive.mecanum(-gamepad1.left_stick_y*drivebias, -gamepad1.left_stick_x*drivebias, -gamepad1.right_stick_x*drivebias)
                 )
         );
+
+        // tee hee
+        plane = hardwareMap.get(Servo.class, "plane");
     }
 
     @Override
@@ -103,9 +109,13 @@ public class CommandBasedTeleOp extends BaseRobot {
         }));
 
         //TODO: PLANE LAUNCH BOTH BUMPERS
-        new Trigger(gamepad1.left_bumper, new RunCommand(() -> {
-                plane.setState(PlaneSubsystem.State.LAUNCH);
-        }));
+        // tehe
+        if (gamepad1.left_bumper) {
+            plane.setPosition(1);
+        }
+//        new Trigger(gamepad1.left_bumper, new RunCommand(() -> {
+//                plane.setState(PlaneSubsystem.State.LAUNCH);
+//        }));
 
         new Trigger(gamepad1.square, new RunCommand(() -> {
             drive.resetIMUAngle();
