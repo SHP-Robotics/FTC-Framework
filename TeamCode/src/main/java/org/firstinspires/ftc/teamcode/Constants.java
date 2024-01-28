@@ -39,9 +39,9 @@ public class Constants {
 
         public static final double kElbowUp = 1300;
 
-        public static final double kWristDrive = 0.2;
+        public static final double kWristDrive = 0.8;
         public static final double kWristDown = 0.5;
-        public static final double kWristDeposit = 0.1;
+        public static final double kWristDeposit = 1;
 
 
 

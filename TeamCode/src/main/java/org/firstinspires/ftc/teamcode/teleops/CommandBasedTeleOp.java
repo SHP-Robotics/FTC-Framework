@@ -115,7 +115,7 @@ public class CommandBasedTeleOp extends BaseRobot {
                 arm.setState(ArmSubsystem.State.DRIVE);
 
                 elbow.setPosition((int)Constants.Arm.kElbowDrive, false, (int)Constants.Arm.kElbowTolerance);
-                wrist.setPosition((int)Constants.Arm.kWristDrive);
+                wrist.setPosition(Constants.Arm.kWristDrive);
 
                 drivebias = 1.0;
             }
@@ -123,7 +123,7 @@ public class CommandBasedTeleOp extends BaseRobot {
                 arm.setState(ArmSubsystem.State.OUTTAKE);
 
                 elbow.setPosition((int)Constants.Arm.kElbowUp, false, (int)Constants.Arm.kElbowTolerance);
-
+                wrist.setPosition(Constants.Arm.kWristDeposit);
 
                 drivebias = 0.75;
             }
@@ -141,6 +141,7 @@ public class CommandBasedTeleOp extends BaseRobot {
                 claw.close();
                 drivebias = 1.0;
                 arm.setState(ArmSubsystem.State.DRIVE);
+                wrist.setPosition(Constants.Arm.kWristDrive);
 
                 // tee hee
                 elbow.setPosition((int)Constants.Arm.kElbowDrive, false, (int)Constants.Arm.kElbowTolerance);
@@ -148,12 +149,13 @@ public class CommandBasedTeleOp extends BaseRobot {
             else if(arm.getState() == ArmSubsystem.State.DRIVE){
                 arm.setState(ArmSubsystem.State.INTAKE);
                 elbow.setPosition((int)Constants.Arm.kElbowDown, false, (int)Constants.Arm.kElbowTolerance);
-
+                wrist.setPosition(Constants.Arm.kWristDown);
                 drivebias = 0.75;
                 claw.open();
             }
             else if (arm.getState() == ArmSubsystem.State.INTAKE) {
                 claw.open();
+                wrist.setPosition(Constants.Arm.kWristDown);
             }
 
 
@@ -178,6 +180,10 @@ public class CommandBasedTeleOp extends BaseRobot {
 //            arm.setState(ArmSubsystem.State.MANUAL);
 //
 //            arm.downElbow();
+        }));
+
+        new Trigger(gamepad1.dpad_right, new RunCommand(() -> {
+            wrist.setPosition(0.1);
         }));
 
 //        new Trigger(!(gamepad1.dpad_down || gamepad1.dpad_up), new RunCommand(() -> {

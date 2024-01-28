@@ -36,7 +36,9 @@ public class ArmSubsystem extends Subsystem {
         DRIVE,
         OUTTAKE,
         UNKNOWN,
-        MANUAL
+        MANUAL,
+
+        CLIMB
     }
 
     private State state;
