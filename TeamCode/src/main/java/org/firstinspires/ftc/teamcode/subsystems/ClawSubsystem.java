@@ -65,27 +65,36 @@ public class ClawSubsystem extends Subsystem {
     public void openLeftClaw() {
         leftClaw.setPosition(kLeftClawOpen);
         leftClawPosition = kLeftClawOpen;
+//        setLeftState(State.OPEN);
     }
     public void openRightClaw() {
         rightClaw.setPosition(kRightClawOpen);
         rightClawPosition = kRightClawOpen;
+//        setRightState(State.OPEN);
     }
     public void open(){
         openRightClaw();
+        setRightState(State.OPEN);
         openLeftClaw();
+        setLeftState(State.OPEN);
+
     }
 
     public void closeLeftClaw() {
         leftClaw.setPosition(kLeftClawClosed);
         leftClawPosition = kLeftClawClosed;
+//        setLeftState(State.CLOSED);
     }
     public void closeRightClaw() {
         rightClaw.setPosition(kRightClawClosed);
         rightClawPosition = kRightClawClosed;
+//        setRightState(State.CLOSED);
     }
     public void close(){
         closeRightClaw();
+        setLeftState(State.CLOSED);
         closeLeftClaw();
+        setRightState(State.CLOSED);
     }
     public double upLeft(){
         setLeftState(State.MANUAL);
@@ -142,6 +151,7 @@ public class ClawSubsystem extends Subsystem {
     public boolean closed(){
         return getRightState() == State.CLOSED && getLeftState() == State.CLOSED;
     }
+
 
     @Override
     public void periodic(Telemetry telemetry) {

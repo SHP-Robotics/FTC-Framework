@@ -56,11 +56,11 @@ public class Constants {
 
     public static final class Claw {
         public static final String kLeftClawName = "leftClaw";
-        public static final double kLeftClawOpen = 0.8; //FINAL
-        public static final double kLeftClawClosed = 1; //bigger in
+        public static final double kLeftClawOpen = .2; //FINAL
+        public static final double kLeftClawClosed = .45; //bigger in
         public static final String kRightClawName = "rightClaw";
-        public static final double kRightClawOpen = 0.37; //FINAL
-        public static final double kRightClawClosed = 0.15; //smaller in
+        public static final double kRightClawOpen = 0.25; //FINAL
+        public static final double kRightClawClosed = 0.0; //smaller in
 
     }
     public static final class Plane {
@@ -68,6 +68,12 @@ public class Constants {
         public static final double kPlaneLaunch = 1.0;
         public static final double kPlaneLoad = 0.6;
 
+    }
+
+    public static final class Climb {
+        public static final double kClimbHold = 0.5;
+
+        public static final double kClimbRelease = 0.2;
     }
 //    public static final class Lift {
 //        public static final String kLeftLiftName = "leftLift";

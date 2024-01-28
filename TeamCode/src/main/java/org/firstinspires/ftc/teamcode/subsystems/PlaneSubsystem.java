@@ -47,10 +47,10 @@ public class PlaneSubsystem extends Subsystem {
     public void periodic(Telemetry telemetry) {
         switch (state) {
             case LOAD:
-                planeServo.setPosition(kPlaneLoad);
+//                planeServo.setPosition(kPlaneLoad);
                 break;
             case LAUNCH:
-                planeServo.setPosition(kPlaneLaunch);
+//                planeServo.setPosition(kPlaneLaunch);
                 break;
         }
         telemetry.addData("Plane Position: ", planeServo.getPosition());

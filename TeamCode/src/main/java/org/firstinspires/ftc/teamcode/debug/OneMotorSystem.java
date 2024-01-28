@@ -18,6 +18,7 @@ public class OneMotorSystem {
     private boolean isStatic = false;
     private double staticPosition = 0;
 
+
     public OneMotorSystem(OneMotorSystemBuilder oneMotorSystemBuilder) {
         this.motor = oneMotorSystemBuilder.motor;
         this.staticPower = oneMotorSystemBuilder.staticPower;
@@ -36,7 +37,7 @@ public class OneMotorSystem {
 
     public void update( int tolerance) {
         if (Math.abs(motor.getTargetPosition()-motor.getCurrentPosition()) < tolerance){
-            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             applyBrakes();
         }
     }
@@ -45,8 +46,11 @@ public class OneMotorSystem {
         motor.setMode(runMode);
     }
 
-    public void setLiftPower(double power) {
-        this.power = power;
+    public void manual(double power, int increment) {
+
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor.setTargetPosition(motor.getCurrentPosition() + increment);
+        motor.setPower(power);
     }
 
     public void applyBrakes() {

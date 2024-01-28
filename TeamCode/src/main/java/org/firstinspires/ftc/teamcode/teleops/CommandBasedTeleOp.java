@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.teamcode.BaseRobot;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.debug.OneMotorSystem;
@@ -24,6 +25,8 @@ public class CommandBasedTeleOp extends BaseRobot {
     private Servo wrist;
     private Servo plane;
 
+    private Servo climb;
+
     @Override
     public void init() {
         super.init();
@@ -38,8 +41,11 @@ public class CommandBasedTeleOp extends BaseRobot {
                 )
         );
 
-        // tee hee
+//        // tee hee
+//        plane = hardwareMap.get(Servo.class, "plane");
+
         plane = hardwareMap.get(Servo.class, "plane");
+        plane.setPosition(0.6);
 
         elbow = new OneMotorSystem.OneMotorSystemBuilder(hardwareMap, "elbow")
                 .setDirection(DcMotorSimple.Direction.REVERSE)
@@ -51,6 +57,11 @@ public class CommandBasedTeleOp extends BaseRobot {
         elbow.setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         wrist = hardwareMap.get(Servo.class, "wrist");
+        wrist.setPosition(Constants.Arm.kWristDrive);
+
+        climb = hardwareMap.get(Servo.class, "climb");
+        climb.setPosition(Constants.Climb.kClimbHold);
+
     }
 
     @Override
@@ -71,11 +82,18 @@ public class CommandBasedTeleOp extends BaseRobot {
 
         // tee hee
         // sus :|
-//        drive.setDriveBias(arm.getDriveBias());
+//        return Math.abs(getElbowPosition(MotorUnit.TICKS) / kElbowUp - 1.0);
+
+        drive.setDriveBias(Math.abs(elbow.getMotorPosition() / Constants.Arm.kElbowUp - 1.0));
 
         elbow.update((int)Constants.Arm.kElbowTolerance);
 
         //TODO: Open/close macro to circle DONE
+
+        new Trigger(gamepad1.right_bumper, new RunCommand(() -> {
+            climb.setPosition(Constants.Climb.kClimbRelease);
+        }));
+
         new Trigger(gamepad1.circle, new RunCommand(()->{
             if (!Clock.hasElapsed(debounce, 0.5)) return;
 
@@ -85,11 +103,13 @@ public class CommandBasedTeleOp extends BaseRobot {
 
         new Trigger(gamepad1.right_trigger>0.5, new RunCommand(()->{ //all upward stuff
             if (!Clock.hasElapsed(debounce, 0.5)) return;
-
-            if((claw.closed() && arm.getState() == ArmSubsystem.State.INTAKE)
+            if (!claw.closed() && arm.getState() == ArmSubsystem.State.INTAKE) {
+                claw.close();
+            }
+            else if((claw.closed() && arm.getState() == ArmSubsystem.State.INTAKE)
             || arm.getState() == ArmSubsystem.State.MANUAL
                     || arm.getState() == ArmSubsystem.State.UNKNOWN){
-                claw.close();
+//                claw.close(); fix shit not opening?
 
 //                tee hee
                 arm.setState(ArmSubsystem.State.DRIVE);
@@ -132,31 +152,42 @@ public class CommandBasedTeleOp extends BaseRobot {
                 drivebias = 0.75;
                 claw.open();
             }
+            else if (arm.getState() == ArmSubsystem.State.INTAKE) {
+                claw.open();
+            }
+
 
             debounce = Clock.now();
         }));
 
         new Trigger(gamepad1.dpad_up, new RunCommand(() -> {
             // tee hee
-            elbow.setLiftPower(0.5);
+            arm.setState(ArmSubsystem.State.MANUAL);
 
-//            arm.setState(ArmSubsystem.State.MANUAL);
+            elbow.manual(1, 50);
+
 //
 //            arm.upElbow();
         }));
         new Trigger(gamepad1.dpad_down, new RunCommand(() -> {
             // tee hee
-            elbow.setLiftPower(-0.5);
+            arm.setState(ArmSubsystem.State.MANUAL);
+
+            elbow.manual(1, -50);
 
 //            arm.setState(ArmSubsystem.State.MANUAL);
 //
 //            arm.downElbow();
         }));
 
+//        new Trigger(!(gamepad1.dpad_down || gamepad1.dpad_up), new RunCommand(() -> {
+//            elbow.applyBrakes();
+//        }));
+
         //TODO: PLANE LAUNCH BOTH BUMPERS
         // tehe
         if (gamepad1.left_bumper) {
-            plane.setPosition(1);
+            plane.setPosition(1.0);
         }
 //        new Trigger(gamepad1.left_bumper, new RunCommand(() -> {
 //                plane.setState(PlaneSubsystem.State.LAUNCH);
