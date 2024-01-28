@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.autos.experimental;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
+@Disabled
 @Autonomous()
 public class AdvancedPixelTracking extends LinearOpMode {
     private double euclidianDistance(double[] point1, double[] point2) {

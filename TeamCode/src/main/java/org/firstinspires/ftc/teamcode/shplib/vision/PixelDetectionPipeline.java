@@ -49,7 +49,7 @@ public class PixelDetectionPipeline extends OpenCvPipeline {
     public static Scalar lowPurple = new Scalar(120, 48, 110);
     public static Scalar highPurple = new Scalar(138, 102, 255);
 
-    final double THRESHOLD = 0.015;
+    public final double THRESHOLD = 0.015;
 
     // return pixelMass if concurrentModification = true
     // else return currentPixelMass

@@ -21,21 +21,6 @@ public class PIDControlledWheels extends LinearOpMode {
     MecanumController mecanumController;
     VisionSubsystem visionSubsystem;
 
-//    private final String soundPath = "/sdcard/FIRST/blocks/sounds";
-//    private final File soundFile = new File(soundPath + "/Holy Moley.wav");
-
-//    final double minimumPixelMass = 0.2;
-
-//    public void pixelSonar() {
-//        while (gamepad1.y && opModeIsActive() && !isStopRequested()) {
-//            if (visionSubsystem.getPixelMass() > minimumPixelMass) {
-//                mecanumController.driveParams(0, 0, 0);
-//                break;
-//            }
-//            mecanumController.driveParams(0, 0.2, 0);
-//        }
-//    }
-
     @Override
     public void runOpMode() throws InterruptedException {
         SpeedController speedController = new SpeedController.SpeedBuilder(SpeedType.SINGLE_OVERRIDE)
@@ -81,7 +66,6 @@ public class PIDControlledWheels extends LinearOpMode {
         mecanumController.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         visionSubsystem = new VisionSubsystem(hardwareMap, "pixel");
-//        boolean holdingY = false;
 
         Servo outtake = hardwareMap.get(Servo.class, "outtake");
         outtake.setDirection(Servo.Direction.REVERSE);
@@ -126,10 +110,8 @@ public class PIDControlledWheels extends LinearOpMode {
 
             if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.OPEN_CLAW)) {
                 claw.setPosition(Constants.CLAW_OPEN);
-//                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, soundFile);
             } else if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLOSE_CLAW)) {
                 claw.setPosition(Constants.CLAW_CLOSE);
-//                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, soundFile);
             }
 
             if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER_UP)) {

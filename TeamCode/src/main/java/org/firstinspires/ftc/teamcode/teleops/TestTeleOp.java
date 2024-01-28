@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.R;
 
+@Disabled
 @TeleOp(name = "Test Tele Op")
 public class TestTeleOp extends LinearOpMode {
     @Override

@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.debug.MecanumController;
 import org.firstinspires.ftc.teamcode.debug.SpeedController;
@@ -19,21 +20,22 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @TeleOp()
 public class RumbleFieldOriented extends LinearOpMode {
-    private double euclideanDistance(double[] point1, double[] point2) {
-        return Math.sqrt((point1[0] - point2[0])*(point1[0] - point2[0]) + (point1[1] - point2[1])*(point1[1] - point2[1]));
-    }
-
     @Override
     public void runOpMode() throws InterruptedException {
         VisionSubsystem visionSubsystem = new VisionSubsystem(hardwareMap, "pixel");
         visionSubsystem.pixelDetectionPipeline.setPipelineMode(PixelDetectionPipeline.PipelineMode.PURPLE_ONLY);
-        boolean rumbleEnabled;
+        boolean rumbleEnabled = true;
+        boolean detected = false;
+        double rumbleMultiplier = 1;
+        final double THRESHOLD = 0.015;
+        double maxDetectionTime = 5;
+        double minTimeBetweenDetections = 2;
+
+        ElapsedTime timer = new ElapsedTime();
 
         Servo cameraServo = hardwareMap.get(Servo.class, "cameraServo");
         cameraServo.setDirection(Servo.Direction.REVERSE);
         cameraServo.setPosition(Constants.CameraMode.FACING_CLAW.getPosition());
-
-        double[] lastObject = null;
 
         SpeedController speedController = new SpeedController.SpeedBuilder(SpeedType.SINGLE_OVERRIDE)
                 .setNaturalSpeed(0.6)
@@ -85,40 +87,32 @@ public class RumbleFieldOriented extends LinearOpMode {
                 climber.setPower(0);
             }
 
-            rumbleEnabled = gamepad1.left_trigger > 0.1;
-
             air.setPower(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.AIR_POWER) ? 1: 0);
 
-            CopyOnWriteArrayList<double[]> objects = visionSubsystem.pixelDetectionPipeline.getObjects();
-
-            if ((objects == null || objects.size() == 0)) {
-                objects = visionSubsystem.pixelDetectionPipeline.getLastObjects();
-            }
-
-            double[] closestObject = null;
-            double distance = -1;
-            if (objects != null && objects.size() > 0) {
-                for (double[] object : objects) {
-                    if (object != null && object.length >= 2) {
-                        if (lastObject == null) {
-                            lastObject = object;
-                            break;
-                        }
-
-                        if (distance == -1 || euclideanDistance(object, lastObject) < distance) {
-                            distance = euclideanDistance(object, lastObject);
-                            closestObject = object;
-                        }
-                    }
+            // Rumble
+            double value = visionSubsystem.pixelDetectionPipeline.getPixelMass();
+            if (value > THRESHOLD) {
+                if (rumbleEnabled) {
+                    gamepad1.rumble(Math.min(value * rumbleMultiplier, 1), Math.min(value * rumbleMultiplier, 1), 50);
                 }
 
-                if (closestObject != null) {
-                    lastObject = closestObject;
-
-                    if (rumbleEnabled) {
-                        gamepad1.rumble(Math.min(closestObject[2]*2.5, 1), Math.min(closestObject[2]*2.5, 1), 50);
-                    }
+                if (!detected && !rumbleEnabled) {
+                    timer.reset();
                 }
+                if (timer.seconds() > maxDetectionTime) {
+                    rumbleEnabled = false;
+                }
+
+                detected = true;
+            } else {
+                if (detected) {
+                    timer.reset();
+                }
+                if (timer.seconds() > minTimeBetweenDetections) {
+                    rumbleEnabled = true;
+                }
+                gamepad1.rumble(0, 0, 50);
+                detected = false;
             }
         }
     }
