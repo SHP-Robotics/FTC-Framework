@@ -52,6 +52,10 @@ public class BlueAutoRightRR extends LinearOpMode {
         State currentState;
         ElementDetectionPipelineBlue.LocationPosition location;
 
+        Servo cameraServo = hardwareMap.get(Servo.class, "cameraServo");
+        cameraServo.setDirection(Servo.Direction.REVERSE);
+        cameraServo.setPosition(Constants.CameraMode.FACING_TEAM_PROP.getPosition());
+
         Servo claw = hardwareMap.get(Servo.class, "claw");
         claw.setPosition(Constants.CLAW_CLOSE);
 

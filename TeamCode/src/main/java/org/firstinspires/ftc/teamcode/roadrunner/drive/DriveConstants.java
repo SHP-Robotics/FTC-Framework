@@ -68,7 +68,6 @@ public class DriveConstants {
      * inches.
      */
 
-    // easier to tune than a higher max_vel
     public static double MAX_VEL = 45;
     //                               rec....    max
     //public static double MAX_VEL = 65.233; // 81.542

@@ -46,26 +46,34 @@ public class PIDControlledWheels extends LinearOpMode {
         mecanumController = new MecanumController(hardwareMap, speedController);
 
         mecanumController.leftFront = new PIDControlledDcMotor.PIDControlledDcMotorBuilder(mecanumController.leftFront)
-                .setkP(0.7)
-                .setkD(-0.003)
+                .setkC(0)
+                .setkB(0.7/0.976)
+//                .setkC(0.00015)
+//                .setkB(0.3/0.976)
                 .setGamma(0)
                 .build();
 
         mecanumController.rightFront = new PIDControlledDcMotor.PIDControlledDcMotorBuilder(mecanumController.rightFront)
-                .setkP(0.7)
-                .setkD(-0.003)
+                .setkC(0)
+                .setkB(0.7/0.992)
+//                .setkC(0.00015)
+//                .setkB(0.3/0.992)
                 .setGamma(0)
                 .build();
 
         mecanumController.leftRear = new PIDControlledDcMotor.PIDControlledDcMotorBuilder(mecanumController.leftRear)
-                .setkP(0.7)
-                .setkD(-0.003)
+                .setkC(0)
+                .setkB(0.7/0.992)
+//                .setkC(0.00015)
+//                .setkB(0.3/0.992)
                 .setGamma(0)
                 .build();
 
         mecanumController.rightRear = new PIDControlledDcMotor.PIDControlledDcMotorBuilder(mecanumController.rightRear)
-                .setkP(0.7)
-                .setkD(-0.003)
+                .setkC(0)
+                .setkB(0.7)
+//                .setkC(0.00015)
+//                .setkB(0.3)
                 .setGamma(0)
                 .build();
 
@@ -80,8 +88,8 @@ public class PIDControlledWheels extends LinearOpMode {
         outtake.setPosition(Constants.OUTTAKE_HIDDEN);
 
         Servo claw = hardwareMap.get(Servo.class, "claw");
-        CRServo air = hardwareMap.get(CRServo.class, "air");
-        air.setDirection(DcMotorSimple.Direction.REVERSE);
+        Servo air = hardwareMap.get(Servo.class, "air");
+        air.setDirection(Servo.Direction.REVERSE);
 
         DcMotor climber = hardwareMap.get(DcMotor.class, "climber");
 
@@ -134,7 +142,7 @@ public class PIDControlledWheels extends LinearOpMode {
                 climber.setPower(0);
             }
 
-            air.setPower(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.AIR_POWER) ? 1: 0);
+            air.setPosition(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.AIR_POWER) ? Constants.AIRPLANE_RELEASE: Constants.AIRPLANE_HOLD);
         }
     }
 }

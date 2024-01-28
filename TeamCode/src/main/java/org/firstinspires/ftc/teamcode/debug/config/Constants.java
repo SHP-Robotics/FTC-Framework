@@ -21,10 +21,14 @@ public final class Constants {
     public static final double CLAW_OPEN = 0.345;
     public static final double CLAW_CLOSE = 0.4;
 
+    // Airplane
+    public static final double AIRPLANE_RELEASE = 0.07;
+    public static final double AIRPLANE_HOLD = 0.41152;
+
     // Camera
     // TODO: tune servo position for camera
     public enum CameraMode {
-        FACING_TEAM_PROP(0),
+        FACING_TEAM_PROP(0.12),
         SONAR(0),
         FACING_CLAW(0.59);
 
