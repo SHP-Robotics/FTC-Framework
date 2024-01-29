@@ -151,7 +151,7 @@ public class CommandBasedTeleOp extends BaseRobot {
                 elbow.setPosition((int)Constants.Arm.kElbowDown, false, (int)Constants.Arm.kElbowTolerance);
                 wrist.setPosition(Constants.Arm.kWristDown);
                 drivebias = 0.75;
-                claw.open();
+//                claw.open();
             }
             else if (arm.getState() == ArmSubsystem.State.INTAKE) {
                 claw.open();
@@ -166,7 +166,7 @@ public class CommandBasedTeleOp extends BaseRobot {
             // tee hee
             arm.setState(ArmSubsystem.State.MANUAL);
 
-            elbow.manual(1, 50);
+            elbow.manual(1, 100);
 
 //
 //            arm.upElbow();
@@ -175,7 +175,7 @@ public class CommandBasedTeleOp extends BaseRobot {
             // tee hee
             arm.setState(ArmSubsystem.State.MANUAL);
 
-            elbow.manual(1, -50);
+            elbow.manual(1, -100);
 
 //            arm.setState(ArmSubsystem.State.MANUAL);
 //

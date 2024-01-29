@@ -35,9 +35,9 @@ public class Constants {
         public static final String kElbowName = "elbow";
         public static final String kWristName = "wrist";
         public static final double kElbowDown = 0;
-        public static final double kElbowDrive = 100;
+        public static final double kElbowDrive = 350;
 
-        public static final double kElbowUp = 1300;
+        public static final double kElbowUp = 5275;
 
         public static final double kWristDrive = 0.8;
         public static final double kWristDown = 0.5;
