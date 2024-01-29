@@ -55,9 +55,12 @@ public class CenterstageDriverOriented extends LinearOpMode {
         outtake.setDirection(Servo.Direction.REVERSE);
         outtake.setPosition(Constants.OUTTAKE_HIDDEN);
 
+        Servo cameraServo = hardwareMap.get(Servo.class, "cameraServo");
+        cameraServo.setDirection(Servo.Direction.REVERSE);
+
         Servo claw = hardwareMap.get(Servo.class, "claw");
-        Servo air = hardwareMap.get(Servo.class, "air");
-        air.setDirection(Servo.Direction.REVERSE);
+        CRServo air = hardwareMap.get(CRServo.class, "air");
+        air.setDirection(DcMotorSimple.Direction.REVERSE);
 
         DcMotor climber = hardwareMap.get(DcMotor.class, "climber");
 
@@ -84,7 +87,8 @@ public class CenterstageDriverOriented extends LinearOpMode {
                 climber.setPower(0);
             }
 
-            air.setPosition(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.AIR_POWER) ? Constants.AIRPLANE_RELEASE: Constants.AIRPLANE_HOLD);
+            air.setPower(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.AIR_POWER) ? 1: 0);
+            cameraServo.setPosition(DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CAMERA_POWER) ? Constants.CameraMode.FACING_CLAW.getPosition() : Constants.CameraMode.FACING_TEAM_PROP.getPosition());
         }
     }
 }

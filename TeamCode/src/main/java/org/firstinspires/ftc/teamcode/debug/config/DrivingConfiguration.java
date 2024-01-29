@@ -12,7 +12,6 @@ public class DrivingConfiguration {
 
     public static final GamepadAnalog ROTATE_RIGHT = GamepadAnalog.RIGHT_STICK_X;
 
-    public static final GamepadDigital PID_OVERRIDE = GamepadDigital.LEFT_STICK_BUTTON;
     public static final GamepadAnalog SPEED_OVERRIDE_ONE = GamepadAnalog.RIGHT_TRIGGER;
     public static final GamepadAnalog SPEED_OVERRIDE_TWO = GamepadAnalog.LEFT_TRIGGER;
 
@@ -32,6 +31,9 @@ public class DrivingConfiguration {
 
     // Air
     public static final GamepadDigital AIR_POWER = GamepadDigital.X;
+
+    // Camera
+    public static final GamepadDigital CAMERA_POWER = GamepadDigital.DPAD_LEFT;
 
     public static double getValue(Gamepad gamepad, GamepadAnalog analog) {
         switch (analog) {

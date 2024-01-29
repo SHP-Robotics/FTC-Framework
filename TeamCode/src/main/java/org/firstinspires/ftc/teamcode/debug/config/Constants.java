@@ -28,7 +28,7 @@ public final class Constants {
     // Camera
     // TODO: tune servo position for camera
     public enum CameraMode {
-        FACING_TEAM_PROP(0.12),
+        FACING_TEAM_PROP(0.11),
         SONAR(0),
         FACING_CLAW(0.59);
 
@@ -42,13 +42,6 @@ public final class Constants {
             return this.position;
         }
     }
-
-    // TODO: Find these values
-    // Camera Focal Length, used for to estimate Object Location
-    // FOCAL_LENGTH = (PERCEIVED_WIDTH x DISTANCE) / WIDTH
-    // public static final double BACKDROP_WIDTH = 25.625;
-    // public static final double FOCAL_LENGTH = 1;
-    public static final double APRIL_TAG_POSITION_CORRECTION = 1.2676056338;
 
     public static double setToDomain(double x, double begin, double end) {
         double length = end - begin;
