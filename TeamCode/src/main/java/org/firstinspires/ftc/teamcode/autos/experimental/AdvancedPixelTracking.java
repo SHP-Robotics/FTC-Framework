@@ -7,7 +7,8 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.debug.MecanumController;
-import org.firstinspires.ftc.teamcode.debug.PIDController;
+import org.firstinspires.ftc.teamcode.debug.PADController;
+import org.firstinspires.ftc.teamcode.shplib.vision.PADFollower;
 import org.firstinspires.ftc.teamcode.shplib.vision.PIDFollower;
 import org.firstinspires.ftc.teamcode.shplib.vision.PixelDetectionPipeline;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
@@ -29,12 +30,12 @@ public class AdvancedPixelTracking extends LinearOpMode {
         MecanumController mecanumController = new MecanumController(hardwareMap);
         CRServo cameraServo = hardwareMap.get(CRServo.class, "cameraServo");
 
-        PIDFollower pidFollower = new PIDFollower.PIDFollowerBuilder(
+        PADFollower padFollower = new PADFollower.PADFollowerBuilder(
                 mecanumController,
                 cameraServo,
-                new PIDController(0.30, 0, 0),
-                new PIDController(0.18, 0, 0),
-                new PIDController(0, 0, 0))
+                new PADController(0.30, 0),
+                new PADController(0.18, 0),
+                new PADController(0, 0))
                 .build();
 
         double[] lastObject = null;
@@ -69,7 +70,7 @@ public class AdvancedPixelTracking extends LinearOpMode {
                 }
 
                 if (closestObject != null) {
-                    pidFollower.update((closestObject[0] / 400) - 1,
+                    padFollower.update((closestObject[0] / 400) - 1,
                             1 - (closestObject[1] / 244),
                             0);
 

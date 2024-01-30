@@ -160,26 +160,26 @@ public class MecanumController {
 
         boolean deceleration = x == 0 && y == 0 && r == 0;
 
-        if (this.leftFront instanceof PIDControlledDcMotor) {
-            ((PIDControlledDcMotor) leftFront).setPower(leftFrontPower * driveSpeed / max, deceleration);
+        if (this.leftFront instanceof PADControlledDcMotor) {
+            ((PADControlledDcMotor) leftFront).setPower(leftFrontPower * driveSpeed / max, deceleration);
         } else {
             leftFront.setPower(leftFrontPower * driveSpeed / max);
         }
 
-        if (this.rightFront instanceof PIDControlledDcMotor) {
-            ((PIDControlledDcMotor) rightFront).setPower(rightFrontPower * driveSpeed / max, deceleration);
+        if (this.rightFront instanceof PADControlledDcMotor) {
+            ((PADControlledDcMotor) rightFront).setPower(rightFrontPower * driveSpeed / max, deceleration);
         } else {
             rightFront.setPower(leftFrontPower * driveSpeed / max);
         }
 
-        if (this.leftRear instanceof PIDControlledDcMotor) {
-            ((PIDControlledDcMotor) leftRear).setPower(leftRearPower * driveSpeed / max, deceleration);
+        if (this.leftRear instanceof PADControlledDcMotor) {
+            ((PADControlledDcMotor) leftRear).setPower(leftRearPower * driveSpeed / max, deceleration);
         } else {
             leftRear.setPower(leftFrontPower * driveSpeed / max);
         }
 
-        if (this.rightRear instanceof PIDControlledDcMotor) {
-            ((PIDControlledDcMotor) rightRear).setPower(rightRearPower * driveSpeed / max, deceleration);
+        if (this.rightRear instanceof PADControlledDcMotor) {
+            ((PADControlledDcMotor) rightRear).setPower(rightRearPower * driveSpeed / max, deceleration);
         } else {
             rightRear.setPower(leftFrontPower * driveSpeed / max);
         }
@@ -245,26 +245,26 @@ public class MecanumController {
 
         boolean deceleration = xOriented == 0 && yOriented == 0 && r == 0;
 
-        if (this.leftFront instanceof PIDControlledDcMotor) {
-            ((PIDControlledDcMotor) leftFront).setPower(leftFrontPower * driveSpeed / max, deceleration);
+        if (this.leftFront instanceof PADControlledDcMotor) {
+            ((PADControlledDcMotor) leftFront).setPower(leftFrontPower * driveSpeed / max, deceleration);
         } else {
             leftFront.setPower(leftFrontPower * driveSpeed / max);
         }
 
-        if (this.rightFront instanceof PIDControlledDcMotor) {
-            ((PIDControlledDcMotor) rightFront).setPower(rightFrontPower * driveSpeed / max, deceleration);
+        if (this.rightFront instanceof PADControlledDcMotor) {
+            ((PADControlledDcMotor) rightFront).setPower(rightFrontPower * driveSpeed / max, deceleration);
         } else {
             rightFront.setPower(leftFrontPower * driveSpeed / max);
         }
 
-        if (this.leftRear instanceof PIDControlledDcMotor) {
-            ((PIDControlledDcMotor) leftRear).setPower(leftRearPower * driveSpeed / max, deceleration);
+        if (this.leftRear instanceof PADControlledDcMotor) {
+            ((PADControlledDcMotor) leftRear).setPower(leftRearPower * driveSpeed / max, deceleration);
         } else {
             leftRear.setPower(leftFrontPower * driveSpeed / max);
         }
 
-        if (this.rightRear instanceof PIDControlledDcMotor) {
-            ((PIDControlledDcMotor) rightRear).setPower(rightRearPower * driveSpeed / max, deceleration);
+        if (this.rightRear instanceof PADControlledDcMotor) {
+            ((PADControlledDcMotor) rightRear).setPower(rightRearPower * driveSpeed / max, deceleration);
         } else {
             rightRear.setPower(leftFrontPower * driveSpeed / max);
         }

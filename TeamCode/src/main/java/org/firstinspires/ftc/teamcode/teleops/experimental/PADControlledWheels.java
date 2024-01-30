@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.debug.PIDControlledDcMotor;
+import org.firstinspires.ftc.teamcode.debug.PADControlledDcMotor;
 import org.firstinspires.ftc.teamcode.debug.MecanumController;
 import org.firstinspires.ftc.teamcode.debug.SpeedController;
 import org.firstinspires.ftc.teamcode.debug.SpeedType;
@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 @TeleOp()
-public class PIDControlledWheels extends LinearOpMode {
+public class PADControlledWheels extends LinearOpMode {
     MecanumController mecanumController;
     VisionSubsystem visionSubsystem;
 
@@ -30,25 +30,25 @@ public class PIDControlledWheels extends LinearOpMode {
 
         mecanumController = new MecanumController(hardwareMap, speedController);
 
-        mecanumController.leftFront = new PIDControlledDcMotor.PIDControlledDcMotorBuilder(mecanumController.leftFront)
+        mecanumController.leftFront = new PADControlledDcMotor.PADControlledDcMotorBuilder(mecanumController.leftFront)
                 .setkP(1/0.976)
                 .setkD(0)
                 .setGamma(0)
                 .build();
 
-        mecanumController.rightFront = new PIDControlledDcMotor.PIDControlledDcMotorBuilder(mecanumController.rightFront)
+        mecanumController.rightFront = new PADControlledDcMotor.PADControlledDcMotorBuilder(mecanumController.rightFront)
                 .setkP(1/0.992)
                 .setkD(0)
                 .setGamma(0)
                 .build();
 
-        mecanumController.leftRear = new PIDControlledDcMotor.PIDControlledDcMotorBuilder(mecanumController.leftRear)
+        mecanumController.leftRear = new PADControlledDcMotor.PADControlledDcMotorBuilder(mecanumController.leftRear)
                 .setkP(1/0.992)
                 .setkD(0)
                 .setGamma(0)
                 .build();
 
-        mecanumController.rightRear = new PIDControlledDcMotor.PIDControlledDcMotorBuilder(mecanumController.rightRear)
+        mecanumController.rightRear = new PADControlledDcMotor.PADControlledDcMotorBuilder(mecanumController.rightRear)
                 .setkP(1)
                 .setkD(0)
                 .setGamma(0)
@@ -85,20 +85,20 @@ public class PIDControlledWheels extends LinearOpMode {
                 mecanumController.calibrateIMUAngleOffset();
             }
 
-            if (mecanumController.leftFront instanceof PIDControlledDcMotor) {
-                telemetry.addData("velo fl", -((PIDControlledDcMotor) mecanumController.leftFront).getVelocity(AngleUnit.RADIANS));
+            if (mecanumController.leftFront instanceof PADControlledDcMotor) {
+                telemetry.addData("velo fl", -((PADControlledDcMotor) mecanumController.leftFront).getVelocity(AngleUnit.RADIANS));
             }
 
-            if (mecanumController.rightFront instanceof PIDControlledDcMotor) {
-                telemetry.addData("velo fr", -((PIDControlledDcMotor) mecanumController.rightFront).getVelocity(AngleUnit.RADIANS));
+            if (mecanumController.rightFront instanceof PADControlledDcMotor) {
+                telemetry.addData("velo fr", -((PADControlledDcMotor) mecanumController.rightFront).getVelocity(AngleUnit.RADIANS));
             }
 
-            if (mecanumController.leftRear instanceof PIDControlledDcMotor) {
-                telemetry.addData("velo rl", -((PIDControlledDcMotor) mecanumController.leftRear).getVelocity(AngleUnit.RADIANS));
+            if (mecanumController.leftRear instanceof PADControlledDcMotor) {
+                telemetry.addData("velo rl", -((PADControlledDcMotor) mecanumController.leftRear).getVelocity(AngleUnit.RADIANS));
             }
 
-            if (mecanumController.rightRear instanceof PIDControlledDcMotor) {
-                telemetry.addData("velo rr", -((PIDControlledDcMotor) mecanumController.rightRear).getVelocity(AngleUnit.RADIANS));
+            if (mecanumController.rightRear instanceof PADControlledDcMotor) {
+                telemetry.addData("velo rr", -((PADControlledDcMotor) mecanumController.rightRear).getVelocity(AngleUnit.RADIANS));
             }
 
             telemetry.update();

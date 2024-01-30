@@ -2,20 +2,11 @@ package org.firstinspires.ftc.teamcode.debug.config;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.debug.PIDControlledDcMotor;
+import org.firstinspires.ftc.teamcode.debug.PADControlledDcMotor;
 import org.firstinspires.ftc.teamcode.debug.MecanumController;
-import org.firstinspires.ftc.teamcode.debug.SpeedController;
-import org.firstinspires.ftc.teamcode.debug.SpeedType;
-import org.firstinspires.ftc.teamcode.debug.config.Constants;
-import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
-import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 @Autonomous()
 public class FindRelativeSpeeds extends LinearOpMode {
@@ -25,22 +16,22 @@ public class FindRelativeSpeeds extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         mecanumController = new MecanumController(hardwareMap);
 
-        mecanumController.leftFront = new PIDControlledDcMotor.PIDControlledDcMotorBuilder(mecanumController.leftFront)
+        mecanumController.leftFront = new PADControlledDcMotor.PIDControlledDcMotorBuilder(mecanumController.leftFront)
                 .setkB(0.7/0.976)
                 .setGamma(0)
                 .build();
 
-        mecanumController.rightFront = new PIDControlledDcMotor.PIDControlledDcMotorBuilder(mecanumController.rightFront)
+        mecanumController.rightFront = new PADControlledDcMotor.PIDControlledDcMotorBuilder(mecanumController.rightFront)
                 .setkB(0.7/0.992)
                 .setGamma(0)
                 .build();
 
-        mecanumController.leftRear = new PIDControlledDcMotor.PIDControlledDcMotorBuilder(mecanumController.leftRear)
+        mecanumController.leftRear = new PADControlledDcMotor.PIDControlledDcMotorBuilder(mecanumController.leftRear)
                 .setkB(0.7/0.992)
                 .setGamma(0)
                 .build();
 
-        mecanumController.rightRear = new PIDControlledDcMotor.PIDControlledDcMotorBuilder(mecanumController.rightRear)
+        mecanumController.rightRear = new PADControlledDcMotor.PIDControlledDcMotorBuilder(mecanumController.rightRear)
                 .setkB(0.7/1)
                 .setGamma(0)
                 .build();
@@ -59,29 +50,29 @@ public class FindRelativeSpeeds extends LinearOpMode {
         mecanumController.rightRear.setPower(1);
 
         while (!opModeIsActive()) {
-            if (mecanumController.leftFront instanceof PIDControlledDcMotor) {
-                double veloLF = ((PIDControlledDcMotor) mecanumController.leftFront).getVelocity(AngleUnit.RADIANS);
+            if (mecanumController.leftFront instanceof PADControlledDcMotor) {
+                double veloLF = ((PADControlledDcMotor) mecanumController.leftFront).getVelocity(AngleUnit.RADIANS);
                 if (veloLF > maxLF) {
                     maxLF = veloLF;
                 }
             }
 
-            if (mecanumController.rightFront instanceof PIDControlledDcMotor) {
-                double veloRF = ((PIDControlledDcMotor) mecanumController.rightFront).getVelocity(AngleUnit.RADIANS);
+            if (mecanumController.rightFront instanceof PADControlledDcMotor) {
+                double veloRF = ((PADControlledDcMotor) mecanumController.rightFront).getVelocity(AngleUnit.RADIANS);
                 if (veloRF > maxRF) {
                     maxRF = veloRF;
                 }
             }
 
-            if (mecanumController.leftRear instanceof PIDControlledDcMotor) {
-                double veloLR = ((PIDControlledDcMotor) mecanumController.leftRear).getVelocity(AngleUnit.RADIANS);
+            if (mecanumController.leftRear instanceof PADControlledDcMotor) {
+                double veloLR = ((PADControlledDcMotor) mecanumController.leftRear).getVelocity(AngleUnit.RADIANS);
                 if (veloLR > maxLR) {
                     maxLR = veloLR;
                 }
             }
 
-            if (mecanumController.rightRear instanceof PIDControlledDcMotor) {
-                double veloRR = ((PIDControlledDcMotor) mecanumController.rightRear).getVelocity(AngleUnit.RADIANS);
+            if (mecanumController.rightRear instanceof PADControlledDcMotor) {
+                double veloRR = ((PADControlledDcMotor) mecanumController.rightRear).getVelocity(AngleUnit.RADIANS);
                 if (veloRR > maxRR) {
                     maxRR = veloRR;
                 }
