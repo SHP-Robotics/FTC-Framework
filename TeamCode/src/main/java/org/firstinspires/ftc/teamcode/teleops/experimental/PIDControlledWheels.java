@@ -31,34 +31,26 @@ public class PIDControlledWheels extends LinearOpMode {
         mecanumController = new MecanumController(hardwareMap, speedController);
 
         mecanumController.leftFront = new PIDControlledDcMotor.PIDControlledDcMotorBuilder(mecanumController.leftFront)
-                .setkC(0)
-                .setkB(1/0.976)
-//                .setkC(0.00015)
-//                .setkB(0.3/0.976)
+                .setkP(1/0.976)
+                .setkD(0)
                 .setGamma(0)
                 .build();
 
         mecanumController.rightFront = new PIDControlledDcMotor.PIDControlledDcMotorBuilder(mecanumController.rightFront)
-                .setkC(0)
-                .setkB(1/0.992)
-//                .setkC(0.00015)
-//                .setkB(0.3/0.992)
+                .setkP(1/0.992)
+                .setkD(0)
                 .setGamma(0)
                 .build();
 
         mecanumController.leftRear = new PIDControlledDcMotor.PIDControlledDcMotorBuilder(mecanumController.leftRear)
-                .setkC(0)
-                .setkB(1/0.992)
-//                .setkC(0.00015)
-//                .setkB(0.3/0.992)
+                .setkP(1/0.992)
+                .setkD(0)
                 .setGamma(0)
                 .build();
 
         mecanumController.rightRear = new PIDControlledDcMotor.PIDControlledDcMotorBuilder(mecanumController.rightRear)
-                .setkC(0)
-                .setkB(1)
-//                .setkC(0.00015)
-//                .setkB(0.3)
+                .setkP(1)
+                .setkD(0)
                 .setGamma(0)
                 .build();
 

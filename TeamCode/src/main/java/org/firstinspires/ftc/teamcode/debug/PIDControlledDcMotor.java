@@ -17,10 +17,8 @@ public class PIDControlledDcMotor extends DcMotorImplEx {
     private double lastError = 0;
     private double lastTime = -1;
 
-    // the cubic multiplier for the kP function
-    private double kC = 0;
-    // the linear multiplier for the kP function
-    private double kB = 0.7;
+    private double kP = 0.7;
+    private double kD = 0;
 
     // gamma specifies de-acceleration multiplier vs acceleration (lower is faster de-acceleration)
     // check line 68
@@ -48,8 +46,8 @@ public class PIDControlledDcMotor extends DcMotorImplEx {
         elapsedTime = new ElapsedTime();
         elapsedTime.reset();
 
-        this.kC = pidControlledDcMotorBuilder.kC;
-        this.kB = pidControlledDcMotorBuilder.kB;
+        this.kP = pidControlledDcMotorBuilder.kP;
+        this.kD = pidControlledDcMotorBuilder.kD;
         this.gamma = pidControlledDcMotorBuilder.gamma;
     }
 
@@ -63,13 +61,12 @@ public class PIDControlledDcMotor extends DcMotorImplEx {
         double error = targetVelocity - currentVelocity;
         double time = elapsedTime.seconds();
         double deltaTime = time - lastTime;
-
-        double kCT = (error * error * kC) + kB;
+        double slope = (error - lastError) / deltaTime;
 
         if (decelerate) {
-            super.setPower(clamp(getPower() * gamma - (error * kCT * gamma * deltaTime)));
+            super.setPower(clamp(gamma * (getPower() - (error * kP * deltaTime) - (slope * kD * deltaTime))));
         } else {
-            super.setPower(clamp(getPower() - (error * kCT * deltaTime)));
+            super.setPower(clamp(getPower() - (error * kP * deltaTime) - (slope * kD * deltaTime)));
         }
 
         lastError = error;
@@ -78,24 +75,24 @@ public class PIDControlledDcMotor extends DcMotorImplEx {
 
     public static class PIDControlledDcMotorBuilder {
         private DcMotor dcMotor;
-        private double kC;
-        private double kB;
+        private double kP;
+        private double kD;
         private double gamma;
 
         public PIDControlledDcMotorBuilder(DcMotor dcMotor) {
             this.dcMotor = dcMotor;
-            this.kC = 0;
-            this.kB = 0.7;
+            this.kP = 0.7;
+            this.kD = 0;
             this.gamma = 1;
         }
 
-        public PIDControlledDcMotorBuilder setkC(double kC) {
-            this.kC = kC;
+        public PIDControlledDcMotorBuilder setkP(double kP) {
+            this.kP = kP;
             return this;
         }
 
-        public PIDControlledDcMotorBuilder setkB(double kB) {
-            this.kB = kB;
+        public PIDControlledDcMotorBuilder setkD(double kD) {
+            this.kD = kD;
             return this;
         }
 
