@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.debug.PADControlledDcMotor;
+import org.firstinspires.ftc.teamcode.debug.AccumulationControlledDcMotor;
 import org.firstinspires.ftc.teamcode.debug.MecanumController;
 
 @Autonomous()
@@ -16,23 +16,23 @@ public class FindRelativeSpeeds extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         mecanumController = new MecanumController(hardwareMap);
 
-        mecanumController.leftFront = new PADControlledDcMotor.PIDControlledDcMotorBuilder(mecanumController.leftFront)
-                .setkB(0.7/0.976)
+        mecanumController.leftFront = new AccumulationControlledDcMotor.AccumulationControlledDcMotorBuilder(mecanumController.leftFront)
+                .setkP(0.7/0.976)
                 .setGamma(0)
                 .build();
 
-        mecanumController.rightFront = new PADControlledDcMotor.PIDControlledDcMotorBuilder(mecanumController.rightFront)
-                .setkB(0.7/0.992)
+        mecanumController.rightFront = new AccumulationControlledDcMotor.AccumulationControlledDcMotorBuilder(mecanumController.rightFront)
+                .setkP(0.7/0.992)
                 .setGamma(0)
                 .build();
 
-        mecanumController.leftRear = new PADControlledDcMotor.PIDControlledDcMotorBuilder(mecanumController.leftRear)
-                .setkB(0.7/0.992)
+        mecanumController.leftRear = new AccumulationControlledDcMotor.AccumulationControlledDcMotorBuilder(mecanumController.leftRear)
+                .setkP(0.7/0.992)
                 .setGamma(0)
                 .build();
 
-        mecanumController.rightRear = new PADControlledDcMotor.PIDControlledDcMotorBuilder(mecanumController.rightRear)
-                .setkB(0.7/1)
+        mecanumController.rightRear = new AccumulationControlledDcMotor.AccumulationControlledDcMotorBuilder(mecanumController.rightRear)
+                .setkP(0.7)
                 .setGamma(0)
                 .build();
 
@@ -50,29 +50,29 @@ public class FindRelativeSpeeds extends LinearOpMode {
         mecanumController.rightRear.setPower(1);
 
         while (!opModeIsActive()) {
-            if (mecanumController.leftFront instanceof PADControlledDcMotor) {
-                double veloLF = ((PADControlledDcMotor) mecanumController.leftFront).getVelocity(AngleUnit.RADIANS);
+            if (mecanumController.leftFront instanceof AccumulationControlledDcMotor) {
+                double veloLF = ((AccumulationControlledDcMotor) mecanumController.leftFront).getVelocity(AngleUnit.RADIANS);
                 if (veloLF > maxLF) {
                     maxLF = veloLF;
                 }
             }
 
-            if (mecanumController.rightFront instanceof PADControlledDcMotor) {
-                double veloRF = ((PADControlledDcMotor) mecanumController.rightFront).getVelocity(AngleUnit.RADIANS);
+            if (mecanumController.rightFront instanceof AccumulationControlledDcMotor) {
+                double veloRF = ((AccumulationControlledDcMotor) mecanumController.rightFront).getVelocity(AngleUnit.RADIANS);
                 if (veloRF > maxRF) {
                     maxRF = veloRF;
                 }
             }
 
-            if (mecanumController.leftRear instanceof PADControlledDcMotor) {
-                double veloLR = ((PADControlledDcMotor) mecanumController.leftRear).getVelocity(AngleUnit.RADIANS);
+            if (mecanumController.leftRear instanceof AccumulationControlledDcMotor) {
+                double veloLR = ((AccumulationControlledDcMotor) mecanumController.leftRear).getVelocity(AngleUnit.RADIANS);
                 if (veloLR > maxLR) {
                     maxLR = veloLR;
                 }
             }
 
-            if (mecanumController.rightRear instanceof PADControlledDcMotor) {
-                double veloRR = ((PADControlledDcMotor) mecanumController.rightRear).getVelocity(AngleUnit.RADIANS);
+            if (mecanumController.rightRear instanceof AccumulationControlledDcMotor) {
+                double veloRR = ((AccumulationControlledDcMotor) mecanumController.rightRear).getVelocity(AngleUnit.RADIANS);
                 if (veloRR > maxRR) {
                     maxRR = veloRR;
                 }
