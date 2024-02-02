@@ -28,7 +28,8 @@ public class CenterstageFieldOriented extends LinearOpMode {
                 .setOverrideOneSpeed(1)
                 .build();
 
-        MecanumController mecanumController = new MecanumController(hardwareMap, speedController);
+        MecanumController mecanumController = new MecanumController(hardwareMap);
+        mecanumController.setSpeedController(speedController);
         mecanumController.setMotorsRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
         mecanumController.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 

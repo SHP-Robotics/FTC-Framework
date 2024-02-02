@@ -52,43 +52,50 @@ public class MecanumController {
         rightRear.setZeroPowerBehavior(zeroPowerBehavior);
     }
 
-    public void initIMU(HardwareMap hardwareMap) {
-        imu = hardwareMap.get(IMU.class, "imu");
-        // TODO: Change IMU direction to match reality
-        RevHubOrientationOnRobot.LogoFacingDirection logo = RevHubOrientationOnRobot.LogoFacingDirection.RIGHT;
-        RevHubOrientationOnRobot.UsbFacingDirection usb = RevHubOrientationOnRobot.UsbFacingDirection.UP;
-        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logo, usb);
-        imu.initialize(new IMU.Parameters(orientationOnRobot));
-    }
+    public MecanumController(DcMotor leftFront, DcMotor rightFront, DcMotor leftRear, DcMotor rightRear, IMU imu) {
+        this.leftFront = leftFront;
+        this.rightFront = rightFront;
+        this.leftRear = leftRear;
+        this.rightRear = rightRear;
 
-    private void init(HardwareMap hardwareMap) {
-        leftFront = hardwareMap.get(DcMotor.class, "leftFront");
-        rightFront = hardwareMap.get(DcMotor.class, "rightFront");
-        leftRear = hardwareMap.get(DcMotor.class, "leftRear");
-        rightRear = hardwareMap.get(DcMotor.class, "rightRear");
+        this.imu = imu;
 
-        initIMU(hardwareMap);
-
-        leftFront.setDirection(DcMotor.Direction.REVERSE);
-        rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
-        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightRear.setDirection(DcMotor.Direction.FORWARD);
-    }
-
-    public MecanumController(HardwareMap hardwareMap) {
-        init(hardwareMap);
         this.speedController = new SpeedController.SpeedBuilder(SpeedType.NO_CHANGE)
                 .build();
     }
 
-    public MecanumController(HardwareMap hardwareMap, SpeedController speedController) {
-        init(hardwareMap);
-        this.speedController = speedController;
+    public MecanumController(HardwareMap hardwareMap) {
+        // TODO: Set name
+        this.leftFront = (DcMotor) hardwareMap.get("leftFront");
+        this.rightFront = (DcMotor) hardwareMap.get("rightFront");
+        this.leftRear = (DcMotor) hardwareMap.get("leftRear");
+        this.rightRear = (DcMotor) hardwareMap.get("rightRear");
+
+        // TODO: Set direction
+        this.leftFront.setDirection(DcMotor.Direction.REVERSE);
+        this.rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        this.leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        this.rightRear.setDirection(DcMotor.Direction.FORWARD);
+
+        // TODO: Set name
+        this.imu = (IMU) hardwareMap.get("imu");
+        // TODO: Set orientation
+        RevHubOrientationOnRobot.LogoFacingDirection logo = RevHubOrientationOnRobot.LogoFacingDirection.RIGHT;
+        RevHubOrientationOnRobot.UsbFacingDirection usb = RevHubOrientationOnRobot.UsbFacingDirection.UP;
+        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logo, usb);
+        this.imu.initialize(new IMU.Parameters(orientationOnRobot));
+
+        this.speedController = new SpeedController.SpeedBuilder(SpeedType.NO_CHANGE)
+                .build();
     }
 
     public void fakeReset() {
         this.positionX = 0;
         this.positionY = 0;
+    }
+
+    public void setSpeedController(SpeedController speedController) {
+        this.speedController = speedController;
     }
 
     public double getDriveSpeed() {

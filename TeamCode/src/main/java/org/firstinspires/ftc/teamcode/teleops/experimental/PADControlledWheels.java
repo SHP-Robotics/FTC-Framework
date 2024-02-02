@@ -28,7 +28,8 @@ public class PADControlledWheels extends LinearOpMode {
                 .setOverrideOneSpeed(1)
                 .build();
 
-        mecanumController = new MecanumController(hardwareMap, speedController);
+        mecanumController = new MecanumController(hardwareMap);
+        mecanumController.setSpeedController(speedController);
 
         mecanumController.leftFront = new AccumulationControlledDcMotor.AccumulationControlledDcMotorBuilder(mecanumController.leftFront)
                 .setkP(1/0.976)
