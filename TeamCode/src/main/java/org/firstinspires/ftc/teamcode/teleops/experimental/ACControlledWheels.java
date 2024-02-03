@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 @TeleOp()
-public class PADControlledWheels extends LinearOpMode {
+public class ACControlledWheels extends LinearOpMode {
     MecanumController mecanumController;
     VisionSubsystem visionSubsystem;
 

@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.debug;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
@@ -10,34 +12,66 @@ public class AccumulationControlledDcMotor extends DcMotorImplEx {
     // should record the max velocity with kP = 1, and then use preferred values of kP
     private final double MAX_VELOCITY = 12;
 
-    private final AccumulationController padController;
+    private ElapsedTime elapsedTime;
+
+    private double lastError = 0;
+    private double lastTime = -1;
+
+    private double kP = 0.7;
 
     // gamma specifies de-acceleration multiplier vs acceleration (lower is faster de-acceleration)
     // check line 68
     private double gamma = 1;
 
+    public AccumulationControlledDcMotor(DcMotorController controller, int portNumber) {
+        super(controller, portNumber);
+
+        elapsedTime = new ElapsedTime();
+        elapsedTime.reset();
+    }
+
+    public AccumulationControlledDcMotor(DcMotor dcMotor) {
+        super(dcMotor.getController(), dcMotor.getPortNumber());
+        super.setDirection(dcMotor.getDirection());
+
+        elapsedTime = new ElapsedTime();
+        elapsedTime.reset();
+    }
+
     public AccumulationControlledDcMotor(AccumulationControlledDcMotorBuilder accumulationControlledDcMotorBuilder) {
         super(accumulationControlledDcMotorBuilder.dcMotor.getController(), accumulationControlledDcMotorBuilder.dcMotor.getPortNumber());
         super.setDirection(accumulationControlledDcMotorBuilder.dcMotor.getDirection());
 
-        this.padController = new AccumulationController.AccumulationControllerBuilder(accumulationControlledDcMotorBuilder.kP)
-                .setClampFunction(-1, 1)
-                .build();
+        elapsedTime = new ElapsedTime();
+        elapsedTime.reset();
 
+        this.kP = accumulationControlledDcMotorBuilder.kP;
         this.gamma = accumulationControlledDcMotorBuilder.gamma;
+    }
+
+    public double clamp(double power) {
+        return Math.min(Math.max(-1, power), 1);
     }
 
     public void setPower(double power, boolean decelerate) {
         double targetVelocity = MAX_VELOCITY*power;
         double currentVelocity = -this.getVelocity(AngleUnit.RADIANS);
         double error = targetVelocity - currentVelocity;
+        double time = elapsedTime.seconds();
+        double deltaTime = time - lastTime;
 
-        double cGamma = decelerate ? gamma : 0;
-        super.setPower(cGamma * padController.getOutput(error));
+        if (decelerate) {
+            super.setPower(clamp(getPower() * gamma - (error * kP * gamma * deltaTime)));
+        } else {
+            super.setPower(clamp(getPower() - (error * kP * deltaTime)));
+        }
+
+        lastError = error;
+        lastTime = time;
     }
 
     public static class AccumulationControlledDcMotorBuilder {
-        private final DcMotor dcMotor;
+        private DcMotor dcMotor;
         private double kP;
         private double gamma;
 

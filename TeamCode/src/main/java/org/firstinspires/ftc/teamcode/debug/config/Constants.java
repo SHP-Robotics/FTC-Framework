@@ -1,6 +1,11 @@
 package org.firstinspires.ftc.teamcode.debug.config;
 
 public final class Constants {
+    // Pure Pursuit
+    // MECANUM_WIDTH only needs to be an estimate, but affects speed of rotation during path following
+    public static final double MECANUM_WIDTH = 14;
+    public static final double ODOMETRY_WIDTH = 9.477259842519654;
+
     // Oh god no
     public static final double TILE_LENGTH = 23.3437;
 
@@ -15,7 +20,7 @@ public final class Constants {
     public static final double OUTTAKE_NEUTRAL = 0.66;
     public static final double OUTTAKE_LOWERED = 0.58;
     public static final double OUTTAKE_ACTIVE = 0.51;
-    public static final double OUTTAKE_HIDDEN = 0.27;
+    public static final double OUTTAKE_HIDDEN = 0.28;
 
     // Claw
     public static final double CLAW_OPEN = 0.345;

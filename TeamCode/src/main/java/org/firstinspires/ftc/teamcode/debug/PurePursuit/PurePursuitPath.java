@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Waypoints.EndWa
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Position2D;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Waypoints.StartWaypoint;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Waypoints.Waypoint;
+import org.firstinspires.ftc.teamcode.debug.config.Constants;
 
 import java.util.ArrayList;
 
@@ -48,18 +49,52 @@ public class PurePursuitPath {
 
             double x2 = position2.getX();
             double y2 = position2.getY();
+//
+//            double x3;
+//            double y3;
+//
+//            if (x1 == x2) {
+//                x3 = x1;
+//                y3 = y2 + followRadius;
+//            } else {
+//
+//                double m = (y2 - y1) / (x2 - x1);
+//                double b = y1 - (m * x1);
+//
+//                // double dist = Math.sqrt(x3**2 + y3**2) // = followRadius
+//                // x3**2 + y3**2 = followRadius**2
+//                // y3 = m*x3+b
+//                // x3**2 + m**2*x3**2 + 2*m*x3*b + b**2 = followRadius **2
+//                // x3**2 + x3**2*m**2 + x3*2*m*b = followRadius**2 - b**2
+//                // x3**2(1 + m**2) + x3*2*m*b = followRadius**2 - b**2
+//                // (1+m**2)(x3 + m*b)**2 = followRadius**2 - b**2
+//                // (x3 + m*b)**2 = (followRadius**2 - b**2)/(1+m**2)
+//                // x3 + m*b = +- sqrt((followRadius**2 - b**2)/(1+m**2))
+//                // x3 = m*b +- sqrt((followRadius**2 - b**2)/(1+m**2))
+//                //
+//
+//                if (x2 > x1) {
+//                    x3 = m*b + Math.sqrt((followRadius*followRadius - b*b)/(1+m*m));
+//                } else {
+//                    x3 = m*b - Math.sqrt((followRadius*followRadius - b*b)/(1+m*m));
+//                }
+//                y3 = x3*m + b;
+//            }
 
             RestrictedLine line = new RestrictedLine(x1, y1, x2, y2);
 
             Position2D[] tmpIntersections = followingCircle.getLineIntersections(line);
-            if (tmpIntersections[0] != null) {
+            if (currentPosition.dist(line.getP2()) <= followRadius) {
+                furthestIntersections = new Position2D[]{line.getP2(), null};
+                waypoint = i;
+            } else if (tmpIntersections != null && tmpIntersections.length == 2 && (tmpIntersections[0] != null || tmpIntersections[1] != null)) {
                 furthestIntersections = tmpIntersections;
                 waypoint = i;
             }
         }
 
         if (furthestIntersections[0] == null) {
-            return null;
+            return furthestIntersections[1];
         }
 
         if (furthestIntersections[1] == null) {
@@ -73,30 +108,41 @@ public class PurePursuitPath {
         return furthestIntersections[1];
     }
 
+    private static double clampRadians(double radians) {
+        while (radians < -Math.PI) {
+            radians += (2*Math.PI);
+        }
+        while (radians > Math.PI) {
+            radians -= (2*Math.PI);
+        }
+        return radians;
+    }
+
     public void follow(MecanumPurePursuitController mecanumPurePursuitController) {
         while (!this.isFinished()) {
-            mecanumPurePursuitController.updateOdometry();
+            this.mecanumPurePursuitController.updateOdometry();
 
-            Position2D optimalIntersection = getOptimalIntersection(mecanumPurePursuitController.getCurrentPosition());
+            Position2D optimalIntersection = getOptimalIntersection(this.mecanumPurePursuitController.getCurrentPosition());
 
             if (optimalIntersection == null) {
                 failed = true;
                 return;
             }
 
-            double differenceX = optimalIntersection.getX() - mecanumPurePursuitController.getCurrentPosition().getX();
-            double differenceY = optimalIntersection.getX() - mecanumPurePursuitController.getCurrentPosition().getX();
-            double differenceHeading = optimalIntersection.getX() - mecanumPurePursuitController.getCurrentPosition().getX();
-            differenceHeading *= mecanumPurePursuitController.getMecanumWidth();
+            double differenceX = optimalIntersection.getX() - this.mecanumPurePursuitController.getCurrentPosition().getX();
+            double differenceY = optimalIntersection.getY() - this.mecanumPurePursuitController.getCurrentPosition().getY();
+            double differenceHeading = clampRadians(optimalIntersection.getHeadingRadians() - this.mecanumPurePursuitController.getCurrentPosition().getHeadingRadians());
+            differenceHeading *= Constants.MECANUM_WIDTH;
 
-            double max = Math.max(differenceX, Math.max(differenceY, differenceHeading));
+            double max = Math.max(Math.abs(differenceX), Math.max(Math.abs(differenceY), Math.abs(differenceHeading)));
 
             double x = differenceX / max;
             double y = differenceY / max;
             double r = differenceHeading / max;
 
-            mecanumPurePursuitController.driveParams(x*this.driveSpeed, y*this.driveSpeed, r*this.driveSpeed);
+            this.mecanumPurePursuitController.driveFieldParams(x * this.driveSpeed, y * this.driveSpeed, r * this.driveSpeed, mecanumPurePursuitController.getCurrentPosition().getHeadingRadians());
         }
+        this.mecanumPurePursuitController.deactivate();
     }
 
     public void followAsync(MecanumPurePursuitController mecanumPurePursuitController) {
@@ -116,11 +162,11 @@ public class PurePursuitPath {
             }
 
             double differenceX = optimalIntersection.getX() - this.mecanumPurePursuitController.getCurrentPosition().getX();
-            double differenceY = optimalIntersection.getX() - this.mecanumPurePursuitController.getCurrentPosition().getX();
-            double differenceHeading = optimalIntersection.getX() - this.mecanumPurePursuitController.getCurrentPosition().getX();
-            differenceHeading *= this.mecanumPurePursuitController.getMecanumWidth();
+            double differenceY = optimalIntersection.getY() - this.mecanumPurePursuitController.getCurrentPosition().getY();
+            double differenceHeading = clampRadians(optimalIntersection.getHeadingRadians() - this.mecanumPurePursuitController.getCurrentPosition().getHeadingRadians());
+            differenceHeading *= Constants.MECANUM_WIDTH;
 
-            double max = Math.max(differenceX, Math.max(differenceY, differenceHeading));
+            double max = Math.max(Math.abs(differenceX), Math.max(Math.abs(differenceY), Math.abs(differenceHeading)));
 
             double x = differenceX / max;
             double y = differenceY / max;
@@ -128,8 +174,8 @@ public class PurePursuitPath {
 
             this.mecanumPurePursuitController.driveFieldParams(x * this.driveSpeed, y * this.driveSpeed, r * this.driveSpeed, mecanumPurePursuitController.getCurrentPosition().getHeadingRadians());
         } else {
+            this.mecanumPurePursuitController.deactivate();
             this.isFollowing = false;
-            this.mecanumPurePursuitController = null;
         }
     }
 
@@ -164,6 +210,12 @@ public class PurePursuitPath {
         public PurePursuitPathBuilder(StartWaypoint startWaypoint) {
             waypoints = new ArrayList<>();
             waypoints.add(startWaypoint);
+
+            this.followRadius = 0.1;
+            this.positionBuffer = 0.3;
+            this.rotationBuffer = 0.3;
+
+            this.driveSpeed = 0.3;
         }
 
         public PurePursuitPathBuilder addWaypoint(Waypoint waypoint) {

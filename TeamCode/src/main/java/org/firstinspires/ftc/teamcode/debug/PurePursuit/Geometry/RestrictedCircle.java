@@ -57,14 +57,34 @@ public class RestrictedCircle {
     public Position2D[] getLineIntersections(RestrictedLine restrictedLine) {
         Position2D[] furthestIntersections = new Position2D[2];
 
-        double x1 = restrictedLine.getLeftRestriction().getX();
-        double y1 = restrictedLine.getLeftRestriction().getY();
+        double x1 = restrictedLine.getP1().getX();
+        double y1 = restrictedLine.getP1().getY();
 
-        double x2 = restrictedLine.getRightRestriction().getX();
-        double y2 = restrictedLine.getRightRestriction().getY();
+        double x2 = restrictedLine.getP2().getX();
+        double y2 = restrictedLine.getP2().getY();
 
-        double m = restrictedLine.getM();
-        double b = restrictedLine.getB();
+        if (x1 == x2) {
+            if (checkInCirclePositive(x1-this.shiftRight)) {
+                furthestIntersections[0] = new Position2D(
+                        x1-this.shiftRight,
+                        plugCirclePositive(x1-this.shiftRight),
+                        0
+                );
+
+                furthestIntersections[1] = new Position2D(
+                        x1-this.shiftRight,
+                        plugCircleNegative(x1-this.shiftRight),
+                        0
+                );
+
+                return furthestIntersections;
+            }
+
+            return null;
+        }
+
+        double m = (y2-y1)/(x2-x1);
+        double b = y1 - (m*x1);
 
         double dx = x2 - x1;
         double dy = y2 - y1;
