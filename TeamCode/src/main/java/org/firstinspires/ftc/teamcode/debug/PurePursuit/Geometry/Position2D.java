@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.debug.PurePursuit.Waypoints;
+package org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry;
 
 public class Position2D {
     private double x;
@@ -18,7 +18,7 @@ public class Position2D {
     }
 
     private static double clampRadians(double headingRadians) {
-        while (headingRadians < Math.PI) {
+        while (headingRadians < -Math.PI) {
             headingRadians += 2*Math.PI;
         }
 
@@ -41,10 +41,13 @@ public class Position2D {
         return headingRadians;
     }
 
-    public void add(Position2D position2D) {
+    public void add(Position2D position2D, boolean clamp) {
         this.x += position2D.getX();
         this.y += position2D.getY();
-        this.headingRadians = clampRadians(this.headingRadians + position2D.getHeadingRadians());
+        this.headingRadians = this.headingRadians + position2D.getHeadingRadians();
+        if (clamp) {
+            this.headingRadians = clampRadians(this.headingRadians);
+        }
     }
 
     public double dist(Position2D position2D) {

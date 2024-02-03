@@ -303,6 +303,31 @@ public class MecanumController {
         rightRear.setPower(rightRearPower * driveSpeed / max);
     }
 
+    public void driveFieldParams(double x, double y, double r, double gyro) {
+        // cos * y = how much right if gamepad forward
+        // cos * x = how much right if gamepad right
+        // sin * y = how much forward if gamepad forward
+        // sin * x = how much forward if gamepad right
+        double xOriented = (Math.cos(gyro) * x) + (Math.sin(gyro) * y);
+        double yOriented = (Math.cos(gyro) * y) - (Math.sin(gyro) * x);
+
+        double leftFrontPower = yOriented + xOriented + r;
+        double rightFrontPower = yOriented - xOriented - r;
+        double leftRearPower = yOriented - xOriented + r;
+        double rightRearPower = yOriented + xOriented - r;
+
+        double max = Math.max(Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower)), Math.max(Math.abs(leftRearPower), Math.abs(rightRearPower)));
+
+        if (max < 1) {
+            max = 1;
+        }
+
+        leftFront.setPower(leftFrontPower * driveSpeed / max);
+        rightFront.setPower(rightFrontPower * driveSpeed / max);
+        leftRear.setPower(leftRearPower * driveSpeed / max);
+        rightRear.setPower(rightRearPower * driveSpeed / max);
+    }
+
     public boolean isBusy() {
         return leftFront.isBusy() || rightFront.isBusy() || leftRear.isBusy() || rightRear.isBusy();
     }

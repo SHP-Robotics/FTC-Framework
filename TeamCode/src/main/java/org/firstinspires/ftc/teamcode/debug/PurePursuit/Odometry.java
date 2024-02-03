@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.R;
 
 public class Odometry extends DcMotorImplEx {
     private double INCHES_PER_TICK = 2000;
+    private double lastCall = 0;
 
     public Odometry(DcMotorController controller, int portNumber) {
         super(controller, portNumber);
@@ -35,8 +36,7 @@ public class Odometry extends DcMotorImplEx {
     }
 
     public void reset() {
-        this.setMode(RunMode.STOP_AND_RESET_ENCODER);
-        this.setMode(RunMode.RUN_USING_ENCODER);
+        this.lastCall = this.getCurrentPosition();
     }
 
     // Prevents front-end from controlling mode
@@ -44,6 +44,6 @@ public class Odometry extends DcMotorImplEx {
     public synchronized void setMode(RunMode mode) {}
 
     public double getInchesTravelled() {
-        return this.getCurrentPosition() * this.INCHES_PER_TICK;
+        return (this.getCurrentPosition() - lastCall) * this.INCHES_PER_TICK;
     }
 }

@@ -6,14 +6,14 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.teamcode.debug.MecanumController;
-import org.firstinspires.ftc.teamcode.debug.PurePursuit.Waypoints.Position2D;
+import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Position2D;
 
 public class MecanumPurePursuitController extends MecanumController {
     private Odometry leftOdometry;
     private Odometry rightOdometry;
     private Odometry centerOdometry;
 
-    private final double ODOMETRY_RADIUS;
+    private final double ODOMETRY_WIDTH;
     private final double MECANUM_WIDTH;
 
     private Position2D currentPosition;
@@ -26,8 +26,14 @@ public class MecanumPurePursuitController extends MecanumController {
         this.rightOdometry = rightOdometry;
         this.centerOdometry = centerOdometry;
 
+        this.leftOdometry.reset();
+        this.rightOdometry.reset();
+        this.centerOdometry.reset();
+
         this.MECANUM_WIDTH = MECANUM_WIDTH;
-        this.ODOMETRY_RADIUS = ODOMETRY_WIDTH / 2;
+        this.ODOMETRY_WIDTH = ODOMETRY_WIDTH;
+
+        this.currentPosition = new Position2D(0, 0, 0);
     }
 
     public MecanumPurePursuitController(HardwareMap hardwareMap, double MECANUM_WIDTH, double ODOMETRY_WIDTH) {
@@ -52,24 +58,49 @@ public class MecanumPurePursuitController extends MecanumController {
                 2000);
 
         // TODO: Set direction
-        this.leftOdometry.setDirection(DcMotorSimple.Direction.FORWARD);
+        this.leftOdometry.setDirection(DcMotorSimple.Direction.REVERSE);
         this.rightOdometry.setDirection(DcMotorSimple.Direction.FORWARD);
         this.centerOdometry.setDirection(DcMotorSimple.Direction.FORWARD);
 
+        this.leftOdometry.reset();
+        this.rightOdometry.reset();
+        this.centerOdometry.reset();
+
         this.MECANUM_WIDTH = MECANUM_WIDTH;
-        this.ODOMETRY_RADIUS = ODOMETRY_WIDTH / 2;
+        this.ODOMETRY_WIDTH = ODOMETRY_WIDTH;
+
+        this.currentPosition = new Position2D(0, 0, 0);
     }
 
     public double getMecanumWidth() {
         return this.MECANUM_WIDTH;
     }
 
+    private static double closestToZero(double x1, double x2) {
+        if (Math.abs(x1) < Math.abs(x2)) {
+            return x1;
+        }
+        return x2;
+    }
+
+    public void rotationTestingUpdateOdometry() {
+        currentPosition.add(new Position2D(
+                centerOdometry.getInchesTravelled() - (Math.abs(leftOdometry.getInchesTravelled() - rightOdometry.getInchesTravelled()) / (ODOMETRY_WIDTH)),
+                closestToZero(leftOdometry.getInchesTravelled(), rightOdometry.getInchesTravelled()),
+                Math.abs(leftOdometry.getInchesTravelled() - rightOdometry.getInchesTravelled()) / ODOMETRY_WIDTH
+                ), false);
+
+        leftOdometry.reset();
+        rightOdometry.reset();
+        centerOdometry.reset();
+    }
+
     public void updateOdometry() {
         currentPosition.add(new Position2D(
-                centerOdometry.getInchesTravelled() - Math.abs(leftOdometry.getInchesTravelled() - rightOdometry.getInchesTravelled()),
-                Math.min(leftOdometry.getInchesTravelled(), rightOdometry.getInchesTravelled()),
-                Math.abs(leftOdometry.getInchesTravelled() - rightOdometry.getInchesTravelled()) / ODOMETRY_RADIUS
-        ));
+                centerOdometry.getInchesTravelled() - (Math.abs(leftOdometry.getInchesTravelled() - rightOdometry.getInchesTravelled()) / (ODOMETRY_WIDTH)),
+                closestToZero(leftOdometry.getInchesTravelled(), rightOdometry.getInchesTravelled()),
+                Math.abs(leftOdometry.getInchesTravelled() - rightOdometry.getInchesTravelled()) / ODOMETRY_WIDTH
+        ), true);
 
         leftOdometry.reset();
         rightOdometry.reset();

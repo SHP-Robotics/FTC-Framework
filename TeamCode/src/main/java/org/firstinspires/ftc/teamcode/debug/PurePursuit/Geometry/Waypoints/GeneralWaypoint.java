@@ -1,4 +1,6 @@
-package org.firstinspires.ftc.teamcode.debug.PurePursuit.Waypoints;
+package org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Waypoints;
+
+import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Position2D;
 
 public class GeneralWaypoint implements Waypoint {
     private Position2D position2d;

@@ -5,20 +5,20 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.MecanumPurePursuitController;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.PurePursuitPath;
-import org.firstinspires.ftc.teamcode.debug.PurePursuit.Waypoints.EndWaypoint;
-import org.firstinspires.ftc.teamcode.debug.PurePursuit.Waypoints.Position2D;
-import org.firstinspires.ftc.teamcode.debug.PurePursuit.Waypoints.StartWaypoint;
+import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Waypoints.EndWaypoint;
+import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Position2D;
+import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Waypoints.StartWaypoint;
 
 @Autonomous()
 public class PurePursuitTesting extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         final double MECANUM_WIDTH = 14;
-        final double ODOMETRY_WIDTH = 11;
+        final double ODOMETRY_WIDTH = 11.681529572799718;
         MecanumPurePursuitController mecanumPurePursuitController = new MecanumPurePursuitController(hardwareMap, MECANUM_WIDTH, ODOMETRY_WIDTH);
 
         PurePursuitPath path = new PurePursuitPath.PurePursuitPathBuilder(new StartWaypoint(new Position2D(0, 0, 0)))
-                .addWaypoint(new EndWaypoint(new Position2D(0, 0, 0)))
+                .addWaypoint(new EndWaypoint(new Position2D(0, 4, 0)))
                 .build();
 
         waitForStart();

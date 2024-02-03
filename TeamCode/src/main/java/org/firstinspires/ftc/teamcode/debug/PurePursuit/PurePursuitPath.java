@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.debug.PurePursuit;
 
-import org.firstinspires.ftc.teamcode.debug.PurePursuit.Waypoints.EndWaypoint;
-import org.firstinspires.ftc.teamcode.debug.PurePursuit.Waypoints.Position2D;
-import org.firstinspires.ftc.teamcode.debug.PurePursuit.Waypoints.StartWaypoint;
-import org.firstinspires.ftc.teamcode.debug.PurePursuit.Waypoints.Waypoint;
+import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.RestrictedCircle;
+import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.RestrictedLine;
+import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Waypoints.EndWaypoint;
+import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Position2D;
+import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Waypoints.StartWaypoint;
+import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Waypoints.Waypoint;
 
 import java.util.ArrayList;
 
@@ -30,59 +32,10 @@ public class PurePursuitPath {
         this.driveSpeed = purePursuitPathBuilder.driveSpeed;
     }
 
-    private static double plugCirclePositive (
-            double radius,
-            double x,
-            double shiftRight,
-            double shiftUp) {
-        return Math.sqrt((radius * radius) - ((x - shiftRight) * (x - shiftRight))) + shiftUp;
-    }
-
-    private static double plugCircleNegative (
-            double radius,
-            double x,
-            double shiftRight,
-            double shiftUp) {
-        return shiftUp - Math.sqrt((radius * radius) - ((x - shiftRight) * (x - shiftRight)));
-    }
-
-    private static double solvePositive(
-            double radius,
-            double shiftRight,
-            double shiftUp,
-            double slope,
-            double offset
-    ) {
-        return (Math.sqrt(
-                -offset*offset + 2 * offset * shiftUp - 2 * offset * shiftRight * slope - shiftUp * shiftUp + 2 * shiftUp * shiftRight * slope - shiftRight * shiftRight * slope * slope + slope * slope * radius * radius + radius * radius
-        ) - offset * slope + shiftUp * slope + shiftRight)
-                / ((slope*slope) +1);
-    }
-
-    private static double solveNegative(
-            double radius,
-            double shiftRight,
-            double shiftUp,
-            double slope,
-            double offset
-    ) {
-        return (-Math.sqrt(
-                -offset*offset + 2 * offset * shiftUp - 2 * offset * shiftRight * slope - shiftUp * shiftUp + 2 * shiftUp * shiftRight * slope - shiftRight * shiftRight * slope * slope + slope * slope * radius * radius + radius * radius
-        ) - offset * slope + shiftUp * slope + shiftRight)
-                / ((slope*slope) +1);
-    }
-
-    private static boolean checkSolve(
-            double radius,
-            double shiftRight,
-            double shiftUp,
-            double slope,
-            double offset
-    ) {
-        return (-offset*offset + 2 * offset * shiftUp - 2 * offset * shiftRight * slope - shiftUp * shiftUp + 2 * shiftUp * shiftRight * slope - shiftRight * shiftRight * slope * slope + slope * slope * radius * radius + radius * radius) >= 0;
-    }
-
     private Position2D getOptimalIntersection(Position2D currentPosition) {
+        RestrictedCircle followingCircle = new RestrictedCircle(followRadius);
+        followingCircle.setOffset(currentPosition);
+
         Position2D[] furthestIntersections = new Position2D[2];
         int waypoint = -1;
 
@@ -90,112 +43,18 @@ public class PurePursuitPath {
             Position2D position1 = this.waypoints.get(i).getPosition();
             Position2D position2 = this.waypoints.get(i+1).getPosition();
 
-
             double x1 = position1.getX();
             double y1 = position1.getY();
 
             double x2 = position2.getX();
             double y2 = position2.getY();
 
-            if (x1 == x2) {
+            RestrictedLine line = new RestrictedLine(x1, y1, x2, y2);
+
+            Position2D[] tmpIntersections = followingCircle.getLineIntersections(line);
+            if (tmpIntersections[0] != null) {
+                furthestIntersections = tmpIntersections;
                 waypoint = i;
-
-                if (Math.abs(currentPosition.getX() - x1) <= this.followRadius) {
-                    furthestIntersections[0] = new Position2D(x1,
-                                    plugCirclePositive(this.followRadius, x1, currentPosition.getX(), currentPosition.getY()),
-                                    0);
-
-                    furthestIntersections[1] = new Position2D(x1,
-                            plugCircleNegative(this.followRadius, x1, currentPosition.getX(), currentPosition.getY()),
-                            0);
-                }
-
-                continue;
-            }
-
-            double m = (y2 - y1) / (x2 - x1);
-            double b = y1 - m*x1;
-
-            if (checkSolve(
-                    this.followRadius,
-                    currentPosition.getX(),
-                    currentPosition.getY(),
-                    m,
-                    b
-            )) {
-                waypoint = i;
-
-                double solutionX1 = solvePositive(
-                        this.followRadius,
-                        currentPosition.getX(),
-                        currentPosition.getY(),
-                        m,
-                        b
-                );
-
-                double solutionX2 = solveNegative(
-                        this.followRadius,
-                        currentPosition.getX(),
-                        currentPosition.getY(),
-                        m,
-                        b
-                );
-
-                double solutionY11 = plugCirclePositive(
-                        this.followRadius,
-                        solutionX1,
-                        currentPosition.getX(),
-                        currentPosition.getY()
-                );
-
-                double solutionY12 = plugCircleNegative(
-                        this.followRadius,
-                        solutionX1,
-                        currentPosition.getX(),
-                        currentPosition.getY()
-                );
-
-                double solutionY21 = plugCirclePositive(
-                        this.followRadius,
-                        solutionX2,
-                        currentPosition.getX(),
-                        currentPosition.getY()
-                );
-
-                double solutionY22 = plugCircleNegative(
-                        this.followRadius,
-                        solutionX2,
-                        currentPosition.getX(),
-                        currentPosition.getY()
-                );
-
-                if (Math.abs((m * solutionX1) - solutionY11) < Math.abs((m * solutionX1) - solutionY12)) {
-                    furthestIntersections[0] = new Position2D(
-                            solutionX1,
-                            solutionY11,
-                            0
-                    );
-                } else {
-                    furthestIntersections[0] = new Position2D(
-                            solutionX1,
-                            solutionY12,
-                            0
-                    );
-                }
-
-                if (Math.abs((m * solutionX2) - solutionY21) < Math.abs((m * solutionX2) - solutionY22)) {
-                    furthestIntersections[1] = new Position2D(
-                            solutionX2,
-                            solutionY21,
-                            0
-                    );
-                } else {
-                    furthestIntersections[1] = new Position2D(
-                            solutionX2,
-                            solutionY22,
-                            0
-                    );
-                }
             }
         }
 
@@ -207,7 +66,7 @@ public class PurePursuitPath {
             return furthestIntersections[0];
         }
 
-        if (this.waypoints.get(waypoint).getPosition().dist(furthestIntersections[0]) < this.waypoints.get(waypoint).getPosition().dist(furthestIntersections[1])) {
+        if (waypoints.get(waypoint+1).getPosition().dist(furthestIntersections[0]) < waypoints.get(waypoint+1).getPosition().dist(furthestIntersections[1])) {
             return furthestIntersections[0];
         }
 
@@ -267,7 +126,7 @@ public class PurePursuitPath {
             double y = differenceY / max;
             double r = differenceHeading / max;
 
-            this.mecanumPurePursuitController.driveParams(x * this.driveSpeed, y * this.driveSpeed, r * this.driveSpeed);
+            this.mecanumPurePursuitController.driveFieldParams(x * this.driveSpeed, y * this.driveSpeed, r * this.driveSpeed, mecanumPurePursuitController.getCurrentPosition().getHeadingRadians());
         } else {
             this.isFollowing = false;
             this.mecanumPurePursuitController = null;
