@@ -2,9 +2,10 @@ package org.firstinspires.ftc.teamcode.debug.config;
 
 public final class Constants {
     // Pure Pursuit
-    // MECANUM_WIDTH only needs to be an estimate, but affects speed of rotation during path following
-    public static final double MECANUM_WIDTH = 14;
-    public static final double ODOMETRY_WIDTH = 9.477259842519654;
+    public static final double MECANUM_WIDTH = 10;
+    public static final double ODOMETRY_TICKS_PER_INCH = 205.86;
+    public static final double ODOMETRY_WIDTH = 14.473080157209779;
+    public static final double CIRCULAR_RATIO = -0.18;
 
     // Oh god no
     public static final double TILE_LENGTH = 23.3437;

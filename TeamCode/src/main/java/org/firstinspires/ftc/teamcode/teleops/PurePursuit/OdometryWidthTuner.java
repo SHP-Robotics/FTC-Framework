@@ -1,0 +1,41 @@
+package org.firstinspires.ftc.teamcode.teleops.PurePursuit;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.teamcode.debug.PurePursuit.MecanumPurePursuitController;
+import org.firstinspires.ftc.teamcode.debug.PurePursuit.Odometry;
+import org.firstinspires.ftc.teamcode.debug.SpeedController;
+import org.firstinspires.ftc.teamcode.debug.SpeedType;
+import org.firstinspires.ftc.teamcode.debug.config.Constants;
+
+@TeleOp()
+public class OdometryWidthTuner extends LinearOpMode {
+    @Override
+    public void runOpMode() throws InterruptedException {
+        SpeedController speedController = new SpeedController.SpeedBuilder(SpeedType.NO_CHANGE)
+                .setNaturalSpeed(0.4)
+                .build();
+        MecanumPurePursuitController mecanumPurePursuitController = new MecanumPurePursuitController(hardwareMap);
+        mecanumPurePursuitController.setSpeedController(speedController);
+
+        waitForStart();
+        telemetry.addLine("Rotate 10 full times");
+        telemetry.update();
+
+        while (opModeIsActive()) {
+            mecanumPurePursuitController.drive(gamepad1);
+            mecanumPurePursuitController.rotationTestingUpdateOdometry();
+
+            if (gamepad1.b) {
+                // predicted too far -> increase width
+                // predicted too short -> decrease width
+                telemetry.addData("Ideal Odometry Width", Constants.ODOMETRY_WIDTH * Math.abs(mecanumPurePursuitController.getCurrentPosition().getHeadingRadians() / (20 * Math.PI)));
+                telemetry.update();
+                break;
+            }
+        }
+
+        while (opModeIsActive()) {}
+    }
+}

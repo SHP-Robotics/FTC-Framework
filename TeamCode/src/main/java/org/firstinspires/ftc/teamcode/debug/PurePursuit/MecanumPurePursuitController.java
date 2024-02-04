@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.debug.PurePursuit;
 
+import static org.firstinspires.ftc.teamcode.debug.config.Constants.ODOMETRY_TICKS_PER_INCH;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -35,22 +37,18 @@ public class MecanumPurePursuitController extends MecanumController {
         super(hardwareMap);
 
         // TODO: Set name (parameter 1)
-        // TODO: Set wheel diameter inches (parameter 2)
-        // TODO: Set ticks per revolution (parameter 3)
+        // TODO: Set ticks per inch (parameter 2)
         this.leftOdometry = new Odometry(
                 (DcMotor)hardwareMap.get("left"),
-                48/25.4,
-                2000);
+                ODOMETRY_TICKS_PER_INCH);
 
         this.rightOdometry = new Odometry(
                 (DcMotor)hardwareMap.get("right"),
-                48/25.4,
-                2000);
+                ODOMETRY_TICKS_PER_INCH);
 
         this.centerOdometry = new Odometry(
                 (DcMotor)hardwareMap.get("center"),
-                48/25.4,
-                2000);
+                ODOMETRY_TICKS_PER_INCH);
 
         // TODO: Set direction
         this.leftOdometry.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -72,16 +70,17 @@ public class MecanumPurePursuitController extends MecanumController {
     }
 
     public void rotationTestingUpdateOdometry() {
-        double x = centerOdometry.getInchesTravelled() + (leftOdometry.getInchesTravelled() - rightOdometry.getInchesTravelled())/2;
+        // rotation subtraction from x missing for tuning ForwardOffsetTuner
+        double x = centerOdometry.getInchesTravelled();
         double y = (leftOdometry.getInchesTravelled() + rightOdometry.getInchesTravelled()) / 2;
         double r = (leftOdometry.getInchesTravelled() - rightOdometry.getInchesTravelled()) / Constants.ODOMETRY_WIDTH;
 
-        double xOriented = (Math.cos(-getCurrentPosition().getHeadingRadians()) * x) - (Math.sin(-getCurrentPosition().getHeadingRadians()) * y);
-        double yOriented = (Math.cos(-getCurrentPosition().getHeadingRadians()) * y) + (Math.sin(-getCurrentPosition().getHeadingRadians()) * x);
+        // removed x and y oriented to get center odometry dist
 
+        // clamp is false for tuning OdometryWidthTuner
         currentPosition.add(new Position2D(
-                xOriented,
-                yOriented,
+                x,
+                y,
                 r
         ), false);
 
@@ -91,7 +90,8 @@ public class MecanumPurePursuitController extends MecanumController {
     }
 
     public void updateOdometry() {
-        double x = centerOdometry.getInchesTravelled() + (leftOdometry.getInchesTravelled() - rightOdometry.getInchesTravelled())/2;
+        double distanceRotationallyTravelled = (leftOdometry.getInchesTravelled() - rightOdometry.getInchesTravelled())/2;
+        double x = centerOdometry.getInchesTravelled() + (distanceRotationallyTravelled * Constants.CIRCULAR_RATIO);
         double y = (leftOdometry.getInchesTravelled() + rightOdometry.getInchesTravelled()) / 2;
         double r = (leftOdometry.getInchesTravelled() - rightOdometry.getInchesTravelled()) / Constants.ODOMETRY_WIDTH;
 

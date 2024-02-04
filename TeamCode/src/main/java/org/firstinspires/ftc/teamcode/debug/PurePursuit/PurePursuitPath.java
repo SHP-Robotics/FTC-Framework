@@ -4,6 +4,7 @@ import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.RestrictedCircl
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.RestrictedLine;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Waypoints.EndWaypoint;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Position2D;
+import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Waypoints.InterruptionWaypoint;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Waypoints.StartWaypoint;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Waypoints.Waypoint;
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
@@ -45,6 +46,10 @@ public class PurePursuitPath {
         int waypoint = -1;
 
         for (int i = 0; i < this.waypoints.size()-1; i++) {
+            if (this.waypoints.get(i) instanceof InterruptionWaypoint && !((InterruptionWaypoint) this.waypoints.get(i)).isExcecuted() && close(this.waypoints.get(i).getPosition())) {
+                ((InterruptionWaypoint) this.waypoints.get(i)).run();
+            }
+
             Position2D position1 = this.waypoints.get(i).getPosition();
             Position2D position2 = this.waypoints.get(i+1).getPosition();
 
@@ -189,13 +194,12 @@ public class PurePursuitPath {
     }
 
     public boolean isFinished() {
-        if (isFollowing) {
-            Position2D lastPosition = this.waypoints.get(this.waypoints.size()-1).getPosition();
-            return this.failed() ||
-                    (this.mecanumPurePursuitController.getCurrentPosition().dist(lastPosition) <= this.positionBuffer
-                    && Math.abs(this.mecanumPurePursuitController.getCurrentPosition().getHeadingRadians() - lastPosition.getHeadingRadians()) <= rotationBuffer);
-        }
-        return false;
+        return !isFollowing || this.failed() || this.close(this.waypoints.get(this.waypoints.size()-1).getPosition());
+    }
+
+    private boolean close(Position2D position2D) {
+        return (this.mecanumPurePursuitController.getCurrentPosition().dist(position2D) <= this.positionBuffer
+                && Math.abs(this.mecanumPurePursuitController.getCurrentPosition().getHeadingRadians() - position2D.getHeadingRadians()) <= rotationBuffer);
     }
 
     public boolean failed() {

@@ -10,8 +10,8 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 import org.firstinspires.ftc.teamcode.R;
 
 public class Odometry extends DcMotorImplEx {
-    private double INCHES_PER_TICK = 2000;
-    private double lastCall = 0;
+    private double TICKS_PER_INCH = 1;
+    private int lastCall = 0;
 
     public Odometry(DcMotorController controller, int portNumber) {
         super(controller, portNumber);
@@ -28,22 +28,23 @@ public class Odometry extends DcMotorImplEx {
         this.setMode(RunMode.RUN_USING_ENCODER);
     }
 
-    public Odometry(DcMotor dcMotor, double wheelDiameterInches, double ticksPerRevolution) {
+    public Odometry(DcMotor dcMotor, double ticksPerInch) {
         super(dcMotor.getController(), dcMotor.getPortNumber());
         this.setDirection(dcMotor.getDirection());
+        this.setMode(RunMode.RUN_USING_ENCODER);
 
-        INCHES_PER_TICK = wheelDiameterInches * Math.PI / ticksPerRevolution;
+        this.TICKS_PER_INCH = ticksPerInch;
     }
 
     public void reset() {
         this.lastCall = this.getCurrentPosition();
     }
 
-    // Prevents front-end from controlling mode
-    @Override
-    public synchronized void setMode(RunMode mode) {}
+//    Prevents front-end from controlling mode
+//    @Override
+//    public synchronized void setMode(RunMode mode) {}
 
     public double getInchesTravelled() {
-        return (this.getCurrentPosition() - lastCall) * this.INCHES_PER_TICK;
+        return (this.getCurrentPosition() - lastCall) / this.TICKS_PER_INCH;
     }
 }

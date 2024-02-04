@@ -50,9 +50,21 @@ public class Position2D {
         }
     }
 
+    public static Position2D add(Position2D p1, Position2D p2) {
+        return new Position2D(
+                p1.getX() + p2.getX(),
+                p1.getY() + p2.getY(),
+                clampRadians(p1.getHeadingRadians() + p2.getHeadingRadians())
+        );
+    }
+
     public double dist(Position2D position2D) {
         double x2 = position2D.getX();
         double y2 = position2D.getY();
         return Math.sqrt(((this.x - x2) * (this.x - x2)) + ((this.y - y2) * (this.y - y2)));
+    }
+
+    public static double dist(Position2D p1, Position2D p2) {
+        return Math.sqrt(((p2.x - p1.x) * (p2.x - p1.x)) + ((p2.y - p1.y) * (p2.y - p1.y)));
     }
 }

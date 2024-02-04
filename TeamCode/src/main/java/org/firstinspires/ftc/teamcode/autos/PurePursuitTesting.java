@@ -21,10 +21,12 @@ public class PurePursuitTesting extends LinearOpMode {
 
         PurePursuitPath path = new PurePursuitPath.PurePursuitPathBuilder(new StartWaypoint(new Position2D(0, 0, 0)))
                 .addWaypoint(new EndWaypoint(new Position2D(4, 0, 0)))
-                .setMaximumTanh(0.4)
+                .setTanhPace(0.97)
+                .setMinimumTanh(0.06)
+                .setMaximumTanh(0.35)
                 .setFollowRadius(1)
-                .setPositionBuffer(0.1)
-                .setRotationBuffer(0.1)
+                .setPositionBuffer(0.05)
+                .setRotationBuffer(0.05)
                 .build();
 
         waitForStart();

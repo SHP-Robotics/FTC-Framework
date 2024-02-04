@@ -15,6 +15,35 @@ public class RestrictedCircle {
         this.shiftUp = 0;
     }
 
+    public RestrictedCircle(Position2D p1, Position2D p2) {
+        RestrictedLine l1 = new RestrictedLine(p1, Position2D.add(p1, new Position2D(
+                Math.cos(p1.getHeadingRadians()),
+                Math.sin(p1.getHeadingRadians()),
+                0
+        )));
+
+        RestrictedLine l2 = new RestrictedLine(p2, Position2D.add(p2, new Position2D(
+                Math.cos(p2.getHeadingRadians()),
+                Math.sin(p2.getHeadingRadians()),
+                0
+        )));
+
+        Position2D p3 = RestrictedLine.lineIntersection(l1, l2);
+
+        double bisectorAngle = p2.getHeadingRadians() - p1.getHeadingRadians();
+        double distFromIntersection = Position2D.dist(p1, p3);
+        this.radius = distFromIntersection * (Math.sin(bisectorAngle / 2));
+
+        this.setOffset(new Position2D(
+                p1.getX() - (this.radius * Math.cos(p1.getHeadingRadians())/Math.sin(p1.getHeadingRadians())),
+                p1.getY() - (this.radius * Math.cos(p1.getHeadingRadians())/Math.sin(p1.getHeadingRadians())),
+                0
+        ));
+
+        this.setRestrictionCounterClockwiseRadians(Math.PI - p1.getHeadingRadians());
+        this.setRestrictionClockwiseRadians(Math.PI - p2.getHeadingRadians());
+    }
+
     public void setOffset(Position2D offset) {
         this.shiftRight = offset.getX();
         this.shiftUp = offset.getY();
