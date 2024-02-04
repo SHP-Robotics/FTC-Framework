@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.autos;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.debug.PIDControlledDcMotor;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Waypoints.GeneralWaypoint;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.MecanumPurePursuitController;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.PurePursuitPath;
@@ -16,16 +17,14 @@ import org.firstinspires.ftc.teamcode.debug.SpeedType;
 public class PurePursuitTesting extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        SpeedController speedController = new SpeedController.SpeedBuilder(SpeedType.NO_CHANGE)
-                .setNaturalSpeed(0.4)
-                .build();
         MecanumPurePursuitController mecanumPurePursuitController = new MecanumPurePursuitController(hardwareMap);
-        mecanumPurePursuitController.setSpeedController(speedController);
 
         PurePursuitPath path = new PurePursuitPath.PurePursuitPathBuilder(new StartWaypoint(new Position2D(0, 0, 0)))
-//                .addWaypoint(new GeneralWaypoint(new Position2D(0, 4, 0)))
-                .addWaypoint(new EndWaypoint(new Position2D(0, 4, 0)))
+                .addWaypoint(new EndWaypoint(new Position2D(4, 0, 0)))
+                .setMaximumTanh(0.4)
                 .setFollowRadius(1)
+                .setPositionBuffer(0.1)
+                .setRotationBuffer(0.1)
                 .build();
 
         waitForStart();

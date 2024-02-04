@@ -72,7 +72,7 @@ public class MecanumPurePursuitController extends MecanumController {
     }
 
     public void rotationTestingUpdateOdometry() {
-        double x = centerOdometry.getInchesTravelled() - (leftOdometry.getInchesTravelled() - rightOdometry.getInchesTravelled());
+        double x = centerOdometry.getInchesTravelled() + (leftOdometry.getInchesTravelled() - rightOdometry.getInchesTravelled())/2;
         double y = (leftOdometry.getInchesTravelled() + rightOdometry.getInchesTravelled()) / 2;
         double r = (leftOdometry.getInchesTravelled() - rightOdometry.getInchesTravelled()) / Constants.ODOMETRY_WIDTH;
 
@@ -91,7 +91,7 @@ public class MecanumPurePursuitController extends MecanumController {
     }
 
     public void updateOdometry() {
-        double x = centerOdometry.getInchesTravelled() - (leftOdometry.getInchesTravelled() - rightOdometry.getInchesTravelled());
+        double x = centerOdometry.getInchesTravelled() + (leftOdometry.getInchesTravelled() - rightOdometry.getInchesTravelled())/2;
         double y = (leftOdometry.getInchesTravelled() + rightOdometry.getInchesTravelled()) / 2;
         double r = (leftOdometry.getInchesTravelled() - rightOdometry.getInchesTravelled()) / Constants.ODOMETRY_WIDTH;
 
