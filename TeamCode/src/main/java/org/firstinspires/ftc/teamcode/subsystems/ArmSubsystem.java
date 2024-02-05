@@ -58,7 +58,7 @@ public class ArmSubsystem extends Subsystem {
         leftSlide.resetEncoder();
         leftSlide.setPositionErrorTolerance(kSlideTolerance);
         leftSlide.enableFF(new ElevatorFFController(kSlideS, kSlideG));
-
+        leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
 
         rightSlide = new SHPMotor(hardwareMap, kRightSlideName);
@@ -68,6 +68,7 @@ public class ArmSubsystem extends Subsystem {
         rightSlide.resetEncoder();
         rightSlide.setPositionErrorTolerance(kSlideTolerance);
         rightSlide.enableFF(new ElevatorFFController(kSlideS, kSlideG));
+        rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
 
 
@@ -184,6 +185,7 @@ public class ArmSubsystem extends Subsystem {
         //get rid of right slide set positions and only do left
         //get at set point
         //switch right and left slide in the configuration
+
         telemetry.addData("State: ", state);
         telemetry.addData("Left Slide Position: ", leftSlide.getPosition(MotorUnit.TICKS));
         telemetry.addData("Right Slide Position: ", rightSlide.getPosition(MotorUnit.TICKS));

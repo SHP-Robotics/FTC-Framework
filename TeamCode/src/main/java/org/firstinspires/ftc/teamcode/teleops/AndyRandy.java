@@ -115,7 +115,7 @@ TODO:
         );
 
         new Trigger (gamepad1.dpad_left, new RunCommand(()->{
-            if (!Clock.hasElapsed(debounce, 60)) return;//TODO: TEST
+            //if (!Clock.hasElapsed(debounce, 60)) return;//TODO: TEST
             planeServo.setState(PlaneServo.State.OUT);
         })
         );

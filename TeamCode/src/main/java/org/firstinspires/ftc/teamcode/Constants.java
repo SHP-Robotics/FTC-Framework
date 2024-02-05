@@ -17,10 +17,10 @@ public class Constants {
                 "rightRear"
         };
         public static final FFController[] kFFs = new FFController[]{
-                new FFController(0.047),
+                new FFController(0.07),
                 new FFController(0.07), //TODO: ??
-                new FFController(0.045),
-                new FFController(0.035)
+                new FFController(0.07),
+                new FFController(0.045)
         };
         public static final double kMinimumBias = 0.3;
         public static final double kMaximumBias = 0.6;
@@ -33,7 +33,7 @@ public class Constants {
     public static final class Intake{
 //        public static final String kLeftAdjust = "LeftAxon";
 //        public static final String kRightAdjust = "RightAxon";
-        public static final double kPositionBottom = 0.6;
+        public static final double kPositionBottom = 0.615;
         public static final double kPositionTop = 0.05; //0.05
         public static final double kPositionMiddle = 0.3;
         public static final String kPixelServo = "MiniServo";

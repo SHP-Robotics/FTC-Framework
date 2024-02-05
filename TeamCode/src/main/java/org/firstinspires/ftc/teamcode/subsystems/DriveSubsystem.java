@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static org.firstinspires.ftc.teamcode.Constants.Drive.kFFs;
 import static org.firstinspires.ftc.teamcode.Constants.Drive.kMaximumBias;
 import static org.firstinspires.ftc.teamcode.Constants.Drive.kMinimumBias;
 import static org.firstinspires.ftc.teamcode.Constants.Drive.kMotorNames;
@@ -16,9 +17,11 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.roadrunner.util.Encoder;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
+import org.firstinspires.ftc.teamcode.shplib.controllers.GainSchedule;
 import org.firstinspires.ftc.teamcode.shplib.hardware.SHPMotor;
 import org.firstinspires.ftc.teamcode.shplib.hardware.drive.SHPMecanumDrive;
 import org.firstinspires.ftc.teamcode.shplib.hardware.sensors.SHPIMU;
+import org.firstinspires.ftc.teamcode.shplib.hardware.units.MotorUnit;
 
 public class DriveSubsystem extends Subsystem {
     private final SHPMecanumDrive drive;
@@ -141,23 +144,23 @@ public class DriveSubsystem extends Subsystem {
         bias = Range.clip(driveBias, kMinimumBias, kMaximumBias);
     }
     //uncomment /* block */
-    /*
-    public void enablePositionPID() {
-        drive.enablePositionPID(0.001, 0.0, 0.0);
-        drive.scheduleGains(
-                new GainSchedule(0.0005, 0.0, 0.0, 0.80),
-                new GainSchedule(0.0002, 0.0, 0.0, 0.40)
-//                new GainSchedule(0.0001, 0.0, 0.0, 0.10)
 
-//                new GainSchedule(0.00015, 0.0, 0.0, 0.20)
-        );
-        drive.enableFF(kFFs);
-    }
+//    public void enablePositionPID() {
+//        drive.enablePositionPID(0.001, 0.0, 0.0);
+//        drive.scheduleGains(
+//                new GainSchedule(0.0005, 0.0, 0.0, 0.80),
+//                new GainSchedule(0.0002, 0.0, 0.0, 0.40)
+////                new GainSchedule(0.0001, 0.0, 0.0, 0.10)
+//
+////                new GainSchedule(0.00015, 0.0, 0.0, 0.20)
+//        );
+//        drive.enableFF(kFFs);
+//    }
 
     public void setInitialPositions() {
         drive.setInitialPositions(MotorUnit.TICKS);
     }
-    */
+
 
 //
 //    public void driveTo(boolean usingPID, double ticks) {
