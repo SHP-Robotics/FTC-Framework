@@ -6,6 +6,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
 
 public class SpeedController {
+    public enum SpeedType {
+        NO_CHANGE,
+        SINGLE_OVERRIDE,
+        DOUBLE_OVERRIDE,
+        GEAR_SHIFT
+    }
+
     SpeedType speedType;
 
     // If speedType is an override type

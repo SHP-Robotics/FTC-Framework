@@ -3,15 +3,11 @@ package org.firstinspires.ftc.teamcode.autos;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.debug.PIDControlledDcMotor;
-import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Waypoints.GeneralWaypoint;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.MecanumPurePursuitController;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.PurePursuitPath;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Waypoints.EndWaypoint;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Position2D;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Waypoints.StartWaypoint;
-import org.firstinspires.ftc.teamcode.debug.SpeedController;
-import org.firstinspires.ftc.teamcode.debug.SpeedType;
 
 @Autonomous()
 public class PurePursuitTesting extends LinearOpMode {

@@ -2,16 +2,11 @@ package org.firstinspires.ftc.teamcode.debug;
 
 import androidx.annotation.NonNull;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoControllerEx;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.ServoConfigurationType;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class AccumulationControlledServo extends ServoImplEx {
     // if too low, increasing kP will not speed up anymore, and may oscillate

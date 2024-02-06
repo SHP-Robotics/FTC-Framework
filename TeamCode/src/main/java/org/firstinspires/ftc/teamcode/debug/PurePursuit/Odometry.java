@@ -7,8 +7,6 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
-import org.firstinspires.ftc.teamcode.R;
-
 public class Odometry extends DcMotorImplEx {
     private double TICKS_PER_INCH = 1;
     private int lastCall = 0;
@@ -40,11 +38,11 @@ public class Odometry extends DcMotorImplEx {
         this.lastCall = this.getCurrentPosition();
     }
 
-//    Prevents front-end from controlling mode
-//    @Override
-//    public synchronized void setMode(RunMode mode) {}
-
     public double getInchesTravelled() {
-        return (this.getCurrentPosition() - lastCall) / this.TICKS_PER_INCH;
+        int currentPosition = this.getCurrentPosition();
+        int lastCall = this.lastCall;
+        // TODO: ADD THIS BACK!!!!
+        this.lastCall = currentPosition;
+        return (currentPosition - lastCall) / this.TICKS_PER_INCH;
     }
 }

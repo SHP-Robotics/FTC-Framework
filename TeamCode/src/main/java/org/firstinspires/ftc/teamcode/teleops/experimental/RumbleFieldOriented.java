@@ -10,13 +10,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.debug.MecanumController;
 import org.firstinspires.ftc.teamcode.debug.SpeedController;
-import org.firstinspires.ftc.teamcode.debug.SpeedType;
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
 import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
 import org.firstinspires.ftc.teamcode.shplib.vision.PixelDetectionPipeline;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
-
-import java.util.concurrent.CopyOnWriteArrayList;
 
 @TeleOp()
 public class RumbleFieldOriented extends LinearOpMode {
@@ -37,7 +34,7 @@ public class RumbleFieldOriented extends LinearOpMode {
         cameraServo.setDirection(Servo.Direction.REVERSE);
         cameraServo.setPosition(Constants.CameraMode.FACING_CLAW.getPosition());
 
-        SpeedController speedController = new SpeedController.SpeedBuilder(SpeedType.SINGLE_OVERRIDE)
+        SpeedController speedController = new SpeedController.SpeedBuilder(SpeedController.SpeedType.SINGLE_OVERRIDE)
                 .setNaturalSpeed(0.6)
                 .setOverrideOneSpeed(1)
                 .build();

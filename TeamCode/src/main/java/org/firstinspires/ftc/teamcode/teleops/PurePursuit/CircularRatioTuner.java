@@ -5,22 +5,22 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.MecanumPurePursuitController;
 import org.firstinspires.ftc.teamcode.debug.SpeedController;
-import org.firstinspires.ftc.teamcode.debug.SpeedType;
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
 
 @TeleOp()
 public class CircularRatioTuner extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        SpeedController speedController = new SpeedController.SpeedBuilder(SpeedType.NO_CHANGE)
+        SpeedController speedController = new SpeedController.SpeedBuilder(SpeedController.SpeedType.NO_CHANGE)
                 .setNaturalSpeed(0.4)
                 .build();
         MecanumPurePursuitController mecanumPurePursuitController = new MecanumPurePursuitController(hardwareMap);
         mecanumPurePursuitController.setSpeedController(speedController);
 
         waitForStart();
-        telemetry.addLine("Run OdometryWidthTuner first");
-        telemetry.addLine("Rotate 10 full times");
+        telemetry.addLine("1. Run OdometryWidthTuner first");
+        telemetry.addLine("2. Rotate 10 full times");
+        telemetry.addLine("3. Press B when complete");
         telemetry.update();
 
         while (opModeIsActive()) {

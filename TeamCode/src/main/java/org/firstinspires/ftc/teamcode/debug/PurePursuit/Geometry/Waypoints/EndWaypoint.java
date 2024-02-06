@@ -3,14 +3,14 @@ package org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Waypoints;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Position2D;
 
 public class EndWaypoint implements Waypoint {
-    private final Position2D position2d;
+    private final Position2D endpoint;
 
-    public EndWaypoint(Position2D position2D) {
-        this.position2d = position2D;
+    public EndWaypoint(Position2D endpoint) {
+        this.endpoint = endpoint;
     }
 
     @Override
-    public Position2D getPosition() {
-        return this.position2d;
+    public Position2D getEndpoint() {
+        return this.endpoint;
     }
 }

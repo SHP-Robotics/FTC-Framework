@@ -22,6 +22,14 @@ public class RestrictedLine {
         return this.p2;
     }
 
+    public double getM() {
+        return (this.p2.getY() - this.p1.getY()) / (this.p2.getX() - this.p1.getX());
+    }
+
+    public double getB() {
+        return this.p1.getY() - (this.getM() * this.p1.getX());
+    }
+
     public boolean inDomain(Position2D position2D) {
         return p1.getX() <= position2D.getX() && position2D.getX() <= p2.getX();
     }

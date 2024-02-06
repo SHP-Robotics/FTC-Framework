@@ -3,15 +3,15 @@ package org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Waypoints;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Position2D;
 
 public class InterruptionWaypoint implements Waypoint {
-    private final Position2D position2d;
+    private final Position2D endpoint;
     private final Runnable interruptingAction;
 
 //    private final double sleep;
 
     private boolean excecuted = false;
 
-    public InterruptionWaypoint(Position2D position2D, Runnable interruptingAction) {
-        this.position2d = position2D;
+    public InterruptionWaypoint(Position2D endpoint, Runnable interruptingAction) {
+        this.endpoint = endpoint;
         this.interruptingAction = interruptingAction;
 //        this.sleep = 0;
     }
@@ -36,7 +36,7 @@ public class InterruptionWaypoint implements Waypoint {
 //    }
 
     @Override
-    public Position2D getPosition() {
-        return this.position2d;
+    public Position2D getEndpoint() {
+        return this.endpoint;
     }
 }

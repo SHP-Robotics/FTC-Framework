@@ -60,7 +60,7 @@ public class MecanumController {
 
         this.imu = imu;
 
-        this.speedController = new SpeedController.SpeedBuilder(SpeedType.NO_CHANGE)
+        this.speedController = new SpeedController.SpeedBuilder(SpeedController.SpeedType.NO_CHANGE)
                 .build();
     }
 
@@ -85,7 +85,7 @@ public class MecanumController {
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logo, usb);
         this.imu.initialize(new IMU.Parameters(orientationOnRobot));
 
-        this.speedController = new SpeedController.SpeedBuilder(SpeedType.NO_CHANGE)
+        this.speedController = new SpeedController.SpeedBuilder(SpeedController.SpeedType.NO_CHANGE.NO_CHANGE)
                 .build();
     }
 

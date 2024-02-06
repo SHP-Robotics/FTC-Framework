@@ -2,39 +2,28 @@ package org.firstinspires.ftc.teamcode.debug.PurePursuit;
 
 import static org.firstinspires.ftc.teamcode.debug.config.Constants.ODOMETRY_TICKS_PER_INCH;
 
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.teamcode.debug.MecanumController;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Position2D;
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
 
 public class MecanumPurePursuitController extends MecanumController {
-    private Odometry leftOdometry;
-    private Odometry rightOdometry;
-    private Odometry centerOdometry;
+    private final Odometry leftOdometry;
+    private final Odometry rightOdometry;
+    private final Odometry centerOdometry;
 
     private Position2D currentPosition;
 
-    public MecanumPurePursuitController(DcMotor leftFront, DcMotor rightFront, DcMotor leftRear, DcMotor rightRear, IMU imu,
-                                        Odometry leftOdometry, Odometry rightOdometry, Odometry centerOdometry) {
-        super(leftFront, rightFront, leftRear, rightRear, imu);
-
-        this.leftOdometry = leftOdometry;
-        this.rightOdometry = rightOdometry;
-        this.centerOdometry = centerOdometry;
-
-        this.leftOdometry.reset();
-        this.rightOdometry.reset();
-        this.centerOdometry.reset();
-
-        this.currentPosition = new Position2D(0, 0, 0);
-    }
-
     public MecanumPurePursuitController(HardwareMap hardwareMap) {
         super(hardwareMap);
+
+        for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
+            module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+        }
 
         // TODO: Set name (parameter 1)
         // TODO: Set ticks per inch (parameter 2)
@@ -62,18 +51,16 @@ public class MecanumPurePursuitController extends MecanumController {
         this.currentPosition = new Position2D(0, 0, 0);
     }
 
-    private static double closestToZero(double x1, double x2) {
-        if (Math.abs(x1) < Math.abs(x2)) {
-            return x1;
-        }
-        return x2;
-    }
-
     public void rotationTestingUpdateOdometry() {
-        // rotation subtraction from x missing for tuning ForwardOffsetTuner
-        double x = centerOdometry.getInchesTravelled();
-        double y = (leftOdometry.getInchesTravelled() + rightOdometry.getInchesTravelled()) / 2;
-        double r = (leftOdometry.getInchesTravelled() - rightOdometry.getInchesTravelled()) / Constants.ODOMETRY_WIDTH;
+        double lT = leftOdometry.getInchesTravelled();
+        double cT = centerOdometry.getInchesTravelled();
+        double rT = rightOdometry.getInchesTravelled();
+
+        // rotation addition to x missing for tuning ForwardOffsetTuner
+        double distanceRotated = (lT - rT) / 2;
+        double x = cT + (distanceRotated * Constants.CIRCULAR_RATIO);
+        double y = (lT + rT) / 2;
+        double r = (2 * distanceRotated) / Constants.ODOMETRY_WIDTH;
 
         // removed x and y oriented to get center odometry dist
 
@@ -83,30 +70,32 @@ public class MecanumPurePursuitController extends MecanumController {
                 y,
                 r
         ), false);
-
-        leftOdometry.reset();
-        rightOdometry.reset();
-        centerOdometry.reset();
     }
 
     public void updateOdometry() {
-        double distanceRotationallyTravelled = (leftOdometry.getInchesTravelled() - rightOdometry.getInchesTravelled())/2;
-        double x = centerOdometry.getInchesTravelled() + (distanceRotationallyTravelled * Constants.CIRCULAR_RATIO);
-        double y = (leftOdometry.getInchesTravelled() + rightOdometry.getInchesTravelled()) / 2;
-        double r = (leftOdometry.getInchesTravelled() - rightOdometry.getInchesTravelled()) / Constants.ODOMETRY_WIDTH;
+        double lT = leftOdometry.getInchesTravelled();
+        double cT = centerOdometry.getInchesTravelled();
+        double rT = rightOdometry.getInchesTravelled();
 
-        double xOriented = (Math.cos(-getCurrentPosition().getHeadingRadians()) * x) - (Math.sin(-getCurrentPosition().getHeadingRadians()) * y);
-        double yOriented = (Math.cos(-getCurrentPosition().getHeadingRadians()) * y) + (Math.sin(-getCurrentPosition().getHeadingRadians()) * x);
+        double distanceRotated = (lT - rT) / 2;
+        double x = cT + (distanceRotated * Constants.CIRCULAR_RATIO);
+        double y = (lT + rT) / 2;
+        double r = (2 * distanceRotated) / Constants.ODOMETRY_WIDTH;
+
+        // TODO: check if r/2 helps or hinders
+        // Should make all movement oriented between last and current position
+        // because all movement occurred between last and current moment
+        double headingRadians = -getCurrentPosition().getHeadingRadians() - r/2;
+
+        // TODO: CHECK MATH
+        double xOriented = (Math.cos(headingRadians) * x) - (Math.sin(headingRadians) * y);
+        double yOriented = (Math.cos(headingRadians) * y) + (Math.sin(headingRadians) * x);
 
         currentPosition.add(new Position2D(
                 xOriented,
                 yOriented,
                 r
         ), true);
-
-        leftOdometry.reset();
-        rightOdometry.reset();
-        centerOdometry.reset();
     }
 
     public Position2D getCurrentPosition() {

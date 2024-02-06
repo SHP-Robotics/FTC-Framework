@@ -11,7 +11,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.debug.AccumulationControlledDcMotor;
 import org.firstinspires.ftc.teamcode.debug.MecanumController;
 import org.firstinspires.ftc.teamcode.debug.SpeedController;
-import org.firstinspires.ftc.teamcode.debug.SpeedType;
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
 import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
@@ -23,7 +22,7 @@ public class ACControlledWheels extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        SpeedController speedController = new SpeedController.SpeedBuilder(SpeedType.SINGLE_OVERRIDE)
+        SpeedController speedController = new SpeedController.SpeedBuilder(SpeedController.SpeedType.SINGLE_OVERRIDE)
                 .setNaturalSpeed(0.45)
                 .setOverrideOneSpeed(1)
                 .build();

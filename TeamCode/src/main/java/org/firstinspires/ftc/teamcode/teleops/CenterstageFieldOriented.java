@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.teleops;
 
-import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -10,11 +9,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.debug.MecanumController;
 import org.firstinspires.ftc.teamcode.debug.SpeedController;
-import org.firstinspires.ftc.teamcode.debug.SpeedType;
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
 import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
-
-import java.io.File;
 
 @TeleOp(name = "CenterStage Field Oriented")
 public class CenterstageFieldOriented extends LinearOpMode {
@@ -23,7 +19,7 @@ public class CenterstageFieldOriented extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        SpeedController speedController = new SpeedController.SpeedBuilder(SpeedType.SINGLE_OVERRIDE)
+        SpeedController speedController = new SpeedController.SpeedBuilder(SpeedController.SpeedType.SINGLE_OVERRIDE)
                 .setNaturalSpeed(0.6)
                 .setOverrideOneSpeed(1)
                 .build();

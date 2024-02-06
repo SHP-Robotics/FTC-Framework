@@ -25,4 +25,9 @@ public class Synchronous {
         leftMotor.setPower(power);
         rightMotor.setPower(power);
     }
+
+    public enum Side {
+        LEFT,
+        RIGHT
+    }
 }

@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.debug.PurePursuit;
 
+import org.apache.commons.math3.util.MathUtils;
+import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Position2D;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.RestrictedCircle;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.RestrictedLine;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Waypoints.EndWaypoint;
-import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Position2D;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Waypoints.InterruptionWaypoint;
+import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Waypoints.LineBindingWaypoint;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Waypoints.StartWaypoint;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Waypoints.Waypoint;
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
@@ -46,28 +48,43 @@ public class PurePursuitPath {
         int waypoint = -1;
 
         for (int i = 0; i < this.waypoints.size()-1; i++) {
-            if (this.waypoints.get(i) instanceof InterruptionWaypoint && !((InterruptionWaypoint) this.waypoints.get(i)).isExcecuted() && close(this.waypoints.get(i).getPosition())) {
+            if (this.waypoints.get(i) instanceof InterruptionWaypoint && !((InterruptionWaypoint) this.waypoints.get(i)).isExcecuted() && nearPosition(this.waypoints.get(i).getEndpoint())) {
                 ((InterruptionWaypoint) this.waypoints.get(i)).run();
             }
 
-            Position2D position1 = this.waypoints.get(i).getPosition();
-            Position2D position2 = this.waypoints.get(i+1).getPosition();
+            Position2D position1 = this.waypoints.get(i).getEndpoint();
+            Position2D position2 = this.waypoints.get(i + 1).getEndpoint();
 
-            double x1 = position1.getX();
-            double y1 = position1.getY();
+            if (this.waypoints.get(i+1) instanceof LineBindingWaypoint) {
+                RestrictedCircle restrictedCircle = new RestrictedCircle(position1, position2);
 
-            double x2 = position2.getX();
-            double y2 = position2.getY();
+                Position2D[] tmpIntersections = followingCircle.getCircleIntersections(restrictedCircle);
 
-            RestrictedLine line = new RestrictedLine(x1, y1, x2, y2);
+                if (currentPosition.dist(restrictedCircle.getEndpoint()) <= followRadius) {
+                    furthestIntersections = new Position2D[]{restrictedCircle.getEndpoint(), null};
+                    waypoint = i;
+                } else if (tmpIntersections != null && tmpIntersections.length == 2 && (tmpIntersections[0] != null || tmpIntersections[1] != null)) {
+                    furthestIntersections = tmpIntersections;
+                    waypoint = i;
+                }
+            } else {
 
-            Position2D[] tmpIntersections = followingCircle.getLineIntersections(line);
-            if (currentPosition.dist(line.getP2()) <= followRadius) {
-                furthestIntersections = new Position2D[]{line.getP2(), null};
-                waypoint = i;
-            } else if (tmpIntersections != null && tmpIntersections.length == 2 && (tmpIntersections[0] != null || tmpIntersections[1] != null)) {
-                furthestIntersections = tmpIntersections;
-                waypoint = i;
+                double x1 = position1.getX();
+                double y1 = position1.getY();
+
+                double x2 = position2.getX();
+                double y2 = position2.getY();
+
+                RestrictedLine line = new RestrictedLine(x1, y1, x2, y2);
+
+                Position2D[] tmpIntersections = followingCircle.getLineIntersections(line);
+                if (currentPosition.dist(line.getP2()) <= followRadius) {
+                    furthestIntersections = new Position2D[]{line.getP2(), null};
+                    waypoint = i;
+                } else if (tmpIntersections != null && tmpIntersections.length == 2 && (tmpIntersections[0] != null || tmpIntersections[1] != null)) {
+                    furthestIntersections = tmpIntersections;
+                    waypoint = i;
+                }
             }
         }
 
@@ -79,68 +96,22 @@ public class PurePursuitPath {
             return furthestIntersections[0];
         }
 
-        if (waypoints.get(waypoint+1).getPosition().dist(furthestIntersections[0]) < waypoints.get(waypoint+1).getPosition().dist(furthestIntersections[1])) {
+        if (waypoints.get(waypoint+1).getEndpoint().dist(furthestIntersections[0]) < waypoints.get(waypoint+1).getEndpoint().dist(furthestIntersections[1])) {
             return furthestIntersections[0];
         }
 
         return furthestIntersections[1];
     }
 
-    private static double sign(double x) {
-        if (x>=0) {
-            return 1;
-        }
-        return -1;
-    }
-
-    private static double clampRadians(double radians) {
-        while (radians < -Math.PI) {
-            radians += (2*Math.PI);
-        }
-        while (radians > Math.PI) {
-            radians -= (2*Math.PI);
-        }
-        return radians;
-    }
-
     public void follow(MecanumPurePursuitController mecanumPurePursuitController) {
         this.isFollowing = true;
         this.mecanumPurePursuitController = mecanumPurePursuitController;
         while (!this.isFinished()) {
-            this.mecanumPurePursuitController.updateOdometry();
-
-            Position2D optimalIntersection = getOptimalIntersection(this.mecanumPurePursuitController.getCurrentPosition());
-
-            if (optimalIntersection == null) {
-                failed = true;
-                return;
-            }
-
-            double differenceX = optimalIntersection.getX() - this.mecanumPurePursuitController.getCurrentPosition().getX();
-            double differenceY = optimalIntersection.getY() - this.mecanumPurePursuitController.getCurrentPosition().getY();
-            double differenceHeading = clampRadians(optimalIntersection.getHeadingRadians() - this.mecanumPurePursuitController.getCurrentPosition().getHeadingRadians());
-            differenceHeading *= Constants.MECANUM_WIDTH;
-
-            double max = Math.max(Math.abs(differenceX), Math.max(Math.abs(differenceY), Math.abs(differenceHeading)));
-
-            if (max < 1) {
-                max = 1;
-            }
-
-            double driveSpeed = this.maximumTanh * (Math.exp(this.tanhPace * max) - Math.exp(-this.tanhPace * max)) /
-                    (Math.exp(-this.tanhPace * max) + Math.exp(this.tanhPace * max));
-
-            if (Math.abs(driveSpeed) < this.minimumTanh) {
-                driveSpeed = sign(driveSpeed) * this.minimumTanh;
-            }
-
-            double x = differenceX / max;
-            double y = differenceY / max;
-            double r = differenceHeading / max;
-
-            this.mecanumPurePursuitController.driveFieldParams(x * driveSpeed, y * driveSpeed, r * driveSpeed, mecanumPurePursuitController.getCurrentPosition().getHeadingRadians());
+            update();
         }
-        this.mecanumPurePursuitController.deactivate();
+        if (mecanumPurePursuitController != null) {
+            this.mecanumPurePursuitController.deactivate();
+        }
         this.isFollowing = false;
         this.mecanumPurePursuitController = null;
     }
@@ -163,7 +134,7 @@ public class PurePursuitPath {
 
             double differenceX = optimalIntersection.getX() - this.mecanumPurePursuitController.getCurrentPosition().getX();
             double differenceY = optimalIntersection.getY() - this.mecanumPurePursuitController.getCurrentPosition().getY();
-            double differenceHeading = clampRadians(optimalIntersection.getHeadingRadians() - this.mecanumPurePursuitController.getCurrentPosition().getHeadingRadians());
+            double differenceHeading = MathUtils.normalizeAngle(optimalIntersection.getHeadingRadians() - this.mecanumPurePursuitController.getCurrentPosition().getHeadingRadians(), 0.0);
             differenceHeading *= Constants.MECANUM_WIDTH;
 
             double max = Math.max(Math.abs(differenceX), Math.max(Math.abs(differenceY), Math.abs(differenceHeading)));
@@ -176,7 +147,7 @@ public class PurePursuitPath {
                     (Math.exp(-this.tanhPace * max) + Math.exp(this.tanhPace * max));
 
             if (Math.abs(driveSpeed) < this.minimumTanh) {
-                driveSpeed = sign(driveSpeed) * this.minimumTanh;
+                driveSpeed = Math.signum(driveSpeed) * this.minimumTanh;
             }
 
             double x = differenceX / max;
@@ -193,22 +164,25 @@ public class PurePursuitPath {
         }
     }
 
-    public boolean isFinished() {
-        return !isFollowing || this.failed() || this.close(this.waypoints.get(this.waypoints.size()-1).getPosition());
+    public void reset() {
+        if (mecanumPurePursuitController != null) {
+            this.mecanumPurePursuitController.deactivate();
+        }
+        this.isFollowing = false;
+        this.mecanumPurePursuitController = null;
     }
 
-    private boolean close(Position2D position2D) {
+    public boolean isFinished() {
+        return !isFollowing || this.failed() || this.nearPosition(this.waypoints.get(this.waypoints.size()-1).getEndpoint());
+    }
+
+    private boolean nearPosition(Position2D position2D) {
         return (this.mecanumPurePursuitController.getCurrentPosition().dist(position2D) <= this.positionBuffer
                 && Math.abs(this.mecanumPurePursuitController.getCurrentPosition().getHeadingRadians() - position2D.getHeadingRadians()) <= rotationBuffer);
     }
 
     public boolean failed() {
         return failed;
-    }
-
-    public void reset() {
-        this.isFollowing = false;
-        this.mecanumPurePursuitController = null;
     }
 
     public static class PurePursuitPathBuilder {

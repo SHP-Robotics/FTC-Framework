@@ -5,13 +5,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.MecanumPurePursuitController;
 import org.firstinspires.ftc.teamcode.debug.SpeedController;
-import org.firstinspires.ftc.teamcode.debug.SpeedType;
 
 @TeleOp()
 public class LocalizationTestPurePursuit extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        SpeedController speedController = new SpeedController.SpeedBuilder(SpeedType.NO_CHANGE)
+        SpeedController speedController = new SpeedController.SpeedBuilder(SpeedController.SpeedType.NO_CHANGE)
                 .setNaturalSpeed(0.4)
                 .build();
         MecanumPurePursuitController mecanumPurePursuitController = new MecanumPurePursuitController(hardwareMap);

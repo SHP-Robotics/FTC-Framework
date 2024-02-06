@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry;
 
+import org.apache.commons.math3.util.MathUtils;
+
 public class Position2D {
     private double x;
     private double y;
@@ -14,19 +16,7 @@ public class Position2D {
     public Position2D(double x, double y, double headingRadians) {
         this.x = x;
         this.y = y;
-        this.headingRadians = clampRadians(headingRadians);
-    }
-
-    private static double clampRadians(double headingRadians) {
-        while (headingRadians < -Math.PI) {
-            headingRadians += 2*Math.PI;
-        }
-
-        while (headingRadians > Math.PI) {
-            headingRadians -= 2 * Math.PI;
-        }
-
-        return headingRadians;
+        this.headingRadians = MathUtils.normalizeAngle(headingRadians, 0.0);
     }
 
     public double getX() {
@@ -46,7 +36,7 @@ public class Position2D {
         this.y += position2D.getY();
         this.headingRadians = this.headingRadians + position2D.getHeadingRadians();
         if (clamp) {
-            this.headingRadians = clampRadians(this.headingRadians);
+            this.headingRadians = MathUtils.normalizeAngle(this.headingRadians, 0.0);
         }
     }
 
@@ -54,7 +44,7 @@ public class Position2D {
         return new Position2D(
                 p1.getX() + p2.getX(),
                 p1.getY() + p2.getY(),
-                clampRadians(p1.getHeadingRadians() + p2.getHeadingRadians())
+                MathUtils.normalizeAngle(p1.getHeadingRadians() + p2.getHeadingRadians(), 0.0)
         );
     }
 
@@ -66,5 +56,15 @@ public class Position2D {
 
     public static double dist(Position2D p1, Position2D p2) {
         return Math.sqrt(((p2.x - p1.x) * (p2.x - p1.x)) + ((p2.y - p1.y) * (p2.y - p1.y)));
+    }
+
+    public void rotate(double radiansClockwise) {
+        double newX = x * Math.cos(radiansClockwise) - y * Math.sin(radiansClockwise);
+        double newY = y * Math.cos(radiansClockwise) + x * Math.sin(radiansClockwise);
+        double newHeading = MathUtils.normalizeAngle(this.headingRadians + radiansClockwise, 0.0);
+
+        this.x = newX;
+        this.y = newY;
+        this.headingRadians = newHeading;
     }
 }

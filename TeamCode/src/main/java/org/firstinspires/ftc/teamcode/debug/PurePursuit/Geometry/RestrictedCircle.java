@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry;
 
+import org.apache.commons.math3.util.MathUtils;
+
 public class RestrictedCircle {
     private final double radius;
     private double shiftRight;
     private double shiftUp;
 
-    // TODO: implement use for restriction in intersections and plugging in
+    private Position2D endpoint;
+
     private double restrictionClockwiseRadians;
     private double restrictionCounterClockwiseRadians;
 
@@ -28,20 +31,30 @@ public class RestrictedCircle {
                 0
         )));
 
-        Position2D p3 = RestrictedLine.lineIntersection(l1, l2);
+        if (p1.getHeadingRadians() == p2.getHeadingRadians()) {
 
-        double bisectorAngle = p2.getHeadingRadians() - p1.getHeadingRadians();
-        double distFromIntersection = Position2D.dist(p1, p3);
-        this.radius = distFromIntersection * (Math.sin(bisectorAngle / 2));
+            this.radius = Math.abs(l1.getB() - l2.getB()) / Math.sqrt(1 + (l1.getM() * l1.getM()));
+
+        } else {
+
+            Position2D p3 = RestrictedLine.lineIntersection(l1, l2);
+
+            double bisectorAngle = p2.getHeadingRadians() - p1.getHeadingRadians();
+            double distFromIntersection = Position2D.dist(p1, p3);
+            this.radius = distFromIntersection * (Math.sin(bisectorAngle / 2));
+
+        }
 
         this.setOffset(new Position2D(
-                p1.getX() - (this.radius * Math.cos(p1.getHeadingRadians())/Math.sin(p1.getHeadingRadians())),
-                p1.getY() - (this.radius * Math.cos(p1.getHeadingRadians())/Math.sin(p1.getHeadingRadians())),
+                p1.getX() - (this.radius * Math.cos(p1.getHeadingRadians())),
+                p1.getY() - (this.radius * Math.sin(p1.getHeadingRadians())),
                 0
         ));
 
         this.setRestrictionCounterClockwiseRadians(Math.PI - p1.getHeadingRadians());
         this.setRestrictionClockwiseRadians(Math.PI - p2.getHeadingRadians());
+
+        this.endpoint = p2;
     }
 
     public void setOffset(Position2D offset) {
@@ -49,29 +62,21 @@ public class RestrictedCircle {
         this.shiftUp = offset.getY();
     }
 
-    private static double clampRadians(double x) {
-        while (x < 0) {
-            x += (2*Math.PI);
-        }
-
-        while (x > 2*Math.PI) {
-            x -= (2*Math.PI);
-        }
-
-        return x;
+    public Position2D getOffset() {
+        return new Position2D (
+                this.shiftRight,
+                this.shiftUp,
+                0
+        );
     }
 
     public void setRestrictionClockwiseRadians(double restrictionClockwiseRadians) {
-        this.restrictionClockwiseRadians = clampRadians(restrictionClockwiseRadians);
+        this.restrictionClockwiseRadians = MathUtils.normalizeAngle(restrictionClockwiseRadians, 0.0);
 
     }
 
     public void setRestrictionCounterClockwiseRadians(double restrictionCounterClockwiseRadians) {
-        this.restrictionCounterClockwiseRadians = clampRadians(restrictionCounterClockwiseRadians);
-    }
-
-    private static double sgn(double x) {
-        return x < 0 ? -1: 1;
+        this.restrictionCounterClockwiseRadians = MathUtils.normalizeAngle(restrictionCounterClockwiseRadians, 0.0);
     }
 
     private boolean checkInCirclePositive(double x) {
@@ -96,7 +101,12 @@ public class RestrictedCircle {
         throw new IllegalArgumentException("X is not within the restriction boundaries");
     }
 
+    static double sgn(double x) {
+        return x < 0 ? -1: 1;
+    }
+
     public Position2D[] getLineIntersections(RestrictedLine restrictedLine) {
+
         Position2D[] furthestIntersections = new Position2D[2];
 
         double x1 = restrictedLine.getP1().getX() - this.shiftRight;
@@ -206,5 +216,53 @@ public class RestrictedCircle {
         }
 
         return furthestIntersections;
+    }
+
+    public Position2D[] getCircleIntersections(RestrictedCircle restrictedCircle) {
+        Position2D circleOffset = restrictedCircle.getOffset();
+        circleOffset.add(new Position2D(
+                -this.shiftRight,
+                -this.shiftUp,
+                0
+        ), true);
+
+        circleOffset.rotate(-Math.atan(circleOffset.getY() / circleOffset.getX()));
+
+        if (circleOffset.getX() == 0) {
+            return new Position2D[]{
+                    null, null
+            };
+        }
+
+        double solutionX = ((circleOffset.getX()*circleOffset.getX())
+                - (this.radius * this.radius)
+                + (restrictedCircle.radius * restrictedCircle.radius))
+                / (2 * circleOffset.getX());
+
+        double solutionY1 = plugCirclePositive(solutionX);
+        double solutionY2 = plugCircleNegative(solutionX);
+
+        if (solutionY1 == solutionY2) {
+            return new Position2D[]{new Position2D(
+                    solutionX + this.shiftRight,
+                    solutionY1 + this.shiftUp,
+                    0
+            ), null};
+        }
+
+        return new Position2D[]{
+                new Position2D(
+                        solutionX + this.shiftRight,
+                        solutionY1 + this.shiftUp,
+                        0
+                ), new Position2D(
+                        solutionX + this.shiftRight,
+                        solutionY2 + this.shiftUp,
+                0
+        )};
+    }
+
+    public Position2D getEndpoint() {
+        return this.endpoint;
     }
 }
