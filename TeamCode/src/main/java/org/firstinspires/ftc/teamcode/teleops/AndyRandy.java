@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleops;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.TestBaseRobot;
 import org.firstinspires.ftc.teamcode.commands.DecrementDownArmCommand;
@@ -23,9 +24,15 @@ public class AndyRandy extends TestBaseRobot {
     private boolean holdingCross = false;
     private boolean holdingRightBumper = false;
 
+    private ElapsedTime elapsedTime;
+    private boolean holdingTriangle;
+
     @Override
     public void init() {
         super.init();
+
+        elapsedTime.reset();
+        holdingTriangle = false;
 
         // Default command runs when no other commands are scheduled for the subsystem
         drive.setDefaultCommand(
@@ -89,17 +96,24 @@ public class AndyRandy extends TestBaseRobot {
             intake.setState(IntakeSubsystem.State.REJECTALL);
         }));
 
-        // Deposit variable pixels
-        new Trigger(gamepad1.triangle, new RunCommand(() -> {
-            if (intake.getState() != IntakeSubsystem.State.STILL) { //2. if no pixels have been released
-                intake.setState(IntakeSubsystem.State.DEPOSIT2);       //   release pixel #1
-                telemetry.addData("Pixels Deposited: ", 2);
+        if (gamepad1.triangle) {
+            if (!holdingTriangle) {
+                elapsedTime.reset();
+            } else if (holdingTriangle && elapsedTime.seconds() > 0.5) {
+                // Deposit variable pixels
+                new Trigger(gamepad1.triangle, new RunCommand(() -> {
+                    if (intake.getState() != IntakeSubsystem.State.STILL) { //2. if no pixels have been released
+                        intake.setState(IntakeSubsystem.State.DEPOSIT2);       //   release pixel #1
+                        telemetry.addData("Pixels Deposited: ", 2);
+                    } else {                                                //3. if pixel #1 has been released
+                        intake.setState(IntakeSubsystem.State.DEPOSIT1);  //   release pixel #2
+                        telemetry.addData("Pixels Deposited: ", 1);
+                    }
+                }));
             }
-            else {                                                //3. if pixel #1 has been released
-                intake.setState(IntakeSubsystem.State.DEPOSIT1);  //   release pixel #2
-                telemetry.addData("Pixels Deposited: ", 1);
-            }
-        }));
+        } else {
+            holdingTriangle = false;
+        }
 
         // Reset IMU
         new Trigger(gamepad1.square, new RunCommand(() -> {
