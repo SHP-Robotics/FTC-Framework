@@ -263,7 +263,7 @@ public class RedCloseAuto extends TestBaseRobot {
                 if (!sampleMecanumDrive.isBusy()) {
                     TrajectorySequence backdropToPark = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
                             .forward(5)
-                            .lineToLinearHeading(new Pose2d(-4, 38, Math.toRadians(-90)))
+                            .lineToLinearHeading(new Pose2d(-55, 38, Math.toRadians(-90)))
                             .back(5)
                             .build();
                     sampleMecanumDrive.followTrajectorySequenceAsync(backdropToPark);

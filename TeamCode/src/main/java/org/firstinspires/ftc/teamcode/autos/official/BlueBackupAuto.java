@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.autos.official;
 
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideExtended;
-
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -9,37 +7,26 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.TestBaseRobot;
 import org.firstinspires.ftc.teamcode.commands.IncrementUpArmCommand;
 import org.firstinspires.ftc.teamcode.commands.LowerArmCommand;
-import org.firstinspires.ftc.teamcode.commands.RaiseArmCommand;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.AutonomousStorage;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
 import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
-import org.firstinspires.ftc.teamcode.shplib.hardware.SHPMotor;
-import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 @Autonomous
-public class BlueCloseAuto extends TestBaseRobot {
+public class BlueBackupAuto extends TestBaseRobot {
 
     public enum State {
         PIXEL_1, PIXEL_2, PIXEL_3,
-        LOCATION_1,
         DEPOSIT_1,
-        TO_BACKDROP_1,
 
-        LOCATION_2,
         DEPOSIT_2,
-        TO_BACKDROP_2,
 
-        LOCATION_3,
         DEPOSIT_3,
-        TO_BACKDROP_3,
-        DEPOSIT_TO_BACKDROP,
 
-        TO_PARKING,
         IDLE
     }
     int location;
@@ -153,23 +140,10 @@ public class BlueCloseAuto extends TestBaseRobot {
                             .lineToLinearHeading(new Pose2d(-28.75, 4, Math.toRadians(90)))
                             .build();
                     sampleMecanumDrive.followTrajectoryAsync(spikeMarkOneBackingUp);
-                    currentState = State.TO_BACKDROP_1;
+                    currentState = State.IDLE;
                 }
                 break;
-            case TO_BACKDROP_1:
-                if (!sampleMecanumDrive.isBusy()) {
-                    TrajectorySequence spikeMarkOneToBackdrop = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-15, 0, Math.toRadians(90)))
-                            .lineToLinearHeading(new Pose2d(-19, -40.5, Math.toRadians(90)))
-                            .build();
 
-                    sampleMecanumDrive.followTrajectorySequenceAsync(spikeMarkOneToBackdrop);
-
-                    currentState = State.DEPOSIT_TO_BACKDROP;
-
-//                        currentState = State.ARM_1;
-                }
-                break;
 
             // Path series 2
             case PIXEL_2:
@@ -187,18 +161,7 @@ public class BlueCloseAuto extends TestBaseRobot {
                             .lineToLinearHeading(new Pose2d(-24, 0, Math.toRadians(0)))
                             .build();
                     sampleMecanumDrive.followTrajectoryAsync(spikeMarkTwoBackingUp);
-                    currentState = State.TO_BACKDROP_2;
-                }
-                break;
-            case TO_BACKDROP_2:
-                if (!sampleMecanumDrive.isBusy()) {
-                    TrajectorySequence spikeMarkTwoToBackdrop = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-24, -41.5, Math.toRadians(90)))
-                            .build();
-
-                    sampleMecanumDrive.followTrajectorySequenceAsync(spikeMarkTwoToBackdrop);
-
-                    currentState = State.DEPOSIT_TO_BACKDROP;
+                    currentState = State.IDLE;
                 }
                 break;
 
@@ -219,58 +182,11 @@ public class BlueCloseAuto extends TestBaseRobot {
                             .lineToLinearHeading(new Pose2d(-28.75, 0, Math.toRadians(-90)))
                             .build();
                     sampleMecanumDrive.followTrajectoryAsync(spikeMarkThreeBackingUp);
-                    currentState = State.TO_BACKDROP_3;
-                }
-                break;
-
-            case TO_BACKDROP_3:
-                if (!sampleMecanumDrive.isBusy()) {
-
-                    TrajectorySequence spikeMarkThreeToParking = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
-//                                .lineToLinearHeading(new Pose2d(-15, 0, Math.toRadians(-90)))
-                            .lineToLinearHeading(new Pose2d(-33, -39.5, Math.toRadians(90)))
-                            .build();
-
-                    sampleMecanumDrive.followTrajectorySequenceAsync(spikeMarkThreeToParking);
-
-                    currentState = State.DEPOSIT_TO_BACKDROP;
-                }
-
-                break;
-
-            // Common states
-            case DEPOSIT_TO_BACKDROP:
-                if (!sampleMecanumDrive.isBusy()) {
-//                        sleep(1000);
-                    myCommand.scheduleCommand(
-                            new IncrementUpArmCommand(arm,wrist,elbow)
-                                    .then(new RunCommand(()->{
-                                        intake.setState(IntakeSubsystem.State.DEPOSIT2);
-                                    }))
-                                    .then(new WaitCommand(1.5))
-                                    .then(new RunCommand(()->{intake.setState(IntakeSubsystem.State.STILL);}))
-                                    .then(new LowerArmCommand(arm, wrist, elbow))
-                                    .then(new RunCommand(()->{
-                                        currentState = State.TO_PARKING;
-                                    })));
-
-//                        intake.setState(IntakeSubsystem.State.DEPOSIT2);
-//                        sleep(1000);
-//                        new LowerArmCommand(arm,wrist,elbow);
                     currentState = State.IDLE;
                 }
                 break;
-            case TO_PARKING:
-                if (!sampleMecanumDrive.isBusy()) {
-                    TrajectorySequence backdropToPark = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
-                            .forward(5)
-                            .lineToLinearHeading(new Pose2d(-55, -38, Math.toRadians(90)))
-                            .back(5)
-                            .build();
-                    sampleMecanumDrive.followTrajectorySequenceAsync(backdropToPark);
-                    currentState = State.IDLE;
-                }
-                break;
+
+
             case IDLE:
                 break;
         }

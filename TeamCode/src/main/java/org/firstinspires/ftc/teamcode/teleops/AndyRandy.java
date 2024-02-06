@@ -134,6 +134,7 @@ public class AndyRandy extends TestBaseRobot {
 
         new Trigger (gamepad1.dpad_left, new RunCommand(()->{
             if (!Clock.hasElapsed(debounce, 60)) return;
+            //if (!Clock.hasElapsed(debounce, 60)) return;//TODO: TEST
             planeServo.setState(PlaneServo.State.OUT);
         }));
 

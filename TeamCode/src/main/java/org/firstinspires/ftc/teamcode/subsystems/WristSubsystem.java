@@ -46,7 +46,7 @@ public class WristSubsystem extends Subsystem {
         switch (state) {
 
             case DOWN:
-                adjustHolder.setPosition(0.615);
+                adjustHolder.setPosition(0.595);
                 break;
             case UP:
                 adjustHolder.setPosition(0.3);
