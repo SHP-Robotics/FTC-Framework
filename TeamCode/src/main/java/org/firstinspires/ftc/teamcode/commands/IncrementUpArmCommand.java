@@ -44,6 +44,7 @@ public class IncrementUpArmCommand extends Command {
     // Returning true causes execute() to be called once
     @Override
     public boolean isFinished() {
-        return Clock.hasElapsed(startTime, 1);
+        return true;
+//        return Clock.hasElapsed(startTime, 1);
     }
 }

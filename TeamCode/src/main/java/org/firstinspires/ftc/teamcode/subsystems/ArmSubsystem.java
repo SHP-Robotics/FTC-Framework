@@ -1,11 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-//import static org.firstinspires.ftc.teamcode.Constants.Arm.kClawClosed;
-//import static org.firstinspires.ftc.teamcode.Constants.Arm.kClawName;
-//import static org.firstinspires.ftc.teamcode.Constants.Arm.kClawOpen;
-//import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideHub;
-//import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideLow;
-//import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideMiddle;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kLeftSlideName;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kMaxHeight;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kPixelHeight;
@@ -27,7 +21,6 @@ import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideSafety;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideTolerance;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -41,6 +34,9 @@ public class ArmSubsystem extends Subsystem {
     private final SHPMotor leftSlide;
     private final SHPMotor rightSlide;
     private int slidePos;
+
+    private final double runPower = 0.5;
+    private final double staticPower = 0.3;
 
     public enum State {
         BOTTOM, EXTENDED, AUTOBOTTOM, MIDDLE, MIDHIGH, HIGH, CLIMB, BOTTOMCLIMB, FINISHCLIMB, CONESTACK, SAFETY,
@@ -117,15 +113,32 @@ public class ArmSubsystem extends Subsystem {
         if(slidePos <= kMaxHeight-kPixelHeight)
              slidePos += kPixelHeight;
     }
+
     public void decrementState(){
         if(slidePos >= kPixelHeight)
             slidePos -= kPixelHeight;
     }
+
+
     public void setPosition(double position){
+        if (rightSlide.getPosition(MotorUnit.TICKS) == position
+                && leftSlide.getPosition(MotorUnit.TICKS) == position
+                && rightSlide.atPositionSetpoint()
+                && leftSlide.atPositionSetpoint()) {
+            rightSlide.setPower(staticPower);
+            leftSlide.setPower(staticPower);
+
+            return;
+        }
+
         rightSlide.setPosition(position);
-        rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightSlide.setPower(0.5);
         leftSlide.setPosition(position);
+
+        rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        rightSlide.setPower(runPower);
+        leftSlide.setPower(runPower);
     }
 
     private double processState() {

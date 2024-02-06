@@ -2,9 +2,9 @@ package org.firstinspires.ftc.teamcode.commands;
 
 import org.firstinspires.ftc.teamcode.shplib.commands.Command;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
-import org.firstinspires.ftc.teamcode.subsystems.WristSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ElbowSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.WristSubsystem;
 
 public class DecrementDownArmCommand extends Command {
     private final ArmSubsystem arm;
@@ -44,6 +44,7 @@ public class DecrementDownArmCommand extends Command {
     // Returning true causes execute() to be called once
     @Override
     public boolean isFinished() {
-        return Clock.hasElapsed(startTime, 1);
+        return true;
+//        return Clock.hasElapsed(startTime, 1);
     }
 }
