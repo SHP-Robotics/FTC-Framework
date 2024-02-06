@@ -1,26 +1,53 @@
 package org.firstinspires.ftc.teamcode.debug.config;
 
 public final class Constants {
-    public static final double WHEEL_ENCODER_TICKS_PER_INCH_FORWARD = 46.7532467532;
-    public static final double WHEEL_ENCODER_TICKS_PER_INCH_SIDEWAYS = 54.5454545455;
-    public static final double MINIMUM_VOLTAGE_APPLIED = 0.07;
+    // Pure Pursuit
+    public static final double MECANUM_WIDTH = 10;
+    public static final double ODOMETRY_TICKS_PER_INCH = 336.878636635;
+    public static final double ODOMETRY_WIDTH = 14.473080157209779;
+    public static final double CIRCULAR_RATIO = -0.18;
 
-    // Gear Shifting PID Controller
-    public static final double KP = 0.01;
-    public static final double KI = 0.00;
-    public static final double KD = 0.01;
+    // Oh god no
+    public static final double TILE_LENGTH = 23.3437;
 
-    public static final double LIFT_ENCODER_TICKS_PER_INCH = 1;
+    // Wheels
+    public static final double WHEEL_ENCODER_TICKS_PER_INCH_FORWARD = 32.8741735;
+    public static final double WHEEL_ENCODER_TICKS_PER_INCH_SIDEWAYS = 42.36 * 48 / 50;
 
-    public static final double CLAW_OPEN = 0;
-    public static final double CLAW_CLOSE = 0;
-    public static final double CLAW_HEIGHT = 0;
+    public static final double MINIMUM_VOLTAGE_APPLIED = 0.0654;
 
-    // TODO: Find these values
-    // Camera Focal Length, used for to estimate Object Location
-    // FOCAL_LENGTH = (PERCEIVED_WIDTH x DISTANCE) / WIDTH
-    public static final double BACKDROP_WIDTH = 25.625;
-    public static final double FOCAL_LENGTH = 1;
+    // Outtake
+    public static final double OUTTAKE_STARTING = 0.9;
+    public static final double OUTTAKE_NEUTRAL = 0.66;
+    public static final double OUTTAKE_LOWERED = 0.58;
+    public static final double OUTTAKE_ACTIVE = 0.51;
+    public static final double OUTTAKE_HIDDEN = 0.28;
+
+    // Claw
+    public static final double CLAW_OPEN = 0.345;
+    public static final double CLAW_CLOSE = 0.4;
+
+    // Airplane
+    public static final double AIRPLANE_RELEASE = 0.07;
+    public static final double AIRPLANE_HOLD = 0.41152;
+
+    // Camera
+    // TODO: tune servo position for camera
+    public enum CameraMode {
+        FACING_TEAM_PROP(0.11),
+        SONAR(0),
+        FACING_CLAW(0.59);
+
+        private double position;
+
+        CameraMode(double position) {
+            this.position = position;
+        }
+
+        public double getPosition() {
+            return this.position;
+        }
+    }
 
     public static double setToDomain(double x, double begin, double end) {
         double length = end - begin;

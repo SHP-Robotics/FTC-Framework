@@ -35,8 +35,8 @@ public class ArmSubsystem extends Subsystem {
     private final SHPMotor rightSlide;
     private int slidePos;
 
-    private final double runPower = 0.5;
-    private final double staticPower = 0.3;
+    private final double runPower = 1;
+    private final double staticPower = 0.2;
 
     public enum State {
         BOTTOM, EXTENDED, AUTOBOTTOM, MIDDLE, MIDHIGH, HIGH, CLIMB, BOTTOMCLIMB, FINISHCLIMB, CONESTACK, SAFETY,

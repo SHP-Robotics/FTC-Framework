@@ -28,6 +28,10 @@ public class PIDController {
         return kP * error + kI * errorSum + kD * errorChange;
     }
 
+    public double getScaledOutput(double current, double error, double scale) {
+        return current + ((getOutput(error) - current) * scale);
+    }
+
     public void reset() {
         errorSum = 0;
         lastError = 0;

@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Synchronous {
-    private DcMotor leftMotor;
-    private DcMotor rightMotor;
+    public DcMotor leftMotor;
+    public DcMotor rightMotor;
 
     public Synchronous(HardwareMap hardwareMap, String leftMotor, String rightMotor) {
         this.leftMotor = hardwareMap.get(DcMotor.class, leftMotor);
@@ -24,5 +24,10 @@ public class Synchronous {
     public void setPowerSynchronous(double power) {
         leftMotor.setPower(power);
         rightMotor.setPower(power);
+    }
+
+    public enum Side {
+        LEFT,
+        RIGHT
     }
 }
