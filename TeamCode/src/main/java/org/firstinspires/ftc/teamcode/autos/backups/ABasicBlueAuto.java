@@ -1,18 +1,19 @@
-package org.firstinspires.ftc.teamcode.autos.AAA;
+package org.firstinspires.ftc.teamcode.autos.backups;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-import org.firstinspires.ftc.teamcode.BaseRobot;
+import org.firstinspires.ftc.teamcode.shplib.TestBaseRobot;
 import org.firstinspires.ftc.teamcode.commands.DriveCommand;
-import org.firstinspires.ftc.teamcode.commands.EncoderStraightDriveCommand;
 import org.firstinspires.ftc.teamcode.commands.EncoderTurnDriveCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
 import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
-//@Autonomous(preselectTeleOp = "CommandBasedTeleOp")
-public class BlueConeAuto extends BaseRobot {
+@Disabled
+@Autonomous(preselectTeleOp = "ATestTeleop")
+public class ABasicBlueAuto extends TestBaseRobot {
     //    SHPMecanumAutoDrive autoDrive;
     //DriveSubsystem drive;
     VisionSubsystem vision;
@@ -27,15 +28,16 @@ public class BlueConeAuto extends BaseRobot {
 //        autoDrive = new SHPMecanumAutoDrive(hardwareMap, kMotorNames, 0.15, 0.0, 0.0);
 //        autoDrive.enableFF(new FFController(0.01));
         //drive = new DriveSubsystem(hardwareMap);
-        vision = new VisionSubsystem(hardwareMap,"red");
-        location = vision.getLocationRed();
+        vision = new VisionSubsystem(hardwareMap,"blue");
+        location = vision.getLocationBlue();
         telemetry.addData("Location: ",location);
+        telemetry.update();
         drive.resetIMUAngle();
 
     }
     public void init_loop() {
         super.init_loop();
-        location = vision.getLocationRed();
+        location = vision.getLocationBlue();
         telemetry.addData("Location: ", location);
 
     }
@@ -51,7 +53,7 @@ public class BlueConeAuto extends BaseRobot {
                         //.then(new RunCommand(() -> {location = vision.getLocation();}))
                         //.then(new EncoderStraightDriveCommand(drive,"forward",10))
                         //.then(new EncoderTurnDriveCommand(drive,"ccw",45))
-                        .then(new WaitCommand(0.5))
+                        //.then(new WaitCommand(0.5))
                         //.then(new RunCommand(() -> {location = vision.getLocation();}))
 
                         //.then(new DriveCommand(drive,0.025,0,0,3.5))
@@ -63,31 +65,42 @@ public class BlueConeAuto extends BaseRobot {
                         .then(new RunCommand(() -> {
                             if (location == 1) {
                                 myCommand.scheduleCommand(
-                                        new EncoderTurnDriveCommand(drive,"ccw",90)
-                                                .then(new WaitCommand(1))
+                                        new DriveCommand(drive,-0.2,0,0,1,true)
+                                                .then(new EncoderTurnDriveCommand(drive,"ccw",90))
+                                                .then(new WaitCommand(3.5))
                                                 .then(new DriveCommand(drive,-0.2,0,0,1,true))
                                                 .then(new DriveCommand(drive,0.3,0,0,1,true))
+//                                                .then(new DriveCommand(drive,0,-0.2,0,2,true))
+//                                                .then(new DriveCommand(drive,0.3,0,0,2,true))
                                 );
                             }
                             else if (location == 3) {
                                 myCommand.scheduleCommand(
-                                        new EncoderTurnDriveCommand(drive,"cw",90)
-                                                .then(new WaitCommand(1))
-                                                .then(new DriveCommand(drive,-0.2,0,0,1,true))
-                                                .then(new DriveCommand(drive,0.3,0,0,1,true))
+                                        new EncoderTurnDriveCommand(drive,"cw",89)
+                                                .then(new WaitCommand(3.25))
+                                                .then(new DriveCommand(drive,-0.2,0,0,1.3,true))
+                                                .then(new DriveCommand(drive,0.2,0,0,1.4,true))
+//                                                .then(new DriveCommand(drive,0,0.3,0,3,true))
+//                                                .then(new DriveCommand(drive,0.4, 0,0,4,true))
                                 );
                             }
                             else {
                                 myCommand.scheduleCommand(
-                                        new DriveCommand(drive,-0.2,0,0,1.25,true)
-                                                .then(new DriveCommand(drive,0.2,0,0,1,true))
+                                        new DriveCommand(drive,-0.2,0,0,1.3,true)
+                                                .then(new DriveCommand(drive,0.2,0,0,1.4,true))
+//                                                .then(new EncoderTurnDriveCommand(drive, "ccw", 90))
+//                                                .then(new DriveCommand(drive,0.3,0,0,4,true))
+//                                                .then(new DriveCommand(drive,0,-0.2,0,2,true))
+//                                                .then(new DriveCommand(drive,0.3,0,0,2,true))
                                 );
                             }
 
                         }))
                         //.then(new DriveCommand(drive,0.3,0,0,2,true))
-                        .then(new WaitCommand(2))
-                        //.then(new DriveCommand(drive,0.5,0,0,1,true))
+//                        .then(new WaitCommand(1))
+//                        .then(new DriveCommand(drive, 0.2, 0,0, 1, true))
+//                        .then(new DriveCommand(drive, 0,-0.2, 0,2, true))
+                //.then(new DriveCommand(drive,0.5,0,0,1,true))
 
 
                        /*

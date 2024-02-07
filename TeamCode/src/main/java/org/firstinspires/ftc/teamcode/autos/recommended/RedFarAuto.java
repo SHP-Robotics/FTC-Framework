@@ -1,29 +1,24 @@
-package org.firstinspires.ftc.teamcode.autos.official;
-
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideExtended;
+package org.firstinspires.ftc.teamcode.autos.recommended;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-import org.firstinspires.ftc.teamcode.TestBaseRobot;
+import org.firstinspires.ftc.teamcode.shplib.TestBaseRobot;
 import org.firstinspires.ftc.teamcode.commands.AutoLowerArmCommand;
 import org.firstinspires.ftc.teamcode.commands.IncrementUpArmCommand;
-import org.firstinspires.ftc.teamcode.commands.LowerArmCommand;
-import org.firstinspires.ftc.teamcode.commands.RaiseArmCommand;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.AutonomousStorage;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
 import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
-import org.firstinspires.ftc.teamcode.shplib.hardware.SHPMotor;
-import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
+@Disabled
 @Autonomous
-public class BlueFarAuto extends TestBaseRobot {
+public class RedFarAuto extends TestBaseRobot {
 
     public enum State {
         PIXEL_1, PIXEL_2, PIXEL_3,
@@ -58,12 +53,11 @@ public class BlueFarAuto extends TestBaseRobot {
     @Override
     public void init(){
         super.init();
-        AutonomousStorage.autonomousType = AutonomousStorage.AutonomousType.RedAutoLeftRR;
         sampleMecanumDrive = new SampleMecanumDrive(hardwareMap);
-        vision = new VisionSubsystem(hardwareMap, "blue");
+        vision = new VisionSubsystem(hardwareMap, "red");
 
         location = 2;
-        location = vision.getLocationBlue();
+        location = vision.getLocationRed();
 
         telemetry.addLine("Trajectory Sequence Ready");
         telemetry.addData("Location: ", location);
@@ -72,7 +66,7 @@ public class BlueFarAuto extends TestBaseRobot {
     }
     public void init_loop() {
         super.init_loop();
-        location = vision.getLocationBlue();
+        location = vision.getLocationRed();
         telemetry.addData("Location: ", location);
 
     }
@@ -166,9 +160,20 @@ public class BlueFarAuto extends TestBaseRobot {
             case TO_STACKS_1:
                 if (!sampleMecanumDrive.isBusy()) {
                     TrajectorySequence spikeMarkOneToStacks = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-42, 23, Math.toRadians(90)))
+                            .lineToLinearHeading(new Pose2d(-40, 0, Math.toRadians(-90)))
+//                            .lineToLinearHeading(new Pose2d(-40, 0, Math.toRadians(-90)))
+                            .lineToLinearHeading(new Pose2d(-35, -22, Math.toRadians(-90)))
                             .build();
-
+//                    myCommand.scheduleCommand(
+//                            new WaitCommand(2)
+//                                    .then(new RunCommand(()->{
+//                                        intake.setState(IntakeSubsystem.State.AUTOINTAKE);
+//                                    }))
+//                                    .then(new WaitCommand(0.5)
+//                                            .then(new RunCommand(()->{
+//                                                intake.setState(IntakeSubsystem.State.STILL);
+//                                            })))
+//                    );
                     sampleMecanumDrive.followTrajectorySequenceAsync(spikeMarkOneToStacks);
 
                     currentState = State.STACK_PICKUP;
@@ -178,9 +183,9 @@ public class BlueFarAuto extends TestBaseRobot {
             case TO_BACKDROP_1:
                 if (!sampleMecanumDrive.isBusy()) {
                     TrajectorySequence spikeMarkOneToBackdrop = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-46, 0, Math.toRadians(90)))
-                            .lineToLinearHeading(new Pose2d(-40, -80, Math.toRadians(90)))
-                            .lineToLinearHeading(new Pose2d(-5, -80, Math.toRadians(90)))
+                            .lineToLinearHeading(new Pose2d(-55, 0, Math.toRadians(-90)))
+                            .lineToLinearHeading(new Pose2d(-55, 80, Math.toRadians(-90)))
+                            .lineToLinearHeading(new Pose2d(-41, 80, Math.toRadians(-90)))
                             .build();
 
                     sampleMecanumDrive.followTrajectorySequenceAsync(spikeMarkOneToBackdrop);
@@ -193,7 +198,7 @@ public class BlueFarAuto extends TestBaseRobot {
             // Path series 2
             case PIXEL_2:
                 TrajectorySequence pixelToSpikeMarkTwo = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
-                        .lineToLinearHeading(new Pose2d(-33, 0, Math.toRadians(0)))
+                        .lineToLinearHeading(new Pose2d(-32, 0, Math.toRadians(0)))
                         .build();
                 myCommand.scheduleCommand(new RunCommand(()->{
                     sampleMecanumDrive.followTrajectorySequenceAsync(pixelToSpikeMarkTwo);
@@ -212,10 +217,19 @@ public class BlueFarAuto extends TestBaseRobot {
             case TO_STACKS_2:
                 if (!sampleMecanumDrive.isBusy()) {
                     TrajectorySequence spikeMarkOneToStacks = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-24, 20, Math.toRadians(90)))
-                            .lineToLinearHeading(new Pose2d(-40, 20, Math.toRadians(90)))
+                            .lineToLinearHeading(new Pose2d(-24, -19, Math.toRadians(-90)))
+                            .lineToLinearHeading(new Pose2d(-40, -23, Math.toRadians(-90)))
                             .build();
-
+                    myCommand.scheduleCommand(
+                            new WaitCommand(2)
+                                    .then(new RunCommand(()->{
+                                        intake.setState(IntakeSubsystem.State.AUTOINTAKE);
+                                    }))
+//                                    .then(new WaitCommand(0.5)
+//                                            .then(new RunCommand(()->{
+//                                                intake.setState(IntakeSubsystem.State.STILL);
+//                                            })))
+                    );
                     sampleMecanumDrive.followTrajectorySequenceAsync(spikeMarkOneToStacks);
 
                     currentState = State.STACK_PICKUP;
@@ -224,10 +238,9 @@ public class BlueFarAuto extends TestBaseRobot {
             case TO_BACKDROP_2:
                 if (!sampleMecanumDrive.isBusy()) {
                     TrajectorySequence spikeMarkTwoToBackdrop = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-48, 0, Math.toRadians(90)))
-                            .lineToLinearHeading(new Pose2d(-46, -10, Math.toRadians(90)))
-                            .lineToLinearHeading(new Pose2d(-40, -80, Math.toRadians(90)))
-                            .lineToLinearHeading(new Pose2d(-17, -80, Math.toRadians(90)))
+                            .lineToLinearHeading(new Pose2d(-53, 0, Math.toRadians(-90)))
+                            .lineToLinearHeading(new Pose2d(-53, 80, Math.toRadians(-90)))
+                            .lineToLinearHeading(new Pose2d(-28, 80, Math.toRadians(-90)))
                             .build();
 
                     sampleMecanumDrive.followTrajectorySequenceAsync(spikeMarkTwoToBackdrop);
@@ -239,8 +252,8 @@ public class BlueFarAuto extends TestBaseRobot {
             // Path series 3
             case PIXEL_3:
                 TrajectorySequence pixelToSpikeMarkThree = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
-                        .lineToLinearHeading(new Pose2d(-28.75, 2, Math.toRadians(-90)))
-                        .lineToLinearHeading(new Pose2d(-28.75, 7, Math.toRadians(-90)))
+                        .lineToLinearHeading(new Pose2d(-28.75, 0, Math.toRadians(-90)))
+                        .lineToLinearHeading(new Pose2d(-28.75, 6.5, Math.toRadians(-90)))
                         .build();
                 myCommand.scheduleCommand(new RunCommand(()->{
                     sampleMecanumDrive.followTrajectorySequenceAsync(pixelToSpikeMarkThree);
@@ -259,23 +272,29 @@ public class BlueFarAuto extends TestBaseRobot {
             case TO_STACKS_3:
                 if (!sampleMecanumDrive.isBusy()) {
                     TrajectorySequence spikeMarkOneToStacks = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-43, 0, Math.toRadians(-90)))
-                            .lineToLinearHeading(new Pose2d(-43, 15, Math.toRadians(90)))
-
-//                            .lineToLinearHeading(new Pose2d(-40, 0, Math.toRadians(-90)))
-                            .lineToLinearHeading(new Pose2d(-35, 23, Math.toRadians(90)))
+                            .lineToLinearHeading(new Pose2d(-42, -21, Math.toRadians(-90)))
                             .build();
-
+//                    myCommand.scheduleCommand(
+//                            new WaitCommand(2)
+//                                    .then(new RunCommand(()->{
+//                                        intake.setState(IntakeSubsystem.State.AUTOINTAKE);
+//                                    }))
+//                                    .then(new WaitCommand(0.5)
+//                                            .then(new RunCommand(()->{
+//                                                intake.setState(IntakeSubsystem.State.STILL);
+//                                            }))));
                     sampleMecanumDrive.followTrajectorySequenceAsync(spikeMarkOneToStacks);
 
                     currentState = State.STACK_PICKUP;
                 }
+                break;
             case TO_BACKDROP_3:
                 if (!sampleMecanumDrive.isBusy()) {
+
                     TrajectorySequence spikeMarkThreeToParking = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(-48, 0, Math.toRadians(90)))
-                            .lineToLinearHeading(new Pose2d(-46, -80, Math.toRadians(90)))
-                            .lineToLinearHeading(new Pose2d(-30, -82, Math.toRadians(90)))
+                            .lineToLinearHeading(new Pose2d(-53, 0, Math.toRadians(-90)))
+                            .lineToLinearHeading(new Pose2d(-53, 80, Math.toRadians(-90)))
+                            .lineToLinearHeading(new Pose2d(-24, 82, Math.toRadians(-90)))
                             .build();
 
                     sampleMecanumDrive.followTrajectorySequenceAsync(spikeMarkThreeToParking);
@@ -292,11 +311,11 @@ public class BlueFarAuto extends TestBaseRobot {
                             new RunCommand(()->{
                                 intake.setState(IntakeSubsystem.State.AUTOINTAKE);
                             })
-                                    .then(new WaitCommand(1.25))
+                                    .then(new WaitCommand(1.5))
                                     .then(new RunCommand(()->{
                                         intake.setState(IntakeSubsystem.State.REJECT);
                                     }))
-                                    .then(new WaitCommand(1.25))
+                                    .then(new WaitCommand(1))
                                     .then(new RunCommand(()->{
                                         if(location == 1)
                                             currentState = State.TO_BACKDROP_1;
@@ -340,7 +359,7 @@ public class BlueFarAuto extends TestBaseRobot {
                             new RunCommand(()->{
                                 intake.setState(IntakeSubsystem.State.DEPOSIT2);
                             })
-                                    .then(new WaitCommand(1))
+                                    .then(new WaitCommand(1.5))
                                     .then(new RunCommand(()->{
                                         intake.setState(IntakeSubsystem.State.STILL);}))
                                     .then(new AutoLowerArmCommand(arm, wrist, elbow))
@@ -355,7 +374,7 @@ public class BlueFarAuto extends TestBaseRobot {
                 if (!sampleMecanumDrive.isBusy()) {
                     TrajectorySequence backdropToPark = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
                             .forward(5)
-                            .lineToLinearHeading(new Pose2d(-4, 80, Math.toRadians(90)))
+                            .lineToLinearHeading(new Pose2d(-4, -80, Math.toRadians(-90)))
                             .back(5)
                             .build();
                     sampleMecanumDrive.followTrajectorySequenceAsync(backdropToPark);

@@ -1,11 +1,8 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import static org.firstinspires.ftc.teamcode.Constants.Intake.kCRWheelName;
-import static org.firstinspires.ftc.teamcode.Constants.Intake.kPixelServo;
-import static org.firstinspires.ftc.teamcode.Constants.Intake.kSpinningIntakeName;
-import static org.firstinspires.ftc.teamcode.Constants.Intake.kWheelBackward;
-import static org.firstinspires.ftc.teamcode.Constants.Intake.kWheelForward;
-import static org.firstinspires.ftc.teamcode.Constants.Intake.kWheelStill;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kCRWheelName;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kPixelServo;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kSpinningIntakeName;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;

@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import static org.firstinspires.ftc.teamcode.Constants.Intake.kPlaneServo;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kPlaneServo;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;

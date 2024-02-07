@@ -1,9 +1,8 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import static org.firstinspires.ftc.teamcode.Constants.Drive.kFFs;
-import static org.firstinspires.ftc.teamcode.Constants.Drive.kMaximumBias;
-import static org.firstinspires.ftc.teamcode.Constants.Drive.kMinimumBias;
-import static org.firstinspires.ftc.teamcode.Constants.Drive.kMotorNames;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Drive.kMaximumBias;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Drive.kMinimumBias;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Drive.kMotorNames;
 
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -17,7 +16,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.roadrunner.util.Encoder;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
-import org.firstinspires.ftc.teamcode.shplib.controllers.GainSchedule;
 import org.firstinspires.ftc.teamcode.shplib.hardware.SHPMotor;
 import org.firstinspires.ftc.teamcode.shplib.hardware.drive.SHPMecanumDrive;
 import org.firstinspires.ftc.teamcode.shplib.hardware.sensors.SHPIMU;

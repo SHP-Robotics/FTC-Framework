@@ -1,10 +1,10 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import static org.firstinspires.ftc.teamcode.Constants.Intake.kPositionBottom;
-import static org.firstinspires.ftc.teamcode.Constants.Intake.kPositionMiddle;
-import static org.firstinspires.ftc.teamcode.Constants.Intake.kPositionTop;
-import static org.firstinspires.ftc.teamcode.Constants.Intake.kPracticeLeftArmServoName;
-import static org.firstinspires.ftc.teamcode.Constants.Intake.kPracticeRightArmServoName;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kPositionBottom;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kPositionMiddle;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kPositionTop;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kPracticeLeftArmServoName;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kPracticeRightArmServoName;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;

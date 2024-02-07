@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-        import static org.firstinspires.ftc.teamcode.Constants.Intake.kHookLeftDisengaged;
-        import static org.firstinspires.ftc.teamcode.Constants.Intake.kHookLeftEngaged;
-        import static org.firstinspires.ftc.teamcode.Constants.Intake.kHookServo1Name;
+        import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kHookLeftDisengaged;
+        import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kHookLeftEngaged;
+        import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kHookServo1Name;
 
         import com.qualcomm.robotcore.hardware.HardwareMap;
         import com.qualcomm.robotcore.hardware.Servo;

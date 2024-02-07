@@ -1,10 +1,9 @@
-package org.firstinspires.ftc.teamcode.autos.AAA;
+package org.firstinspires.ftc.teamcode.autos.backups;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-import org.firstinspires.ftc.teamcode.BaseRobot;
-import org.firstinspires.ftc.teamcode.Constants;
-import org.firstinspires.ftc.teamcode.TestBaseRobot;
+import org.firstinspires.ftc.teamcode.shplib.TestBaseRobot;
 import org.firstinspires.ftc.teamcode.commands.DriveCommand;
 import org.firstinspires.ftc.teamcode.commands.EncoderTurnDriveCommand;
 import org.firstinspires.ftc.teamcode.commands.LowerArmCommand;
@@ -15,7 +14,8 @@ import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
-//@Autonomous(preselectTeleOp = "ATestTeleop")
+@Disabled
+@Autonomous(preselectTeleOp = "ATestTeleop")
 public class ABlueAuto extends TestBaseRobot {
     //    SHPMecanumAutoDrive autoDrive;
     //DriveSubsystem drive;

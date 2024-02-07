@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.shplib.controllers;
 
-import org.firstinspires.ftc.teamcode.Constants;
-
 public class VelocityPID extends PIDController {
     private double currentVelocity = 0.0;
     private double power = 0.0;

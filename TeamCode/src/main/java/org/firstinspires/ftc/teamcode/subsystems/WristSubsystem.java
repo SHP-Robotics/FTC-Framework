@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import static org.firstinspires.ftc.teamcode.Constants.Intake.kAdjustHolder;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kAdjustHolder;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 
 public class WristSubsystem extends Subsystem {

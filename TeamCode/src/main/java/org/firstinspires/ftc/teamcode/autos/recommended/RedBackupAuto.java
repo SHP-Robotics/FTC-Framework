@@ -1,21 +1,18 @@
-package org.firstinspires.ftc.teamcode.autos.official;
+package org.firstinspires.ftc.teamcode.autos.recommended;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-import org.firstinspires.ftc.teamcode.TestBaseRobot;
-import org.firstinspires.ftc.teamcode.commands.IncrementUpArmCommand;
-import org.firstinspires.ftc.teamcode.commands.LowerArmCommand;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.AutonomousStorage;
+import org.firstinspires.ftc.teamcode.shplib.TestBaseRobot;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
 import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
-import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
-import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
+@Disabled
 @Autonomous
 public class RedBackupAuto extends TestBaseRobot {
 
@@ -36,7 +33,6 @@ public class RedBackupAuto extends TestBaseRobot {
     @Override
     public void init(){
         super.init();
-        AutonomousStorage.autonomousType = AutonomousStorage.AutonomousType.RedAutoLeftRR;
         sampleMecanumDrive = new SampleMecanumDrive(hardwareMap);
         vision = new VisionSubsystem(hardwareMap, "red");
 

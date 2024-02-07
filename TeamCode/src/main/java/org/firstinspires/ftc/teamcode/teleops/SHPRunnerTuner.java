@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.teleops;
 
-import static org.firstinspires.ftc.teamcode.Constants.Drive.kMotorNames;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Drive.kMotorNames;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.BaseRobot;
+import org.firstinspires.ftc.teamcode.shplib.BaseRobot;
 import org.firstinspires.ftc.teamcode.shplib.hardware.drive.SHPRunnerMecanumDrive;
 import org.firstinspires.ftc.teamcode.shplib.hardware.units.MotorUnit;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+@Disabled
 @TeleOp
 public class SHPRunnerTuner extends BaseRobot {
     private SHPRunnerMecanumDrive runner;

@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import static org.firstinspires.ftc.teamcode.Constants.Intake.kSpinningIntakeName;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kSpinningIntakeName;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 

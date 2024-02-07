@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.teleops;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.TestBaseRobot;
+import org.firstinspires.ftc.teamcode.shplib.TestBaseRobot;
 import org.firstinspires.ftc.teamcode.commands.DecrementDownArmCommand;
 import org.firstinspires.ftc.teamcode.commands.IncrementUpArmCommand;
 import org.firstinspires.ftc.teamcode.commands.LowerArmCommand;
@@ -25,14 +25,14 @@ public class AndyRandy extends TestBaseRobot {
     private boolean holdingRightBumper = false;
 
     private ElapsedTime elapsedTime;
-    private boolean holdingTriangle;
+    private boolean holdingTriangle = false;
 
     @Override
     public void init() {
         super.init();
 
+        elapsedTime = new ElapsedTime();
         elapsedTime.reset();
-        holdingTriangle = false;
 
         // Default command runs when no other commands are scheduled for the subsystem
         drive.setDefaultCommand(
