@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.debug.PurePursuit;
 
 import static org.firstinspires.ftc.teamcode.debug.config.Constants.ODOMETRY_TICKS_PER_INCH;
+import static org.firstinspires.ftc.teamcode.debug.config.Constants.centerEncoderDirection;
+import static org.firstinspires.ftc.teamcode.debug.config.Constants.leftEncoderDirection;
+import static org.firstinspires.ftc.teamcode.debug.config.Constants.rightEncoderDirection;
 
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.debug.MecanumController;
@@ -40,9 +42,9 @@ public class MecanumPurePursuitController extends MecanumController {
                 ODOMETRY_TICKS_PER_INCH);
 
         // TODO: Set direction
-        this.leftOdometry.setDirection(DcMotorSimple.Direction.REVERSE);
-        this.rightOdometry.setDirection(DcMotorSimple.Direction.REVERSE);
-        this.centerOdometry.setDirection(DcMotorSimple.Direction.REVERSE);
+        this.leftOdometry.setDirection(leftEncoderDirection);
+        this.rightOdometry.setDirection(rightEncoderDirection);
+        this.centerOdometry.setDirection(centerEncoderDirection);
 
         this.leftOdometry.reset();
         this.rightOdometry.reset();

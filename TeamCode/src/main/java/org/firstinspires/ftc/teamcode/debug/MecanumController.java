@@ -1,16 +1,19 @@
 package org.firstinspires.ftc.teamcode.debug;
 
+import static org.firstinspires.ftc.teamcode.debug.config.Constants.leftFrontDirection;
+import static org.firstinspires.ftc.teamcode.debug.config.Constants.leftRearDirection;
+import static org.firstinspires.ftc.teamcode.debug.config.Constants.rightFrontDirection;
+import static org.firstinspires.ftc.teamcode.debug.config.Constants.rightRearDirection;
+
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
-import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-
-import org.firstinspires.ftc.teamcode.debug.config.*;
+import org.firstinspires.ftc.teamcode.debug.config.Constants;
+import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
 
 public class MecanumController {
     public DcMotor leftFront;
@@ -30,13 +33,6 @@ public class MecanumController {
 
     private double positionX = 0;
     private double positionY = 0;
-
-    public static int sign(float num) {
-        if (num == 0) {
-            return 0;
-        }
-        return (int)(Math.abs(num)/num);
-    }
 
     public void setMotorsRunMode(DcMotor.RunMode runMode) {
         leftFront.setMode(runMode);
@@ -72,10 +68,10 @@ public class MecanumController {
         this.rightRear = (DcMotor) hardwareMap.get("rightRear");
 
         // TODO: Set direction
-        this.leftFront.setDirection(DcMotor.Direction.REVERSE);
-        this.rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
-        this.leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
-        this.rightRear.setDirection(DcMotor.Direction.REVERSE);
+        this.leftFront.setDirection(leftFrontDirection);
+        this.rightFront.setDirection(rightFrontDirection);
+        this.leftRear.setDirection(leftRearDirection);
+        this.rightRear.setDirection(rightRearDirection);
 
         // TODO: Set name
         this.imu = (IMU) hardwareMap.get("imu");
@@ -85,7 +81,7 @@ public class MecanumController {
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logo, usb);
         this.imu.initialize(new IMU.Parameters(orientationOnRobot));
 
-        this.speedController = new SpeedController.SpeedBuilder(SpeedController.SpeedType.NO_CHANGE.NO_CHANGE)
+        this.speedController = new SpeedController.SpeedBuilder(SpeedController.SpeedType.NO_CHANGE)
                 .build();
     }
 

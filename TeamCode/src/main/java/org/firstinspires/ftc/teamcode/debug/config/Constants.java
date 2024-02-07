@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.debug.config;
 
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
 public final class Constants {
     // Pure Pursuit
     public static final double MECANUM_WIDTH = 10;
@@ -7,10 +9,16 @@ public final class Constants {
     public static final double ODOMETRY_WIDTH = 14.473080157209779;
     public static final double CIRCULAR_RATIO = -0.18;
 
-    // Oh god no
-    public static final double TILE_LENGTH = 23.3437;
+    public static final DcMotorSimple.Direction leftEncoderDirection = DcMotorSimple.Direction.REVERSE;
+    public static final DcMotorSimple.Direction rightEncoderDirection = DcMotorSimple.Direction.REVERSE;
+    public static final DcMotorSimple.Direction centerEncoderDirection = DcMotorSimple.Direction.REVERSE;
 
     // Wheels
+    public static final DcMotorSimple.Direction leftFrontDirection = DcMotorSimple.Direction.REVERSE;
+    public static final DcMotorSimple.Direction rightFrontDirection = DcMotorSimple.Direction.FORWARD;
+    public static final DcMotorSimple.Direction leftRearDirection = DcMotorSimple.Direction.REVERSE;
+    public static final DcMotorSimple.Direction rightRearDirection = DcMotorSimple.Direction.REVERSE;
+
     public static final double WHEEL_ENCODER_TICKS_PER_INCH_FORWARD = 32.8741735;
     public static final double WHEEL_ENCODER_TICKS_PER_INCH_SIDEWAYS = 42.36 * 48 / 50;
 
