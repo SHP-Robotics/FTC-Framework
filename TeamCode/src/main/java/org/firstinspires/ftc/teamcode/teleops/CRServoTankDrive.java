@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.debug.AccumulationControlledServo;
+
 @TeleOp()
 public class CRServoTankDrive extends LinearOpMode {
     @Override
@@ -16,8 +18,14 @@ public class CRServoTankDrive extends LinearOpMode {
         CRServo right = (CRServo) hardwareMap.get("right");
         right.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        Servo leftPlow = (Servo) hardwareMap.get("leftPlow");
-        Servo rightPlow = (Servo) hardwareMap.get("rightPlow");
+        AccumulationControlledServo leftPlow = new AccumulationControlledServo.AccumulationControlledServoBuilder((Servo) hardwareMap.get("leftPlow"))
+                .setkP(1)
+                .build();
+
+        AccumulationControlledServo rightPlow = new AccumulationControlledServo.AccumulationControlledServoBuilder((Servo) hardwareMap.get("rightPlow"))
+                .setkP(1)
+                .build();
+
         Servo eye = (Servo) hardwareMap.get("eye");
 
         waitForStart();
@@ -36,6 +44,7 @@ public class CRServoTankDrive extends LinearOpMode {
             if (gamepad1.circle){
                 eye.setPosition(0.25);
             }
+            
             leftPlow.setPosition(gamepad1.left_trigger);
             rightPlow.setPosition(-gamepad1.left_trigger);
         }
