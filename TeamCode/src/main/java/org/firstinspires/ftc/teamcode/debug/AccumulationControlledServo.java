@@ -49,7 +49,7 @@ public class AccumulationControlledServo extends ServoImplEx {
         double time = elapsedTime.seconds();
         double deltaTime = time - lastTime;
 
-        super.setPosition(clamp(getPosition() - (error * kP * deltaTime)));
+        super.setPosition(clamp(getPosition() + (error * kP * deltaTime)));
 
         lastError = error;
         lastTime = time;
