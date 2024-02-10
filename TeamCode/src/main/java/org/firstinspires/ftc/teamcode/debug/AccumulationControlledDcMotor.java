@@ -14,7 +14,6 @@ public class AccumulationControlledDcMotor extends DcMotorImplEx {
 
     private ElapsedTime elapsedTime;
 
-    private double lastError = 0;
     private double lastTime = -1;
 
     private double kP = 0.7;
@@ -49,6 +48,10 @@ public class AccumulationControlledDcMotor extends DcMotorImplEx {
         this.gamma = accumulationControlledDcMotorBuilder.gamma;
     }
 
+    public void resetEncoders() {
+        this.setMode(RunMode.STOP_AND_RESET_ENCODER);
+    }
+
     public double clamp(double power) {
         return Math.min(Math.max(-1, power), 1);
     }
@@ -66,7 +69,6 @@ public class AccumulationControlledDcMotor extends DcMotorImplEx {
             super.setPower(clamp(getPower() - (error * kP * deltaTime)));
         }
 
-        lastError = error;
         lastTime = time;
     }
 

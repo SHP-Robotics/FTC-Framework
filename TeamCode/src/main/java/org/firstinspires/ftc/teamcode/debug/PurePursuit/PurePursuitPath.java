@@ -1,20 +1,17 @@
 package org.firstinspires.ftc.teamcode.debug.PurePursuit;
 
 import org.apache.commons.math3.util.MathUtils;
+import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.GeometricShape;
+import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.InterruptionShape;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Position2D;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.RestrictedCircle;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.RestrictedLine;
-import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Waypoints.EndWaypoint;
-import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Waypoints.InterruptionWaypoint;
-import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Waypoints.LineBindingWaypoint;
-import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Waypoints.StartWaypoint;
-import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Waypoints.Waypoint;
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
 
 import java.util.ArrayList;
 
 public class PurePursuitPath {
-    private final ArrayList<Waypoint> waypoints;
+    private final ArrayList<GeometricShape> geometries;
 
     private final double followRadius;
     private final double positionBuffer;
@@ -29,7 +26,7 @@ public class PurePursuitPath {
     private MecanumPurePursuitController mecanumPurePursuitController;
 
     public PurePursuitPath(PurePursuitPathBuilder purePursuitPathBuilder) {
-        this.waypoints = purePursuitPathBuilder.waypoints;
+        this.geometries = purePursuitPathBuilder.geometries;
 
         this.followRadius = purePursuitPathBuilder.followRadius;
         this.positionBuffer = purePursuitPathBuilder.positionBuffer;
@@ -47,44 +44,24 @@ public class PurePursuitPath {
         Position2D[] furthestIntersections = new Position2D[2];
         int waypoint = -1;
 
-        for (int i = 0; i < this.waypoints.size()-1; i++) {
-            if (this.waypoints.get(i) instanceof InterruptionWaypoint && !((InterruptionWaypoint) this.waypoints.get(i)).isExcecuted() && nearPosition(this.waypoints.get(i).getEndpoint())) {
-                ((InterruptionWaypoint) this.waypoints.get(i)).run();
+        for (int i = 0; i < this.geometries.size()-1; i++) {
+            if (this.geometries.get(i) instanceof InterruptionShape && !((InterruptionShape) this.geometries.get(i)).isExcecuted() && nearPosition(this.geometries.get(i).getEndpoint())) {
+                ((InterruptionShape) this.geometries.get(i)).run();
             }
 
-            Position2D position1 = this.waypoints.get(i).getEndpoint();
-            Position2D position2 = this.waypoints.get(i + 1).getEndpoint();
+            Position2D position1 = this.geometries.get(i).getEndpoint();
+            Position2D position2 = this.geometries.get(i + 1).getEndpoint();
 
-            if (this.waypoints.get(i+1) instanceof LineBindingWaypoint) {
-                RestrictedCircle restrictedCircle = new RestrictedCircle(position1, position2);
+            RestrictedCircle restrictedCircle = new RestrictedCircle(position1, position2);
 
-                Position2D[] tmpIntersections = followingCircle.getCircleIntersections(restrictedCircle);
+            Position2D[] tmpIntersections = restrictedCircle.circleIntersections(followingCircle);
 
-                if (currentPosition.dist(restrictedCircle.getEndpoint()) <= followRadius) {
+            if (currentPosition.dist(restrictedCircle.getEndpoint()) <= followRadius) {
                     furthestIntersections = new Position2D[]{restrictedCircle.getEndpoint(), null};
                     waypoint = i;
-                } else if (tmpIntersections != null && tmpIntersections.length == 2 && (tmpIntersections[0] != null || tmpIntersections[1] != null)) {
+            } else if (tmpIntersections != null && tmpIntersections.length == 2 && (tmpIntersections[0] != null || tmpIntersections[1] != null)) {
                     furthestIntersections = tmpIntersections;
                     waypoint = i;
-                }
-            } else {
-
-                double x1 = position1.getX();
-                double y1 = position1.getY();
-
-                double x2 = position2.getX();
-                double y2 = position2.getY();
-
-                RestrictedLine line = new RestrictedLine(x1, y1, x2, y2);
-
-                Position2D[] tmpIntersections = followingCircle.getLineIntersections(line);
-                if (currentPosition.dist(line.getP2()) <= followRadius) {
-                    furthestIntersections = new Position2D[]{line.getP2(), null};
-                    waypoint = i;
-                } else if (tmpIntersections != null && tmpIntersections.length == 2 && (tmpIntersections[0] != null || tmpIntersections[1] != null)) {
-                    furthestIntersections = tmpIntersections;
-                    waypoint = i;
-                }
             }
         }
 
@@ -96,7 +73,7 @@ public class PurePursuitPath {
             return furthestIntersections[0];
         }
 
-        if (waypoints.get(waypoint+1).getEndpoint().dist(furthestIntersections[0]) < waypoints.get(waypoint+1).getEndpoint().dist(furthestIntersections[1])) {
+        if (geometries.get(waypoint+1).getEndpoint().dist(furthestIntersections[0]) < geometries.get(waypoint+1).getEndpoint().dist(furthestIntersections[1])) {
             return furthestIntersections[0];
         }
 
@@ -173,7 +150,7 @@ public class PurePursuitPath {
     }
 
     public boolean isFinished() {
-        return !isFollowing || this.failed() || this.nearPosition(this.waypoints.get(this.waypoints.size()-1).getEndpoint());
+        return !isFollowing || this.failed() || this.nearPosition(this.geometries.get(this.geometries.size()-1).getEndpoint());
     }
 
     private boolean nearPosition(Position2D position2D) {
@@ -186,7 +163,8 @@ public class PurePursuitPath {
     }
 
     public static class PurePursuitPathBuilder {
-        private ArrayList<Waypoint> waypoints;
+        private ArrayList<GeometricShape> geometries;
+        private Position2D lastPosition;
 
         private double followRadius;
         private double positionBuffer;
@@ -196,9 +174,9 @@ public class PurePursuitPath {
         private double minimumTanh;
         private double maximumTanh;
 
-        public PurePursuitPathBuilder(StartWaypoint startWaypoint) {
-            waypoints = new ArrayList<>();
-            waypoints.add(startWaypoint);
+        public PurePursuitPathBuilder(Position2D startPosition) {
+            geometries = new ArrayList<>();
+            lastPosition = startPosition;
 
             this.followRadius = 0.1;
             this.positionBuffer = 0.3;
@@ -209,8 +187,27 @@ public class PurePursuitPath {
             this.maximumTanh = 1;
         }
 
-        public PurePursuitPathBuilder addWaypoint(Waypoint waypoint) {
-            waypoints.add(waypoint);
+        public PurePursuitPathBuilder moveTo(Position2D position2D) {
+            if (position2D.getX() == this.lastPosition.getX() && position2D.getY() == this.lastPosition.getY()) {
+                throw new IllegalArgumentException("position2D cannot equal the last position2D added to the path");
+            }
+
+            if (position2D.getHeadingRadians() != lastPosition.getHeadingRadians()) {
+                this.geometries.add(new RestrictedCircle(lastPosition, position2D));
+                if (this.geometries.get(this.geometries.size()-1).getEndpoint() != position2D) {
+                    this.geometries.add(new RestrictedLine(this.geometries.get(this.geometries.size()-1).getEndpoint(), position2D));
+                }
+            } else {
+                this.geometries.add(new RestrictedLine(lastPosition, position2D));
+            }
+
+            lastPosition = position2D;
+
+            return this;
+        }
+
+        public PurePursuitPathBuilder addAction(Runnable runnable) {
+            this.geometries.add(new InterruptionShape(lastPosition, runnable));
             return this;
         }
 
@@ -245,16 +242,8 @@ public class PurePursuitPath {
         }
 
         private void compile() {
-            if (waypoints.size() < 2) {
-                throw new IllegalArgumentException("Pure Pursuit Paths must start with a StartWaypoint and end with an EndWaypoint");
-            }
-
-            if (!(waypoints.get(0) instanceof StartWaypoint)) {
-                throw new IllegalArgumentException("Pure Pursuit Paths must start with a StartWaypoint");
-            }
-
-            if (!(waypoints.get(waypoints.size()-1) instanceof EndWaypoint)) {
-                throw new IllegalArgumentException("Pure Pursuit Paths must end with an EndWaypoint");
+            if (geometries.size() < 1) {
+                throw new IllegalArgumentException("Pure Pursuit Paths must include two points");
             }
         }
 

@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry;
 
 import org.apache.commons.math3.util.MathUtils;
 
-public class RestrictedCircle {
+public class RestrictedCircle extends GeometricShape {
     private final double radius;
     private double shiftRight;
     private double shiftUp;
@@ -57,6 +57,10 @@ public class RestrictedCircle {
         this.endpoint = p2;
     }
 
+    public double getRadius() {
+        return radius;
+    }
+
     public void setOffset(Position2D offset) {
         this.shiftRight = offset.getX();
         this.shiftUp = offset.getY();
@@ -79,22 +83,22 @@ public class RestrictedCircle {
         this.restrictionCounterClockwiseRadians = MathUtils.normalizeAngle(restrictionCounterClockwiseRadians, 0.0);
     }
 
-    private boolean checkInCirclePositive(double x) {
+    public boolean checkInCirclePositive(double x) {
         return Math.cos(Math.max(this.restrictionCounterClockwiseRadians, Math.PI)) * radius <= x && x <= Math.cos(Math.min(restrictionClockwiseRadians, Math.PI)) * radius;
     }
 
-    private double plugCirclePositive (double x) {
+    public double plugCirclePositive (double x) {
         if (checkInCirclePositive(x)) {
             return Math.sqrt((radius * radius) - (x*x));
         }
         throw new IllegalArgumentException("X is not within the restriction boundaries");
     }
 
-    private boolean checkInCircleNegative(double x) {
+    public boolean checkInCircleNegative(double x) {
         return Math.cos(Math.max(restrictionClockwiseRadians, Math.PI)) * radius <= x && x <= Math.cos(Math.min(restrictionCounterClockwiseRadians, Math.PI)) * radius;
     }
 
-    private double plugCircleNegative (double x) {
+    public double plugCircleNegative (double x) {
         if (checkInCircleNegative(x)) {
             return -Math.sqrt((radius * radius) - (x*x));
         }
@@ -218,7 +222,7 @@ public class RestrictedCircle {
         return furthestIntersections;
     }
 
-    public Position2D[] getCircleIntersections(RestrictedCircle restrictedCircle) {
+    public Position2D[] circleIntersections(RestrictedCircle restrictedCircle) {
         Position2D circleOffset = restrictedCircle.getOffset();
         circleOffset.add(new Position2D(
                 -this.shiftRight,
@@ -239,10 +243,32 @@ public class RestrictedCircle {
                 + (restrictedCircle.radius * restrictedCircle.radius))
                 / (2 * circleOffset.getX());
 
-        double solutionY1 = plugCirclePositive(solutionX);
-        double solutionY2 = plugCircleNegative(solutionX);
+        if (checkInCirclePositive(solutionX)) {
+            double solutionY1 = plugCirclePositive(solutionX);
 
-        if (solutionY1 == solutionY2) {
+            if (checkInCircleNegative(solutionX)) {
+                double solutionY2 = plugCircleNegative(solutionX);
+
+                if (solutionY1 == solutionY2) {
+                    return new Position2D[]{new Position2D(
+                            solutionX + this.shiftRight,
+                            solutionY1 + this.shiftUp,
+                            0
+                    ), null};
+                }
+
+                return new Position2D[]{
+                        new Position2D(
+                                solutionX + this.shiftRight,
+                                solutionY1 + this.shiftUp,
+                                0
+                        ), new Position2D(
+                        solutionX + this.shiftRight,
+                        solutionY2 + this.shiftUp,
+                        0
+                )};
+            }
+
             return new Position2D[]{new Position2D(
                     solutionX + this.shiftRight,
                     solutionY1 + this.shiftUp,
@@ -250,16 +276,15 @@ public class RestrictedCircle {
             ), null};
         }
 
-        return new Position2D[]{
-                new Position2D(
-                        solutionX + this.shiftRight,
-                        solutionY1 + this.shiftUp,
-                        0
-                ), new Position2D(
-                        solutionX + this.shiftRight,
-                        solutionY2 + this.shiftUp,
-                0
-        )};
+        if (checkInCircleNegative(solutionX)) {
+            return new Position2D[]{new Position2D(
+                    solutionX + this.shiftRight,
+                    plugCircleNegative(solutionX) + this.shiftUp,
+                    0
+            ), null};
+        }
+
+        return new Position2D[]{null,null};
     }
 
     public Position2D getEndpoint() {

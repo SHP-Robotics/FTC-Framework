@@ -1,11 +1,10 @@
 package org.firstinspires.ftc.teamcode.teleops;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
-@Disabled
+//@Disabled
 @TeleOp()
 public class PixelClassifier extends LinearOpMode {
     @Override
@@ -32,7 +31,7 @@ public class PixelClassifier extends LinearOpMode {
             double max = 0;
 
             for (int i = 0; i < 5; i++) {
-                result[i] = (r * weights[1][i]) + (g * weights[2][i]) + (b * weights[3][i]) + bias[i];
+                result[i] = (r * weights[0][i]) + (g * weights[1][i]) + (b * weights[2][i]) + bias[i];
             }
 
             for (int i = 0; i < 5; i++) {

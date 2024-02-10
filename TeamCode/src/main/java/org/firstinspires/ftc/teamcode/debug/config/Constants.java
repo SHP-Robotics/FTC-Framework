@@ -6,11 +6,11 @@ public final class Constants {
     // Pure Pursuit
     public static final double MECANUM_WIDTH = 10;
     public static final double ODOMETRY_TICKS_PER_INCH = 336.878636635;
-    public static final double ODOMETRY_WIDTH = 14.473080157209779;
-    public static final double CIRCULAR_RATIO = -0.18;
+    public static final double ODOMETRY_WIDTH = 15.206142816005409;
+    public static final double CIRCULAR_RATIO = -0.9771989769312929;
 
-    public static final DcMotorSimple.Direction leftEncoderDirection = DcMotorSimple.Direction.REVERSE;
-    public static final DcMotorSimple.Direction rightEncoderDirection = DcMotorSimple.Direction.REVERSE;
+    public static final DcMotorSimple.Direction leftEncoderDirection = DcMotorSimple.Direction.FORWARD;
+    public static final DcMotorSimple.Direction rightEncoderDirection = DcMotorSimple.Direction.FORWARD;
     public static final DcMotorSimple.Direction centerEncoderDirection = DcMotorSimple.Direction.REVERSE;
 
     // Wheels
