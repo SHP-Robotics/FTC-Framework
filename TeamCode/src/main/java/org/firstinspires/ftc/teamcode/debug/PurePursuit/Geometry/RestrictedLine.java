@@ -79,20 +79,20 @@ public class RestrictedLine extends GeometricShape {
             if (restrictedCircle.checkInCirclePositive(x1)) {
                 furthestIntersections[0] = new Position2D(
                         x1 + shiftRight,
-                        restrictedCircle.plugCircleNegative(x1) + shiftUp,
+                        restrictedCircle.plugCirclePositive(x1) + shiftUp,
                         0
                 );
+            }
 
+            if (restrictedCircle.checkInCircleNegative(x1)) {
                 furthestIntersections[1] = new Position2D(
                         x1 + shiftRight,
                         restrictedCircle.plugCircleNegative(x1) + shiftUp,
                         0
                 );
-
-                return furthestIntersections;
             }
 
-            return null;
+            return furthestIntersections;
         }
 
         double m = (y2-y1)/(x2-x1);

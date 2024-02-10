@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kCRWheelName;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kWheelBackward;
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kWheelForward;
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kWheelStill;
 
@@ -33,40 +34,18 @@ public class CRWheel extends Subsystem {
         this.state = state;
     }
 
-    // Add control methods
-    // Example:
-    // private void setPower(double power) { motor.setPower(power); }
-
     @Override
     public void periodic(Telemetry telemetry) {
-        // Add logging if needed
-        // Example:
-        // telemetry.addData("Motor Encoder: ", motor.getPosition(MotorUnit.TICKS));
-
         switch (state) {
             case FORWARD:
                 cWheel.setPower(kWheelForward);
                 break;
             case BACKWARD:
-                cWheel.setPower(kWheelForward);
+                cWheel.setPower(kWheelBackward);
                 break;
             case STILL:
                 cWheel.setPower(kWheelStill);
-//            case PIXELOFF:
-//                pixelThing.setPosition(kPixelDisengaged);
-//            case PIXELON:
-//                pixelThing.setPosition(kPixelEngaged);
-
-
+                break;
         }
-//        }
-
-        // OR
-
-//        if (state == State.ENABLED) {
-//            setPower(1.0);
-//        } else if (state == State.DISABLED) {
-//            setPower(0.0);
-//        }
     }
 }

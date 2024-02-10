@@ -243,15 +243,17 @@ public class RestrictedCircle extends GeometricShape {
                 + (restrictedCircle.radius * restrictedCircle.radius))
                 / (2 * circleOffset.getX());
 
+        solutionX += this.shiftRight;
+
         if (checkInCirclePositive(solutionX)) {
-            double solutionY1 = plugCirclePositive(solutionX);
+            double solutionY1 = plugCirclePositive(solutionX) + this.shiftUp;
 
             if (checkInCircleNegative(solutionX)) {
                 double solutionY2 = plugCircleNegative(solutionX);
 
                 if (solutionY1 == solutionY2) {
                     return new Position2D[]{new Position2D(
-                            solutionX + this.shiftRight,
+                            solutionX,
                             solutionY1 + this.shiftUp,
                             0
                     ), null};
@@ -259,18 +261,18 @@ public class RestrictedCircle extends GeometricShape {
 
                 return new Position2D[]{
                         new Position2D(
-                                solutionX + this.shiftRight,
+                                solutionX,
                                 solutionY1 + this.shiftUp,
                                 0
                         ), new Position2D(
-                        solutionX + this.shiftRight,
+                        solutionX,
                         solutionY2 + this.shiftUp,
                         0
                 )};
             }
 
             return new Position2D[]{new Position2D(
-                    solutionX + this.shiftRight,
+                    solutionX,
                     solutionY1 + this.shiftUp,
                     0
             ), null};
@@ -278,7 +280,7 @@ public class RestrictedCircle extends GeometricShape {
 
         if (checkInCircleNegative(solutionX)) {
             return new Position2D[]{new Position2D(
-                    solutionX + this.shiftRight,
+                    solutionX,
                     plugCircleNegative(solutionX) + this.shiftUp,
                     0
             ), null};

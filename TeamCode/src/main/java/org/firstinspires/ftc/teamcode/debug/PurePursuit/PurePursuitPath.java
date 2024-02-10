@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.debug.config.Constants;
 import java.util.ArrayList;
 
 public class PurePursuitPath {
-    private final ArrayList<GeometricShape> geometries;
+    public final ArrayList<GeometricShape> geometries;
 
     private final double followRadius;
     private final double positionBuffer;
@@ -42,26 +42,24 @@ public class PurePursuitPath {
         followingCircle.setOffset(currentPosition);
 
         Position2D[] furthestIntersections = new Position2D[2];
-        int waypoint = -1;
+        int geometry = -1;
 
-        for (int i = 0; i < this.geometries.size()-1; i++) {
+        for (int i = 0; i < this.geometries.size(); i++) {
             if (this.geometries.get(i) instanceof InterruptionShape && !((InterruptionShape) this.geometries.get(i)).isExcecuted() && nearPosition(this.geometries.get(i).getEndpoint())) {
+                mecanumPurePursuitController.deactivate();
                 ((InterruptionShape) this.geometries.get(i)).run();
             }
 
-            Position2D position1 = this.geometries.get(i).getEndpoint();
-            Position2D position2 = this.geometries.get(i + 1).getEndpoint();
+            GeometricShape geometricShape = this.geometries.get(i);
 
-            RestrictedCircle restrictedCircle = new RestrictedCircle(position1, position2);
+            Position2D[] tmpIntersections = geometricShape.circleIntersections(followingCircle);
 
-            Position2D[] tmpIntersections = restrictedCircle.circleIntersections(followingCircle);
-
-            if (currentPosition.dist(restrictedCircle.getEndpoint()) <= followRadius) {
-                    furthestIntersections = new Position2D[]{restrictedCircle.getEndpoint(), null};
-                    waypoint = i;
+            if (currentPosition.dist(geometricShape.getEndpoint()) <= followRadius) {
+                    furthestIntersections = new Position2D[]{geometricShape.getEndpoint(), null};
+                geometry = i;
             } else if (tmpIntersections != null && tmpIntersections.length == 2 && (tmpIntersections[0] != null || tmpIntersections[1] != null)) {
                     furthestIntersections = tmpIntersections;
-                    waypoint = i;
+                geometry = i;
             }
         }
 
@@ -73,7 +71,7 @@ public class PurePursuitPath {
             return furthestIntersections[0];
         }
 
-        if (geometries.get(waypoint+1).getEndpoint().dist(furthestIntersections[0]) < geometries.get(waypoint+1).getEndpoint().dist(furthestIntersections[1])) {
+        if (geometries.get(geometry).getEndpoint().dist(furthestIntersections[0]) < geometries.get(geometry).getEndpoint().dist(furthestIntersections[1])) {
             return furthestIntersections[0];
         }
 

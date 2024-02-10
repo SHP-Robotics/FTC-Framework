@@ -3,11 +3,11 @@ package org.firstinspires.ftc.teamcode.teleops;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.shplib.TestBaseRobot;
 import org.firstinspires.ftc.teamcode.commands.DecrementDownArmCommand;
 import org.firstinspires.ftc.teamcode.commands.IncrementUpArmCommand;
 import org.firstinspires.ftc.teamcode.commands.LowerArmCommand;
 import org.firstinspires.ftc.teamcode.commands.PrepareClimbCommand;
+import org.firstinspires.ftc.teamcode.shplib.TestBaseRobot;
 import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.Trigger;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
@@ -20,7 +20,7 @@ public class AndyRandy extends TestBaseRobot {
     private double debounce;
     private double driveBias;
 
-    //spammable code
+    // spammable code
     private boolean holdingCross = false;
     private boolean holdingRightBumper = false;
 
@@ -40,14 +40,7 @@ public class AndyRandy extends TestBaseRobot {
                         () -> drive.mecanum(-gamepad1.left_stick_y*driveBias, -gamepad1.left_stick_x*driveBias, -gamepad1.right_stick_x*driveBias)
                 )
         );
-//        intake.setDefaultCommand(new RunCommand(
-//                () -> intake.setState(IntakeSubsystem.State.STILL)
-//        ));
-//        vision.setDefaultCommand(
-//                new RunCommand(
-//                        () -> vision.showRes(telemetry)
-//                )
-//        );
+
         driveBias = 1;
     }
 
@@ -87,23 +80,21 @@ public class AndyRandy extends TestBaseRobot {
         }));
 
         // Set intake to intake
-        new Trigger((gamepad1.right_trigger>0.5 && arm.getState() == ArmSubsystem.State.BOTTOM), new RunCommand(() -> {
-            intake.setState(IntakeSubsystem.State.INTAKE);
-        }));
+        new Trigger((gamepad1.right_trigger>0.5 && arm.getState() == ArmSubsystem.State.BOTTOM), new RunCommand(() -> intake.setState(IntakeSubsystem.State.INTAKE)));
 
         // Set intake to reject
-        new Trigger((gamepad1.left_trigger>0.5 && arm.getState() == ArmSubsystem.State.BOTTOM), new RunCommand(() -> {
-            intake.setState(IntakeSubsystem.State.REJECTALL);
-        }));
+        new Trigger((gamepad1.left_trigger>0.5 && arm.getState() == ArmSubsystem.State.BOTTOM), new RunCommand(() -> intake.setState(IntakeSubsystem.State.REJECTALL)));
 
+        // wait before depositing more pixels
         if (gamepad1.triangle) {
             if (!holdingTriangle) {
                 elapsedTime.reset();
-            } else if (holdingTriangle && elapsedTime.seconds() > 0.5) {
+            } else if (elapsedTime.seconds() > 0.04) {
                 // Deposit variable pixels
                 new Trigger(gamepad1.triangle, new RunCommand(() -> {
                     if (intake.getState() != IntakeSubsystem.State.STILL) { //2. if no pixels have been released
                         intake.setState(IntakeSubsystem.State.DEPOSIT2);       //   release pixel #1
+                        holdingTriangle = false;
                         telemetry.addData("Pixels Deposited: ", 2);
                     } else {                                                //3. if pixel #1 has been released
                         intake.setState(IntakeSubsystem.State.DEPOSIT1);  //   release pixel #2
@@ -111,17 +102,18 @@ public class AndyRandy extends TestBaseRobot {
                     }
                 }));
             }
+            holdingTriangle = true;
         } else {
             holdingTriangle = false;
         }
 
         // Reset IMU
-        new Trigger(gamepad1.square, new RunCommand(() -> {
-            drive.resetIMUAngle();
-        }));
+        new Trigger(gamepad1.square, new RunCommand(() -> drive.resetIMUAngle()));
 
-        // TODO: new code from WillyBilly
+        // new code from WillyBilly
         // allows spamming
+
+        // move arm up
         if (gamepad1.right_bumper) {
             if (!holdingRightBumper) {
                 new Trigger(true,
@@ -133,8 +125,10 @@ public class AndyRandy extends TestBaseRobot {
             holdingRightBumper = false;
         }
 
-        // TODO: new code from WillyBilly
+        // new code from WillyBilly
         // allows spamming
+
+        // move arm down
         if (gamepad1.cross) {
             if (!holdingCross) {
                 new Trigger(true,
@@ -146,16 +140,19 @@ public class AndyRandy extends TestBaseRobot {
             holdingCross = false;
         }
 
+        // launch plane
         new Trigger (gamepad1.dpad_left, new RunCommand(()->{
             if (!Clock.hasElapsed(debounce, 60)) return;
-            //if (!Clock.hasElapsed(debounce, 60)) return;//TODO: TEST
             planeServo.setState(PlaneServo.State.OUT);
         }));
 
+        // reject pixels
         new Trigger (gamepad2.x, new RunCommand(()->intake.setState(IntakeSubsystem.State.REJECT)));
 
+        // prepare climb
         new Trigger (gamepad1.dpad_up, new PrepareClimbCommand(arm, wrist, elbow));
 
-        new Trigger (gamepad1.dpad_down, new RunCommand(()->arm.setState(ArmSubsystem.State.FINISHCLIMB)));
+        // finish climb
+        new Trigger (gamepad1.dpad_down && arm.getState() == ArmSubsystem.State.BOTTOM, new RunCommand(()->arm.setState(ArmSubsystem.State.FINISHCLIMB)));
     }
 }
