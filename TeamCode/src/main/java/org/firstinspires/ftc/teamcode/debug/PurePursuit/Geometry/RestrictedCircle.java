@@ -105,6 +105,17 @@ public class RestrictedCircle extends GeometricShape {
         throw new IllegalArgumentException("X is not within the restriction boundaries");
     }
 
+    public boolean checkInCircle(double x, double y) {
+        if (checkInCirclePositive(x)) {
+            if (checkInCircleNegative(x)) {
+                return plugCirclePositive(x) == y || plugCircleNegative(x) == y;
+            }
+            return plugCirclePositive(x) == y;
+        } else {
+            return checkInCircleNegative(x) && plugCircleNegative(x) == y;
+        }
+    }
+
     static double sgn(double x) {
         return x < 0 ? -1: 1;
     }

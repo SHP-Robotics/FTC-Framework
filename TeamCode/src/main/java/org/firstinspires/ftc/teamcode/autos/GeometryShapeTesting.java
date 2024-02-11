@@ -28,11 +28,14 @@ public class GeometryShapeTesting extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         GeometricShape geometricShape = new RestrictedLine(
-                new Position2D(0, 0, 0),
-                new Position2D(0, 4, 0)
+                new Position2D(0, 10, 0),
+                new Position2D(10, 10, 0)
         );
 
         RestrictedCircle followingCircle = new RestrictedCircle(0.1);
+        followingCircle.setOffset(new Position2D(
+                0.1, 10.1, 0
+        ));
 
         waitForStart();
 

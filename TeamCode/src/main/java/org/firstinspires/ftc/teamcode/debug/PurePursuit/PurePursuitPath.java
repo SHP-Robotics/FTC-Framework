@@ -45,8 +45,11 @@ public class PurePursuitPath {
         int geometry = -1;
 
         for (int i = 0; i < this.geometries.size(); i++) {
-            if (this.geometries.get(i) instanceof InterruptionShape && !((InterruptionShape) this.geometries.get(i)).isExcecuted() && nearPosition(this.geometries.get(i).getEndpoint())) {
-                mecanumPurePursuitController.deactivate();
+            if (this.geometries.get(i) instanceof InterruptionShape && !((InterruptionShape) this.geometries.get(i)).isExecuted() && nearPosition(this.geometries.get(i).getEndpoint())) {
+                mecanumPurePursuitController.leftFront.setPower(0);
+                mecanumPurePursuitController.rightFront.setPower(0);
+                mecanumPurePursuitController.leftRear.setPower(0);
+                mecanumPurePursuitController.rightRear.setPower(0);
                 ((InterruptionShape) this.geometries.get(i)).run();
             }
 
@@ -55,10 +58,10 @@ public class PurePursuitPath {
             Position2D[] tmpIntersections = geometricShape.circleIntersections(followingCircle);
 
             if (currentPosition.dist(geometricShape.getEndpoint()) <= followRadius) {
-                    furthestIntersections = new Position2D[]{geometricShape.getEndpoint(), null};
+                furthestIntersections = new Position2D[]{geometricShape.getEndpoint(), null};
                 geometry = i;
             } else if (tmpIntersections != null && tmpIntersections.length == 2 && (tmpIntersections[0] != null || tmpIntersections[1] != null)) {
-                    furthestIntersections = tmpIntersections;
+                furthestIntersections = tmpIntersections;
                 geometry = i;
             }
         }

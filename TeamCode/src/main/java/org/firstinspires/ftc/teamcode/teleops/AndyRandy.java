@@ -83,7 +83,9 @@ public class AndyRandy extends TestBaseRobot {
         new Trigger((gamepad1.right_trigger>0.5 && arm.getState() == ArmSubsystem.State.BOTTOM), new RunCommand(() -> intake.setState(IntakeSubsystem.State.INTAKE)));
 
         // Set intake to reject
-        new Trigger((gamepad1.left_trigger>0.5 && arm.getState() == ArmSubsystem.State.BOTTOM), new RunCommand(() -> intake.setState(IntakeSubsystem.State.REJECTALL)));
+        new Trigger((gamepad1.left_trigger > 0.5 && arm.getState() == ArmSubsystem.State.BOTTOM), new RunCommand(() -> intake.setState(IntakeSubsystem.State.REJECT)));
+
+        new Trigger((gamepad1.dpad_right && arm.getState() == ArmSubsystem.State.BOTTOM), new RunCommand(() -> intake.setState(IntakeSubsystem.State.REJECTALL)));
 
         // wait before depositing more pixels
         if (gamepad1.triangle) {
@@ -146,13 +148,10 @@ public class AndyRandy extends TestBaseRobot {
             planeServo.setState(PlaneServo.State.OUT);
         }));
 
-        // reject pixels
-        new Trigger (gamepad2.x, new RunCommand(()->intake.setState(IntakeSubsystem.State.REJECT)));
-
         // prepare climb
         new Trigger (gamepad1.dpad_up, new PrepareClimbCommand(arm, wrist, elbow));
 
         // finish climb
-        new Trigger (gamepad1.dpad_down && arm.getState() == ArmSubsystem.State.BOTTOM, new RunCommand(()->arm.setState(ArmSubsystem.State.FINISHCLIMB)));
+        new Trigger (gamepad1.dpad_down && arm.getState() == ArmSubsystem.State.CLIMB, new RunCommand(()->arm.setState(ArmSubsystem.State.FINISHCLIMB)));
     }
 }

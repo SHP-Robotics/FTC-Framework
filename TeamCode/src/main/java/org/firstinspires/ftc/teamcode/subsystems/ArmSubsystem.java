@@ -11,16 +11,13 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.shplib.Constants;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 
 public class ArmSubsystem extends Subsystem {
     private final DcMotor leftSlide;
     private final DcMotor rightSlide;
     private int slidePos;
-
-    private final double runPower = 1;
-    private final double ketchupPower = 1;
-    private final double staticPower = 0;
 
     public enum State {
         BOTTOM(0),
@@ -41,7 +38,9 @@ public class ArmSubsystem extends Subsystem {
             this.position = position;
         }
     }
+
     private State state;
+
     public ArmSubsystem(HardwareMap hardwareMap) {
         slidePos = 0;
 
@@ -105,21 +104,13 @@ public class ArmSubsystem extends Subsystem {
         leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         if (Math.abs(this.getSlidePosition() - position) < kSlideTolerance) {
-            rightSlide.setPower(staticPower);
-            leftSlide.setPower(staticPower);
+            rightSlide.setPower(0);
+            leftSlide.setPower(0);
             return;
         }
 
-        if (Math.abs(this.rightSlide.getCurrentPosition() - position) - Math.abs(this.leftSlide.getCurrentPosition() - position) < 0) {
-            this.rightSlide.setPower(runPower-ketchupPower);
-            this.leftSlide.setPower(runPower);
-        } else if (Math.abs(this.leftSlide.getCurrentPosition() - position) - Math.abs(this.rightSlide.getCurrentPosition() - position) < 0) {
-            this.rightSlide.setPower(runPower);
-            this.leftSlide.setPower(runPower-ketchupPower);
-        }
-
-        rightSlide.setPower(runPower);
-        leftSlide.setPower(runPower);
+        rightSlide.setPower(Constants.Arm.kRunPower);
+        leftSlide.setPower(Constants.Arm.kRunPower);
     }
 
     private void processState() {

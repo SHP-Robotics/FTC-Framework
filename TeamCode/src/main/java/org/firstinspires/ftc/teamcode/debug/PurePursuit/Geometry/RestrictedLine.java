@@ -107,31 +107,13 @@ public class RestrictedLine extends GeometricShape {
 
         if (discriminant == 0) {
             double solutionX = (d*dy) / (dr*dr);
-            double approxY = m * solutionX + b;
+            double solutionY = (-d*dx) / (dr*dr);
 
-            if ((restrictedCircle.checkInCirclePositive(solutionX) && !restrictedCircle.checkInCircleNegative(solutionX)) || (restrictedCircle.checkInCirclePositive(solutionX) && Math.abs(approxY - restrictedCircle.plugCirclePositive(solutionX) - shiftUp) < Math.abs(approxY - restrictedCircle.plugCircleNegative(solutionX) - shiftUp))) {
-                furthestIntersections[0] = new Position2D(
-                        solutionX + shiftRight,
-                        restrictedCircle.plugCirclePositive(solutionX) + shiftUp,
-                        0
-                );
-
-                if (!this.inDomain(furthestIntersections[0])) {
-                    furthestIntersections[0] = null;
-                }
-            } else if (restrictedCircle.checkInCircleNegative(solutionX)) {
-                furthestIntersections[0] = new Position2D(
-                        solutionX + shiftRight,
-                        restrictedCircle.plugCircleNegative(solutionX) + shiftUp,
-                        0
-                );
-
-                if (!this.inDomain(furthestIntersections[0])) {
-                    furthestIntersections[0] = null;
-                }
-            } else {
-                furthestIntersections[0] = null;
-            }
+            furthestIntersections[0] = new Position2D(
+                    solutionX,
+                    solutionY,
+                    0
+            );
 
             furthestIntersections[1] = null;
 
@@ -139,40 +121,20 @@ public class RestrictedLine extends GeometricShape {
             double solutionX1 = (d * dy + sgn(dy) * dx * Math.sqrt(discriminant)) / (dr * dr);
             double solutionX2 = (d * dy - sgn(dy) * dx * Math.sqrt(discriminant)) / (dr * dr);
 
-            double approxY1 = m * solutionX1 + b;
-            double approxY2 = m * solutionX2 + b;
+            double solutionY1 = (-d*dx + Math.abs(dy)*Math.sqrt(discriminant)) / (dr*dr);
+            double solutionY2 = (-d*dx - Math.abs(dy)*Math.sqrt(discriminant)) / (dr*dr);
 
-            if ((restrictedCircle.checkInCirclePositive(solutionX1) && !restrictedCircle.checkInCircleNegative(solutionX1)) || (restrictedCircle.checkInCirclePositive(solutionX1) && Math.abs(approxY1 - restrictedCircle.plugCirclePositive(solutionX1) - shiftUp) <= Math.abs(approxY1 - restrictedCircle.plugCircleNegative(solutionX1) - shiftUp))) {
-                furthestIntersections[0] = new Position2D(
-                        solutionX1 + shiftRight,
-                        restrictedCircle.plugCirclePositive(solutionX1) + shiftUp,
-                        0
-                );
-            } else if (restrictedCircle.checkInCircleNegative(solutionX1)) {
-                furthestIntersections[0] = new Position2D(
-                        solutionX1 + shiftRight,
-                        restrictedCircle.plugCircleNegative(solutionX1) + shiftUp,
-                        0
-                );
-            } else {
-                furthestIntersections[0] = null;
-            }
+            furthestIntersections[0] = new Position2D(
+                    solutionX1 + shiftRight,
+                    solutionY1 + shiftUp,
+                    0
+            );
 
-            if ((restrictedCircle.checkInCirclePositive(solutionX2) && !restrictedCircle.checkInCircleNegative(solutionX2)) || (restrictedCircle.checkInCirclePositive(solutionX2) && Math.abs(approxY2 - restrictedCircle.plugCirclePositive(solutionX2) - shiftUp) <= Math.abs(approxY2 - restrictedCircle.plugCircleNegative(solutionX2) - shiftUp))) {
-                furthestIntersections[1] = new Position2D(
-                        solutionX2 + shiftRight,
-                        restrictedCircle.plugCirclePositive(solutionX2) + shiftUp,
-                        0
-                );
-            } else if (restrictedCircle.checkInCircleNegative(solutionX2)) {
-                furthestIntersections[1] = new Position2D(
-                        solutionX2 + shiftRight,
-                        restrictedCircle.plugCircleNegative(solutionX2) + shiftUp,
-                        0
-                );
-            } else {
-                furthestIntersections[1] = null;
-            }
+            furthestIntersections[1] = new Position2D(
+                    solutionX2 + shiftRight,
+                    solutionY2 + shiftUp,
+                    0
+            );
         }
 
         return furthestIntersections;

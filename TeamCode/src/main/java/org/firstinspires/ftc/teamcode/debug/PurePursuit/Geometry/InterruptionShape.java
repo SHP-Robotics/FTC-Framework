@@ -3,12 +3,12 @@ package org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry;
 public class InterruptionShape extends GeometricShape {
     private final Position2D endpoint;
     private final Runnable runnable;
-    private boolean isExcecuted;
+    private boolean isExecuted;
 
     public InterruptionShape(Position2D position2D, Runnable runnable) {
         this.endpoint = position2D;
         this.runnable = runnable;
-        this.isExcecuted = false;
+        this.isExecuted = false;
     }
 
     @Override
@@ -23,10 +23,10 @@ public class InterruptionShape extends GeometricShape {
 
     public void run() {
         runnable.run();
-        this.isExcecuted = true;
+        this.isExecuted = true;
     }
 
-    public boolean isExcecuted() {
-        return this.isExcecuted;
+    public boolean isExecuted() {
+        return this.isExecuted;
     }
 }

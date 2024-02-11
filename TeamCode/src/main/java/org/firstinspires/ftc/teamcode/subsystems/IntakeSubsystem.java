@@ -88,7 +88,7 @@ public class IntakeSubsystem extends Subsystem {
                 break;
             case REJECT:
                 cWheel.setPower(0);
-                spinner.setPower(-0.75);
+                spinner.setPower(-0.8);
                 break;
             case STILL:
                 cWheel.setPower(0);

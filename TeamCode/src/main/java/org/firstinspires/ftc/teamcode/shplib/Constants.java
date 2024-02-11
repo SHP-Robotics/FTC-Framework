@@ -33,9 +33,19 @@ public class Constants {
     public static final class Intake{
 //        public static final String kLeftAdjust = "LeftAxon";
 //        public static final String kRightAdjust = "RightAxon";
-        public static final double kPositionBottom = 0.615;
-        public static final double kPositionTop = 0.05; //0.05
-        public static final double kPositionMiddle = 0.3;
+//        public static final double kPositionBottom = 0.615;
+
+        // Wrist
+        public static double kWristDown = 0.405;
+        public static double kWristUp = 0.3;
+        public static double kWristHalfway = 1;
+        public static double kWristClimb = 0.4;
+
+        // Elbow
+        public static double kPositionBottom = 0.56;
+        public static double kPositionTop = 0.05; //0.05
+        public static double kPositionMiddle = 0.3;
+
         public static final String kPixelServo = "MiniServo";
         public static final String kPlaneServo = "plane";
 
@@ -62,8 +72,10 @@ public class Constants {
     public static final class Arm {
         public static final String kLeftSlideName = "leftSlide";
         public static final String kRightSlideName = "rightSlide";
-        public static final double kMaxHeight = 4000.0;
-        public static final double kSlideTolerance = 25;
+
+        public static final double kMaxHeight = 3470;
+        public static final double kSlideTolerance = 20;
         public static final double kPixelHeight = 500;
+        public static final double kRunPower = 1;
     }
 }

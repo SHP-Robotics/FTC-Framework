@@ -42,10 +42,12 @@ public class PurePursuitTesting extends LinearOpMode {
         mecanumPurePursuitController.setMotorsRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         PurePursuitPath path = new PurePursuitPath.PurePursuitPathBuilder(new Position2D(0, 0, 0))
+//                .moveTo(new Position2D(0, 10, 0))
+//                .addAction(() -> sleep(10000))
                 .moveTo(new Position2D(0, 10, 0))
-//                .addAction(() -> sleep(1000))
-//                .moveTo(new Position2D(4, 4, 0))
+                .moveTo(new Position2D(10, 10, 0))
                 .setFollowRadius(2)
+                .setTanhPace(1.3)
                 .setMinimumTanh(0.15)
                 .setMaximumTanh(0.3)
                 .setPositionBuffer(0.05)

@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kAdjustHolder;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kWristClimb;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kWristDown;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kWristHalfway;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kWristUp;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -45,16 +49,16 @@ public class WristSubsystem extends Subsystem {
         switch (state) {
 
             case DOWN:
-                adjustHolder.setPosition(0.595);
+                adjustHolder.setPosition(kWristDown);
                 break;
             case UP:
-                adjustHolder.setPosition(0.3);
+                adjustHolder.setPosition(kWristUp);
                 break;
             case HALFWAY:
-                adjustHolder.setPosition(1);
+                adjustHolder.setPosition(kWristHalfway);
                 break;
             case CLIMB:
-                adjustHolder.setPosition(0.4);
+                adjustHolder.setPosition(kWristClimb);
 
 
 
