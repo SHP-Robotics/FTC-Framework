@@ -1,17 +1,14 @@
 package org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry;
 
 public class RestrictedLine extends GeometricShape {
-    private Position2D p1;
-    private Position2D p2;
+    private final Position2D p1;
+    private final Position2D p2;
+    private final double heading;
 
     public RestrictedLine(Position2D p1, Position2D p2) {
         this.p1 = p1;
         this.p2 = p2;
-    }
-
-    public RestrictedLine(double x1, double y1, double x2, double y2) {
-        this.p1 = new Position2D(x1, y1, 0);
-        this.p2 = new Position2D(x2, y2, 0);
+        this.heading = p1.getHeadingRadians();
     }
 
     public Position2D getP1() {
@@ -58,7 +55,7 @@ public class RestrictedLine extends GeometricShape {
         return new Position2D(
                 (b2-b1)/(m1-m2),
                 m1*((b2-b1)/(m1-m2))+b1,
-                0
+                (line1.heading+line2.heading)/2
         );
     }
 
@@ -80,7 +77,7 @@ public class RestrictedLine extends GeometricShape {
                 furthestIntersections[0] = new Position2D(
                         x1 + shiftRight,
                         restrictedCircle.plugCirclePositive(x1) + shiftUp,
-                        0
+                        this.heading
                 );
             }
 
@@ -88,15 +85,12 @@ public class RestrictedLine extends GeometricShape {
                 furthestIntersections[1] = new Position2D(
                         x1 + shiftRight,
                         restrictedCircle.plugCircleNegative(x1) + shiftUp,
-                        0
+                        this.heading
                 );
             }
 
             return furthestIntersections;
         }
-
-        double m = (y2-y1)/(x2-x1);
-        double b = y1 - (m*x1);
 
         double dx = x2 - x1;
         double dy = y2 - y1;
@@ -112,7 +106,7 @@ public class RestrictedLine extends GeometricShape {
             furthestIntersections[0] = new Position2D(
                     solutionX,
                     solutionY,
-                    0
+                    this.heading
             );
 
             furthestIntersections[1] = null;
@@ -127,13 +121,13 @@ public class RestrictedLine extends GeometricShape {
             furthestIntersections[0] = new Position2D(
                     solutionX1 + shiftRight,
                     solutionY1 + shiftUp,
-                    0
+                    this.heading
             );
 
             furthestIntersections[1] = new Position2D(
                     solutionX2 + shiftRight,
                     solutionY2 + shiftUp,
-                    0
+                    this.heading
             );
         }
 

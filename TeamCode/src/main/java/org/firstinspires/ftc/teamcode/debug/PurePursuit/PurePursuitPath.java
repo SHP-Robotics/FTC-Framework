@@ -6,6 +6,8 @@ import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.InterruptionSha
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Position2D;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.RestrictedCircle;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.RestrictedLine;
+import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.RotationShape;
+import org.firstinspires.ftc.teamcode.debug.RobotController;
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
 
 import java.util.ArrayList;
@@ -17,13 +19,14 @@ public class PurePursuitPath {
     private final double positionBuffer;
     private final double rotationBuffer;
 
-    private final double tanhPace;
-    private final double minimumTanh;
-    private final double maximumTanh;
+    private final double speedMin;
+    private final double speedCap;
+    private final double pace;
 
     private boolean isFollowing = false;
     private boolean failed = false;
-    private MecanumPurePursuitController mecanumPurePursuitController;
+    private PurePursuitFollower purePursuitFollower;
+    private RobotController robotController;
 
     public PurePursuitPath(PurePursuitPathBuilder purePursuitPathBuilder) {
         this.geometries = purePursuitPathBuilder.geometries;
@@ -32,9 +35,9 @@ public class PurePursuitPath {
         this.positionBuffer = purePursuitPathBuilder.positionBuffer;
         this.rotationBuffer = purePursuitPathBuilder.rotationBuffer;
 
-        this.tanhPace = purePursuitPathBuilder.tanhPace;
-        this.minimumTanh = purePursuitPathBuilder.minimumTanh;
-        this.maximumTanh = purePursuitPathBuilder.maximumTanh;
+        this.speedMin = purePursuitPathBuilder.speedMin;
+        this.speedCap = purePursuitPathBuilder.speedCap;
+        this.pace = purePursuitPathBuilder.pace;
     }
 
     private Position2D getOptimalIntersection(Position2D currentPosition) {
@@ -46,10 +49,7 @@ public class PurePursuitPath {
 
         for (int i = 0; i < this.geometries.size(); i++) {
             if (this.geometries.get(i) instanceof InterruptionShape && !((InterruptionShape) this.geometries.get(i)).isExecuted() && nearPosition(this.geometries.get(i).getEndpoint())) {
-                mecanumPurePursuitController.leftFront.setPower(0);
-                mecanumPurePursuitController.rightFront.setPower(0);
-                mecanumPurePursuitController.leftRear.setPower(0);
-                mecanumPurePursuitController.rightRear.setPower(0);
+                robotController.deactivate();
                 ((InterruptionShape) this.geometries.get(i)).run();
             }
 
@@ -57,7 +57,7 @@ public class PurePursuitPath {
 
             Position2D[] tmpIntersections = geometricShape.circleIntersections(followingCircle);
 
-            if (currentPosition.dist(geometricShape.getEndpoint()) <= followRadius) {
+            if (geometricShape.getEndpoint() != null && currentPosition.dist(geometricShape.getEndpoint()) <= followRadius) {
                 furthestIntersections = new Position2D[]{geometricShape.getEndpoint(), null};
                 geometry = i;
             } else if (tmpIntersections != null && tmpIntersections.length == 2 && (tmpIntersections[0] != null || tmpIntersections[1] != null)) {
@@ -81,73 +81,71 @@ public class PurePursuitPath {
         return furthestIntersections[1];
     }
 
-    public void follow(MecanumPurePursuitController mecanumPurePursuitController) {
+    public void follow(PurePursuitFollower purePursuitFollower, RobotController robotController) {
         this.isFollowing = true;
-        this.mecanumPurePursuitController = mecanumPurePursuitController;
+        this.purePursuitFollower = purePursuitFollower;
+        this.robotController = robotController;
         while (!this.isFinished()) {
             update();
         }
-        if (mecanumPurePursuitController != null) {
-            this.mecanumPurePursuitController.deactivate();
+        if (robotController != null) {
+            this.robotController.deactivate();
         }
         this.isFollowing = false;
-        this.mecanumPurePursuitController = null;
+        this.purePursuitFollower = null;
+        this.robotController = null;
     }
 
-    public void followAsync(MecanumPurePursuitController mecanumPurePursuitController) {
+    public void followAsync(PurePursuitFollower purePursuitFollower, RobotController robotController) {
         this.isFollowing = true;
-        this.mecanumPurePursuitController = mecanumPurePursuitController;
+        this.purePursuitFollower = purePursuitFollower;
+        this.robotController = robotController;
     }
 
     public void update() {
         if (this.isFollowing && !this.isFinished()) {
-            this.mecanumPurePursuitController.updateOdometry();
+            this.purePursuitFollower.updateOdometry();
 
-            Position2D optimalIntersection = getOptimalIntersection(this.mecanumPurePursuitController.getCurrentPosition());
+            Position2D optimalIntersection = getOptimalIntersection(this.purePursuitFollower.getCurrentPosition());
 
             if (optimalIntersection == null) {
                 failed = true;
                 return;
             }
 
-            double differenceX = optimalIntersection.getX() - this.mecanumPurePursuitController.getCurrentPosition().getX();
-            double differenceY = optimalIntersection.getY() - this.mecanumPurePursuitController.getCurrentPosition().getY();
-            double differenceHeading = MathUtils.normalizeAngle(optimalIntersection.getHeadingRadians() - this.mecanumPurePursuitController.getCurrentPosition().getHeadingRadians(), 0.0);
+            double differenceX = optimalIntersection.getX() - this.purePursuitFollower.getCurrentPosition().getX();
+            double differenceY = optimalIntersection.getY() - this.purePursuitFollower.getCurrentPosition().getY();
+            double differenceHeading = MathUtils.normalizeAngle(optimalIntersection.getHeadingRadians() - this.purePursuitFollower.getCurrentPosition().getHeadingRadians(), 0.0);
             differenceHeading *= Constants.MECANUM_WIDTH;
 
             double max = Math.max(Math.abs(differenceX), Math.max(Math.abs(differenceY), Math.abs(differenceHeading)));
 
+            double driveSpeed = Math.max(this.speedMin, Math.min(max * this.pace, this.speedCap));
+
             if (max < 1) {
                 max = 1;
-            }
-
-            double driveSpeed = this.maximumTanh * (Math.exp(this.tanhPace * max) - Math.exp(-this.tanhPace * max)) /
-                    (Math.exp(-this.tanhPace * max) + Math.exp(this.tanhPace * max));
-
-            if (Math.abs(driveSpeed) < this.minimumTanh) {
-                driveSpeed = Math.signum(driveSpeed) * this.minimumTanh;
             }
 
             double x = differenceX / max;
             double y = differenceY / max;
             double r = differenceHeading / max;
 
-            this.mecanumPurePursuitController.driveFieldParams(x * driveSpeed, y * driveSpeed, r * driveSpeed, mecanumPurePursuitController.getCurrentPosition().getHeadingRadians());
+            this.robotController.driveFieldParams(x * driveSpeed, y * driveSpeed, r * driveSpeed, purePursuitFollower.getCurrentPosition().getHeadingRadians());
         } else {
-            if (mecanumPurePursuitController != null) {
-                this.mecanumPurePursuitController.deactivate();
+            if (robotController != null) {
+                this.robotController.deactivate();
             }
             this.isFollowing = false;
-            this.mecanumPurePursuitController = null;
+            this.purePursuitFollower = null;
         }
     }
 
     public void reset() {
-        if (mecanumPurePursuitController != null) {
-            this.mecanumPurePursuitController.deactivate();
+        if (robotController != null) {
+            this.robotController.deactivate();
         }
         this.isFollowing = false;
-        this.mecanumPurePursuitController = null;
+        this.purePursuitFollower = null;
     }
 
     public boolean isFinished() {
@@ -155,8 +153,8 @@ public class PurePursuitPath {
     }
 
     private boolean nearPosition(Position2D position2D) {
-        return (this.mecanumPurePursuitController.getCurrentPosition().dist(position2D) <= this.positionBuffer
-                && Math.abs(this.mecanumPurePursuitController.getCurrentPosition().getHeadingRadians() - position2D.getHeadingRadians()) <= rotationBuffer);
+        return (this.purePursuitFollower.getCurrentPosition().dist(position2D) <= this.positionBuffer
+                && Math.abs(this.purePursuitFollower.getCurrentPosition().getHeadingRadians() - position2D.getHeadingRadians()) <= rotationBuffer);
     }
 
     public boolean failed() {
@@ -171,21 +169,21 @@ public class PurePursuitPath {
         private double positionBuffer;
         private double rotationBuffer;
 
-        private double tanhPace;
-        private double minimumTanh;
-        private double maximumTanh;
+        private double speedMin;
+        private double speedCap;
+        private double pace;
 
-        public PurePursuitPathBuilder(Position2D startPosition) {
+        public PurePursuitPathBuilder() {
             geometries = new ArrayList<>();
-            lastPosition = startPosition;
+            lastPosition = new Position2D(0, 0, Math.toRadians(90));
 
             this.followRadius = 0.1;
             this.positionBuffer = 0.3;
             this.rotationBuffer = 0.3;
 
-            this.tanhPace = 1;
-            this.minimumTanh = 0;
-            this.maximumTanh = 1;
+            this.speedMin = 0;
+            this.speedCap = 1;
+            this.pace = 0.02;
         }
 
         public PurePursuitPathBuilder moveTo(Position2D position2D) {
@@ -194,16 +192,29 @@ public class PurePursuitPath {
             }
 
             if (position2D.getHeadingRadians() != lastPosition.getHeadingRadians()) {
-                this.geometries.add(new RestrictedCircle(lastPosition, position2D));
-                if (this.geometries.get(this.geometries.size()-1).getEndpoint() != position2D) {
-                    this.geometries.add(new RestrictedLine(this.geometries.get(this.geometries.size()-1).getEndpoint(), position2D));
-                }
+                throw new IllegalArgumentException("position2D heading must equal the last position2D heading");
             } else {
                 this.geometries.add(new RestrictedLine(lastPosition, position2D));
             }
 
             lastPosition = position2D;
 
+            return this;
+        }
+        
+        public PurePursuitPathBuilder rotateTo(Position2D pointOfRotation, double heading) {
+            if (heading == lastPosition.getHeadingRadians()) {
+                throw new IllegalArgumentException("heading cannot equal last heading");
+            }
+            this.geometries.add(new RotationShape(pointOfRotation, 0, heading));
+            return this;
+        }
+
+        public PurePursuitPathBuilder turnTo(Position2D position2D) {
+            this.geometries.add(new RestrictedCircle(lastPosition, position2D));
+            if (this.geometries.get(this.geometries.size()-1).getEndpoint() != position2D) {
+                this.geometries.add(new RestrictedLine(this.geometries.get(this.geometries.size()-1).getEndpoint(), position2D));
+            }
             return this;
         }
 
@@ -227,18 +238,18 @@ public class PurePursuitPath {
             return this;
         }
 
-        public PurePursuitPathBuilder setTanhPace(double tanhPace) {
-            this.tanhPace = tanhPace;
+        public PurePursuitPathBuilder setSpeedMin(double speedMin) {
+            this.speedMin = speedMin;
             return this;
         }
 
-        public PurePursuitPathBuilder setMinimumTanh(double minimumTanh) {
-            this.minimumTanh = minimumTanh;
+        public PurePursuitPathBuilder setSpeedCap(double speedCap) {
+            this.speedCap = speedCap;
             return this;
         }
 
-        public PurePursuitPathBuilder setMaximumTanh(double maximumTanh) {
-            this.maximumTanh = maximumTanh;
+        public PurePursuitPathBuilder setPace(double pace) {
+            this.pace = pace;
             return this;
         }
 

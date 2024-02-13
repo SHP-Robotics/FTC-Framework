@@ -5,10 +5,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.debug.MecanumController;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.GeometricShape;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Position2D;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.RestrictedCircle;
-import org.firstinspires.ftc.teamcode.debug.PurePursuit.MecanumPurePursuitController;
+import org.firstinspires.ftc.teamcode.debug.PurePursuit.PurePursuitFollower;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.PurePursuitPath;
 
 @Autonomous()
@@ -38,39 +39,88 @@ public class PurePursuitTesting extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        MecanumPurePursuitController mecanumPurePursuitController = new MecanumPurePursuitController(hardwareMap);
-        mecanumPurePursuitController.setMotorsRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        PurePursuitFollower purePursuitFollower = new PurePursuitFollower(hardwareMap);
+        MecanumController mecanumController = new MecanumController(hardwareMap);
+        mecanumController.setMotorsRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        PurePursuitPath path = new PurePursuitPath.PurePursuitPathBuilder(new Position2D(0, 0, 0))
-//                .moveTo(new Position2D(0, 10, 0))
-//                .addAction(() -> sleep(10000))
-                .moveTo(new Position2D(0, 10, 0))
-                .moveTo(new Position2D(10, 10, 0))
+        /*
+        PurePursuitPath path = new PurePursuitPath.PurePursuitPathBuilder()
+                .rotateTo(new Position2D(0, 0, 0), Math.toRadians(180))
                 .setFollowRadius(2)
-                .setTanhPace(1.3)
-                .setMinimumTanh(0.15)
-                .setMaximumTanh(0.3)
                 .setPositionBuffer(0.05)
+                .setRotationBuffer(Math.toRadians(5))
+                .setSpeedMin(0.1)
+                .setSpeedCap(0.1)
+//                .setPace(0.005)
+                .build();
+         */
+
+        /*
+        PurePursuitPath path = new PurePursuitPath.PurePursuitPathBuilder()
+                .turnTo(new Position2D(10, 10, Math.toRadians(90)))
+                .setFollowRadius(2)
+                .setPositionBuffer(0.05)
+                .setRotationBuffer(Math.toRadians(5))
+                .setSpeedMin(0.1)
+                .setSpeedCap(0.1)
+//                .setPace(0.005)
+                .build();
+         */
+
+
+        PurePursuitPath path = new PurePursuitPath.PurePursuitPathBuilder()
+                .moveTo(new Position2D(0, 10, Math.toRadians(90)))
+                .setFollowRadius(2)
+                .setPositionBuffer(0.2)
+                .setRotationBuffer(Math.toRadians(5))
+                .setSpeedMin(0.2)
+                .setSpeedCap(0.2)
+//                .setPace(0.005)
                 .build();
 
+
+        /*
+        PurePursuitPath path = new PurePursuitPath.PurePursuitPathBuilder()
+                .moveTo(new Position2D(10, 10, Math.toRadians(90)))
+                .setFollowRadius(2)
+                .setPositionBuffer(0.05)
+                .setRotationBuffer(Math.toRadians(5))
+                .setSpeedMin(0.1)
+                .setSpeedCap(0.1)
+//                .setPace(0.005)
+                .build();
+         */
+
+        /*
+        PurePursuitPath path = new PurePursuitPath.PurePursuitPathBuilder()
+                .moveTo(new Position2D(10, 0, Math.toRadians(90)))
+                .setFollowRadius(2)
+                .setPositionBuffer(0.05)
+                .setRotationBuffer(Math.toRadians(5))
+                .setSpeedMin(0.1)
+                .setSpeedCap(0.1)
+//                .setPace(0.005)
+                .build();
+         */
+
         waitForStart();
 
-        path.followAsync(mecanumPurePursuitController);
+        path.followAsync(purePursuitFollower, mecanumController);
 
         waitForStart();
 
-        while (opModeIsActive()) {
+        while (opModeIsActive() && !isStopRequested()) {
             path.update();
 
             RestrictedCircle followingCircle = new RestrictedCircle(1);
-            followingCircle.setOffset(mecanumPurePursuitController.getCurrentPosition());
+            followingCircle.setOffset(purePursuitFollower.getCurrentPosition());
 
             decrypt(telemetry, path.geometries.get(0).getEndpoint());
             decrypt(telemetry, path.geometries.get(0), followingCircle);
 
-            telemetry.addData("x", mecanumPurePursuitController.getCurrentPosition().getX());
-            telemetry.addData("y", mecanumPurePursuitController.getCurrentPosition().getY());
-            telemetry.addData("r", mecanumPurePursuitController.getCurrentPosition().getHeadingRadians());
+            telemetry.addData("x", purePursuitFollower.getCurrentPosition().getX());
+            telemetry.addData("y", purePursuitFollower.getCurrentPosition().getY());
+            telemetry.addData("r", purePursuitFollower.getCurrentPosition().getHeadingRadians());
             telemetry.addLine();
             telemetry.addData("finished", path.isFinished());
             telemetry.addData("failed", path.failed());

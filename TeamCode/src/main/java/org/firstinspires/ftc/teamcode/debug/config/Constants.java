@@ -4,10 +4,10 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 public final class Constants {
     // Pure Pursuit
-    public static final double MECANUM_WIDTH = 10;
+    public static final double MECANUM_WIDTH = 12;
     public static final double ODOMETRY_TICKS_PER_INCH = 336.878636635*4*9.8/(3*12);
-    public static final double ODOMETRY_WIDTH = 13.711951031025708;
-    public static final double CIRCULAR_RATIO = -1.726971554886571;
+    public static final double ODOMETRY_WIDTH = 13.822861635923072;
+    public static final double CIRCULAR_RATIO = 0.7658864198272942;
 
     public static final DcMotorSimple.Direction leftEncoderDirection = DcMotorSimple.Direction.FORWARD;
     public static final DcMotorSimple.Direction rightEncoderDirection = DcMotorSimple.Direction.FORWARD;

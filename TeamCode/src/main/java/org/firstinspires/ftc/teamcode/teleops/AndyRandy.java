@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.commands.DecrementDownArmCommand;
 import org.firstinspires.ftc.teamcode.commands.IncrementUpArmCommand;
 import org.firstinspires.ftc.teamcode.commands.LowerArmCommand;
+import org.firstinspires.ftc.teamcode.commands.OpenStageDoorCommand;
 import org.firstinspires.ftc.teamcode.commands.PrepareClimbCommand;
 import org.firstinspires.ftc.teamcode.shplib.TestBaseRobot;
 import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
@@ -69,7 +70,7 @@ public class AndyRandy extends TestBaseRobot {
         }));
 
         // Lower arm
-        new Trigger(gamepad1.left_bumper,
+        new Trigger(arm.getState() != ArmSubsystem.State.BOTTOM && gamepad1.left_bumper,
             new LowerArmCommand(arm, wrist, elbow)
         );
 
@@ -153,5 +154,8 @@ public class AndyRandy extends TestBaseRobot {
 
         // finish climb
         new Trigger (gamepad1.dpad_down && arm.getState() == ArmSubsystem.State.CLIMB, new RunCommand(()->arm.setState(ArmSubsystem.State.FINISHCLIMB)));
+
+        // open door
+        new Trigger (gamepad1.touchpad, new OpenStageDoorCommand(arm, wrist, elbow));
     }
 }

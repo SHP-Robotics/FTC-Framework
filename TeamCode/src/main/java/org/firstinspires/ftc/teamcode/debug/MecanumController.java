@@ -15,7 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
 import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
 
-public class MecanumController {
+public class MecanumController extends RobotController {
     public DcMotor leftFront;
     public DcMotor rightFront;
     public DcMotor leftRear;
@@ -109,7 +109,7 @@ public class MecanumController {
     }
 
     public void calibrateIMUAngleOffset() {
-        imuAngleOffset = -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        imuAngleOffset = -imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS)+Math.PI/2;
 //        imu.resetYaw();
     }
 
@@ -142,52 +142,6 @@ public class MecanumController {
         rightRear.setPower(rightRearPower * driveSpeed / max);
     }
 
-    public void drivePID(Gamepad gamepad) {
-        double x = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.STRAFE_RIGHT);
-        double y = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.STRAFE_UP);
-        double r = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.ROTATE_RIGHT);
-
-        double leftFrontPower = y + x + r;
-        double rightFrontPower = y - x - r;
-        double leftRearPower = y - x + r;
-        double rightRearPower = y + x - r;
-
-        double max = Math.max(Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower)), Math.max(Math.abs(leftRearPower), Math.abs(rightRearPower)));
-
-        speedController.updateSpeed(gamepad, max);
-        this.driveSpeed = speedController.getSpeed();
-
-        if (max < 1) {
-            max = 1;
-        }
-
-        boolean deceleration = x == 0 && y == 0 && r == 0;
-
-        if (this.leftFront instanceof AccumulationControlledDcMotor) {
-            ((AccumulationControlledDcMotor) leftFront).setPower(leftFrontPower * driveSpeed / max, deceleration);
-        } else {
-            leftFront.setPower(leftFrontPower * driveSpeed / max);
-        }
-
-        if (this.rightFront instanceof AccumulationControlledDcMotor) {
-            ((AccumulationControlledDcMotor) rightFront).setPower(rightFrontPower * driveSpeed / max, deceleration);
-        } else {
-            rightFront.setPower(leftFrontPower * driveSpeed / max);
-        }
-
-        if (this.leftRear instanceof AccumulationControlledDcMotor) {
-            ((AccumulationControlledDcMotor) leftRear).setPower(leftRearPower * driveSpeed / max, deceleration);
-        } else {
-            leftRear.setPower(leftFrontPower * driveSpeed / max);
-        }
-
-        if (this.rightRear instanceof AccumulationControlledDcMotor) {
-            ((AccumulationControlledDcMotor) rightRear).setPower(rightRearPower * driveSpeed / max, deceleration);
-        } else {
-            rightRear.setPower(leftFrontPower * driveSpeed / max);
-        }
-    }
-
     public void fieldOrientedDrive(Gamepad gamepad) {
         double x = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.STRAFE_RIGHT);
         double y = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.STRAFE_UP);
@@ -197,8 +151,8 @@ public class MecanumController {
         // cos * x = how much right if gamepad right
         // sin * y = how much forward if gamepad forward
         // sin * x = how much forward if gamepad right
-        double xOriented = (Math.cos(getCalibratedIMUAngle()) * x) + (Math.sin(getCalibratedIMUAngle()) * y);
-        double yOriented = (Math.cos(getCalibratedIMUAngle()) * y) - (Math.sin(getCalibratedIMUAngle()) * x);
+        double xOriented = (Math.sin(getCalibratedIMUAngle()) * x) + (Math.cos(getCalibratedIMUAngle()) * y);
+        double yOriented = (Math.sin(getCalibratedIMUAngle()) * y) - (Math.cos(getCalibratedIMUAngle()) * x);
 
         double leftFrontPower = yOriented + xOriented + r;
         double rightFrontPower = yOriented - xOriented - r;
@@ -218,59 +172,6 @@ public class MecanumController {
         rightFront.setPower(rightFrontPower * driveSpeed / max);
         leftRear.setPower(leftRearPower * driveSpeed / max);
         rightRear.setPower(rightRearPower * driveSpeed / max);
-    }
-
-    public void fieldOrientedDrivePID(Gamepad gamepad) {
-        double x = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.STRAFE_RIGHT);
-        double y = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.STRAFE_UP);
-        double r = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.ROTATE_RIGHT);
-
-        // cos * y = how much right if gamepad forward
-        // cos * x = how much right if gamepad right
-        // sin * y = how much forward if gamepad forward
-        // sin * x = how much forward if gamepad right
-        double xOriented = (Math.cos(getCalibratedIMUAngle()) * x) + (Math.sin(getCalibratedIMUAngle()) * y);
-        double yOriented = (Math.cos(getCalibratedIMUAngle()) * y) - (Math.sin(getCalibratedIMUAngle()) * x);
-
-        double leftFrontPower = yOriented + xOriented + r;
-        double rightFrontPower = yOriented - xOriented - r;
-        double leftRearPower = yOriented - xOriented + r;
-        double rightRearPower = yOriented + xOriented - r;
-
-        double max = Math.max(Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower)), Math.max(Math.abs(leftRearPower), Math.abs(rightRearPower)));
-
-        speedController.updateSpeed(gamepad, max);
-        this.driveSpeed = speedController.getSpeed();
-
-        if (max < 1) {
-            max = 1;
-        }
-
-        boolean deceleration = xOriented == 0 && yOriented == 0 && r == 0;
-
-        if (this.leftFront instanceof AccumulationControlledDcMotor) {
-            ((AccumulationControlledDcMotor) leftFront).setPower(leftFrontPower * driveSpeed / max, deceleration);
-        } else {
-            leftFront.setPower(leftFrontPower * driveSpeed / max);
-        }
-
-        if (this.rightFront instanceof AccumulationControlledDcMotor) {
-            ((AccumulationControlledDcMotor) rightFront).setPower(rightFrontPower * driveSpeed / max, deceleration);
-        } else {
-            rightFront.setPower(leftFrontPower * driveSpeed / max);
-        }
-
-        if (this.leftRear instanceof AccumulationControlledDcMotor) {
-            ((AccumulationControlledDcMotor) leftRear).setPower(leftRearPower * driveSpeed / max, deceleration);
-        } else {
-            leftRear.setPower(leftFrontPower * driveSpeed / max);
-        }
-
-        if (this.rightRear instanceof AccumulationControlledDcMotor) {
-            ((AccumulationControlledDcMotor) rightRear).setPower(rightRearPower * driveSpeed / max, deceleration);
-        } else {
-            rightRear.setPower(leftFrontPower * driveSpeed / max);
-        }
     }
 
     public void driveParams(double x, double y, double r) {
@@ -304,8 +205,8 @@ public class MecanumController {
         // cos * x = how much right if gamepad right
         // sin * y = how much forward if gamepad forward
         // sin * x = how much forward if gamepad right
-        double xOriented = (Math.cos(gyro) * x) + (Math.sin(gyro) * y);
-        double yOriented = (Math.cos(gyro) * y) - (Math.sin(gyro) * x);
+        double xOriented = (Math.sin(gyro) * x) + (Math.cos(gyro) * y);
+        double yOriented = (Math.sin(gyro) * y) - (Math.cos(gyro) * x);
 
         double leftFrontPower = yOriented + xOriented + r;
         double rightFrontPower = yOriented - xOriented - r;

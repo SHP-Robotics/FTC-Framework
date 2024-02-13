@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.commands;
 
+import org.firstinspires.ftc.teamcode.shplib.Constants;
 import org.firstinspires.ftc.teamcode.shplib.commands.Command;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
 import org.firstinspires.ftc.teamcode.subsystems.WristSubsystem;
@@ -38,13 +39,11 @@ public class LowerArmCommand extends Command {
 
     @Override
     public void end() {
-        //wrist.setState(AdjustHolder.State.DOWN);
-        //elbow.setState(PracticeArmServo.State.DOWN);
         wrist.setState(WristSubsystem.State.DOWN);
     }
 
     @Override
     public boolean isFinished() {
-        return Clock.hasElapsed(startTime, 0.75);
+        return arm.getSlidePosition() < Constants.Arm.kSlideTolerance;
     }
 }

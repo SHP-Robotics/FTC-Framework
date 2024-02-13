@@ -40,11 +40,13 @@ public class Constants {
         public static double kWristUp = 0.3;
         public static double kWristHalfway = 1;
         public static double kWristClimb = 0.4;
+        public static double kWristStageDoor = 0.4;
 
         // Elbow
         public static double kPositionBottom = 0.56;
         public static double kPositionTop = 0.05; //0.05
         public static double kPositionMiddle = 0.3;
+        public static double kPositionStageDoor = 0.335;
 
         public static final String kPixelServo = "MiniServo";
         public static final String kPlaneServo = "plane";
@@ -73,7 +75,7 @@ public class Constants {
         public static final String kLeftSlideName = "leftSlide";
         public static final String kRightSlideName = "rightSlide";
 
-        public static final double kMaxHeight = 3470;
+        public static final double kMaxHeight = 4000;
         public static final double kSlideTolerance = 20;
         public static final double kPixelHeight = 500;
         public static final double kRunPower = 1;
