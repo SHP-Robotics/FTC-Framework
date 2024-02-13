@@ -16,7 +16,7 @@ public class Position2D {
     public Position2D(double x, double y, double headingRadians) {
         this.x = x;
         this.y = y;
-        this.headingRadians = MathUtils.normalizeAngle(headingRadians, 0.0);
+        this.headingRadians = MathUtils.normalizeAngle(headingRadians, Math.PI/2);
     }
 
     public double getX() {
@@ -36,7 +36,7 @@ public class Position2D {
         this.y += position2D.getY();
         this.headingRadians = this.headingRadians + position2D.getHeadingRadians();
         if (clamp) {
-            this.headingRadians = MathUtils.normalizeAngle(this.headingRadians, 0.0);
+            this.headingRadians = MathUtils.normalizeAngle(this.headingRadians, Math.PI/2);
         }
     }
 

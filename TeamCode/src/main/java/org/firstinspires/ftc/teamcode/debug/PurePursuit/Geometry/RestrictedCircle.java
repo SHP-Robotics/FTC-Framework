@@ -75,12 +75,12 @@ public class RestrictedCircle extends GeometricShape {
     }
 
     public void setRestrictionClockwiseRadians(double restrictionClockwiseRadians) {
-        this.restrictionClockwiseRadians = MathUtils.normalizeAngle(restrictionClockwiseRadians, 0.0);
+        this.restrictionClockwiseRadians = MathUtils.normalizeAngle(restrictionClockwiseRadians, Math.PI/2);
 
     }
 
     public void setRestrictionCounterClockwiseRadians(double restrictionCounterClockwiseRadians) {
-        this.restrictionCounterClockwiseRadians = MathUtils.normalizeAngle(restrictionCounterClockwiseRadians, 0.0);
+        this.restrictionCounterClockwiseRadians = MathUtils.normalizeAngle(restrictionCounterClockwiseRadians, Math.PI/2);
     }
 
     public boolean checkInCirclePositive(double x) {
