@@ -81,8 +81,10 @@ public class AndyRandy extends TestBaseRobot {
         }));
 
         // Set intake to intake
-        new Trigger((gamepad1.right_trigger>0.5 && arm.getState() == ArmSubsystem.State.BOTTOM), new RunCommand(() -> intake.setState(IntakeSubsystem.State.INTAKE)));
-
+        new Trigger((gamepad1.right_trigger>0.5 && arm.getState() == ArmSubsystem.State.BOTTOM), new RunCommand(() -> {
+            if(arm.getSlidePosition()<20)
+                intake.setState(IntakeSubsystem.State.INTAKE);
+        }));
         // Set intake to reject
         new Trigger((gamepad1.left_trigger > 0.5 && arm.getState() == ArmSubsystem.State.BOTTOM), new RunCommand(() -> intake.setState(IntakeSubsystem.State.REJECT)));
 
