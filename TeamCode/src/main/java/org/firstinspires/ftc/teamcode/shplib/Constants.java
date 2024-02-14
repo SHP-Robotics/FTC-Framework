@@ -76,7 +76,7 @@ public class Constants {
         public static final String kRightSlideName = "rightSlide";
 
         public static final double kMaxHeight = 4000;
-        public static final double kSlideTolerance = 20;
+        public static final double kSlideTolerance = 30;
         public static final double kPixelHeight = 500;
         public static final double kRunPower = 1;
     }

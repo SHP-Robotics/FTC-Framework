@@ -30,8 +30,6 @@ public class LowerArmCommand extends Command {
         arm.setState(ArmSubsystem.State.BOTTOM);
         wrist.setState(WristSubsystem.State.HALFWAY);
         elbow.setState(ElbowSubsystem.State.DOWN);
-
-
     }
 
     // Specifies whether or not the command has finished
