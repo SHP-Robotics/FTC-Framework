@@ -40,7 +40,7 @@ public class PurePursuitPath {
         this.pace = purePursuitPathBuilder.pace;
     }
 
-    private Position2D getOptimalIntersection(Position2D currentPosition) {
+    public Position2D getOptimalIntersection(Position2D currentPosition) {
         RestrictedCircle followingCircle = new RestrictedCircle(followRadius);
         followingCircle.setOffset(currentPosition);
 
@@ -115,7 +115,7 @@ public class PurePursuitPath {
 
             double differenceX = optimalIntersection.getX() - this.purePursuitFollower.getCurrentPosition().getX();
             double differenceY = optimalIntersection.getY() - this.purePursuitFollower.getCurrentPosition().getY();
-            double differenceHeading = MathUtils.normalizeAngle(optimalIntersection.getHeadingRadians() - this.purePursuitFollower.getCurrentPosition().getHeadingRadians(), Math.PI/2);
+            double differenceHeading = -MathUtils.normalizeAngle(optimalIntersection.getHeadingRadians() - this.purePursuitFollower.getCurrentPosition().getHeadingRadians(), 0);
             differenceHeading *= Constants.MECANUM_WIDTH;
 
             double max = Math.max(Math.abs(differenceX), Math.max(Math.abs(differenceY), Math.abs(differenceHeading)));

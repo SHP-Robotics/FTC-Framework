@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.commands.IncrementUpArmCommand;
 import org.firstinspires.ftc.teamcode.commands.LowerArmCommand;
 import org.firstinspires.ftc.teamcode.commands.OpenStageDoorCommand;
 import org.firstinspires.ftc.teamcode.commands.PrepareClimbCommand;
+import org.firstinspires.ftc.teamcode.shplib.Constants;
 import org.firstinspires.ftc.teamcode.shplib.TestBaseRobot;
 import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.Trigger;
@@ -15,6 +16,7 @@ import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.PlaneServo;
+import org.firstinspires.ftc.teamcode.subsystems.WristSubsystem;
 
 @TeleOp
 public class AndyRandy extends TestBaseRobot {
@@ -70,7 +72,7 @@ public class AndyRandy extends TestBaseRobot {
         }));
 
         // Lower arm
-        new Trigger(arm.getState() != ArmSubsystem.State.BOTTOM && gamepad1.left_bumper,
+        new Trigger((arm.getState() != ArmSubsystem.State.BOTTOM && gamepad1.left_bumper) || (wrist.getState() == WristSubsystem.State.STAGE_DOOR && !gamepad1.touchpad),
             new LowerArmCommand(arm, wrist, elbow)
         );
 
@@ -85,6 +87,8 @@ public class AndyRandy extends TestBaseRobot {
             if(arm.getSlidePosition()<20)
                 intake.setState(IntakeSubsystem.State.INTAKE);
         }));
+        new Trigger((gamepad1.right_trigger>0.5 && arm.getSlidePosition() < Constants.Arm.kSlideTolerance), new RunCommand(() -> intake.setState(IntakeSubsystem.State.INTAKE)));
+
         // Set intake to reject
         new Trigger((gamepad1.left_trigger > 0.5 && arm.getState() == ArmSubsystem.State.BOTTOM), new RunCommand(() -> intake.setState(IntakeSubsystem.State.REJECT)));
 
