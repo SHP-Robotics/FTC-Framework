@@ -49,35 +49,36 @@ public class PurePursuitTesting extends LinearOpMode {
                 .setFollowRadius(2)
                 .setPositionBuffer(0.05)
                 .setRotationBuffer(Math.toRadians(5))
-                .setSpeedMin(0.1)
-                .setSpeedCap(0.1)
+                .setSpeedMin(0.4)
+                .setSpeedCap(0.4)
 //                .setPace(0.005)
                 .build();
          */
 
-        /*
+//        /*
         PurePursuitPath path = new PurePursuitPath.PurePursuitPathBuilder()
-                .turnTo(new Position2D(10, 10, Math.toRadians(90)))
+                .turnTo(new Position2D(10, 0, Math.toRadians(90)))
                 .setFollowRadius(2)
                 .setPositionBuffer(0.05)
                 .setRotationBuffer(Math.toRadians(5))
-                .setSpeedMin(0.1)
-                .setSpeedCap(0.1)
+                .setSpeedMin(0.4)
+                .setSpeedCap(0.4)
 //                .setPace(0.005)
                 .build();
-         */
+//         */
 
 
+        /*
         PurePursuitPath path = new PurePursuitPath.PurePursuitPathBuilder()
                 .moveTo(new Position2D(0, 10, Math.toRadians(90)))
                 .setFollowRadius(2)
                 .setPositionBuffer(0.2)
                 .setRotationBuffer(Math.toRadians(5))
-                .setSpeedMin(0.2)
-                .setSpeedCap(0.2)
+                .setSpeedMin(0.4)
+                .setSpeedCap(0.4)
 //                .setPace(0.005)
                 .build();
-
+         */
 
         /*
         PurePursuitPath path = new PurePursuitPath.PurePursuitPathBuilder()
@@ -85,11 +86,12 @@ public class PurePursuitTesting extends LinearOpMode {
                 .setFollowRadius(2)
                 .setPositionBuffer(0.05)
                 .setRotationBuffer(Math.toRadians(5))
-                .setSpeedMin(0.1)
-                .setSpeedCap(0.1)
+                .setSpeedMin(0.4)
+                .setSpeedCap(0.4)
 //                .setPace(0.005)
                 .build();
          */
+
 
         /*
         PurePursuitPath path = new PurePursuitPath.PurePursuitPathBuilder()
@@ -97,19 +99,41 @@ public class PurePursuitTesting extends LinearOpMode {
                 .setFollowRadius(2)
                 .setPositionBuffer(0.05)
                 .setRotationBuffer(Math.toRadians(5))
-                .setSpeedMin(0.1)
-                .setSpeedCap(0.1)
+                .setSpeedMin(0.4)
+                .setSpeedCap(0.4)
 //                .setPace(0.005)
                 .build();
          */
 
         waitForStart();
 
+//        /*
+
         path.followAsync(purePursuitFollower, mecanumController);
 
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
+//            purePursuitFollower.updateOdometry();
+//
+//            Position2D optimalIntersection = path.getOptimalIntersection(purePursuitFollower.getCurrentPosition());
+//
+//            if (optimalIntersection != null) {
+//                double differenceX = optimalIntersection.getX() - purePursuitFollower.getCurrentPosition().getX();
+//                double differenceY = optimalIntersection.getY() - purePursuitFollower.getCurrentPosition().getY();
+//                double differenceHeading = MathUtils.normalizeAngle(optimalIntersection.getHeadingRadians() - purePursuitFollower.getCurrentPosition().getHeadingRadians(), Math.PI / 2);
+//                differenceHeading *= Constants.MECANUM_WIDTH;
+//
+//                telemetry.addData("x", differenceX);
+//                telemetry.addData("y", differenceY);
+//                telemetry.addData("heading", differenceHeading);
+//                telemetry.update();
+//            } else {
+//                telemetry.addLine("null");
+//                telemetry.update();
+//            }
+
+//            /*
             path.update();
 
             RestrictedCircle followingCircle = new RestrictedCircle(1);
@@ -125,6 +149,8 @@ public class PurePursuitTesting extends LinearOpMode {
             telemetry.addData("finished", path.isFinished());
             telemetry.addData("failed", path.failed());
             telemetry.update();
+//            */
         }
+//         */
     }
 }

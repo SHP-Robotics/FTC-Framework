@@ -201,12 +201,8 @@ public class MecanumController extends RobotController {
     }
 
     public void driveFieldParams(double x, double y, double r, double gyro) {
-        // cos * y = how much right if gamepad forward
-        // cos * x = how much right if gamepad right
-        // sin * y = how much forward if gamepad forward
-        // sin * x = how much forward if gamepad right
-        double xOriented = (Math.sin(gyro) * x) + (Math.cos(gyro) * y);
-        double yOriented = (Math.sin(gyro) * y) - (Math.cos(gyro) * x);
+        double xOriented = (Math.sin(gyro) * x) - (Math.cos(gyro) * y);
+        double yOriented = (Math.sin(gyro) * y) + (Math.cos(gyro) * x);
 
         double leftFrontPower = yOriented + xOriented + r;
         double rightFrontPower = yOriented - xOriented - r;
