@@ -35,6 +35,8 @@ public class ArmSubsystem extends Subsystem {
         INTAKE,
         DRIVE,
         OUTTAKE,
+
+        REACH,
         UNKNOWN,
         MANUAL,
 

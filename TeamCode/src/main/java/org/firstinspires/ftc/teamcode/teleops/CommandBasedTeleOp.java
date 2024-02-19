@@ -127,6 +127,11 @@ public class CommandBasedTeleOp extends BaseRobot {
 
                 drivebias = 0.75;
             }
+            else if (arm.getState() == ArmSubsystem.State.OUTTAKE){
+                arm.setState(ArmSubsystem.State.REACH);
+                elbow.setPosition((int)Constants.Arm.kElbowReach, false, (int)Constants.Arm.kElbowTolerance);
+                wrist.setPosition(Constants.Arm.kWristReach);
+            }
 
 
 
@@ -157,6 +162,17 @@ public class CommandBasedTeleOp extends BaseRobot {
                 claw.open();
                 wrist.setPosition(Constants.Arm.kWristDown);
             }
+            else if (arm.getState() == ArmSubsystem.State.CLIMB) {
+                arm.setState(ArmSubsystem.State.INTAKE);
+                wrist.setPosition(Constants.Arm.kWristDown);
+                elbow.setPosition((int) Constants.Arm.kElbowDown, false, (int) Constants.Arm.kElbowTolerance);
+
+            }
+            else if (arm.getState() == ArmSubsystem.State.REACH) {
+                arm.setState(ArmSubsystem.State.OUTTAKE);
+                elbow.setPosition((int)Constants.Arm.kElbowUp, false, (int)Constants.Arm.kElbowTolerance);
+                wrist.setPosition(Constants.Arm.kWristDeposit);
+            }
 
 
             debounce = Clock.now();
@@ -184,6 +200,8 @@ public class CommandBasedTeleOp extends BaseRobot {
 
         new Trigger(gamepad1.dpad_right, new RunCommand(() -> {
             wrist.setPosition(0.1);
+            elbow.setPosition((int) Constants.Arm.kElbowClimb, false, (int) Constants.Arm.kElbowTolerance);
+            arm.setState(ArmSubsystem.State.CLIMB);
         }));
 
 //        new Trigger(!(gamepad1.dpad_down || gamepad1.dpad_up), new RunCommand(() -> {
