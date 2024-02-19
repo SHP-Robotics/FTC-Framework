@@ -35,8 +35,8 @@ public class DriveConstants {
     public static final boolean RUN_USING_ENCODER = true;
     // TODO: Run MaxVelocityTuner and set f to Voltage Compensated kF
     // TODO: Tune P, D, and F in the DriveVelocityPIDTuner to optimize for phase lag and oscillations
-    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(22, 0, 8,
-            10.7);
+    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(20, 0, 8,
+            10.3);
 
     /*
      * These are physical constants that can be determined from your robot (including the track
@@ -48,7 +48,7 @@ public class DriveConstants {
      */
     public static double WHEEL_RADIUS = 1.8898; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 14.72; // in
+    public static double TRACK_WIDTH = 14.76; // in
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using
@@ -69,11 +69,11 @@ public class DriveConstants {
      */
 
     // easier to tune than a higher max_vel
-    public static double MAX_VEL = 45;
+    public static double MAX_VEL = 53;
     //                               rec....    max
     //public static double MAX_VEL = 65.233; // 81.542
     public static double MAX_ACCEL = 30;
-    public static double MAX_ANG_VEL = 3.631; //4.5385 //MAX_VEL / TRACK_WIDTH;
+    public static double MAX_ANG_VEL = 4; //4.5385 //MAX_VEL / TRACK_WIDTH;
     public static double MAX_ANG_ACCEL = Math.toRadians(60);
 
     /*
