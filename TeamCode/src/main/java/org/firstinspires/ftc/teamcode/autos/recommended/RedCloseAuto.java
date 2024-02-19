@@ -5,7 +5,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-import org.firstinspires.ftc.teamcode.shplib.TestBaseRobot;
+import org.firstinspires.ftc.teamcode.shplib.BaseRobot;
 import org.firstinspires.ftc.teamcode.commands.IncrementUpArmCommand;
 import org.firstinspires.ftc.teamcode.commands.LowerArmCommand;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 @Disabled
 @Autonomous
-public class RedCloseAuto extends TestBaseRobot {
+public class RedCloseAuto extends BaseRobot {
 
     public enum State {
         PIXEL_1, PIXEL_2, PIXEL_3,

@@ -8,6 +8,7 @@ public final class CommandScheduler {
     private static CommandScheduler instance;
 
     private final ArrayList<Command> commands = new ArrayList<>();
+    private final ArrayList<Class<?>> removalQueue = new ArrayList<>();
     private final ArrayList<Subsystem> subsystems = new ArrayList<>();
 
     private Telemetry telemetry;
@@ -28,6 +29,21 @@ public final class CommandScheduler {
 
     public void registerSubsystem(Subsystem subsystem) {
         subsystems.add(subsystem);
+    }
+
+    public boolean containsInstance(Class<?> commandType) {
+        for (Command command: commands) {
+            if (command.getClass() == commandType) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void removeInstances(Class<?> commandType) {
+        if (containsInstance(commandType) && !removalQueue.contains(commandType)) {
+            removalQueue.add(commandType);
+        }
     }
 
     public void scheduleCommand(Command command) {
@@ -73,6 +89,12 @@ public final class CommandScheduler {
         }
 
         for (int i = 0; i < commands.size(); i++) {
+            if (removalQueue.contains(commands.get(i).getClass())) {
+                removalQueue.remove(commands.get(i).getClass());
+                commands.remove(i);
+                continue;
+            }
+
             Command command = commands.get(i);
 
             // check if command subsystems are idle

@@ -5,7 +5,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-import org.firstinspires.ftc.teamcode.shplib.TestBaseRobot;
+import org.firstinspires.ftc.teamcode.shplib.BaseRobot;
 import org.firstinspires.ftc.teamcode.commands.AutoLowerArmCommand;
 import org.firstinspires.ftc.teamcode.commands.IncrementUpArmCommand;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 @Disabled
 @Autonomous
-public class RedFarAuto extends TestBaseRobot {
+public class RedFarAuto extends BaseRobot {
 
     public enum State {
         PIXEL_1, PIXEL_2, PIXEL_3,
@@ -223,7 +223,7 @@ public class RedFarAuto extends TestBaseRobot {
                     myCommand.scheduleCommand(
                             new WaitCommand(2)
                                     .then(new RunCommand(()->{
-                                        intake.setState(IntakeSubsystem.State.AUTOINTAKE);
+                                        intake.setState(IntakeSubsystem.State.AUTO_INTAKE);
                                     }))
 //                                    .then(new WaitCommand(0.5)
 //                                            .then(new RunCommand(()->{
@@ -309,7 +309,7 @@ public class RedFarAuto extends TestBaseRobot {
                 if (!sampleMecanumDrive.isBusy()) {
                     myCommand.scheduleCommand(
                             new RunCommand(()->{
-                                intake.setState(IntakeSubsystem.State.AUTOINTAKE);
+                                intake.setState(IntakeSubsystem.State.AUTO_INTAKE);
                             })
                                     .then(new WaitCommand(1.5))
                                     .then(new RunCommand(()->{

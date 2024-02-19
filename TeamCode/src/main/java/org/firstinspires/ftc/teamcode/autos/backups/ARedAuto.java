@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.autos.backups;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-import org.firstinspires.ftc.teamcode.shplib.TestBaseRobot;
+import org.firstinspires.ftc.teamcode.shplib.BaseRobot;
 import org.firstinspires.ftc.teamcode.commands.DriveCommand;
 import org.firstinspires.ftc.teamcode.commands.EncoderTurnDriveCommand;
 import org.firstinspires.ftc.teamcode.commands.LowerArmCommand;
@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 @Disabled
 @Autonomous(preselectTeleOp = "ATestTeleop")
-public class ARedAuto extends TestBaseRobot {
+public class ARedAuto extends BaseRobot {
     //    SHPMecanumAutoDrive autoDrive;
     //DriveSubsystem drive;
     VisionSubsystem vision;

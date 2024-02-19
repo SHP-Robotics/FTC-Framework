@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kCRWheelName;
-import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kPixelServo;
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kSpinningIntakeName;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kPixelServo;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -14,30 +14,28 @@ import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 import org.firstinspires.ftc.teamcode.shplib.hardware.SHPMotor;
 
 public class IntakeSubsystem extends Subsystem {
-    // Declare devices
-    // Example:
-    private final CRServo cWheel;
+    private final CRServo crWheel;
     private final Servo pixelServo;
-    private final SHPMotor spinner;
+    private final SHPMotor spinningIntake;
 
-    //private final Servo pixelThing; // Need better name
     public enum State {
-        INTAKE, DEPOSIT1, DEPOSIT2, STILL, REJECT, REJECTALL, AUTOINTAKE,
-//        PIXELIN, PIXELOUT
-//        STILL, PIXELON, PIXELOFF
+        INTAKE,
+        DEPOSIT1,
+        DEPOSIT2,
+        STILL,
+        REJECT,
+        REJECT_ALL,
+        AUTO_INTAKE
     }
 
     private State state;
 
     public IntakeSubsystem(HardwareMap hardwareMap) {
-        cWheel = hardwareMap.get(CRServo.class, kCRWheelName);
+        crWheel = hardwareMap.get(CRServo.class, kCRWheelName);
         pixelServo = hardwareMap.get(Servo.class, kPixelServo);
-        spinner = new SHPMotor(hardwareMap, kSpinningIntakeName);
-        spinner.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        spinningIntake = new SHPMotor(hardwareMap, kSpinningIntakeName);
+        spinningIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-//        pixelThing = hardwareMap.get(Servo.class, kPixelThingName);
-        // Set initial state
-        // Example:
         setState(State.STILL);
         pixelServo.setPosition(0.9);
     }
@@ -55,69 +53,40 @@ public class IntakeSubsystem extends Subsystem {
 
     public State getState(){return state;}
 
-
-
-    // Add control methods
-    // Example:
-    // private void setPower(double power) { motor.setPower(power); }
-
     @Override
     public void periodic(Telemetry telemetry) {
-        // Add logging if needed
-        // Example:
-         telemetry.addData("Intake: ", state);
-        //dropDown.setPosition(0.5);
+        telemetry.addData("Intake: ", state);
+
         switch (state) {
             case INTAKE:
-                cWheel.setPower(-1.0);
-                spinner.setPower(1.0);
+                crWheel.setPower(-1.0);
+                spinningIntake.setPower(1.0);
                 pixelServo.setPosition(0.9);
                 break;
-            case AUTOINTAKE:
-                cWheel.setPower(-1.0);
-                spinner.setPower(0.5);
+            case AUTO_INTAKE:
+                crWheel.setPower(-1.0);
+                spinningIntake.setPower(0.5);
                 pixelServo.setPosition(0.8);
                 break;
             case DEPOSIT1:
                 pixelServo.setPosition(0.5);
-//                pixelServo.setPosition(1.0);
                 break;
             case DEPOSIT2:
-                cWheel.setPower(-1.0);
+                crWheel.setPower(-1.0);
                 pixelServo.setPosition(0.5);
                 break;
             case REJECT:
-                cWheel.setPower(0);
-                spinner.setPower(-0.8);
+                crWheel.setPower(0);
+                spinningIntake.setPower(-0.8);
                 break;
             case STILL:
-                cWheel.setPower(0);
-                spinner.setPower(0.0);
+                crWheel.setPower(0);
+                spinningIntake.setPower(0.0);
                 break;
-            case REJECTALL:
-                cWheel.setPower(1.0);
-                spinner.setPower(-0.8);
+            case REJECT_ALL:
+                crWheel.setPower(1.0);
+                spinningIntake.setPower(-0.8);
                 break;
-
-//            case PIXELOUT:
-////                pixelServo.setPosition(0.5);
-//                break;
-
-//            case PIXELOFF:
-//                pixelThing.setPosition(kPixelDisengaged);
-//            case PIXELON:
-//                pixelThing.setPosition(kPixelEngaged);
-
-
         }
-//        }
-
-        // OR
-
-//        if (state == State.ENABLED) {
-//            setPower(1.0);
-//        } else if (state == State.DISABLED) {
-//            setPower(0.0);
-//        }
     }
 }

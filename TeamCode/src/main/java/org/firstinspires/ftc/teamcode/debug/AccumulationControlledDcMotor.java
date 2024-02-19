@@ -12,12 +12,11 @@ public class AccumulationControlledDcMotor extends DcMotorImplEx {
     // should record the max velocity with kP = 1, and then use preferred values of kP
     private final double MAX_VELOCITY = 12;
 
-    private ElapsedTime elapsedTime;
+    private final ElapsedTime elapsedTime;
 
     private double lastTime = -1;
 
     private double kP = 0.7;
-    private double max = 1;
 
     // gamma specifies de-acceleration multiplier vs acceleration (lower is faster de-acceleration)
     // check line 68
@@ -32,6 +31,7 @@ public class AccumulationControlledDcMotor extends DcMotorImplEx {
 
     public AccumulationControlledDcMotor(DcMotor dcMotor) {
         super(dcMotor.getController(), dcMotor.getPortNumber());
+        super.setDirection(dcMotor.getDirection());
 
         elapsedTime = new ElapsedTime();
         elapsedTime.reset();
@@ -39,26 +39,17 @@ public class AccumulationControlledDcMotor extends DcMotorImplEx {
 
     public AccumulationControlledDcMotor(AccumulationControlledDcMotorBuilder accumulationControlledDcMotorBuilder) {
         super(accumulationControlledDcMotorBuilder.dcMotor.getController(), accumulationControlledDcMotorBuilder.dcMotor.getPortNumber());
+        super.setDirection(accumulationControlledDcMotorBuilder.dcMotor.getDirection());
 
         elapsedTime = new ElapsedTime();
         elapsedTime.reset();
 
         this.kP = accumulationControlledDcMotorBuilder.kP;
         this.gamma = accumulationControlledDcMotorBuilder.gamma;
-        this.max = accumulationControlledDcMotorBuilder.max;
-    }
-
-    public void resetEncoders() {
-        this.setMode(RunMode.STOP_AND_RESET_ENCODER);
     }
 
     public double clamp(double power) {
-        return Math.min(Math.max(-this.max, power), this.max);
-    }
-
-    @Override
-    public void setPower(double power) {
-        this.setPower(power, (power < 0 && this.getVelocity(AngleUnit.RADIANS) < 0) || (power > 0 && this.getVelocity(AngleUnit.RADIANS) > 0));
+        return Math.min(Math.max(-1, power), 1);
     }
 
     public void setPower(double power, boolean decelerate) {
@@ -69,9 +60,7 @@ public class AccumulationControlledDcMotor extends DcMotorImplEx {
         double deltaTime = time - lastTime;
 
         if (decelerate) {
-            super.setPower(clamp(getPower() * gamma - (error * kP * deltaTime)));
-//            super.setPower(clamp(getPower() - (error * kP * gamma * deltaTime)));
-//            super.setPower(clamp(getPower() * gamma - (error * kP * gamma * deltaTime)));
+            super.setPower(clamp(getPower() * gamma - (error * kP * gamma * deltaTime)));
         } else {
             super.setPower(clamp(getPower() - (error * kP * deltaTime)));
         }
@@ -80,16 +69,14 @@ public class AccumulationControlledDcMotor extends DcMotorImplEx {
     }
 
     public static class AccumulationControlledDcMotorBuilder {
-        private DcMotor dcMotor;
+        private final DcMotor dcMotor;
         private double kP;
         private double gamma;
-        private double max;
 
         public AccumulationControlledDcMotorBuilder(DcMotor dcMotor) {
             this.dcMotor = dcMotor;
             this.kP = 0.7;
             this.gamma = 1;
-            this.max = 1;
         }
 
         public AccumulationControlledDcMotorBuilder setkP(double kP) {
@@ -99,16 +86,6 @@ public class AccumulationControlledDcMotor extends DcMotorImplEx {
 
         public AccumulationControlledDcMotorBuilder setGamma(double gamma) {
             this.gamma = gamma;
-            return this;
-        }
-
-        public AccumulationControlledDcMotorBuilder setMax(double max) {
-            if (max <= 0) {
-                throw new IllegalArgumentException("max must be greater than 0");
-            } else if (max > 1) {
-                throw new IllegalArgumentException("max must be less than or equal to 1");
-            }
-            this.max = max;
             return this;
         }
 

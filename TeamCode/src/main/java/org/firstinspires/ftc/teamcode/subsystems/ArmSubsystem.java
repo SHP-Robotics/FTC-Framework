@@ -64,10 +64,13 @@ public class ArmSubsystem extends Subsystem {
     }
 
     public double getDriveBias() {
-        if(state != State.BOTTOM){
-            return 0.75;
+        double setpoint = this.state == State.EXTENDED ? this.slidePos: this.state.position;
+
+        if (Math.abs(setpoint - this.getSlidePosition()) < kSlideTolerance) {
+            return Constants.Drive.kMinimumBias;
         }
-        return 1.0;
+
+        return Constants.Drive.kMaximumBias;
     }
 
     public double getSlidePosition() {

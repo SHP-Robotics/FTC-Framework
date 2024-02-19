@@ -5,19 +5,13 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
-import org.firstinspires.ftc.teamcode.subsystems.WristSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
-//import org.firstinspires.ftc.teamcode.subsystems.testfuck;
-
-import org.firstinspires.ftc.teamcode.subsystems.CRWheel;
-import org.firstinspires.ftc.teamcode.subsystems.HookServo1;
-import org.firstinspires.ftc.teamcode.subsystems.HookServo2;
-import org.firstinspires.ftc.teamcode.subsystems.PixelServo;
-import org.firstinspires.ftc.teamcode.subsystems.PlaneServo;
 import org.firstinspires.ftc.teamcode.subsystems.ElbowSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.SpinningIntake;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.PlaneServo;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.WristSubsystem;
 
 /**
  * Template created by Ayaan Govil on 8/21/2021.
@@ -33,23 +27,13 @@ import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 public class BaseRobot extends OpMode {
     // Declare subsystems and devices
     public DriveSubsystem drive;
-//    public DriveSubsystem fuckthis;
-    public CRWheel crWheel;
-    public PixelServo pixelServo;
-    //public CameraOn vision;
-//    public VisionSubsystem visiona;
     public VisionSubsystem vision;
-    public ElbowSubsystem slideServos;
-    public HookServo1 rightPlane;
-    public HookServo2 leftPlane;
+    public ElbowSubsystem elbow;
     public ArmSubsystem arm;
-    public SpinningIntake spinningIntake;
-    public WristSubsystem adjustHolder;
+    public WristSubsystem wrist;
     public PlaneServo planeServo;
-//    public SpinningIntake spinningIntake;
-//    public CRWheel cWheel;
-//    public Flap flap;
-//    public ScoopSubsystem scoop;
+    public IntakeSubsystem intake;
+//    public DropDownSubsystem dropDown;
 
     public double previousTime = 0;
 
@@ -61,24 +45,12 @@ public class BaseRobot extends OpMode {
 
         // Initialize your subsystems and devices
         drive = new DriveSubsystem(hardwareMap);
-        crWheel = new CRWheel(hardwareMap);
-        spinningIntake = new SpinningIntake(hardwareMap);
-        //vision = new CameraOn(hardwareMap);
-        vision = new VisionSubsystem(hardwareMap, "blue");
         arm = new ArmSubsystem(hardwareMap);
-        slideServos = new ElbowSubsystem(hardwareMap);
-//        spinningIntake = new SpinningIntake(hardwareMap);
-//        cWheel = new CRWheel(hardwareMap);
-//        flap = new Flap(hardwareMap);
-//        scoop = new ScoopSubsystem(hardwareMap);
-//        intake = new SHPMotor(hardwareMap, "intake");
-        rightPlane = new HookServo1(hardwareMap);
-        leftPlane = new HookServo2(hardwareMap);
-        pixelServo = new PixelServo(hardwareMap);
-        adjustHolder = new WristSubsystem(hardwareMap);
+        elbow = new ElbowSubsystem(hardwareMap);
+        wrist = new WristSubsystem(hardwareMap);
         planeServo = new PlaneServo(hardwareMap);
-
-
+        intake = new IntakeSubsystem(hardwareMap);
+//        dropDown = new DropDownSubsystem(hardwareMap);
     }
 
     // Called when you press the start button

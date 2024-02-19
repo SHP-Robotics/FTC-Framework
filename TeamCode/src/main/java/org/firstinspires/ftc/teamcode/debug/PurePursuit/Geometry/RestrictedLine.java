@@ -133,4 +133,15 @@ public class RestrictedLine extends GeometricShape {
 
         return furthestIntersections;
     }
+
+    public Position2D getEndpoint(RestrictedCircle followingCircle) {
+        double percentClose = followingCircle.getOffset().dist(this.getEndpoint()) / followingCircle.getRadius();
+        double dist = (this.p2.getHeadingRadians()-followingCircle.getOffset().getHeadingRadians());
+
+        return new Position2D(
+                this.p2.getX(),
+                this.p2.getY(),
+                (dist * percentClose) + followingCircle.getOffset().getHeadingRadians()
+        );
+    }
 }
