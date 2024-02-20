@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.commands;
 
 import org.firstinspires.ftc.teamcode.shplib.Constants;
 import org.firstinspires.ftc.teamcode.shplib.commands.Command;
+import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
 import org.firstinspires.ftc.teamcode.subsystems.WristSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
@@ -30,6 +31,8 @@ public class LowerArmCommand extends Command {
         arm.setState(ArmSubsystem.State.BOTTOM);
         wrist.setState(WristSubsystem.State.HALFWAY);
         elbow.setState(ElbowSubsystem.State.DOWN);
+
+        CommandScheduler.getInstance().removeInstances(IncrementUpArmCommand.class);
     }
 
     // Specifies whether or not the command has finished

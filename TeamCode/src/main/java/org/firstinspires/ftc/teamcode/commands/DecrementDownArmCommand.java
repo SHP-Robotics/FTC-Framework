@@ -27,13 +27,13 @@ public class DecrementDownArmCommand extends Command {
     public void init() {
         startTime = Clock.now();
 
-        if(arm.getState() != ArmSubsystem.State.EXTENDED)
+        if(arm.getState() != ArmSubsystem.State.EXTENDED) {
             arm.setState(ArmSubsystem.State.EXTENDED);
-        else
+            wrist.setState(WristSubsystem.State.UP);
+            elbow.setState(ElbowSubsystem.State.UP);
+        } else {
             arm.decrementState();
-
-        wrist.setState(WristSubsystem.State.UP);
-        elbow.setState(ElbowSubsystem.State.UP);
+        }
     }
 //    @Override
 //    public void end() {

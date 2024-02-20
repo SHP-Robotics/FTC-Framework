@@ -36,8 +36,6 @@ public class DriveSubsystem extends Subsystem {
     //even is speed normal
     private int buttonClicks;
 
-
-
     public DriveSubsystem(HardwareMap hardwareMap) {
         drive = new SHPMecanumDrive(hardwareMap, kMotorNames);
         //drive.enableBuiltInVelocityControl();

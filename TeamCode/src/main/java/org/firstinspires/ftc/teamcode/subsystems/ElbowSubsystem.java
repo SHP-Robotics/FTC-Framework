@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kPositionBottom;
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kPositionMiddle;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kPositionMosaic;
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kPositionStageDoor;
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kPositionTop;
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kPracticeLeftArmServoName;
@@ -21,7 +22,7 @@ public class ElbowSubsystem extends Subsystem {
     public enum State {
         // Define states
         // Example:
-        UP, DOWN, HALFWAY, STAGE_DOOR
+        UP, DOWN, HALFWAY, STAGE_DOOR, MOSAIC
     }
 
     private State state;
@@ -68,6 +69,9 @@ public class ElbowSubsystem extends Subsystem {
                 practiceRightArm.setPosition(kPositionStageDoor);
                 practiceLeftArm.setPosition(1-kPositionStageDoor);
                 break;
+            case MOSAIC:
+                practiceRightArm.setPosition(kPositionMosaic);
+                practiceLeftArm.setPosition(1-kPositionMosaic);
         }
         telemetry.addData("Right Arm Posiiton ", practiceRightArm.getPosition());
         telemetry.addData("Left Arm Position: ", practiceLeftArm.getPosition());

@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kAdjustHold
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kWristClimb;
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kWristDown;
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kWristHalfway;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kWristMosaic;
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kWristStageDoor;
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kWristUp;
 
@@ -18,7 +19,7 @@ public class WristSubsystem extends Subsystem {
     // Example:
     private final Servo adjustHolder;
     public enum State {
-        UP, DOWN,HALFWAY, CLIMB, STAGE_DOOR
+        UP, DOWN,HALFWAY, CLIMB, STAGE_DOOR, MOSAIC
 
     }
 
@@ -64,6 +65,8 @@ public class WristSubsystem extends Subsystem {
             case STAGE_DOOR:
                 adjustHolder.setPosition(kWristStageDoor);
                 break;
+            case MOSAIC:
+                adjustHolder.setPosition(kWristMosaic);
         }
         telemetry.addData("Position; ", adjustHolder.getPosition());
     }

@@ -7,8 +7,8 @@ import org.firstinspires.ftc.teamcode.shplib.controllers.FFController;
 @Config
 public class Constants {
     // Target voltage for voltage compensation
-    public static final double kNominalVoltage = 12.0;
-    public static double offset = 0;
+    public static final double kNominalVoltage = 13.0;
+
     public static final class Drive {
         public static final String[] kMotorNames = new String[]{
                 "leftFront",
@@ -16,18 +16,24 @@ public class Constants {
                 "rightFront",
                 "rightRear"
         };
+
         public static final FFController[] kFFs = new FFController[]{
                 new FFController(0.07),
-                new FFController(0.07), //TODO: ??
                 new FFController(0.07),
-                new FFController(0.045)
+                new FFController(0.07),
+                new FFController(0.07)
         };
-        public static final double kMinimumBias = 0.3;
-        public static final double kMaximumBias = 0.6;
+
+        public static final double kMinimumBias = 0.4;
+        public static final double kMaximumBias = 1;
     }
 
     public static final class Vision {
         public static final double kTagsizeMeters = 0.0475;
+    }
+
+    public static final class Plane{
+        public static final String kPlaneServo = "plane";
     }
 
     public static final class Intake{
@@ -36,20 +42,21 @@ public class Constants {
 //        public static final double kPositionBottom = 0.615;
 
         // Wrist
-        public static double kWristDown = 0.405;
+        public static double kWristDown = 0.42;
         public static double kWristUp = 0.3;
-        public static double kWristHalfway = 1;
+        public static double kWristHalfway = 0.9;
         public static double kWristClimb = 0.4;
         public static double kWristStageDoor = 0.4;
+        public static double kWristMosaic = 0.765;
 
         // Elbow
         public static double kPositionBottom = 0.56;
         public static double kPositionTop = 0.05; //0.05
         public static double kPositionMiddle = 0.3;
         public static double kPositionStageDoor = 0.335;
+        public static double kPositionMosaic = 0.045;
 
         public static final String kPixelServo = "MiniServo";
-        public static final String kPlaneServo = "plane";
 
         public static final String kAdjustHolder = "35kg";
 
@@ -60,12 +67,12 @@ public class Constants {
         public static final double kWheelStill = 0.0;
 
         // Hook Servo Constants
-        public static final String kHookServo1Name = "Hook1";
-        public static final String kHookServo2Name = "Hook2";
-        public static final double kHookLeftEngaged = 0.85;
-        public static final double kHookLeftDisengaged = 0.5;
-        public static final double kHookRightEngaged = 0.0;
-        public static final double kHookRightDisengaged = 0.5;
+//        public static final String kHookServo1Name = "Hook1";
+//        public static final String kHookServo2Name = "Hook2";
+//        public static final double kHookLeftEngaged = 0.85;
+//        public static final double kHookLeftDisengaged = 0.5;
+//        public static final double kHookRightEngaged = 0.0;
+//        public static final double kHookRightDisengaged = 0.5;
 
         public static final String kPracticeLeftArmServoName = "LeftAxon";
         public static final String kPracticeRightArmServoName = "RightAxon";
@@ -79,5 +86,10 @@ public class Constants {
         public static final double kSlideTolerance = 30;
         public static final double kPixelHeight = 500;
         public static final double kRunPower = 1;
+    }
+
+    public static final class DropDown {
+        public static final String kDropDownName = "dropDown";
+        // the positions are in subsystems/DropDownSubsystem/State
     }
 }

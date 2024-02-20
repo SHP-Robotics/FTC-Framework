@@ -19,9 +19,9 @@ public class PurePursuitPath {
     private final double positionBuffer;
     private final double rotationBuffer;
 
-    private final double speedMin;
-    private final double speedCap;
-    private final double pace;
+    private final double tanhPace;
+    private final double minimumTanh;
+    private final double maximumTanh;
 
     private boolean isFollowing = false;
     private boolean failed = false;
@@ -35,9 +35,9 @@ public class PurePursuitPath {
         this.positionBuffer = purePursuitPathBuilder.positionBuffer;
         this.rotationBuffer = purePursuitPathBuilder.rotationBuffer;
 
-        this.speedMin = purePursuitPathBuilder.speedMin;
-        this.speedCap = purePursuitPathBuilder.speedCap;
-        this.pace = purePursuitPathBuilder.pace;
+        this.tanhPace = purePursuitPathBuilder.tanhPace;
+        this.minimumTanh = purePursuitPathBuilder.minimumTanh;
+        this.maximumTanh = purePursuitPathBuilder.maximumTanh;
     }
 
     public Position2D getOptimalIntersection(Position2D currentPosition) {
@@ -49,8 +49,8 @@ public class PurePursuitPath {
 
         for (int i = 0; i < this.geometries.size(); i++) {
             if (this.geometries.get(i) instanceof InterruptionShape && !((InterruptionShape) this.geometries.get(i)).isExecuted() && nearPosition(this.geometries.get(i).getEndpoint())) {
-                robotController.deactivate();
                 ((InterruptionShape) this.geometries.get(i)).run();
+                continue;
             }
 
             GeometricShape geometricShape = this.geometries.get(i);
@@ -119,11 +119,17 @@ public class PurePursuitPath {
             differenceHeading *= Constants.MECANUM_WIDTH;
 
             double max = Math.max(Math.abs(differenceX), Math.max(Math.abs(differenceY), Math.abs(differenceHeading)));
+            double driveSpeed;
 
-            double driveSpeed = Math.max(this.speedMin, Math.min(max * this.pace, this.speedCap));
+            if (this.maximumTanh == this.minimumTanh) {
+                driveSpeed = this.minimumTanh;
+            } else {
+                driveSpeed = this.maximumTanh * (Math.exp(this.tanhPace * max) - Math.exp(-this.tanhPace * max)) /
+                        (Math.exp(-this.tanhPace * max) + Math.exp(this.tanhPace * max));
 
-            if (max < 1) {
-                max = 1;
+                if (Math.abs(driveSpeed) < this.minimumTanh) {
+                    driveSpeed = Math.signum(driveSpeed) * this.minimumTanh;
+                }
             }
 
             double x = differenceX / max;
@@ -169,21 +175,21 @@ public class PurePursuitPath {
         private double positionBuffer;
         private double rotationBuffer;
 
-        private double speedMin;
-        private double speedCap;
-        private double pace;
+        private double tanhPace;
+        private double minimumTanh;
+        private double maximumTanh;
 
         public PurePursuitPathBuilder() {
             geometries = new ArrayList<>();
             lastPosition = new Position2D(0, 0, Math.toRadians(90));
 
-            this.followRadius = 0.1;
-            this.positionBuffer = 0.3;
-            this.rotationBuffer = 0.3;
+            this.followRadius = Constants.followRadius;
+            this.positionBuffer = Constants.positionBuffer;
+            this.rotationBuffer = Constants.rotationBuffer;
 
-            this.speedMin = 0;
-            this.speedCap = 1;
-            this.pace = 0.02;
+            this.tanhPace = Constants.tanhPace;
+            this.minimumTanh = Constants.minimumTanh;
+            this.maximumTanh = Constants.maximumTanh;
         }
 
         public PurePursuitPathBuilder moveTo(Position2D position2D) {
@@ -238,18 +244,17 @@ public class PurePursuitPath {
             return this;
         }
 
-        public PurePursuitPathBuilder setSpeedMin(double speedMin) {
-            this.speedMin = speedMin;
+        public PurePursuitPathBuilder disableTanh(double driveSpeed) {
+            this.tanhPace = 0;
+            this.minimumTanh = driveSpeed;
+            this.maximumTanh = driveSpeed;
             return this;
         }
 
-        public PurePursuitPathBuilder setSpeedCap(double speedCap) {
-            this.speedCap = speedCap;
-            return this;
-        }
-
-        public PurePursuitPathBuilder setPace(double pace) {
-            this.pace = pace;
+        public PurePursuitPathBuilder enableTanh(double tanhPace, double minimumTanh, double maximumTanh) {
+            this.tanhPace = tanhPace;
+            this.minimumTanh = minimumTanh;
+            this.maximumTanh = maximumTanh;
             return this;
         }
 

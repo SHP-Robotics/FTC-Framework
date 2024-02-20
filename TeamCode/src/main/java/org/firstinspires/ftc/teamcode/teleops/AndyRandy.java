@@ -8,18 +8,20 @@ import org.firstinspires.ftc.teamcode.commands.IncrementUpArmCommand;
 import org.firstinspires.ftc.teamcode.commands.LowerArmCommand;
 import org.firstinspires.ftc.teamcode.commands.OpenStageDoorCommand;
 import org.firstinspires.ftc.teamcode.commands.PrepareClimbCommand;
+import org.firstinspires.ftc.teamcode.commands.RearrangeMosaicCommand;
+import org.firstinspires.ftc.teamcode.shplib.BaseRobot;
 import org.firstinspires.ftc.teamcode.shplib.Constants;
-import org.firstinspires.ftc.teamcode.shplib.TestBaseRobot;
 import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.Trigger;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.ElbowSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.PlaneServo;
 import org.firstinspires.ftc.teamcode.subsystems.WristSubsystem;
 
 @TeleOp
-public class AndyRandy extends TestBaseRobot {
+public class AndyRandy extends BaseRobot {
     private double debounce;
     private double driveBias;
 
@@ -30,12 +32,21 @@ public class AndyRandy extends TestBaseRobot {
     private ElapsedTime elapsedTime;
     private boolean holdingTriangle = false;
 
+    // dropdown
+//    private ElapsedTime dropdownTimer;
+
+    // mosaic rearrange
+    private boolean holdingTouchpad = false;
+
     @Override
     public void init() {
         super.init();
 
         elapsedTime = new ElapsedTime();
         elapsedTime.reset();
+
+//        dropdownTimer = new ElapsedTime();
+//        dropdownTimer.reset();
 
         // Default command runs when no other commands are scheduled for the subsystem
         drive.setDefaultCommand(
@@ -62,14 +73,20 @@ public class AndyRandy extends TestBaseRobot {
 
         drive.setDriveBias(arm.getDriveBias());
 
-        // Boost button
-        new Trigger(gamepad1.left_stick_button, new RunCommand(() -> {
-            if (!Clock.hasElapsed(debounce, 0.5)) return;
-            if(driveBias == 0.3)
-                driveBias = 1.0;
-            else
-                driveBias = 0.3;
-        }));
+//        // Boost button
+//        new Trigger(gamepad1.left_stick_button, new RunCommand(() -> {
+//            if (!Clock.hasElapsed(debounce, 0.5)) return;
+//            if(driveBias == 0.3)
+//                driveBias = 1.0;
+//            else
+//                driveBias = 0.3;
+//        }));
+
+//        new Trigger(gamepad1.back, new RunCommand(() -> {
+//             if state ordinal = 0 -> ordinal = 1
+//             if state ordinal = 1 -> ordinal = 2 -> ordinal = 0 because of modulo
+//            dropDown.setState(DropDownSubsystem.State.values()[(dropDown.getState().ordinal()+1)%2]);
+//        }));
 
         // Lower arm
         new Trigger((arm.getState() != ArmSubsystem.State.BOTTOM && gamepad1.left_bumper) || (wrist.getState() == WristSubsystem.State.STAGE_DOOR && !gamepad1.touchpad),
@@ -80,6 +97,9 @@ public class AndyRandy extends TestBaseRobot {
         new Trigger((gamepad1.right_trigger<0.5 && gamepad1.left_trigger<0.5&&!gamepad1.triangle), new RunCommand(() -> {
             if(intake.getState() != IntakeSubsystem.State.DEPOSIT1)
                 intake.setState(IntakeSubsystem.State.STILL);
+//            if (dropdownTimer.seconds() > 2.5) {
+//                dropDown.setState(DropDownSubsystem.State.RAISED);
+//            }
         }));
 
         // Set intake to intake
@@ -88,17 +108,22 @@ public class AndyRandy extends TestBaseRobot {
                 intake.setState(IntakeSubsystem.State.INTAKE);
         }));
         new Trigger((gamepad1.right_trigger>0.5 && arm.getSlidePosition() < Constants.Arm.kSlideTolerance), new RunCommand(() -> intake.setState(IntakeSubsystem.State.INTAKE)));
+        new Trigger((gamepad1.right_trigger>0.5 && arm.getSlidePosition() < Constants.Arm.kSlideTolerance), new RunCommand(() -> {
+            intake.setState(IntakeSubsystem.State.INTAKE);
+//            dropDown.setState(DropDownSubsystem.State.LOWERED);
+//            dropdownTimer.reset();
+        }));
 
         // Set intake to reject
         new Trigger((gamepad1.left_trigger > 0.5 && arm.getState() == ArmSubsystem.State.BOTTOM), new RunCommand(() -> intake.setState(IntakeSubsystem.State.REJECT)));
 
-        new Trigger((gamepad1.dpad_right && arm.getState() == ArmSubsystem.State.BOTTOM), new RunCommand(() -> intake.setState(IntakeSubsystem.State.REJECTALL)));
+        new Trigger((gamepad1.dpad_right && arm.getState() == ArmSubsystem.State.BOTTOM), new RunCommand(() -> intake.setState(IntakeSubsystem.State.REJECT_ALL)));
 
         // wait before depositing more pixels
         if (gamepad1.triangle) {
             if (!holdingTriangle) {
                 elapsedTime.reset();
-            } else if (elapsedTime.seconds() > 0.04) {
+            } else if (elapsedTime.seconds() > 0.1) {
                 // Deposit variable pixels
                 new Trigger(gamepad1.triangle, new RunCommand(() -> {
                     if (intake.getState() != IntakeSubsystem.State.STILL) { //2. if no pixels have been released
@@ -162,6 +187,16 @@ public class AndyRandy extends TestBaseRobot {
         new Trigger (gamepad1.dpad_down && arm.getState() == ArmSubsystem.State.CLIMB, new RunCommand(()->arm.setState(ArmSubsystem.State.FINISHCLIMB)));
 
         // open door
-        new Trigger (gamepad1.touchpad, new OpenStageDoorCommand(arm, wrist, elbow));
+        new Trigger (gamepad1.touchpad && arm.getState() == ArmSubsystem.State.BOTTOM, new OpenStageDoorCommand(arm, wrist, elbow));
+
+        new Trigger(gamepad1.touchpad && !holdingTouchpad && wrist.getState() == WristSubsystem.State.MOSAIC, new RunCommand(() -> {
+            elbow.setState(ElbowSubsystem.State.UP);
+            wrist.setState(WristSubsystem.State.UP);
+        }));
+
+        // rearrange mosaics
+        new Trigger(gamepad1.touchpad && !holdingTouchpad && arm.getState() != ArmSubsystem.State.BOTTOM, new RearrangeMosaicCommand(arm, wrist, elbow));
+
+        holdingTouchpad = gamepad1.touchpad;
     }
 }
