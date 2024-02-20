@@ -48,10 +48,6 @@ public class AccumulationControlledDcMotor extends DcMotorImplEx {
         this.gamma = accumulationControlledDcMotorBuilder.gamma;
     }
 
-    public double clamp(double power) {
-        return Math.min(Math.max(-1, power), 1);
-    }
-
     public void setPower(double power, boolean decelerate) {
         double targetVelocity = MAX_VELOCITY*power;
         double currentVelocity = -this.getVelocity(AngleUnit.RADIANS);
@@ -60,9 +56,9 @@ public class AccumulationControlledDcMotor extends DcMotorImplEx {
         double deltaTime = time - lastTime;
 
         if (decelerate) {
-            super.setPower(clamp(getPower() * gamma - (error * kP * gamma * deltaTime)));
+            super.setPower(getPower() * gamma - (error * kP * gamma * deltaTime));
         } else {
-            super.setPower(clamp(getPower() - (error * kP * deltaTime)));
+            super.setPower(getPower() - (error * kP * deltaTime));
         }
 
         lastTime = time;

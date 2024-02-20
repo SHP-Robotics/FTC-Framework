@@ -25,8 +25,8 @@ public class RotationShape extends GeometricShape {
     @Override
     public Position2D getEndpoint() {
         return new Position2D(
-                center.getX() + radius * Math.cos(this.heading),
-                center.getY() + radius * Math.sin(this.heading),
+                center.getX() + (radius * Math.cos(this.heading)),
+                center.getY() + (radius * Math.sin(this.heading)),
                 heading
         );
     }

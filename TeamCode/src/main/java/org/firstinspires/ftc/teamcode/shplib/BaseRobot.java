@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.DropDownSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ElbowSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.PlaneServo;
@@ -33,7 +34,7 @@ public class BaseRobot extends OpMode {
     public WristSubsystem wrist;
     public PlaneServo planeServo;
     public IntakeSubsystem intake;
-//    public DropDownSubsystem dropDown;
+    public DropDownSubsystem dropDown;
 
     public double previousTime = 0;
 
@@ -50,7 +51,7 @@ public class BaseRobot extends OpMode {
         wrist = new WristSubsystem(hardwareMap);
         planeServo = new PlaneServo(hardwareMap);
         intake = new IntakeSubsystem(hardwareMap);
-//        dropDown = new DropDownSubsystem(hardwareMap);
+        dropDown = new DropDownSubsystem(hardwareMap);
     }
 
     // Called when you press the start button

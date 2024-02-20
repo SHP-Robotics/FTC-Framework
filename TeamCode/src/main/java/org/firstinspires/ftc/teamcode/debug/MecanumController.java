@@ -136,10 +136,10 @@ public class MecanumController extends RobotController {
             max = 1;
         }
 
-        leftFront.setPower(leftFrontPower * driveSpeed / max);
-        rightFront.setPower(rightFrontPower * driveSpeed / max);
-        leftRear.setPower(leftRearPower * driveSpeed / max);
-        rightRear.setPower(rightRearPower * driveSpeed / max);
+        leftFront.setPower(leftFrontPower * Constants.leftFrontPower * driveSpeed / max);
+        rightFront.setPower(rightFrontPower * Constants.rightFrontPower * driveSpeed / max);
+        leftRear.setPower(leftRearPower * Constants.leftRearPower * driveSpeed / max);
+        rightRear.setPower(rightRearPower * Constants.rightRearPower * driveSpeed / max);
     }
 
     public void fieldOrientedDrive(Gamepad gamepad) {
@@ -168,10 +168,10 @@ public class MecanumController extends RobotController {
             max = 1;
         }
 
-        leftFront.setPower(leftFrontPower * driveSpeed / max);
-        rightFront.setPower(rightFrontPower * driveSpeed / max);
-        leftRear.setPower(leftRearPower * driveSpeed / max);
-        rightRear.setPower(rightRearPower * driveSpeed / max);
+        leftFront.setPower(leftFrontPower * Constants.leftFrontPower * driveSpeed / max);
+        rightFront.setPower(rightFrontPower * Constants.rightFrontPower * driveSpeed / max);
+        leftRear.setPower(leftRearPower * Constants.leftRearPower * driveSpeed / max);
+        rightRear.setPower(rightRearPower * Constants.rightRearPower * driveSpeed / max);
     }
 
     public void driveParams(double x, double y, double r) {
@@ -194,10 +194,10 @@ public class MecanumController extends RobotController {
             return;
         }
 
-        leftFront.setPower(leftFrontPower * driveSpeed / max);
-        rightFront.setPower(rightFrontPower * driveSpeed / max);
-        leftRear.setPower(leftRearPower * driveSpeed / max);
-        rightRear.setPower(rightRearPower * driveSpeed / max);
+        leftFront.setPower(leftFrontPower * Constants.leftFrontPower * driveSpeed / max);
+        rightFront.setPower(rightFrontPower * Constants.rightFrontPower * driveSpeed / max);
+        leftRear.setPower(leftRearPower * Constants.leftRearPower * driveSpeed / max);
+        rightRear.setPower(rightRearPower * Constants.rightRearPower * driveSpeed / max);
     }
 
     public void driveFieldParams(double x, double y, double r, double gyro) {
@@ -215,10 +215,10 @@ public class MecanumController extends RobotController {
             max = 1;
         }
 
-        leftFront.setPower(leftFrontPower * driveSpeed / max);
-        rightFront.setPower(rightFrontPower * driveSpeed / max);
-        leftRear.setPower(leftRearPower * driveSpeed / max);
-        rightRear.setPower(rightRearPower * driveSpeed / max);
+        leftFront.setPower(leftFrontPower * Constants.leftFrontPower * driveSpeed / max);
+        rightFront.setPower(rightFrontPower * Constants.rightFrontPower * driveSpeed / max);
+        leftRear.setPower(leftRearPower * Constants.leftRearPower * driveSpeed / max);
+        rightRear.setPower(rightRearPower * Constants.rightRearPower * driveSpeed / max);
     }
 
     public boolean isBusy() {
