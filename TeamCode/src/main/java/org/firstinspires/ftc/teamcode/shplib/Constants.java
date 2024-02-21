@@ -62,17 +62,6 @@ public class Constants {
 
         public static final String kSpinningIntakeName = "SpinningIntake";
         public static final String kCRWheelName = "CRWheel";
-        public static final double kWheelForward = 1.0;
-        public static final double kWheelBackward = -1.0;
-        public static final double kWheelStill = 0.0;
-
-        // Hook Servo Constants
-//        public static final String kHookServo1Name = "Hook1";
-//        public static final String kHookServo2Name = "Hook2";
-//        public static final double kHookLeftEngaged = 0.85;
-//        public static final double kHookLeftDisengaged = 0.5;
-//        public static final double kHookRightEngaged = 0.0;
-//        public static final double kHookRightDisengaged = 0.5;
 
         public static final String kPracticeLeftArmServoName = "LeftAxon";
         public static final String kPracticeRightArmServoName = "RightAxon";
@@ -89,7 +78,7 @@ public class Constants {
     }
 
     public static final class DropDown {
-        public static final String kDropDownName = "dropDown";
+        public static final String kDropdownName = "dropdown";
         // the positions are in subsystems/DropDownSubsystem/State
     }
 }

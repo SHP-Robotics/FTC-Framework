@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.Trigger;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.DropDownSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ElbowSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.PlaneServo;
@@ -28,12 +29,13 @@ public class AndyRandy extends BaseRobot {
     // spammable code
     private boolean holdingCross = false;
     private boolean holdingRightBumper = false;
+    private boolean holdingRightStick = false;
 
-    private ElapsedTime elapsedTime;
+//    private ElapsedTime elapsedTime;
     private boolean holdingTriangle = false;
 
     // dropdown
-//    private ElapsedTime dropdownTimer;
+    private ElapsedTime dropdownTimer;
 
     // mosaic rearrange
     private boolean holdingTouchpad = false;
@@ -42,11 +44,11 @@ public class AndyRandy extends BaseRobot {
     public void init() {
         super.init();
 
-        elapsedTime = new ElapsedTime();
-        elapsedTime.reset();
+//        elapsedTime = new ElapsedTime();
+//        elapsedTime.reset();
 
-//        dropdownTimer = new ElapsedTime();
-//        dropdownTimer.reset();
+        dropdownTimer = new ElapsedTime();
+        dropdownTimer.reset();
 
         // Default command runs when no other commands are scheduled for the subsystem
         drive.setDefaultCommand(
@@ -64,6 +66,8 @@ public class AndyRandy extends BaseRobot {
 
         debounce = Clock.now();
         // Add anything that needs to be run a single time when the OpMode starts
+
+        dropDown.setState(DropDownSubsystem.State.GROUND_HEIGHT);
     }
 
     @Override
@@ -82,11 +86,13 @@ public class AndyRandy extends BaseRobot {
 //                driveBias = 0.3;
 //        }));
 
-//        new Trigger(gamepad1.back, new RunCommand(() -> {
+//        new Trigger(gamepad1.right_stick_button && !holdingRightStick, new RunCommand(() -> {
 //             if state ordinal = 0 -> ordinal = 1
 //             if state ordinal = 1 -> ordinal = 2 -> ordinal = 0 because of modulo
-//            dropDown.setState(DropDownSubsystem.State.values()[(dropDown.getState().ordinal()+1)%2]);
+//            dropDown.setState(DropDownSubsystem.State.values()[(dropDown.getState().ordinal()+1)%6]);
 //        }));
+
+        holdingRightStick = gamepad1.right_stick_button;
 
         // Lower arm
         new Trigger((arm.getState() != ArmSubsystem.State.BOTTOM && gamepad1.left_bumper) || (wrist.getState() == WristSubsystem.State.STAGE_DOOR && !gamepad1.touchpad),
@@ -97,9 +103,9 @@ public class AndyRandy extends BaseRobot {
         new Trigger((gamepad1.right_trigger<0.5 && gamepad1.left_trigger<0.5&&!gamepad1.triangle), new RunCommand(() -> {
             if(intake.getState() != IntakeSubsystem.State.DEPOSIT1)
                 intake.setState(IntakeSubsystem.State.STILL);
-//            if (dropdownTimer.seconds() > 2.5) {
-//                dropDown.setState(DropDownSubsystem.State.RAISED);
-//            }
+            if (dropdownTimer.seconds() > 1.5) {
+                dropDown.setState(DropDownSubsystem.State.RAISED);
+            }
         }));
 
         // Set intake to intake
@@ -110,8 +116,8 @@ public class AndyRandy extends BaseRobot {
         new Trigger((gamepad1.right_trigger>0.5 && arm.getSlidePosition() < Constants.Arm.kSlideTolerance), new RunCommand(() -> intake.setState(IntakeSubsystem.State.INTAKE)));
         new Trigger((gamepad1.right_trigger>0.5 && arm.getSlidePosition() < Constants.Arm.kSlideTolerance), new RunCommand(() -> {
             intake.setState(IntakeSubsystem.State.INTAKE);
-//            dropDown.setState(DropDownSubsystem.State.LOWERED);
-//            dropdownTimer.reset();
+            dropDown.setState(DropDownSubsystem.State.GROUND_HEIGHT);
+            dropdownTimer.reset();
         }));
 
         // Set intake to reject
@@ -120,26 +126,17 @@ public class AndyRandy extends BaseRobot {
         new Trigger((gamepad1.dpad_right && arm.getState() == ArmSubsystem.State.BOTTOM), new RunCommand(() -> intake.setState(IntakeSubsystem.State.REJECT_ALL)));
 
         // wait before depositing more pixels
-        if (gamepad1.triangle) {
-            if (!holdingTriangle) {
-                elapsedTime.reset();
-            } else if (elapsedTime.seconds() > 0.1) {
-                // Deposit variable pixels
-                new Trigger(gamepad1.triangle, new RunCommand(() -> {
-                    if (intake.getState() != IntakeSubsystem.State.STILL) { //2. if no pixels have been released
-                        intake.setState(IntakeSubsystem.State.DEPOSIT2);       //   release pixel #1
-                        holdingTriangle = false;
-                        telemetry.addData("Pixels Deposited: ", 2);
-                    } else {                                                //3. if pixel #1 has been released
-                        intake.setState(IntakeSubsystem.State.DEPOSIT1);  //   release pixel #2
-                        telemetry.addData("Pixels Deposited: ", 1);
-                    }
-                }));
+        new Trigger(gamepad1.triangle && !holdingTriangle, new RunCommand(() -> {
+            if (intake.getState() == IntakeSubsystem.State.STILL) { //2. if no pixels have been released
+                intake.setState(IntakeSubsystem.State.DEPOSIT1);       //   release pixel #1
+                telemetry.addData("Pixels Deposited: ", 1);
+            } else {                  //3. if pixel #1 has been released
+                intake.setState(IntakeSubsystem.State.DEPOSIT2);  //   release pixel #2
+                telemetry.addData("Pixels Deposited: ", 2);
             }
-            holdingTriangle = true;
-        } else {
-            holdingTriangle = false;
-        }
+        }));
+
+        holdingTriangle = gamepad1.triangle;
 
         // Reset IMU
         new Trigger(gamepad1.square, new RunCommand(() -> drive.resetIMUAngle()));

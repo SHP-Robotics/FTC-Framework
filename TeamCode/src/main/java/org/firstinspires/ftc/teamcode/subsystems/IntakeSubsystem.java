@@ -14,9 +14,9 @@ import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 import org.firstinspires.ftc.teamcode.shplib.hardware.SHPMotor;
 
 public class IntakeSubsystem extends Subsystem {
-    private final CRServo crWheel;
-    private final Servo pixelServo;
-    private final SHPMotor spinningIntake;
+    public final CRServo crWheel;
+    public final Servo pixelServo;
+    public final SHPMotor spinningIntake;
 
     public enum State {
         INTAKE,

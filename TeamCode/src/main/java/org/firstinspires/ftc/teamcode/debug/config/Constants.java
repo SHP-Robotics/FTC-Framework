@@ -7,17 +7,17 @@ public final class Constants {
     // ** means tunable
     // * means approximate
     public static final double MECANUM_WIDTH = 15; // Inches each wheel travels per rotation *
-    public static final double ODOMETRY_TICKS_PER_INCH = 336.878636635*4*9.8/(3*12); // # of ticks per dead wheel travelling 1" **
-    public static final double ODOMETRY_WIDTH = 13.822861635923072; // Rotational diameter **
-    public static final double CIRCULAR_RATIO = 0.7658864198272942; // Cancels out rotation causing movement on the x-axis **
+    public static final double ODOMETRY_TICKS_PER_INCH = 336.877962878; // ticks per rev / circumference
+    public static double ODOMETRY_WIDTH = 15.147; // Rotational diameter **
+    public static double CIRCULAR_RATIO = 1.186; // Cancels out rotation causing movement on the x-axis after rotations **/*
 
-    public static final double followRadius = 2; // Follow radius *
-    public static final double positionBuffer = 0.05; // Maximum positional error admitted *
-    public static final double rotationBuffer = Math.toRadians(5); // Maximum rotational error admitted *
+    public static final double followRadius = 5; // Follow radius *
+    public static final double positionBuffer = 0.5; // Default positional error admitted *
+    public static final double rotationBuffer = Math.toRadians(5); // Default rotational error admitted *
 
-    public static final double tanhPace = 1; // Acceleration constant *
-    public static final double minimumTanh = 0.05; // Minimum path following speed *
-    public static final double maximumTanh = 0.3; // Maximum path following speed *
+    public static final double tanhPace = 0.5; // Acceleration constant *
+    public static final double minimumTanh = 0.04; // Minimum path following speed *
+    public static final double maximumTanh = 0.6; // Maximum path following speed *
 
     public static final DcMotorSimple.Direction leftEncoderDirection = DcMotorSimple.Direction.FORWARD; // **
     public static final DcMotorSimple.Direction rightEncoderDirection = DcMotorSimple.Direction.FORWARD; // **
@@ -28,6 +28,11 @@ public final class Constants {
     public static final DcMotorSimple.Direction rightFrontDirection = DcMotorSimple.Direction.FORWARD; // **
     public static final DcMotorSimple.Direction leftRearDirection = DcMotorSimple.Direction.REVERSE; // **
     public static final DcMotorSimple.Direction rightRearDirection = DcMotorSimple.Direction.REVERSE; // **
+
+    public static double leftFrontPower = 1;
+    public static double rightFrontPower = 0.97;
+    public static double leftRearPower = 1;
+    public static double rightRearPower = 0.97;
 
     // Basic movement library (not Pure Pursuit)
     public static final double WHEEL_ENCODER_TICKS_PER_INCH_FORWARD = 32.8741735;

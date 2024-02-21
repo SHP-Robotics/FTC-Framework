@@ -8,13 +8,16 @@ import org.firstinspires.ftc.teamcode.shplib.Constants;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 
 public class DropDownSubsystem extends Subsystem {
-    Servo dropDown;
+    Servo dropdown;
     private State state;
 
     public enum State {
-        LOWERED (0),
-        SIDE_STACK (0),
-        RAISED (0);
+        RAISED (0.67),
+        FIVE_HEIGHT (0.73),
+        FOUR_HEIGHT (0.7575),
+        THREE_HEIGHT (0.785),
+        TWO_HEIGHT (0.8125),
+        GROUND_HEIGHT (0.84);
 
         private final double position;
 
@@ -24,9 +27,9 @@ public class DropDownSubsystem extends Subsystem {
     }
 
     public DropDownSubsystem(HardwareMap hardwareMap) {
-        this.dropDown = (Servo) hardwareMap.get(Constants.DropDown.kDropDownName);
+        this.dropdown = (Servo) hardwareMap.get(Constants.DropDown.kDropdownName);
         this.state = State.RAISED;
-        this.dropDown.setPosition(this.getState().position);
+        this.dropdown.setPosition(this.getState().position);
     }
 
     public void setState(State state) {
@@ -39,9 +42,9 @@ public class DropDownSubsystem extends Subsystem {
 
     @Override
     public void periodic(Telemetry telemetry) {
-        this.dropDown.setPosition(this.getState().position);
+        this.dropdown.setPosition(this.getState().position);
 
         telemetry.addData("State: ", state);
-        telemetry.addData("Drop Down Position: ", this.dropDown.getPosition());
+        telemetry.addData("Drop Down Position: ", this.dropdown.getPosition());
     }
 }

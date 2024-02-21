@@ -50,18 +50,21 @@ public class PurePursuitFollower {
         this.currentPosition = new Position2D(0, 0, Math.PI/2);
     }
 
+    public void reset() {
+        this.currentPosition = new Position2D(0, 0, Math.PI/2);
+    }
+
     public void rotationTestingUpdateOdometry() {
         double lT = leftOdometry.getInchesTravelled();
         double cT = centerOdometry.getInchesTravelled();
         double rT = rightOdometry.getInchesTravelled();
 
         double distanceRotated = (lT - rT) / 2;
-        double x = cT + (distanceRotated * Constants.CIRCULAR_RATIO);
         double y = (lT + rT) / 2;
         double r = - (4 * distanceRotated) / Constants.ODOMETRY_WIDTH;
 
         currentPosition.add(new Position2D(
-                x,
+                cT,
                 y,
                 r
         ), false);
@@ -73,7 +76,7 @@ public class PurePursuitFollower {
         double rT = rightOdometry.getInchesTravelled();
 
         double distanceRotated = (lT - rT) / 2;
-        double x = cT + (distanceRotated * Constants.CIRCULAR_RATIO);
+        double x = cT - (distanceRotated * Constants.CIRCULAR_RATIO);
         double y = (lT + rT) / 2;
         double r = - (4 * distanceRotated) / Constants.ODOMETRY_WIDTH;
 

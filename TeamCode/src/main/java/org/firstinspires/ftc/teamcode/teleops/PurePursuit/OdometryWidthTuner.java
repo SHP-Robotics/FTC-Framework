@@ -16,7 +16,7 @@ public class OdometryWidthTuner extends LinearOpMode {
         PurePursuitFollower purePursuitFollower = new PurePursuitFollower(hardwareMap);
 
         SpeedController speedController = new SpeedController.SpeedBuilder(SpeedController.SpeedType.NO_CHANGE)
-                .setNaturalSpeed(0.4)
+                .setNaturalSpeed(0.7)
                 .build();
         MecanumController mecanumController = new MecanumController(hardwareMap);
         mecanumController.setSpeedController(speedController);
@@ -34,8 +34,10 @@ public class OdometryWidthTuner extends LinearOpMode {
             if (gamepad1.b) {
                 // predicted too far -> increase width
                 // predicted too short -> decrease width
-                telemetry.addData("Ideal Odometry Width", Constants.ODOMETRY_WIDTH * Math.abs((purePursuitFollower.getCurrentPosition().getHeadingRadians()-(Math.PI/2)) / (20 * Math.PI)));
+                double newOdometryWidth = Constants.ODOMETRY_WIDTH * Math.abs((purePursuitFollower.getCurrentPosition().getHeadingRadians()-(Math.PI/2)) / (20 * Math.PI));
+                telemetry.addData("Ideal Odometry Width", newOdometryWidth);
                 telemetry.update();
+                Constants.ODOMETRY_WIDTH = newOdometryWidth;
                 break;
             }
         }

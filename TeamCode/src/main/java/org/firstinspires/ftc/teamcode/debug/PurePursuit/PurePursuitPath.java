@@ -14,6 +14,12 @@ import java.util.ArrayList;
 
 public class PurePursuitPath {
     public final ArrayList<GeometricShape> geometries;
+    public final ArrayList<Double> admissibleXYErrors;
+    public final ArrayList<Double> admissibleRotationalErrors;
+
+    Position2D lastPosition;
+
+    private int currentGeometry = 0;
 
     private final double followRadius;
     private final double positionBuffer;
@@ -30,6 +36,10 @@ public class PurePursuitPath {
 
     public PurePursuitPath(PurePursuitPathBuilder purePursuitPathBuilder) {
         this.geometries = purePursuitPathBuilder.geometries;
+        this.admissibleXYErrors = purePursuitPathBuilder.admissibleXYErrors;
+        this.admissibleRotationalErrors = purePursuitPathBuilder.admissibleRotationalErrors;
+
+        this.lastPosition = purePursuitPathBuilder.lastPosition;
 
         this.followRadius = purePursuitPathBuilder.followRadius;
         this.positionBuffer = purePursuitPathBuilder.positionBuffer;
@@ -40,45 +50,66 @@ public class PurePursuitPath {
         this.maximumTanh = purePursuitPathBuilder.maximumTanh;
     }
 
+    public int getCurrentGeometry() {
+        return this.currentGeometry;
+    }
+
+    private Position2D getGeometryIntersection(Position2D currentPosition, RestrictedCircle followingCircle, GeometricShape geometricShape) {
+        Position2D[] tmpIntersections = geometricShape.circleIntersections(followingCircle);
+
+        if (geometricShape.getEndpoint() != null && currentPosition.dist(geometricShape.getEndpoint()) <= followRadius) {
+            return geometricShape.getEndpoint();
+        } else if (tmpIntersections != null && tmpIntersections.length == 2 && (tmpIntersections[0] != null || tmpIntersections[1] != null)) {
+            if (tmpIntersections[0] == null) {
+                return tmpIntersections[1];
+            }
+
+            if (tmpIntersections[1] == null) {
+                return tmpIntersections[0];
+            }
+
+            if (geometricShape.getEndpoint().dist(tmpIntersections[0]) < geometricShape.getEndpoint().dist(tmpIntersections[1])) {
+                return tmpIntersections[0];
+            }
+
+            return tmpIntersections[1];
+        }
+
+        return null;
+    }
+
     public Position2D getOptimalIntersection(Position2D currentPosition) {
         RestrictedCircle followingCircle = new RestrictedCircle(followRadius);
         followingCircle.setOffset(currentPosition);
 
-        Position2D[] furthestIntersections = new Position2D[2];
-        int geometry = -1;
+        GeometricShape geometricShape;
+        double admissibleXYError;
+        double admissibleRotationalError;
 
-        for (int i = 0; i < this.geometries.size(); i++) {
-            if (this.geometries.get(i) instanceof InterruptionShape && !((InterruptionShape) this.geometries.get(i)).isExecuted() && nearPosition(this.geometries.get(i).getEndpoint())) {
-                ((InterruptionShape) this.geometries.get(i)).run();
-                continue;
+        while (true) {
+            if (currentGeometry >= geometries.size()) {
+                return null;
             }
 
-            GeometricShape geometricShape = this.geometries.get(i);
+            geometricShape = geometries.get(currentGeometry);
+            admissibleXYError = admissibleXYErrors.get(currentGeometry);
+            admissibleRotationalError = admissibleRotationalErrors.get(currentGeometry);
 
-            Position2D[] tmpIntersections = geometricShape.circleIntersections(followingCircle);
-
-            if (geometricShape.getEndpoint() != null && currentPosition.dist(geometricShape.getEndpoint()) <= followRadius) {
-                furthestIntersections = new Position2D[]{geometricShape.getEndpoint(), null};
-                geometry = i;
-            } else if (tmpIntersections != null && tmpIntersections.length == 2 && (tmpIntersections[0] != null || tmpIntersections[1] != null)) {
-                furthestIntersections = tmpIntersections;
-                geometry = i;
+            if (geometricShape instanceof InterruptionShape) {
+                if (nearPosition(geometricShape.getEndpoint(), admissibleXYError, admissibleRotationalError) && !((InterruptionShape) geometries.get(currentGeometry)).isExecuted()) {
+                    ((InterruptionShape) (geometries.get(currentGeometry))).run();
+                    currentGeometry += 1;
+                } else {
+                    break;
+                }
+            } else if (nearPosition(geometricShape.getEndpoint(), admissibleXYError, admissibleRotationalError)) {
+                currentGeometry += 1;
+            } else {
+                break;
             }
         }
 
-        if (furthestIntersections[0] == null) {
-            return furthestIntersections[1];
-        }
-
-        if (furthestIntersections[1] == null) {
-            return furthestIntersections[0];
-        }
-
-        if (geometries.get(geometry).getEndpoint().dist(furthestIntersections[0]) < geometries.get(geometry).getEndpoint().dist(furthestIntersections[1])) {
-            return furthestIntersections[0];
-        }
-
-        return furthestIntersections[1];
+        return getGeometryIntersection(currentPosition, followingCircle, geometricShape);
     }
 
     public void follow(PurePursuitFollower purePursuitFollower, RobotController robotController) {
@@ -109,6 +140,7 @@ public class PurePursuitPath {
             Position2D optimalIntersection = getOptimalIntersection(this.purePursuitFollower.getCurrentPosition());
 
             if (optimalIntersection == null) {
+                this.robotController.deactivate();
                 failed = true;
                 return;
             }
@@ -116,9 +148,14 @@ public class PurePursuitPath {
             double differenceX = optimalIntersection.getX() - this.purePursuitFollower.getCurrentPosition().getX();
             double differenceY = optimalIntersection.getY() - this.purePursuitFollower.getCurrentPosition().getY();
             double differenceHeading = -MathUtils.normalizeAngle(optimalIntersection.getHeadingRadians() - this.purePursuitFollower.getCurrentPosition().getHeadingRadians(), 0);
-            differenceHeading *= Constants.MECANUM_WIDTH;
+            differenceHeading *= Constants.MECANUM_WIDTH / 2;
 
-            double max = Math.max(Math.abs(differenceX), Math.max(Math.abs(differenceY), Math.abs(differenceHeading)));
+            double max = Math.abs(differenceX) + Math.abs(differenceY) + Math.abs(differenceHeading);
+
+            if (max < 1) {
+                max = 1;
+            }
+
             double driveSpeed;
 
             if (this.maximumTanh == this.minimumTanh) {
@@ -136,7 +173,12 @@ public class PurePursuitPath {
             double y = differenceY / max;
             double r = differenceHeading / max;
 
+            if (this.robotController instanceof SimulatedMecanumController) {
+                ((SimulatedMecanumController)this.robotController).simulateEncoders(Position2D.add(purePursuitFollower.getCurrentPosition(), lastPosition.getNegative()));
+            }
+
             this.robotController.driveFieldParams(x * driveSpeed, y * driveSpeed, r * driveSpeed, purePursuitFollower.getCurrentPosition().getHeadingRadians());
+            lastPosition = purePursuitFollower.getCurrentPosition();
         } else {
             if (robotController != null) {
                 this.robotController.deactivate();
@@ -155,12 +197,17 @@ public class PurePursuitPath {
     }
 
     public boolean isFinished() {
-        return !isFollowing || this.failed() || this.nearPosition(this.geometries.get(this.geometries.size()-1).getEndpoint());
+        return !isFollowing || this.failed() || (this.currentGeometry == this.geometries.size()-1 && this.nearPosition(this.geometries.get(this.geometries.size()-1).getEndpoint()));
     }
 
-    private boolean nearPosition(Position2D position2D) {
+    public boolean nearPosition(Position2D position2D) {
         return (this.purePursuitFollower.getCurrentPosition().dist(position2D) <= this.positionBuffer
                 && Math.abs(this.purePursuitFollower.getCurrentPosition().getHeadingRadians() - position2D.getHeadingRadians()) <= rotationBuffer);
+    }
+
+    public boolean nearPosition(Position2D position2D, double admissibleXYError, double admissibleRotationalError) {
+        return (this.purePursuitFollower.getCurrentPosition().dist(position2D) <= admissibleXYError
+                && Math.abs(this.purePursuitFollower.getCurrentPosition().getHeadingRadians() - position2D.getHeadingRadians()) <= admissibleRotationalError);
     }
 
     public boolean failed() {
@@ -169,6 +216,8 @@ public class PurePursuitPath {
 
     public static class PurePursuitPathBuilder {
         private ArrayList<GeometricShape> geometries;
+        private ArrayList<Double> admissibleXYErrors;
+        private ArrayList<Double> admissibleRotationalErrors;
         private Position2D lastPosition;
 
         private double followRadius;
@@ -181,6 +230,8 @@ public class PurePursuitPath {
 
         public PurePursuitPathBuilder() {
             geometries = new ArrayList<>();
+            admissibleXYErrors = new ArrayList<>();
+            admissibleRotationalErrors = new ArrayList<>();
             lastPosition = new Position2D(0, 0, Math.toRadians(90));
 
             this.followRadius = Constants.followRadius;
@@ -192,41 +243,67 @@ public class PurePursuitPath {
             this.maximumTanh = Constants.maximumTanh;
         }
 
-        public PurePursuitPathBuilder moveTo(Position2D position2D) {
+        public PurePursuitPathBuilder moveTo(Position2D position2D, double admissibleXYError, double admissibleRotationalError) {
             if (position2D.getX() == this.lastPosition.getX() && position2D.getY() == this.lastPosition.getY()) {
                 throw new IllegalArgumentException("position2D cannot equal the last position2D added to the path");
             }
 
             if (position2D.getHeadingRadians() != lastPosition.getHeadingRadians()) {
                 throw new IllegalArgumentException("position2D heading must equal the last position2D heading");
-            } else {
-                this.geometries.add(new RestrictedLine(lastPosition, position2D));
             }
 
+            this.geometries.add(new RestrictedLine(lastPosition, position2D));
+            this.admissibleXYErrors.add(admissibleXYError);
+            this.admissibleRotationalErrors.add(admissibleRotationalError);
             lastPosition = position2D;
 
             return this;
         }
+
+        public PurePursuitPathBuilder moveTo(Position2D position2D) {
+            return this.moveTo(position2D, Constants.followRadius, Constants.rotationBuffer);
+        }
         
-        public PurePursuitPathBuilder rotateTo(Position2D pointOfRotation, double heading) {
+        public PurePursuitPathBuilder rotateTo(Position2D pointOfRotation, double heading, double admissibleXYError, double admissibleRotationalError) {
             if (heading == lastPosition.getHeadingRadians()) {
                 throw new IllegalArgumentException("heading cannot equal last heading");
             }
             this.geometries.add(new RotationShape(pointOfRotation, 0, heading));
+            this.admissibleXYErrors.add(admissibleXYError);
+            this.admissibleRotationalErrors.add(admissibleRotationalError);
+            lastPosition = this.geometries.get(this.geometries.size()-1).getEndpoint();
             return this;
         }
 
-        public PurePursuitPathBuilder turnTo(Position2D position2D) {
+        public PurePursuitPathBuilder rotateTo(Position2D pointOfRotation, double heading) {
+            return this.rotateTo(pointOfRotation, heading, Constants.followRadius, Constants.rotationBuffer);
+        }
+
+        public PurePursuitPathBuilder turnTo(Position2D position2D, double admissibleXYError, double admissibleRotationalError) {
             this.geometries.add(new RestrictedCircle(lastPosition, position2D));
+            this.admissibleXYErrors.add(admissibleXYError);
+            this.admissibleRotationalErrors.add(admissibleRotationalError);
             if (this.geometries.get(this.geometries.size()-1).getEndpoint() != position2D) {
                 this.geometries.add(new RestrictedLine(this.geometries.get(this.geometries.size()-1).getEndpoint(), position2D));
+                this.admissibleXYErrors.add(admissibleXYError);
+                this.admissibleRotationalErrors.add(admissibleRotationalError);
             }
             return this;
         }
 
-        public PurePursuitPathBuilder addAction(Runnable runnable) {
+        public PurePursuitPathBuilder turnTo(Position2D position2D) {
+            return this.turnTo(position2D, Constants.followRadius, Constants.rotationBuffer);
+        }
+
+        public PurePursuitPathBuilder addAction(double admissibleXYError, double admissibleRotationalError, Runnable runnable) {
             this.geometries.add(new InterruptionShape(lastPosition, runnable));
+            this.admissibleXYErrors.add(admissibleXYError);
+            this.admissibleRotationalErrors.add(admissibleRotationalError);
             return this;
+        }
+
+        public PurePursuitPathBuilder addAction(Runnable runnable) {
+            return this.addAction(Constants.followRadius, Constants.rotationBuffer, runnable);
         }
 
         public PurePursuitPathBuilder setFollowRadius(double followRadius) {
