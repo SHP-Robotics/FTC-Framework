@@ -6,18 +6,19 @@ public final class Constants {
     // Pure Pursuit
     // ** means tunable
     // * means approximate
-    public static final double MECANUM_WIDTH = 15; // Inches each wheel travels per rotation *
-    public static final double ODOMETRY_TICKS_PER_INCH = 336.877962878; // ticks per rev / circumference
+    public static final double MECANUM_WIDTH = 15; // Inches each wheel travels per rotation **
+    public static final double ODOMETRY_TICKS_PER_INCH = 336.877962878; // ticks per rev / circumference **
     public static double ODOMETRY_WIDTH = 15.147; // Rotational diameter **
-    public static double CIRCULAR_RATIO = 1.186; // Cancels out rotation causing movement on the x-axis after rotations **/*
+    public static double FORWARD_OFFSET = -0.025567678201360137; // Cancels out rotation causing movement on the x-axis after rotations **
+    public static double MAX_VELOCITY = 85; // **
 
-    public static final double followRadius = 5; // Follow radius *
+    public static final double followRadius = 1; // Follow radius *
     public static final double positionBuffer = 0.5; // Default positional error admitted *
     public static final double rotationBuffer = Math.toRadians(5); // Default rotational error admitted *
 
-    public static final double tanhPace = 0.5; // Acceleration constant *
+    public static final double tanhPace = 0.6; // Acceleration constant *
     public static final double minimumTanh = 0.04; // Minimum path following speed *
-    public static final double maximumTanh = 0.6; // Maximum path following speed *
+    public static final double maximumTanh = 1; // Maximum path following speed *
 
     public static final DcMotorSimple.Direction leftEncoderDirection = DcMotorSimple.Direction.FORWARD; // **
     public static final DcMotorSimple.Direction rightEncoderDirection = DcMotorSimple.Direction.FORWARD; // **

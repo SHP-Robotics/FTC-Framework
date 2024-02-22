@@ -52,6 +52,10 @@ public class Position2D {
         );
     }
 
+    public double getMagnitude() {
+        return Math.sqrt((this.x*this.x)+(this.y*this.y));
+    }
+
     public Position2D getNegative() {
         return new Position2D(
                 -this.getX(),
@@ -78,5 +82,17 @@ public class Position2D {
         this.x = newX;
         this.y = newY;
         this.headingRadians = newHeading;
+    }
+
+    public static Position2D rotate(Position2D position2D, double radiansClockwise) {
+        double x = position2D.getX();
+        double y = position2D.getY();
+        double r = position2D.getHeadingRadians();
+
+        return new Position2D(
+                x * Math.cos(radiansClockwise) - y * Math.sin(radiansClockwise),
+                y * Math.cos(radiansClockwise) + x * Math.sin(radiansClockwise),
+                MathUtils.normalizeAngle(r + radiansClockwise, 0.0)
+        );
     }
 }

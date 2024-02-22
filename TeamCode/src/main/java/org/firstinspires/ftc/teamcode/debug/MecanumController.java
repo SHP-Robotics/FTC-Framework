@@ -7,6 +7,7 @@ import static org.firstinspires.ftc.teamcode.debug.config.Constants.rightRearDir
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -16,10 +17,10 @@ import org.firstinspires.ftc.teamcode.debug.config.Constants;
 import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
 
 public class MecanumController extends RobotController {
-    public DcMotor leftFront;
-    public DcMotor rightFront;
-    public DcMotor leftRear;
-    public DcMotor rightRear;
+    public DcMotorEx leftFront;
+    public DcMotorEx rightFront;
+    public DcMotorEx leftRear;
+    public DcMotorEx rightRear;
 
     public IMU imu;
     protected double imuAngleOffset = 0;
@@ -48,7 +49,7 @@ public class MecanumController extends RobotController {
         rightRear.setZeroPowerBehavior(zeroPowerBehavior);
     }
 
-    public MecanumController(DcMotor leftFront, DcMotor rightFront, DcMotor leftRear, DcMotor rightRear, IMU imu) {
+    public MecanumController(DcMotorEx leftFront, DcMotorEx rightFront, DcMotorEx leftRear, DcMotorEx rightRear, IMU imu) {
         this.leftFront = leftFront;
         this.rightFront = rightFront;
         this.leftRear = leftRear;
@@ -62,10 +63,10 @@ public class MecanumController extends RobotController {
 
     public MecanumController(HardwareMap hardwareMap) {
         // TODO: Set name
-        this.leftFront = (DcMotor) hardwareMap.get("leftFront");
-        this.rightFront = (DcMotor) hardwareMap.get("rightFront");
-        this.leftRear = (DcMotor) hardwareMap.get("leftRear");
-        this.rightRear = (DcMotor) hardwareMap.get("rightRear");
+        this.leftFront = (DcMotorEx) hardwareMap.get("leftFront");
+        this.rightFront = (DcMotorEx) hardwareMap.get("rightFront");
+        this.leftRear = (DcMotorEx) hardwareMap.get("leftRear");
+        this.rightRear = (DcMotorEx) hardwareMap.get("rightRear");
 
         // TODO: Set direction
         this.leftFront.setDirection(leftFrontDirection);

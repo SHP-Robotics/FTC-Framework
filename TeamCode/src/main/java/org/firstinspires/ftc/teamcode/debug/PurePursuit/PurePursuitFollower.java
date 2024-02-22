@@ -17,6 +17,7 @@ public class PurePursuitFollower {
     private final Odometry rightOdometry;
     private final Odometry centerOdometry;
 
+    private Position2D robotDeltaPosition;
     private Position2D currentPosition;
 
     public PurePursuitFollower(HardwareMap hardwareMap) {
@@ -76,14 +77,18 @@ public class PurePursuitFollower {
         double rT = rightOdometry.getInchesTravelled();
 
         double distanceRotated = (lT - rT) / 2;
-        double x = cT - (distanceRotated * Constants.CIRCULAR_RATIO);
+        double x = cT + (distanceRotated * Constants.FORWARD_OFFSET);
         double y = (lT + rT) / 2;
         double r = - (4 * distanceRotated) / Constants.ODOMETRY_WIDTH;
+
+        this.robotDeltaPosition = new Position2D(x, y, r);
 
         // TODO: check if r/2 helps or hinders
         // Should make all movement oriented between last and current position
         // because all movement occurred between last and current moment
         double headingRadians = getCurrentPosition().getHeadingRadians() + r/2;
+
+        // TODO: replace with Position2D.rotate for simplicity
 
         // TODO: CHECK MATH
         double xOriented = (Math.sin(headingRadians) * x) + (Math.cos(headingRadians) * y);
@@ -96,7 +101,12 @@ public class PurePursuitFollower {
         ), true);
     }
 
+
     public Position2D getCurrentPosition() {
         return this.currentPosition;
+    }
+
+    public Position2D getRobotDeltaPosition() {
+        return robotDeltaPosition;
     }
 }
