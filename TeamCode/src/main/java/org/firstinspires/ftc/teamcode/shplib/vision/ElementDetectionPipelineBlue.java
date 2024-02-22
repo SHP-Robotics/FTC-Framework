@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.shplib.vision;
 
+import org.firstinspires.ftc.teamcode.subsystems.VisionLocation;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -24,12 +25,6 @@ public class ElementDetectionPipelineBlue extends OpenCvPipeline {
 
     public ElementDetectionPipelineBlue() {
         frameList = new ArrayList<>();
-    }
-
-    public enum LocationPosition {
-        LEFT,
-        RIGHT,
-        NONE
     }
 
     static final Rect LEFT_ROI = new Rect(
@@ -107,15 +102,14 @@ public class ElementDetectionPipelineBlue extends OpenCvPipeline {
 
     }
 
-    public LocationPosition getLocation(){
+    public VisionLocation getLocation(){
         if(leftValue>rightValue && leftValue > THRESHOLD){
-            return LocationPosition.LEFT;
+            return VisionLocation.CLOSE;
         }
         if(rightValue>leftValue && rightValue > THRESHOLD){
-            return LocationPosition.RIGHT;
+            return VisionLocation.FAR;
         }
-        return LocationPosition.NONE;
-
+        return VisionLocation.CENTER;
     }
 
     public int getMaxHeightReadable() {

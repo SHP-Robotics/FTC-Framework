@@ -82,10 +82,10 @@ public class VisionSubsystem extends Subsystem {
         this.state = state;
     }
 
-    public ElementDetectionPipelineRed.LocationPosition getLocationRed(){
+    public VisionLocation getLocationRed(){
         return detectorRed.getLocation();
     }
-    public ElementDetectionPipelineBlue.LocationPosition getLocationBlue(){
+    public VisionLocation getLocationBlue(){
         return detectorBlue.getLocation();
     }
     public double getPixelMass() {

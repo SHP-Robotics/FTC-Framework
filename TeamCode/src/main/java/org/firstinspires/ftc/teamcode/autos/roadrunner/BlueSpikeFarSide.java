@@ -1,22 +1,22 @@
-package org.firstinspires.ftc.teamcode.autos;
+package org.firstinspires.ftc.teamcode.autos.roadrunner;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.shplib.vision.ElementDetectionPipelineRed;
+import org.firstinspires.ftc.teamcode.shplib.vision.ElementDetectionPipelineBlue;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 import java.io.File;
 
+@Disabled
 @Autonomous(preselectTeleOp = "CenterStage Field Oriented")
-public class RedSpikeFarSide extends LinearOpMode {
+public class BlueSpikeFarSide extends LinearOpMode {
     private final String soundPath = "/sdcard/FIRST/blocks/sounds";
     private final File soundFile = new File(soundPath + "/Holy Moley.wav");
 
@@ -43,11 +43,7 @@ public class RedSpikeFarSide extends LinearOpMode {
         SampleMecanumDrive sampleMecanumDrive = new SampleMecanumDrive(hardwareMap);
         VisionSubsystem visionSubsystem;
         State currentState;
-        ElementDetectionPipelineRed.LocationPosition location;
-
-        Servo cameraServo = hardwareMap.get(Servo.class, "cameraServo");
-        cameraServo.setDirection(Servo.Direction.REVERSE);
-        cameraServo.setPosition(Constants.CameraMode.FACING_TEAM_PROP.getPosition());
+        ElementDetectionPipelineBlue.LocationPosition location;
 
         Servo claw = hardwareMap.get(Servo.class, "claw");
         claw.setPosition(Constants.CLAW_CLOSE);
@@ -56,17 +52,17 @@ public class RedSpikeFarSide extends LinearOpMode {
         outtake.setDirection(Servo.Direction.REVERSE);
         outtake.setPosition(Constants.OUTTAKE_STARTING);
 
-        visionSubsystem = new VisionSubsystem(hardwareMap,"red");
-        location = visionSubsystem.getLocationRed();
+        visionSubsystem = new VisionSubsystem(hardwareMap,"blue");
+        location = visionSubsystem.getLocationBlue();
         telemetry.addLine("Trajectory Sequence Ready");
         telemetry.addData("Location: ", location);
         telemetry.update();
         while (opModeInInit() && !isStopRequested()) {
-            location = visionSubsystem.getLocationRed();
+            location = visionSubsystem.getLocationBlue();
             telemetry.addLine("Trajectory Sequence Ready");
             telemetry.addData("Location: ", location);
-            telemetry.addData("height", visionSubsystem.detectorRed.getMaxHeightReadable());
-            telemetry.addData("mass", visionSubsystem.detectorRed.totalValue);
+            telemetry.addData("height", visionSubsystem.detectorBlue.getMaxHeightReadable());
+            telemetry.addData("mass", visionSubsystem.detectorBlue.totalValue);
             telemetry.update();
         }
 
@@ -74,7 +70,7 @@ public class RedSpikeFarSide extends LinearOpMode {
 
         if (isStopRequested()) return;
 
-        if (location == ElementDetectionPipelineRed.LocationPosition.RIGHT) {
+        if (location == ElementDetectionPipelineBlue.LocationPosition.RIGHT) {
             Trajectory forwardTwo = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
                     .lineToLinearHeading(new Pose2d(46, 0, Math.toRadians(0)))
                     .build();
@@ -94,13 +90,13 @@ public class RedSpikeFarSide extends LinearOpMode {
             sampleMecanumDrive.update();
 
             telemetry.addData("Current State", currentState);
-            telemetry.addData("max height", visionSubsystem.detectorRed.getMaxHeightReadable());
+            telemetry.addData("max height", visionSubsystem.detectorBlue.getMaxHeightReadable());
             telemetry.update();
 
             switch (currentState) {
                 case GEN_FORWARD:
                     if (!sampleMecanumDrive.isBusy()) {
-                        sampleMecanumDrive.turnAsync(Math.toRadians(90));
+                        sampleMecanumDrive.turnAsync(Math.toRadians(-90));
 
                         currentState = State.GEN_TURN;
                     }
@@ -108,7 +104,7 @@ public class RedSpikeFarSide extends LinearOpMode {
                 case GEN_TURN:
                     if (!sampleMecanumDrive.isBusy()) {
                         Trajectory genLeft = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
-                                .lineToLinearHeading(new Pose2d(28, -7, Math.toRadians(90)))
+                                .lineToLinearHeading(new Pose2d(28, 7, Math.toRadians(-90)))
                                 .build();
 
                         sampleMecanumDrive.followTrajectoryAsync(genLeft);
@@ -120,13 +116,13 @@ public class RedSpikeFarSide extends LinearOpMode {
                     if (!sampleMecanumDrive.isBusy()) {
                         sleep(500);
 
-                        if (visionSubsystem.detectorRed.getMaxHeightReadable() < 600) {
+                        if (visionSubsystem.detectorBlue.getMaxHeightReadable() < 170) {
                             sampleMecanumDrive.turnAsync(Math.toRadians(180));
 
                             currentState = State.TURN_TO_PIXEL_1;
                         } else {
                             Trajectory unknownForwardThree = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
-                                    .lineToLinearHeading(new Pose2d(28, 6, Math.toRadians(90)))
+                                    .lineToLinearHeading(new Pose2d(28, -6, Math.toRadians(-90)))
                                     .build();
 
                             sampleMecanumDrive.followTrajectoryAsync(unknownForwardThree);
@@ -144,7 +140,7 @@ public class RedSpikeFarSide extends LinearOpMode {
                         sleep(2000);
 
                         Trajectory forwardOne = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
-                                .lineToLinearHeading(new Pose2d(28, -10, Math.toRadians(-90)))
+                                .lineToLinearHeading(new Pose2d(28, 10, Math.toRadians(90)))
                                 .build();
 
                         sampleMecanumDrive.followTrajectoryAsync(forwardOne);
@@ -159,7 +155,7 @@ public class RedSpikeFarSide extends LinearOpMode {
                         sleep(1000);
 
                         Trajectory backOne = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
-                                .lineToLinearHeading(new Pose2d(28, 0, Math.toRadians(-90)))
+                                .lineToLinearHeading(new Pose2d(28, 0, Math.toRadians(90)))
                                 .build();
 
                         sampleMecanumDrive.followTrajectoryAsync(backOne);
@@ -175,6 +171,7 @@ public class RedSpikeFarSide extends LinearOpMode {
                         currentState = State.IDLE;
                     }
                     break;
+
 
                 // Path series 2
                 case FORWARD_2:
@@ -199,7 +196,7 @@ public class RedSpikeFarSide extends LinearOpMode {
                     break;
                 case BACKING_UP_2:
                     if (!sampleMecanumDrive.isBusy()) {
-                        sampleMecanumDrive.turnAsync(Math.toRadians(-90));
+                        sampleMecanumDrive.turnAsync(Math.toRadians(90));
 
                         currentState = State.IDLE;
                     }
@@ -211,20 +208,6 @@ public class RedSpikeFarSide extends LinearOpMode {
                         outtake.setPosition(Constants.OUTTAKE_NEUTRAL);
                         claw.setPosition(Constants.CLAW_OPEN);
                         sleep(1000);
-
-                        TrajectorySequence forwardThreeToBackdropThree = sampleMecanumDrive.trajectorySequenceBuilder(sampleMecanumDrive.getPoseEstimate())
-                                .lineToLinearHeading(new Pose2d(28, 0, Math.toRadians(90)))
-                                .lineToLinearHeading(new Pose2d(28+23.5, 0, Math.toRadians(90)))
-                                .addSpatialMarker(new Vector2d(28+23.5, 0), () -> outtake.setPosition(Constants.OUTTAKE_LOWERED))
-                                .lineToLinearHeading(new Pose2d(28+23.5, -38-47, Math.toRadians(90)))
-                                .addSpatialMarker(new Vector2d(28+23.5, -23), () -> outtake.setPosition(Constants.OUTTAKE_NEUTRAL))
-                                .lineToLinearHeading(new Pose2d(24, -38-47, Math.toRadians(90)))
-                                .lineToLinearHeading(new Pose2d(24, -43-47, Math.toRadians(90)))
-                                .lineToLinearHeading(new Pose2d(31.5, -43-47, Math.toRadians(90)))
-                                .lineToLinearHeading(new Pose2d(32, -43.5-47, Math.toRadians(90)))
-                                .build();
-
-                        sampleMecanumDrive.followTrajectorySequenceAsync(forwardThreeToBackdropThree);
 
                         currentState = State.IDLE;
                     }

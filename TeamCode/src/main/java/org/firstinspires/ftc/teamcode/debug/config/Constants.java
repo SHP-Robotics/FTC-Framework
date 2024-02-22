@@ -41,6 +41,21 @@ public final class Constants {
 
     public static final double MINIMUM_VOLTAGE_APPLIED = 0.0654;
 
+    // Outtake
+    public static final double OUTTAKE_STARTING = 0.9;
+    public static final double OUTTAKE_NEUTRAL = 0.66;
+    public static final double OUTTAKE_LOWERED = 0.58;
+    public static final double OUTTAKE_ACTIVE = 0.51;
+    public static final double OUTTAKE_HIDDEN = 0.28;
+
+    // Claw
+    public static final double CLAW_OPEN = 0.345;
+    public static final double CLAW_CLOSE = 0.4;
+
+    // Airplane
+    public static final double AIRPLANE_RELEASE = 0.07;
+    public static final double AIRPLANE_HOLD = 0.41152;
+
     public static double setToDomain(double x, double begin, double end) {
         double length = end - begin;
         while (x < begin) {
