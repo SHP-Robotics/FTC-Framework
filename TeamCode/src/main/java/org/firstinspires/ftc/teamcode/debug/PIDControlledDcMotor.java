@@ -28,8 +28,7 @@ public class PIDControlledDcMotor extends DcMotorImplEx {
         return Math.min(Math.max(-1, power), 1);
     }
 
-    public void setPower(double targetPosition, double currentPosition) {
-        double error = targetPosition - currentPosition;
+    public void setPower(double error) {
         double time = elapsedTime.seconds();
         double dError = lastError - error;
         double dTime = lastTime - time;

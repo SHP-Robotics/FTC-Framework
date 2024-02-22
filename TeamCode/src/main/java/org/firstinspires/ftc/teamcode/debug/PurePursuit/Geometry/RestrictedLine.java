@@ -1,17 +1,14 @@
 package org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry;
 
-public class RestrictedLine {
-    private Position2D p1;
-    private Position2D p2;
+public class RestrictedLine extends GeometricShape {
+    private final Position2D p1;
+    private final Position2D p2;
+    private final double heading;
 
     public RestrictedLine(Position2D p1, Position2D p2) {
         this.p1 = p1;
         this.p2 = p2;
-    }
-
-    public RestrictedLine(double x1, double y1, double x2, double y2) {
-        this.p1 = new Position2D(x1, y1, 0);
-        this.p2 = new Position2D(x2, y2, 0);
+        this.heading = p1.getHeadingRadians();
     }
 
     public Position2D getP1() {
@@ -20,6 +17,10 @@ public class RestrictedLine {
 
     public Position2D getP2() {
         return this.p2;
+    }
+
+    public Position2D getEndpoint() {
+        return this.getP2();
     }
 
     public double getM() {
@@ -32,6 +33,10 @@ public class RestrictedLine {
 
     public boolean inDomain(Position2D position2D) {
         return p1.getX() <= position2D.getX() && position2D.getX() <= p2.getX();
+    }
+
+    static double sgn(double x) {
+        return x < 0 ? -1: 1;
     }
 
     public static Position2D lineIntersection(RestrictedLine line1, RestrictedLine line2) {
@@ -50,7 +55,93 @@ public class RestrictedLine {
         return new Position2D(
                 (b2-b1)/(m1-m2),
                 m1*((b2-b1)/(m1-m2))+b1,
-                0
+                (line1.heading+line2.heading)/2
+        );
+    }
+
+    public Position2D[] circleIntersections(RestrictedCircle restrictedCircle) {
+
+        Position2D[] furthestIntersections = new Position2D[2];
+
+        double shiftRight = restrictedCircle.getOffset().getX();
+        double shiftUp = restrictedCircle.getOffset().getY();
+
+        double x1 = this.getP1().getX() - shiftRight;
+        double y1 = this.getP1().getY() - shiftUp;
+
+        double x2 = this.getP2().getX() - shiftRight;
+        double y2 = this.getP2().getY() - shiftUp;
+
+        if (x1 == x2) {
+            if (restrictedCircle.checkInCirclePositive(x1)) {
+                furthestIntersections[0] = new Position2D(
+                        x1 + shiftRight,
+                        restrictedCircle.plugCirclePositive(x1) + shiftUp,
+                        this.heading
+                );
+            }
+
+            if (restrictedCircle.checkInCircleNegative(x1)) {
+                furthestIntersections[1] = new Position2D(
+                        x1 + shiftRight,
+                        restrictedCircle.plugCircleNegative(x1) + shiftUp,
+                        this.heading
+                );
+            }
+
+            return furthestIntersections;
+        }
+
+        double dx = x2 - x1;
+        double dy = y2 - y1;
+        double dr = Math.sqrt(dx * dx + dy * dy);
+        double d = x1 * y2 - x2 * y1;
+
+        double discriminant = restrictedCircle.getRadius() * restrictedCircle.getRadius() * dr * dr - d * d;
+
+        if (discriminant == 0) {
+            double solutionX = (d*dy) / (dr*dr);
+            double solutionY = (-d*dx) / (dr*dr);
+
+            furthestIntersections[0] = new Position2D(
+                    solutionX,
+                    solutionY,
+                    this.heading
+            );
+
+            furthestIntersections[1] = null;
+
+        } else if (discriminant > 0) {
+            double solutionX1 = (d * dy + sgn(dy) * dx * Math.sqrt(discriminant)) / (dr * dr);
+            double solutionX2 = (d * dy - sgn(dy) * dx * Math.sqrt(discriminant)) / (dr * dr);
+
+            double solutionY1 = (-d*dx + Math.abs(dy)*Math.sqrt(discriminant)) / (dr*dr);
+            double solutionY2 = (-d*dx - Math.abs(dy)*Math.sqrt(discriminant)) / (dr*dr);
+
+            furthestIntersections[0] = new Position2D(
+                    solutionX1 + shiftRight,
+                    solutionY1 + shiftUp,
+                    this.heading
+            );
+
+            furthestIntersections[1] = new Position2D(
+                    solutionX2 + shiftRight,
+                    solutionY2 + shiftUp,
+                    this.heading
+            );
+        }
+
+        return furthestIntersections;
+    }
+
+    public Position2D getEndpoint(RestrictedCircle followingCircle) {
+        double percentClose = followingCircle.getOffset().dist(this.getEndpoint()) / followingCircle.getRadius();
+        double dist = (this.p2.getHeadingRadians()-followingCircle.getOffset().getHeadingRadians());
+
+        return new Position2D(
+                this.p2.getX(),
+                this.p2.getY(),
+                (dist * percentClose) + followingCircle.getOffset().getHeadingRadians()
         );
     }
 }
