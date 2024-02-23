@@ -5,45 +5,50 @@ import static org.firstinspires.ftc.teamcode.debug.config.Constants.leftRearDire
 import static org.firstinspires.ftc.teamcode.debug.config.Constants.rightFrontDirection;
 import static org.firstinspires.ftc.teamcode.debug.config.Constants.rightRearDirection;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.debug.AccumulationControlledDcMotor;
+import org.firstinspires.ftc.teamcode.debug.MecanumController;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Position2D;
-import org.firstinspires.ftc.teamcode.debug.RobotController;
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
 
-public class SimulatedMecanumController extends RobotController {
-    public SimulatedDcMotor leftFront;
-    public SimulatedDcMotor rightFront;
-    public SimulatedDcMotor leftRear;
-    public SimulatedDcMotor rightRear;
-
-    public void setMotorsRunMode(DcMotor.RunMode runMode) {
-        leftFront.setMode(runMode);
-        rightFront.setMode(runMode);
-        leftRear.setMode(runMode);
-        rightRear.setMode(runMode);
-    }
-
-    public void setZeroPowerBehavior(DcMotor.ZeroPowerBehavior zeroPowerBehavior) {
-        leftFront.setZeroPowerBehavior(zeroPowerBehavior);
-        rightFront.setZeroPowerBehavior(zeroPowerBehavior);
-        leftRear.setZeroPowerBehavior(zeroPowerBehavior);
-        rightRear.setZeroPowerBehavior(zeroPowerBehavior);
-    }
+public class SimulatedMecanumController extends MecanumController {
+    private double lastTime = -1;
+    private final ElapsedTime elapsedTime;
 
     public SimulatedMecanumController(HardwareMap hardwareMap) {
-        // TODO: Set name
-        this.leftFront = new SimulatedDcMotor((DcMotor) hardwareMap.get("leftFront"), 1);
-        this.rightFront = new SimulatedDcMotor((DcMotor) hardwareMap.get("rightFront"), 1);
-        this.leftRear = new SimulatedDcMotor((DcMotor) hardwareMap.get("leftRear"), 1);
-        this.rightRear = new SimulatedDcMotor((DcMotor) hardwareMap.get("rightRear"), 1);
+        super(hardwareMap);
+
+        this.leftFront = new AccumulationControlledDcMotor.AccumulationControlledDcMotorBuilder(this.leftFront)
+                .setkP((Constants.leftFrontPower*0.7)/Constants.MAX_VELOCITY)
+//                .setkP(1)
+                .setGamma(0)
+                .build();
+        this.rightFront = new AccumulationControlledDcMotor.AccumulationControlledDcMotorBuilder(this.rightFront)
+                .setkP((Constants.rightFrontPower*0.7)/Constants.MAX_VELOCITY)
+//                .setkP(1)
+                .setGamma(0)
+                .build();
+        this.leftRear = new AccumulationControlledDcMotor.AccumulationControlledDcMotorBuilder(this.leftRear)
+                .setkP((Constants.leftRearPower*0.7)/Constants.MAX_VELOCITY)
+//                .setkP(1)
+                .setGamma(0)
+                .build();
+        this.rightRear = new AccumulationControlledDcMotor.AccumulationControlledDcMotorBuilder(this.rightRear)
+                .setkP((Constants.rightRearPower*0.7)/Constants.MAX_VELOCITY)
+//                .setkP(1)
+                .setGamma(0)
+                .build();
 
         // TODO: Set direction
         this.leftFront.setDirection(leftFrontDirection.inverted());
         this.rightFront.setDirection(rightFrontDirection.inverted());
         this.leftRear.setDirection(leftRearDirection.inverted());
         this.rightRear.setDirection(rightRearDirection);
+
+        this.elapsedTime = new ElapsedTime();
+        this.elapsedTime.reset();
     }
 
     public void driveParams(double x, double y, double r) {
@@ -52,16 +57,35 @@ public class SimulatedMecanumController extends RobotController {
         double leftRearPower = y - x + r;
         double rightRearPower = y + x - r;
 
-        double max = Math.max(Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower)), Math.max(Math.abs(leftRearPower), Math.abs(rightRearPower)));
+        double[] velocities = new double[]{
+                Math.abs(leftFrontPower),
+                Math.abs(rightFrontPower),
+                Math.abs(leftRearPower),
+                Math.abs(rightRearPower)
+        };
 
-        if (max < 1) {
-            max = 1;
-        }
+        double max = VelocityApproximator.getMaxVelocity(velocities);
 
-        leftFront.setPower(leftFrontPower * Constants.leftFrontPower / max);
-        rightFront.setPower(rightFrontPower * Constants.rightFrontPower / max);
-        leftRear.setPower(leftRearPower * Constants.leftRearPower / max);
-        rightRear.setPower(rightRearPower * Constants.rightRearPower / max);
+//        if (max < 1) {
+//            max = 1;
+//        }
+//
+//        double min = VelocityApproximator.getBottleneck(velocities);
+//
+//        double multiplier = 1;
+//        if (max != 0 && max - min > 0.2) {
+//            multiplier = min/max;
+//        }
+//
+//        this.leftFront.setPower(leftFrontPower * Constants.leftFrontPower * multiplier);
+//        this.rightFront.setPower(rightFrontPower * Constants.rightFrontPower * multiplier);
+//        this.leftRear.setPower(leftRearPower * Constants.leftRearPower * multiplier);
+//        this.rightRear.setPower(rightRearPower * Constants.rightRearPower * multiplier);
+//
+        this.leftFront.setPower(leftFrontPower * Constants.leftFrontPower / max);
+        this.rightFront.setPower(rightFrontPower * Constants.rightFrontPower / max);
+        this.leftRear.setPower(leftRearPower * Constants.leftRearPower / max);
+        this.rightRear.setPower(rightRearPower * Constants.rightRearPower / max);
     }
 
     public void driveFieldParams(double x, double y, double r, double gyro) {
@@ -73,47 +97,46 @@ public class SimulatedMecanumController extends RobotController {
         double leftRearPower = yOriented - xOriented + r;
         double rightRearPower = yOriented + xOriented - r;
 
-        double max = Math.max(Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower)), Math.max(Math.abs(leftRearPower), Math.abs(rightRearPower)));
+        double[] velocities = new double[]{
+                Math.abs(leftFrontPower),
+                Math.abs(rightFrontPower),
+                Math.abs(leftRearPower),
+                Math.abs(rightRearPower)
+        };
 
-        if (max < 1) {
-            max = 1;
-        }
+        double max = VelocityApproximator.getMaxVelocity(velocities);
 
-        leftFront.setPower(leftFrontPower * Constants.leftFrontPower / max);
-        rightFront.setPower(rightFrontPower * Constants.rightFrontPower / max);
-        leftRear.setPower(leftRearPower * Constants.leftRearPower / max);
-        rightRear.setPower(rightRearPower * Constants.rightRearPower / max);
+//        if (max < 1) {
+//            max = 1;
+//        }
+
+//        double min = VelocityApproximator.getBottleneck(velocities);
+//
+//        double multiplier = 1;
+//        if (max != 0 && max - min > 0.2) {
+//            multiplier = min/max;
+//        }
+//
+//        this.leftFront.setPower(leftFrontPower * Constants.leftFrontPower * multiplier);
+//        this.rightFront.setPower(rightFrontPower * Constants.rightFrontPower * multiplier);
+//        this.leftRear.setPower(leftRearPower * Constants.leftRearPower * multiplier);
+//        this.rightRear.setPower(rightRearPower * Constants.rightRearPower * multiplier);
+//
+        this.leftFront.setPower(leftFrontPower * Constants.leftFrontPower / max);
+        this.rightFront.setPower(rightFrontPower * Constants.rightFrontPower / max);
+        this.leftRear.setPower(leftRearPower * Constants.leftRearPower / max);
+        this.rightRear.setPower(rightRearPower * Constants.rightRearPower / max);
     }
 
     public void simulateEncoders(Position2D deltaPosition) {
-        double x = deltaPosition.getX();
-        double y = deltaPosition.getY();
-        double r = deltaPosition.getHeadingRadians() * Constants.MECANUM_WIDTH / 2;
-        double realMax = Math.max(Math.abs(leftFront.getLastOutput()), Math.max(Math.abs(rightFront.getLastOutput()),
-                Math.max(Math.abs(leftRear.getLastOutput()), Math.abs(rightRear.getLastOutput()))));
+        if (this.lastTime != -1) {
+            double[] approximatedVelocities = VelocityApproximator.getVelocities(deltaPosition, this.lastTime - this.elapsedTime.seconds());
 
-        if (realMax < 1) {
-            realMax = 1;
+            ((AccumulationControlledDcMotor)this.leftFront).setCurrentVelocity(approximatedVelocities[0]);
+            ((AccumulationControlledDcMotor)this.rightFront).setCurrentVelocity(approximatedVelocities[1]);
+            ((AccumulationControlledDcMotor)this.leftRear).setCurrentVelocity(approximatedVelocities[2]);
+            ((AccumulationControlledDcMotor)this.rightRear).setCurrentVelocity(approximatedVelocities[3]);
         }
-
-        leftFront.setLastVelocity((y + x + r) / realMax);
-        rightFront.setLastVelocity((y - x - r) / realMax);
-        leftRear.setLastVelocity((y - x + r) / realMax);
-        rightRear.setLastVelocity((y + x - r) / realMax);
-    }
-
-    public boolean isBusy() {
-        return leftFront.isBusy() || rightFront.isBusy() || leftRear.isBusy() || rightRear.isBusy();
-    }
-
-    public void waitUntilCompletion() {
-        while (isBusy()) {}
-    }
-
-    public void deactivate() {
-        leftFront.setPower(0);
-        rightFront.setPower(0);
-        leftRear.setPower(0);
-        rightRear.setPower(0);
+        this.lastTime = this.elapsedTime.seconds();
     }
 }

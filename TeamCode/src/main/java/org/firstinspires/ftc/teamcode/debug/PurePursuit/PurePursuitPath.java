@@ -17,8 +17,6 @@ public class PurePursuitPath {
     public final ArrayList<Double> admissibleXYErrors;
     public final ArrayList<Double> admissibleRotationalErrors;
 
-    Position2D lastPosition;
-
     private int currentGeometry = 0;
 
     private final double followRadius;
@@ -38,8 +36,6 @@ public class PurePursuitPath {
         this.geometries = purePursuitPathBuilder.geometries;
         this.admissibleXYErrors = purePursuitPathBuilder.admissibleXYErrors;
         this.admissibleRotationalErrors = purePursuitPathBuilder.admissibleRotationalErrors;
-
-        this.lastPosition = purePursuitPathBuilder.lastPosition;
 
         this.followRadius = purePursuitPathBuilder.followRadius;
         this.positionBuffer = purePursuitPathBuilder.positionBuffer;
@@ -136,8 +132,9 @@ public class PurePursuitPath {
     public void update() {
         if (this.isFollowing && !this.isFinished()) {
             this.purePursuitFollower.updateOdometry();
+            Position2D currentPosition = this.purePursuitFollower.getCurrentPosition();
 
-            Position2D optimalIntersection = getOptimalIntersection(this.purePursuitFollower.getCurrentPosition());
+            Position2D optimalIntersection = getOptimalIntersection(currentPosition);
 
             if (optimalIntersection == null) {
                 this.robotController.deactivate();
@@ -145,10 +142,22 @@ public class PurePursuitPath {
                 return;
             }
 
-            double differenceX = optimalIntersection.getX() - this.purePursuitFollower.getCurrentPosition().getX();
-            double differenceY = optimalIntersection.getY() - this.purePursuitFollower.getCurrentPosition().getY();
-            double differenceHeading = -MathUtils.normalizeAngle(optimalIntersection.getHeadingRadians() - this.purePursuitFollower.getCurrentPosition().getHeadingRadians(), 0);
+            double differenceX = optimalIntersection.getX() - currentPosition.getX();
+            double differenceY = optimalIntersection.getY() - currentPosition.getY();
+            double differenceHeading = -MathUtils.normalizeAngle(optimalIntersection.getHeadingRadians() - currentPosition.getHeadingRadians(), 0);
             differenceHeading *= Constants.MECANUM_WIDTH / 2;
+
+            Position2D a = new Position2D(differenceX, differenceY, differenceHeading);
+            Position2D b = purePursuitFollower.getRobotDeltaPosition();
+
+            // TODO: pat Theo on the back
+            // BIG BRAIN?!
+            if (Math.abs(Math.cosh( ((a.getX()*b.getX()) + (a.getY()*b.getY())) / (a.getMagnitude() * b.getMagnitude()) )) > Math.toRadians(1)) {
+                Position2D optimalVelocity = VelocityApproximator.getScaledTargetVelocity(a, b);
+                differenceX = optimalVelocity.getX();
+                differenceY = optimalVelocity.getY();
+                differenceHeading = optimalVelocity.getHeadingRadians();
+            }
 
             double max = Math.abs(differenceX) + Math.abs(differenceY) + Math.abs(differenceHeading);
 
@@ -174,11 +183,10 @@ public class PurePursuitPath {
             double r = differenceHeading / max;
 
             if (this.robotController instanceof SimulatedMecanumController) {
-                ((SimulatedMecanumController)this.robotController).simulateEncoders(Position2D.add(purePursuitFollower.getCurrentPosition(), lastPosition.getNegative()));
+                ((SimulatedMecanumController)this.robotController).simulateEncoders(this.purePursuitFollower.getRobotDeltaPosition());
             }
 
             this.robotController.driveFieldParams(x * driveSpeed, y * driveSpeed, r * driveSpeed, purePursuitFollower.getCurrentPosition().getHeadingRadians());
-            lastPosition = purePursuitFollower.getCurrentPosition();
         } else {
             if (robotController != null) {
                 this.robotController.deactivate();
@@ -215,9 +223,9 @@ public class PurePursuitPath {
     }
 
     public static class PurePursuitPathBuilder {
-        private ArrayList<GeometricShape> geometries;
-        private ArrayList<Double> admissibleXYErrors;
-        private ArrayList<Double> admissibleRotationalErrors;
+        private final ArrayList<GeometricShape> geometries;
+        private final ArrayList<Double> admissibleXYErrors;
+        private final ArrayList<Double> admissibleRotationalErrors;
         private Position2D lastPosition;
 
         private double followRadius;
