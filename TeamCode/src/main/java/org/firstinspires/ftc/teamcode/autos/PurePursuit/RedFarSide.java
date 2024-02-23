@@ -55,6 +55,8 @@ public class RedFarSide extends BaseAuto {
                 .addAction(() -> outtake.setPosition(Constants.OUTTAKE_HIDDEN))
                 .moveTo(new Position2D(44+60, 10, Math.toRadians(180)))
                 .moveTo(new Position2D(52+60, 10, Math.toRadians(180)))
+
+                .enableRetrace()
                 .build();
         PurePursuitPath path2 = new PurePursuitPath.PurePursuitPathBuilder()
                 .addAction(() -> {
@@ -89,6 +91,8 @@ public class RedFarSide extends BaseAuto {
                 .addAction(() -> outtake.setPosition(Constants.OUTTAKE_HIDDEN))
                 .moveTo(new Position2D(44+48, 10, Math.toRadians(180)))
                 .moveTo(new Position2D(52+48, 10, Math.toRadians(180)))
+
+                .enableRetrace()
                 .build();
         PurePursuitPath path3 = new PurePursuitPath.PurePursuitPathBuilder()
                 .addAction(() -> {
@@ -121,6 +125,8 @@ public class RedFarSide extends BaseAuto {
                 .addAction(() -> outtake.setPosition(Constants.OUTTAKE_HIDDEN))
                 .moveTo(new Position2D(44+60, 10, Math.toRadians(180)))
                 .moveTo(new Position2D(52+60, 10, Math.toRadians(180)))
+
+                .enableRetrace()
                 .build();
 
         super.runOpMode();
@@ -143,6 +149,24 @@ public class RedFarSide extends BaseAuto {
             telemetry.addData("x", purePursuitFollower.getCurrentPosition().getX());
             telemetry.addData("y", purePursuitFollower.getCurrentPosition().getY());
             telemetry.addData("r", purePursuitFollower.getCurrentPosition().getHeadingRadians());
+            telemetry.addLine();
+            telemetry.addData("finished", path.isFinished());
+            telemetry.addData("failed", path.failed());
+            telemetry.addLine();
+            telemetry.addData("power", mecanumController.motors[0].getPower());
+            telemetry.addData("power", mecanumController.motors[1].getPower());
+            telemetry.addData("power", mecanumController.motors[2].getPower());
+            telemetry.addData("power", mecanumController.motors[3].getPower());
+            telemetry.addLine();
+            telemetry.addData("target", path.targetVelocities[0]);
+            telemetry.addData("target", path.targetVelocities[1]);
+            telemetry.addData("target", path.targetVelocities[2]);
+            telemetry.addData("target", path.targetVelocities[3]);
+            telemetry.addLine();
+            telemetry.addData("current", path.currentVelocities[0]);
+            telemetry.addData("current", path.currentVelocities[1]);
+            telemetry.addData("current", path.currentVelocities[2]);
+            telemetry.addData("current", path.currentVelocities[3]);
             telemetry.update();
         }
 

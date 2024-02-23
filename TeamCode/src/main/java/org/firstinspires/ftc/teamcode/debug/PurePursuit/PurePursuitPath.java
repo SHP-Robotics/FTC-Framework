@@ -30,6 +30,9 @@ public class PurePursuitPath {
     private final double minimumTanh;
     private final double maximumTanh;
 
+    private boolean retrace;
+    private Position2D lastIntersection;
+
     private boolean isFollowing = false;
     private boolean failed = false;
     private PurePursuitFollower purePursuitFollower;
@@ -37,9 +40,8 @@ public class PurePursuitPath {
 
     public double[] targetVelocities;
     public double[] currentVelocities;
-    public double[] bottlenecks = null;
 
-    private ElapsedTime elapsedTime;
+    private final ElapsedTime elapsedTime;
     private double lastTime;
 
     public PurePursuitPath(PurePursuitPathBuilder purePursuitPathBuilder) {
@@ -55,6 +57,9 @@ public class PurePursuitPath {
         this.tanhPace = purePursuitPathBuilder.tanhPace;
         this.minimumTanh = purePursuitPathBuilder.minimumTanh;
         this.maximumTanh = purePursuitPathBuilder.maximumTanh;
+
+        this.retrace = purePursuitPathBuilder.retrace;
+        this.lastIntersection = purePursuitPathBuilder.startPosition;
 
         elapsedTime = new ElapsedTime();
         lastTime = -1;
@@ -151,10 +156,16 @@ public class PurePursuitPath {
             Position2D optimalIntersection = getOptimalIntersection(currentPosition);
 
             if (optimalIntersection == null) {
-                this.robotController.deactivate();
-                failed = true;
-                return;
+                if (retrace) {
+                    optimalIntersection = this.lastIntersection;
+                } else {
+                    this.robotController.deactivate();
+                    failed = true;
+                    return;
+                }
             }
+
+            this.lastIntersection = optimalIntersection;
 
             double differenceX = optimalIntersection.getX() - currentPosition.getX();
             double differenceY = optimalIntersection.getY() - currentPosition.getY();
@@ -253,6 +264,7 @@ public class PurePursuitPath {
         private final ArrayList<Double> admissibleXYErrors;
         private final ArrayList<Double> admissibleRotationalErrors;
         private final ArrayList<Double> timeouts;
+        private Position2D startPosition;
         private Position2D lastPosition;
 
         private double followRadius;
@@ -263,12 +275,15 @@ public class PurePursuitPath {
         private double minimumTanh;
         private double maximumTanh;
 
-        public PurePursuitPathBuilder() {
-            geometries = new ArrayList<>();
-            admissibleXYErrors = new ArrayList<>();
-            admissibleRotationalErrors = new ArrayList<>();
-            timeouts = new ArrayList<>();
-            lastPosition = new Position2D(0, 0, Math.toRadians(90));
+        private boolean retrace;
+
+        public PurePursuitPathBuilder(Position2D startPosition) {
+            this.geometries = new ArrayList<>();
+            this.admissibleXYErrors = new ArrayList<>();
+            this.admissibleRotationalErrors = new ArrayList<>();
+            this.timeouts = new ArrayList<>();
+            this.startPosition = startPosition;
+            this.lastPosition = startPosition;
 
             this.followRadius = Constants.followRadius;
             this.positionBuffer = Constants.positionBuffer;
@@ -277,6 +292,27 @@ public class PurePursuitPath {
             this.tanhPace = Constants.tanhPace;
             this.minimumTanh = Constants.minimumTanh;
             this.maximumTanh = Constants.maximumTanh;
+
+            this.retrace = false;
+        }
+
+        public PurePursuitPathBuilder() {
+            this.geometries = new ArrayList<>();
+            this.admissibleXYErrors = new ArrayList<>();
+            this.admissibleRotationalErrors = new ArrayList<>();
+            this.timeouts = new ArrayList<>();
+            this.startPosition = new Position2D(0, 0, Math.toRadians(90));
+            this.lastPosition = new Position2D(0, 0, Math.toRadians(90));
+
+            this.followRadius = Constants.followRadius;
+            this.positionBuffer = Constants.positionBuffer;
+            this.rotationBuffer = Constants.rotationBuffer;
+
+            this.tanhPace = Constants.tanhPace;
+            this.minimumTanh = Constants.minimumTanh;
+            this.maximumTanh = Constants.maximumTanh;
+
+            this.retrace = false;
         }
 
         public PurePursuitPathBuilder moveTo(Position2D position2D, double admissibleXYError, double admissibleRotationalError) {
@@ -381,6 +417,16 @@ public class PurePursuitPath {
             this.tanhPace = tanhPace;
             this.minimumTanh = minimumTanh;
             this.maximumTanh = maximumTanh;
+            return this;
+        }
+
+        public PurePursuitPathBuilder disableRetrace() {
+            this.retrace = false;
+            return this;
+        }
+
+        public PurePursuitPathBuilder enableRetrace() {
+            this.retrace = true;
             return this;
         }
 

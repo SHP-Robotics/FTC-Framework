@@ -63,11 +63,6 @@ public class PurePursuitTesting extends LinearOpMode {
             telemetry.addData("lr", mecanumController.motors[2].getVelocity());
             telemetry.addData("rr", mecanumController.motors[3].getVelocity());
             telemetry.addLine();
-            telemetry.addData("bottlenecks", path.bottlenecks[0]);
-            telemetry.addData("bottlenecks", path.bottlenecks[1]);
-            telemetry.addData("bottlenecks", path.bottlenecks[2]);
-            telemetry.addData("bottlenecks", path.bottlenecks[3]);
-            telemetry.addLine();
             telemetry.addData("target", path.targetVelocities[0]);
             telemetry.addData("target", path.targetVelocities[1]);
             telemetry.addData("target", path.targetVelocities[2]);

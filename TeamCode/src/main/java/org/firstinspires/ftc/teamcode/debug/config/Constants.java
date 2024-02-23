@@ -12,7 +12,7 @@ public final class Constants {
     public static double FORWARD_OFFSET = -0.0294066; // Cancels out rotation causing movement on the x-axis after rotations **
     public static double MAX_VELOCITY = 131; // **
 
-    public static final double followRadius = 2; // Follow radius *
+    public static final double followRadius = 3; // Follow radius *
     public static final double headingCorrected = Math.toRadians(1); // in radians, maximum acceptable directional error *
     public static final double positionBuffer = 0.5; // Default positional error admitted *
     public static final double rotationBuffer = Math.toRadians(5); // Default rotational error admitted *
