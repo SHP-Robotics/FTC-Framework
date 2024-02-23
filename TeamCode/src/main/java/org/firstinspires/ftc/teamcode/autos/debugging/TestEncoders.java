@@ -19,10 +19,10 @@ public class TestEncoders extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            telemetry.addData("front Left Encoder", mecanumController.leftFront.getCurrentPosition());
-            telemetry.addData("front Right Encoder", mecanumController.rightFront.getCurrentPosition());
-            telemetry.addData("rear Left Encoder", mecanumController.leftRear.getCurrentPosition());
-            telemetry.addData("rear Right Encoder", mecanumController.rightRear.getCurrentPosition());
+            telemetry.addData("front Left Encoder", mecanumController.motors[0].getCurrentPosition());
+            telemetry.addData("front Right Encoder", mecanumController.motors[1].getCurrentPosition());
+            telemetry.addData("rear Left Encoder", mecanumController.motors[2].getCurrentPosition());
+            telemetry.addData("rear Right Encoder", mecanumController.motors[3].getCurrentPosition());
             telemetry.update();
         }
     }

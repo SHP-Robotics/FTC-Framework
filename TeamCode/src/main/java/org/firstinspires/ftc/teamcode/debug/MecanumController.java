@@ -17,10 +17,7 @@ import org.firstinspires.ftc.teamcode.debug.config.Constants;
 import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
 
 public class MecanumController extends RobotController {
-    public DcMotorEx leftFront;
-    public DcMotorEx rightFront;
-    public DcMotorEx leftRear;
-    public DcMotorEx rightRear;
+    public DcMotorEx[] motors;
 
     public IMU imu;
     protected double imuAngleOffset = 0;
@@ -36,24 +33,24 @@ public class MecanumController extends RobotController {
     private double positionY = 0;
 
     public void setMotorsRunMode(DcMotor.RunMode runMode) {
-        leftFront.setMode(runMode);
-        rightFront.setMode(runMode);
-        leftRear.setMode(runMode);
-        rightRear.setMode(runMode);
+        for (DcMotorEx motor: motors) {
+            motor.setMode(runMode);
+        }
     }
 
     public void setZeroPowerBehavior(DcMotor.ZeroPowerBehavior zeroPowerBehavior) {
-        leftFront.setZeroPowerBehavior(zeroPowerBehavior);
-        rightFront.setZeroPowerBehavior(zeroPowerBehavior);
-        leftRear.setZeroPowerBehavior(zeroPowerBehavior);
-        rightRear.setZeroPowerBehavior(zeroPowerBehavior);
+        for (DcMotorEx motor: motors) {
+            motor.setZeroPowerBehavior(zeroPowerBehavior);
+        }
     }
 
     public MecanumController(DcMotorEx leftFront, DcMotorEx rightFront, DcMotorEx leftRear, DcMotorEx rightRear, IMU imu) {
-        this.leftFront = leftFront;
-        this.rightFront = rightFront;
-        this.leftRear = leftRear;
-        this.rightRear = rightRear;
+        this.motors = new DcMotorEx[]{
+                leftFront,
+                rightFront,
+                leftRear,
+                rightRear
+        };
 
         this.imu = imu;
 
@@ -63,16 +60,18 @@ public class MecanumController extends RobotController {
 
     public MecanumController(HardwareMap hardwareMap) {
         // TODO: Set name
-        this.leftFront = (DcMotorEx) hardwareMap.get("leftFront");
-        this.rightFront = (DcMotorEx) hardwareMap.get("rightFront");
-        this.leftRear = (DcMotorEx) hardwareMap.get("leftRear");
-        this.rightRear = (DcMotorEx) hardwareMap.get("rightRear");
+        this.motors = new DcMotorEx[]{
+                (DcMotorEx) hardwareMap.get("leftFront"),
+                (DcMotorEx) hardwareMap.get("rightFront"),
+                (DcMotorEx) hardwareMap.get("leftRear"),
+                (DcMotorEx) hardwareMap.get("rightRear")
+        };
 
         // TODO: Set direction
-        this.leftFront.setDirection(leftFrontDirection);
-        this.rightFront.setDirection(rightFrontDirection);
-        this.leftRear.setDirection(leftRearDirection);
-        this.rightRear.setDirection(rightRearDirection);
+        this.motors[0].setDirection(leftFrontDirection);
+        this.motors[1].setDirection(rightFrontDirection);
+        this.motors[2].setDirection(leftRearDirection);
+        this.motors[3].setDirection(rightRearDirection);
 
         // TODO: Set name
         this.imu = (IMU) hardwareMap.get("imu");
@@ -118,29 +117,54 @@ public class MecanumController extends RobotController {
         return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) + imuAngleOffset;
     }
 
-    public void drive(Gamepad gamepad) {
-        double x = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.STRAFE_RIGHT);
-        double y = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.STRAFE_UP);
-        double r = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.ROTATE_RIGHT);
+    public void driveParams(double x, double y, double r, double[] bottleneckSpeeds) {
+        double[] powers = new double[]{
+                y + x + r,
+                y - x - r,
+                y - x + r,
+                y + x - r
+        };
 
-        double leftFrontPower = y + x + r;
-        double rightFrontPower = y - x - r;
-        double leftRearPower = y - x + r;
-        double rightRearPower = y + x - r;
-
-        double max = Math.max(Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower)), Math.max(Math.abs(leftRearPower), Math.abs(rightRearPower)));
-
-        speedController.updateSpeed(gamepad, max);
-        this.driveSpeed = speedController.getSpeed();
+        double max = 0;
+        for (double power: powers) {
+            if (Math.abs(power) > max) {
+                max = Math.abs(power);
+            }
+        }
 
         if (max < 1) {
             max = 1;
         }
 
-        leftFront.setPower(leftFrontPower * Constants.leftFrontPower * driveSpeed / max);
-        rightFront.setPower(rightFrontPower * Constants.rightFrontPower * driveSpeed / max);
-        leftRear.setPower(leftRearPower * Constants.leftRearPower * driveSpeed / max);
-        rightRear.setPower(rightRearPower * Constants.rightRearPower * driveSpeed / max);
+        for (int i = 0; i < 4; i++) {
+            this.motors[i].setPower(powers[i] * Constants.powers[i] * driveSpeed * bottleneckSpeeds[i] / max);
+        }
+    }
+
+    public void driveParams(double x, double y, double r) {
+        this.driveParams(x, y, r, new double[]{1, 1, 1, 1});
+    }
+
+    public void drive(Gamepad gamepad) {
+        double x = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.STRAFE_RIGHT);
+        double y = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.STRAFE_UP);
+        double r = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.ROTATE_RIGHT);
+
+        speedController.updateSpeed(gamepad);
+        this.driveSpeed = speedController.getSpeed();
+
+        this.driveParams(x, y, r);
+    }
+
+    public void driveFieldParams(double x, double y, double r, double gyro, double[] bottleneckSpeeds) {
+        double xOriented = (Math.sin(gyro) * x) - (Math.cos(gyro) * y);
+        double yOriented = (Math.sin(gyro) * y) + (Math.cos(gyro) * x);
+
+        this.driveParams(xOriented, yOriented, r, bottleneckSpeeds);
+    }
+
+    public void driveFieldParams(double x, double y, double r, double gyro) {
+        this.driveFieldParams(x, y, r, gyro, new double[]{1, 1, 1, 1});
     }
 
     public void fieldOrientedDrive(Gamepad gamepad) {
@@ -148,82 +172,30 @@ public class MecanumController extends RobotController {
         double y = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.STRAFE_UP);
         double r = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.ROTATE_RIGHT);
 
-        // cos * y = how much right if gamepad forward
-        // cos * x = how much right if gamepad right
-        // sin * y = how much forward if gamepad forward
-        // sin * x = how much forward if gamepad right
-        double xOriented = (Math.sin(getCalibratedIMUAngle()) * x) + (Math.cos(getCalibratedIMUAngle()) * y);
-        double yOriented = (Math.sin(getCalibratedIMUAngle()) * y) - (Math.cos(getCalibratedIMUAngle()) * x);
-
-        double leftFrontPower = yOriented + xOriented + r;
-        double rightFrontPower = yOriented - xOriented - r;
-        double leftRearPower = yOriented - xOriented + r;
-        double rightRearPower = yOriented + xOriented - r;
-
-        double max = Math.max(Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower)), Math.max(Math.abs(leftRearPower), Math.abs(rightRearPower)));
-
-        speedController.updateSpeed(gamepad, max);
+        speedController.updateSpeed(gamepad);
         this.driveSpeed = speedController.getSpeed();
 
-        if (max < 1) {
-            max = 1;
-        }
-
-        leftFront.setPower(leftFrontPower * Constants.leftFrontPower * driveSpeed / max);
-        rightFront.setPower(rightFrontPower * Constants.rightFrontPower * driveSpeed / max);
-        leftRear.setPower(leftRearPower * Constants.leftRearPower * driveSpeed / max);
-        rightRear.setPower(rightRearPower * Constants.rightRearPower * driveSpeed / max);
+        this.driveFieldParams(x, y, r, this.getCalibratedIMUAngle());
     }
 
-    public void driveParams(double x, double y, double r) {
-        double leftFrontPower = y + x + r;
-        double rightFrontPower = y - x - r;
-        double leftRearPower = y - x + r;
-        double rightRearPower = y + x - r;
+    public void fieldOrientedDrive(Gamepad gamepad, double[] bottleneckSpeeds) {
+        double x = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.STRAFE_RIGHT);
+        double y = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.STRAFE_UP);
+        double r = DrivingConfiguration.getValue(gamepad, DrivingConfiguration.ROTATE_RIGHT);
 
-        double max = Math.max(Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower)), Math.max(Math.abs(leftRearPower), Math.abs(rightRearPower)));
+        speedController.updateSpeed(gamepad);
+        this.driveSpeed = speedController.getSpeed();
 
-        if (max < 1) {
-            max = 1;
-        }
-
-        if (speedController.applyMinimumVoltage && max * driveSpeed < Constants.MINIMUM_VOLTAGE_APPLIED) {
-            leftFront.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);
-            rightFront.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);
-            leftRear.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);
-            rightRear.setPower(Constants.MINIMUM_VOLTAGE_APPLIED);
-            return;
-        }
-
-        leftFront.setPower(leftFrontPower * Constants.leftFrontPower * driveSpeed / max);
-        rightFront.setPower(rightFrontPower * Constants.rightFrontPower * driveSpeed / max);
-        leftRear.setPower(leftRearPower * Constants.leftRearPower * driveSpeed / max);
-        rightRear.setPower(rightRearPower * Constants.rightRearPower * driveSpeed / max);
-    }
-
-    public void driveFieldParams(double x, double y, double r, double gyro) {
-        double xOriented = (Math.sin(gyro) * x) - (Math.cos(gyro) * y);
-        double yOriented = (Math.sin(gyro) * y) + (Math.cos(gyro) * x);
-
-        double leftFrontPower = yOriented + xOriented + r;
-        double rightFrontPower = yOriented - xOriented - r;
-        double leftRearPower = yOriented - xOriented + r;
-        double rightRearPower = yOriented + xOriented - r;
-
-        double max = Math.max(Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower)), Math.max(Math.abs(leftRearPower), Math.abs(rightRearPower)));
-
-        if (max < 1) {
-            max = 1;
-        }
-
-        leftFront.setPower(leftFrontPower * Constants.leftFrontPower * driveSpeed / max);
-        rightFront.setPower(rightFrontPower * Constants.rightFrontPower * driveSpeed / max);
-        leftRear.setPower(leftRearPower * Constants.leftRearPower * driveSpeed / max);
-        rightRear.setPower(rightRearPower * Constants.rightRearPower * driveSpeed / max);
+        this.driveFieldParams(x, y, r, this.getCalibratedIMUAngle(), bottleneckSpeeds);
     }
 
     public boolean isBusy() {
-        return leftFront.isBusy() || rightFront.isBusy() || leftRear.isBusy() || rightRear.isBusy();
+        for (DcMotorEx motor: this.motors) {
+            if (motor.isBusy()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void waitUntilCompletion() {
@@ -231,10 +203,9 @@ public class MecanumController extends RobotController {
     }
 
     public void deactivate() {
-        leftFront.setPower(0);
-        rightFront.setPower(0);
-        leftRear.setPower(0);
-        rightRear.setPower(0);
+        for (DcMotorEx motor: this.motors) {
+            motor.setPower(0);
+        }
     }
 
     public void rotateToRadian(double targetRadian, double radianTolerance) {
@@ -250,19 +221,16 @@ public class MecanumController extends RobotController {
             dif = targetRadian - relativeRadians;
             direction = dif / (Math.abs(dif));
 
-            this.leftFront.setPower(-direction * this.rotationSpeed);
-            this.rightFront.setPower(direction * this.rotationSpeed);
-            this.leftRear.setPower(-direction * this.rotationSpeed);
-            this.rightRear.setPower(direction * this.rotationSpeed);
+            this.motors[0].setPower(-direction * this.rotationSpeed);
+            this.motors[1].setPower(direction * this.rotationSpeed);
+            this.motors[2].setPower(-direction * this.rotationSpeed);
+            this.motors[3].setPower(direction * this.rotationSpeed);
 
             currentRadians = this.getCalibratedIMUAngle();
             relativeRadians = Constants.setToDomain(currentRadians, targetRadian - Math.PI, targetRadian + Math.PI);
         }
 
-        this.leftFront.setPower(0);
-        this.rightFront.setPower(0);
-        this.leftRear.setPower(0);
-        this.rightRear.setPower(0);
+        this.deactivate();
     }
 
     public void rotateToRadianUsingPID(double targetRadian, double radianTolerance) {
@@ -286,19 +254,16 @@ public class MecanumController extends RobotController {
                 power = Math.min(-Constants.MINIMUM_VOLTAGE_APPLIED, Math.max(-1, power));
             }
 
-            this.leftFront.setPower(power);
-            this.rightFront.setPower(-power);
-            this.leftRear.setPower(power);
-            this.rightRear.setPower(-power);
+            this.motors[0].setPower(power);
+            this.motors[1].setPower(-power);
+            this.motors[2].setPower(power);
+            this.motors[3].setPower(-power);
 
             currentRadians = this.getCalibratedIMUAngle();
             relativeRadians = Constants.setToDomain(currentRadians, targetRadian - Math.PI, targetRadian + Math.PI);
         }
 
-        this.leftFront.setPower(0);
-        this.rightFront.setPower(0);
-        this.leftRear.setPower(0);
-        this.rightRear.setPower(0);
+        this.deactivate();
     }
 
     public void rotateToRadianUsingPID(double targetRadian, double radianTolerance, int maxOscillations) {
@@ -331,19 +296,16 @@ public class MecanumController extends RobotController {
 
             lastError = error;
 
-            this.leftFront.setPower(power);
-            this.rightFront.setPower(-power);
-            this.leftRear.setPower(power);
-            this.rightRear.setPower(-power);
+            this.motors[0].setPower(power);
+            this.motors[1].setPower(-power);
+            this.motors[2].setPower(power);
+            this.motors[3].setPower(-power);
 
             currentRadians = this.getCalibratedIMUAngle();
             relativeRadians = Constants.setToDomain(currentRadians, targetRadian - Math.PI, targetRadian + Math.PI);
         }
 
-        this.leftFront.setPower(0);
-        this.rightFront.setPower(0);
-        this.leftRear.setPower(0);
-        this.rightRear.setPower(0);
+        this.deactivate();
     }
 
     public void moveInches(double leftFrontInches, double rightFrontInches, double leftRearInches, double rightRearInches, boolean wait) {
@@ -359,17 +321,17 @@ public class MecanumController extends RobotController {
 
         double max = Math.max(Math.max(Math.abs(leftFrontInches), Math.abs(rightFrontInches)), Math.max(Math.abs(leftRearInches), Math.abs(rightRearInches)));
 
-        leftFront.setTargetPosition((int) leftFrontEncoderTicks);
-        rightFront.setTargetPosition((int) rightFrontEncoderTicks);
-        leftRear.setTargetPosition((int) leftRearEncoderTicks);
-        rightRear.setTargetPosition((int) rightRearEncoderTicks);
+        this.motors[0].setTargetPosition((int) leftFrontEncoderTicks);
+        this.motors[1].setTargetPosition((int) rightFrontEncoderTicks);
+        this.motors[2].setTargetPosition((int) leftRearEncoderTicks);
+        this.motors[3].setTargetPosition((int) rightRearEncoderTicks);
 
         setMotorsRunMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        leftFront.setPower(driveSpeed * leftFrontInches / max);
-        rightFront.setPower(driveSpeed * rightFrontInches / max);
-        leftRear.setPower(driveSpeed * leftRearInches / max);
-        rightRear.setPower(driveSpeed * rightRearInches / max);
+        this.motors[0].setPower(driveSpeed * leftFrontInches / max);
+        this.motors[1].setPower(driveSpeed * rightFrontInches / max);
+        this.motors[2].setPower(driveSpeed * leftRearInches / max);
+        this.motors[3].setPower(driveSpeed * rightRearInches / max);
 
         if (wait) {
             waitUntilCompletion();

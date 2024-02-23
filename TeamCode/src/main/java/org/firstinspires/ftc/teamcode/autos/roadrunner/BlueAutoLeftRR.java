@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 import java.io.File;
 
+/*
 @Disabled
 @Autonomous(preselectTeleOp = "CenterStage Field Oriented")
 public class BlueAutoLeftRR extends LinearOpMode {
@@ -285,3 +286,4 @@ public class BlueAutoLeftRR extends LinearOpMode {
         }
     }
 }
+*/

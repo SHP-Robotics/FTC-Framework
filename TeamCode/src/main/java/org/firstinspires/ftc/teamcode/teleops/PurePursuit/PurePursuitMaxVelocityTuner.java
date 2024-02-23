@@ -35,7 +35,7 @@ public class PurePursuitMaxVelocityTuner extends LinearOpMode {
             purePursuitFollower.updateOdometry();
 
             if (lastTime != -1) {
-                double[] approximatedVelocities = VelocityApproximator.getVelocities(purePursuitFollower.getRobotDeltaPosition(), lastTime - elapsedTime.seconds());
+                double[] approximatedVelocities = VelocityApproximator.getVelocities(purePursuitFollower.getRobotVelocity(), 1);
 
                 if (VelocityApproximator.getMaxVelocity(approximatedVelocities) > Math.abs(maxVelo)) {
                     maxVelo = VelocityApproximator.getMaxVelocity(approximatedVelocities);

@@ -38,7 +38,7 @@ public class LocalizationTestPurePursuit extends LinearOpMode {
             telemetry.addData("r", purePursuitFollower.getCurrentPosition().getHeadingRadians());
             telemetry.addLine();
             if (lastTime != -1) {
-                double[] approximatedVelocities = VelocityApproximator.getVelocities(purePursuitFollower.getRobotDeltaPosition(), lastTime - elapsedTime.seconds());
+                double[] approximatedVelocities = VelocityApproximator.getVelocities(purePursuitFollower.getRobotVelocity(), 1);
 
                 telemetry.addData("leftFront approximated velocity", approximatedVelocities[0]);
                 telemetry.addData("rightFront approximated velocity", approximatedVelocities[1]);

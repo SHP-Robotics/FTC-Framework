@@ -18,86 +18,54 @@ public class FindRelativeSpeeds extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         mecanumController = new MecanumController(hardwareMap);
 
-        mecanumController.leftFront = new AccumulationControlledDcMotor.AccumulationControlledDcMotorBuilder(mecanumController.leftFront)
-                .setkP(0.7/0.976)
-                .setGamma(0)
-                .build();
-
-        mecanumController.rightFront = new AccumulationControlledDcMotor.AccumulationControlledDcMotorBuilder(mecanumController.rightFront)
-                .setkP(0.7/0.992)
-                .setGamma(0)
-                .build();
-
-        mecanumController.leftRear = new AccumulationControlledDcMotor.AccumulationControlledDcMotorBuilder(mecanumController.leftRear)
-                .setkP(0.7/0.992)
-                .setGamma(0)
-                .build();
-
-        mecanumController.rightRear = new AccumulationControlledDcMotor.AccumulationControlledDcMotorBuilder(mecanumController.rightRear)
-                .setkP(0.7)
-                .setGamma(0)
-                .build();
+        for (int i = 0; i < 4; i++) {
+            mecanumController.motors[i] = new AccumulationControlledDcMotor.AccumulationControlledDcMotorBuilder(mecanumController.motors[i])
+                    .setkP(0.7/Constants.powers[i])
+                    .setGamma(0)
+                    .build();
+        }
 
         mecanumController.setMotorsRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
         mecanumController.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        double maxLF = 0;
-        double maxRF = 0;
-        double maxLR = 0;
-        double maxRR = 0;
+        double[] velos = new double[]{0, 0, 0, 0};
+        double[] maxVelos = new double[]{0, 0, 0, 0};
 
-        mecanumController.leftFront.setPower(1);
-        mecanumController.rightFront.setPower(1);
-        mecanumController.leftRear.setPower(1);
-        mecanumController.rightRear.setPower(1);
+        mecanumController.motors[0].setPower(1);
+        mecanumController.motors[1].setPower(1);
+        mecanumController.motors[2].setPower(1);
+        mecanumController.motors[3].setPower(1);
 
         while (!opModeIsActive()) {
-            if (mecanumController.leftFront instanceof AccumulationControlledDcMotor) {
-                double veloLF = ((AccumulationControlledDcMotor) mecanumController.leftFront).getVelocity(AngleUnit.RADIANS);
-                if (veloLF > maxLF) {
-                    maxLF = veloLF;
-                }
-            }
-
-            if (mecanumController.rightFront instanceof AccumulationControlledDcMotor) {
-                double veloRF = ((AccumulationControlledDcMotor) mecanumController.rightFront).getVelocity(AngleUnit.RADIANS);
-                if (veloRF > maxRF) {
-                    maxRF = veloRF;
-                }
-            }
-
-            if (mecanumController.leftRear instanceof AccumulationControlledDcMotor) {
-                double veloLR = ((AccumulationControlledDcMotor) mecanumController.leftRear).getVelocity(AngleUnit.RADIANS);
-                if (veloLR > maxLR) {
-                    maxLR = veloLR;
-                }
-            }
-
-            if (mecanumController.rightRear instanceof AccumulationControlledDcMotor) {
-                double veloRR = ((AccumulationControlledDcMotor) mecanumController.rightRear).getVelocity(AngleUnit.RADIANS);
-                if (veloRR > maxRR) {
-                    maxRR = veloRR;
+            for (int i = 0; i < 4; i++) {
+                if (mecanumController.motors[i] instanceof AccumulationControlledDcMotor) {
+                    velos[i] = ((AccumulationControlledDcMotor) mecanumController.motors[i]).getVelocity(AngleUnit.RADIANS);
+                    if (velos[i] > maxVelos[i]) {
+                        maxVelos[i] = velos[i];
+                    }
                 }
             }
         }
 
         waitForStart();
 
-        mecanumController.leftFront.setPower(0);
-        mecanumController.rightFront.setPower(0);
-        mecanumController.leftRear.setPower(0);
-        mecanumController.rightRear.setPower(0);
+        mecanumController.deactivate();
 
-        double maxVelo = Math.max(maxLF, Math.max(maxRF, Math.max(maxLR, maxRR)));
+        double maxVelo = 0;
+        for (double velo: maxVelos) {
+            if (velo > maxVelo) {
+                maxVelo = velo;
+            }
+        }
 
-        telemetry.addData("maxVeloLF", maxLF);
-        telemetry.addData("maxVeloRF", maxRF);
-        telemetry.addData("maxVeloLR", maxLR);
-        telemetry.addData("maxVeloRR", maxRR);
-        telemetry.addData("relativeVeloLF", maxLF/maxVelo);
-        telemetry.addData("relativeVeloRF", maxRF/maxVelo);
-        telemetry.addData("relativeVeloLR", maxLR/maxVelo);
-        telemetry.addData("relativeVeloRR", maxRR/maxVelo);
+        telemetry.addData("maxVeloLF", maxVelos[0]);
+        telemetry.addData("maxVeloRF", maxVelos[1]);
+        telemetry.addData("maxVeloLR", maxVelos[2]);
+        telemetry.addData("maxVeloRR", maxVelos[3]);
+        telemetry.addData("relativeVeloLF", maxVelos[0]/maxVelo);
+        telemetry.addData("relativeVeloRF", maxVelos[1]/maxVelo);
+        telemetry.addData("relativeVeloLR", maxVelos[2]/maxVelo);
+        telemetry.addData("relativeVeloRR", maxVelos[3]/maxVelo);
         telemetry.update();
 
         sleep(10000);

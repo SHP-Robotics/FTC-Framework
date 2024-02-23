@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.shplib.controllers.tests;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.teamcode.shplib.hardware.units.MotorUnit;
 
 import java.util.ArrayList;
 
+@Disabled
 @Autonomous(group = "ff")
 public class SingleMotorFFTest extends LinearOpMode {
 

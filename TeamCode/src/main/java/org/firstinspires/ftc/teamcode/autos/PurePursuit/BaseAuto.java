@@ -32,12 +32,17 @@ public class BaseAuto extends LinearOpMode {
             location = visionSubsystem.getLocationRed();
         }
 
+        telemetry.addData("location", location);
+        telemetry.update();
+
         while (opModeInInit() && !isStopRequested()) {
             if (side == Side.BLUE) {
                 location = visionSubsystem.getLocationBlue();
             } else {
                 location = visionSubsystem.getLocationRed();
             }
+            telemetry.addData("location", location);
+            telemetry.update();
         }
 
         waitForStart();

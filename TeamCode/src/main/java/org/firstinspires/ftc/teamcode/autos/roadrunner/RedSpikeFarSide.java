@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 import java.io.File;
 
+/*
 @Disabled
 @Autonomous(preselectTeleOp = "CenterStage Field Oriented")
 public class RedSpikeFarSide extends LinearOpMode {
@@ -236,3 +237,4 @@ public class RedSpikeFarSide extends LinearOpMode {
         }
     }
 }
+ */

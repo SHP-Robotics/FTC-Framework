@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.shplib.controllers.tests;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -8,6 +9,7 @@ import org.firstinspires.ftc.teamcode.shplib.controllers.FFController;
 import org.firstinspires.ftc.teamcode.shplib.hardware.SHPMotor;
 import org.firstinspires.ftc.teamcode.shplib.hardware.units.MotorUnit;
 
+@Disabled
 @Autonomous(group = "ff")
 public class SingleMotorGravityTuner extends LinearOpMode {
 

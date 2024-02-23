@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode.autos.experimental;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.debug.MecanumController;
 import org.firstinspires.ftc.teamcode.debug.AccumulationController;
+import org.firstinspires.ftc.teamcode.debug.MecanumController;
 import org.firstinspires.ftc.teamcode.debug.PIDController;
 import org.firstinspires.ftc.teamcode.shplib.vision.PIADFollower;
 import org.firstinspires.ftc.teamcode.shplib.vision.PixelDetectionPipeline;
@@ -13,7 +14,7 @@ import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
-//@Disabled
+@Disabled
 @Autonomous()
 public class AdvancedPixelTracking extends LinearOpMode {
     private double euclidianDistance(double[] point1, double[] point2) {

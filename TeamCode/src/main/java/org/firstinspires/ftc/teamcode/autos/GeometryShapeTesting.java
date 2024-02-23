@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.autos;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -9,7 +8,7 @@ import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.GeometricShape;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Position2D;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.RestrictedCircle;
 
-@Disabled
+//@Disabled
 @Autonomous()
 public class GeometryShapeTesting extends LinearOpMode {
     private void decrypt(Telemetry telemetry, Position2D position2D) {
@@ -49,22 +48,12 @@ public class GeometryShapeTesting extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        GeometricShape geometricShape = new RestrictedCircle(
-                new Position2D(0, 0, Math.PI/2),
-                new Position2D(10, 0, -Math.PI/2)
-        );
-
-        RestrictedCircle followingCircle = new RestrictedCircle(1);
-        followingCircle.setOffset(new Position2D(
-                0, 0, 0
-        ));
-
         waitForStart();
 
-        while (opModeIsActive()) {
-            decrypt(telemetry, geometricShape);
-            addIntersections(telemetry, geometricShape, followingCircle);
-            telemetry.update();
-        }
+//        while (opModeIsActive()) {
+//            decrypt(telemetry, geometricShape);
+//            addIntersections(telemetry, geometricShape, followingCircle);
+//            telemetry.update();
+//        }
     }
 }

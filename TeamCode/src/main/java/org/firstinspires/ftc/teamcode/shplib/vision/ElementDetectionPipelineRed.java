@@ -33,8 +33,8 @@ public class ElementDetectionPipelineRed extends OpenCvPipeline {
     );
 
     static final Rect RIGHT_ROI = new Rect(
-            new Point(200, 1),
-            new Point(500, 300)
+            new Point(400, 200),
+            new Point(600, 300)
     );
 
     //threshold(lowest possible) percentage of that color
@@ -135,9 +135,9 @@ public class ElementDetectionPipelineRed extends OpenCvPipeline {
             return VisionLocation.FAR;
         }
         if(rightValue>leftValue && rightValue > THRESHOLD){
-            return VisionLocation.CLOSE;
+            return VisionLocation.CENTER;
         }
-        return VisionLocation.CENTER;
+        return VisionLocation.CLOSE;
     }
 
     public int getMaxHeightReadable() {
