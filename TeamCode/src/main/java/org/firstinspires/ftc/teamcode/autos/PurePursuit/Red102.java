@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.debug.PurePursuit.PurePursuitPath;
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
 
 @Autonomous(preselectTeleOp = "Centerstage Field Oriented")
-public class RedCloseSide extends BaseAuto {
+public class Red102 extends BaseAuto {
     @Override
     public void runOpMode() throws InterruptedException {
         this.side = Side.RED;
@@ -26,7 +26,7 @@ public class RedCloseSide extends BaseAuto {
         claw.setDirection(Servo.Direction.REVERSE);
 
         PurePursuitPath path;
-        PurePursuitPath path1 = new PurePursuitPath.PurePursuitPathBuilder()
+        PurePursuitPath pathFar = new PurePursuitPath.PurePursuitPathBuilder()
                 .addAction(() -> {
                     claw.setPosition(Constants.CLAW_CLOSE);
                     try {
@@ -37,6 +37,7 @@ public class RedCloseSide extends BaseAuto {
                 })
                 .moveTo(new Position2D(0, 30, Math.toRadians(90)))
                 .rotateTo(new Position2D(0, 30, Math.toRadians(90)), Math.toRadians(180))
+                .moveTo(new Position2D(0, 37, Math.toRadians(180)))
                 .addAction(() -> claw.setPosition(Constants.CLAW_OPEN))
                 .moveTo(new Position2D(48, 38, Math.toRadians(180)))
                 .addAction(7, () -> {
@@ -50,10 +51,10 @@ public class RedCloseSide extends BaseAuto {
                 })
                 .moveTo(new Position2D(44, 38, Math.toRadians(180)))
                 .addAction(() -> outtake.setPosition(Constants.OUTTAKE_HIDDEN))
-                .moveTo(new Position2D(44, 10, Math.toRadians(180)))
-                .moveTo(new Position2D(52, 10, Math.toRadians(180)))
+                .moveTo(new Position2D(44, 60, Math.toRadians(180)))
+                .moveTo(new Position2D(52, 60, Math.toRadians(180)))
                 .build();
-        PurePursuitPath path2 = new PurePursuitPath.PurePursuitPathBuilder()
+        PurePursuitPath pathCenter = new PurePursuitPath.PurePursuitPathBuilder()
                 .addAction(() -> {
                     claw.setPosition(Constants.CLAW_CLOSE);
                     try {
@@ -79,10 +80,10 @@ public class RedCloseSide extends BaseAuto {
                 })
                 .moveTo(new Position2D(44, 34.5, Math.toRadians(180)))
                 .addAction(() -> outtake.setPosition(Constants.OUTTAKE_HIDDEN))
-                .moveTo(new Position2D(44, 10, Math.toRadians(180)))
-                .moveTo(new Position2D(52, 10, Math.toRadians(180)))
+                .moveTo(new Position2D(44, 60, Math.toRadians(180)))
+                .moveTo(new Position2D(52, 60, Math.toRadians(180)))
                 .build();
-        PurePursuitPath path3 = new PurePursuitPath.PurePursuitPathBuilder()
+        PurePursuitPath pathClose = new PurePursuitPath.PurePursuitPathBuilder()
                 .addAction(() -> {
                     claw.setPosition(Constants.CLAW_CLOSE);
                     try {
@@ -91,8 +92,8 @@ public class RedCloseSide extends BaseAuto {
                         throw new RuntimeException(e);
                     }
                 })
-                .moveTo(new Position2D(23.5, 28, Math.toRadians(90)))
-                .rotateTo(new Position2D(23.5, 28, Math.toRadians(90)), Math.toRadians(180))
+                .moveTo(new Position2D(23.5, 40, Math.toRadians(90)))
+                .rotateTo(new Position2D(23.5, 40, Math.toRadians(90)), Math.toRadians(180))
                 .addAction(() -> claw.setPosition(Constants.CLAW_OPEN))
                 .moveTo(new Position2D(49, 28, Math.toRadians(180)))
                 .addAction(7, () -> {
@@ -106,20 +107,20 @@ public class RedCloseSide extends BaseAuto {
                 })
                 .moveTo(new Position2D(44, 28, Math.toRadians(180)))
                 .addAction(() -> outtake.setPosition(Constants.OUTTAKE_HIDDEN))
-                .moveTo(new Position2D(44, 10, Math.toRadians(180)))
-                .moveTo(new Position2D(52, 10, Math.toRadians(180)))
+                .moveTo(new Position2D(44, 60, Math.toRadians(180)))
+                .moveTo(new Position2D(52, 60, Math.toRadians(180)))
                 .build();
 
         super.runOpMode();
         switch (this.location) {
             case FAR:
-                path = path1;
+                path = pathFar;
                 break;
             case CLOSE:
-                path = path3;
+                path = pathClose;
                 break;
             default:
-                path = path2;
+                path = pathCenter;
                 break;
         }
         path.followAsync(purePursuitFollower, mecanumController);

@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.debug.PurePursuit.PurePursuitPath;
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
 
 @Autonomous(preselectTeleOp = "Centerstage Field Oriented")
-public class RedFarSide extends BaseAuto {
+public class Red211 extends BaseAuto {
     @Override
     public void runOpMode() throws InterruptedException {
         this.side = Side.RED;
@@ -26,7 +26,7 @@ public class RedFarSide extends BaseAuto {
         claw.setDirection(Servo.Direction.REVERSE);
 
         PurePursuitPath path;
-        PurePursuitPath path1 = new PurePursuitPath.PurePursuitPathBuilder()
+        PurePursuitPath pathFar = new PurePursuitPath.PurePursuitPathBuilder()
                 .addAction(() -> {
                     claw.setPosition(Constants.CLAW_CLOSE);
                     try {
@@ -35,13 +35,17 @@ public class RedFarSide extends BaseAuto {
                         throw new RuntimeException(e);
                     }
                 })
-                .moveTo(new Position2D(0, 30, Math.toRadians(90)))
-                .rotateTo(new Position2D(0, 30, Math.toRadians(90)), Math.toRadians(180))
+                .moveTo(new Position2D(0, 37, Math.toRadians(90)))
+                .rotateTo(new Position2D(0, 37, Math.toRadians(90)), Math.toRadians(180))
                 .addAction(() -> {
                     claw.setPosition(Constants.CLAW_OPEN);
                     outtake.setPosition(Constants.OUTTAKE_NEUTRAL);
                 })
-                .moveTo(new Position2D(48+60, 38, Math.toRadians(180)))
+                .moveTo(new Position2D(6, 37, Math.toRadians(180)))
+                .moveTo(new Position2D(6, 15, Math.toRadians(180)))
+                .moveTo(new Position2D(46+48, 15, Math.toRadians(180)))
+                .moveTo(new Position2D(46+48, 38+7, Math.toRadians(180)))
+                .moveTo(new Position2D(48+48, 38+7, Math.toRadians(180)))
                 .addAction(7, () -> {
                     mecanumController.deactivate();
                     outtake.setPosition(Constants.OUTTAKE_LOWERED);
@@ -51,14 +55,14 @@ public class RedFarSide extends BaseAuto {
                         throw new RuntimeException(e);
                     }
                 })
-                .moveTo(new Position2D(44+60, 38, Math.toRadians(180)))
+                .moveTo(new Position2D(44+48, 38, Math.toRadians(180)))
                 .addAction(() -> outtake.setPosition(Constants.OUTTAKE_HIDDEN))
-                .moveTo(new Position2D(44+60, 10, Math.toRadians(180)))
-                .moveTo(new Position2D(52+60, 10, Math.toRadians(180)))
+                .moveTo(new Position2D(44+48, 15, Math.toRadians(180)))
+                .moveTo(new Position2D(52+48, 15, Math.toRadians(180)))
 
                 .enableRetrace()
                 .build();
-        PurePursuitPath path2 = new PurePursuitPath.PurePursuitPathBuilder()
+        PurePursuitPath pathCenter = new PurePursuitPath.PurePursuitPathBuilder()
                 .addAction(() -> {
                     claw.setPosition(Constants.CLAW_CLOSE);
                     try {
@@ -76,8 +80,8 @@ public class RedFarSide extends BaseAuto {
                 .rotateTo(new Position2D(5, 29.5, Math.toRadians(90)), Math.toRadians(180))
                 .moveTo(new Position2D(5, 12, Math.toRadians(180)))
                 .moveTo(new Position2D(46+48, 12, Math.toRadians(180)))
-                .moveTo(new Position2D(46+48, 34, Math.toRadians(180)))
-                .moveTo(new Position2D(48+48, 34, Math.toRadians(180)))
+                .moveTo(new Position2D(46+48, 37, Math.toRadians(180)))
+                .moveTo(new Position2D(48+48, 37, Math.toRadians(180)))
                 .addAction(7, () -> {
                     mecanumController.deactivate();
                     outtake.setPosition(Constants.OUTTAKE_LOWERED);
@@ -89,12 +93,12 @@ public class RedFarSide extends BaseAuto {
                 })
                 .moveTo(new Position2D(44+48, 34.5, Math.toRadians(180)))
                 .addAction(() -> outtake.setPosition(Constants.OUTTAKE_HIDDEN))
-                .moveTo(new Position2D(44+48, 10, Math.toRadians(180)))
-                .moveTo(new Position2D(52+48, 10, Math.toRadians(180)))
+                .moveTo(new Position2D(44+48, 13, Math.toRadians(180)))
+                .moveTo(new Position2D(52+48, 13, Math.toRadians(180)))
 
                 .enableRetrace()
                 .build();
-        PurePursuitPath path3 = new PurePursuitPath.PurePursuitPathBuilder()
+        PurePursuitPath pathClose = new PurePursuitPath.PurePursuitPathBuilder()
                 .addAction(() -> {
                     claw.setPosition(Constants.CLAW_CLOSE);
                     try {
@@ -103,15 +107,19 @@ public class RedFarSide extends BaseAuto {
                         throw new RuntimeException(e);
                     }
                 })
-                .moveTo(new Position2D(23.5, 28, Math.toRadians(90)))
-                .rotateTo(new Position2D(23.5, 28, Math.toRadians(90)), Math.toRadians(180))
+                .moveTo(new Position2D(0, 28, Math.toRadians(90)))
+                .rotateTo(new Position2D(0, 28, Math.toRadians(90)), Math.toRadians(0))
+                .moveTo(new Position2D(3, 28, Math.toRadians(0)))
                 .addAction(() -> {
                     claw.setPosition(Constants.CLAW_OPEN);
                     outtake.setPosition(Constants.OUTTAKE_NEUTRAL);
                 })
-                .moveTo(new Position2D(23.5, 4, Math.toRadians(180)))
-                .moveTo(new Position2D(49+60, 4, Math.toRadians(180)))
-                .moveTo(new Position2D(49+60, 28, Math.toRadians(180)))
+                .moveTo(new Position2D(-5, 28, Math.toRadians(0)))
+                .rotateTo(new Position2D(-5, 28, Math.toRadians(0)), Math.toRadians(180))
+                .moveTo(new Position2D(-5, 10, Math.toRadians(180)))
+                .moveTo(new Position2D(46 + 48, 13, Math.toRadians(180)))
+                .moveTo(new Position2D(46 + 48, 33, Math.toRadians(180)))
+                .moveTo(new Position2D(49 + 48, 33, Math.toRadians(180)))
                 .addAction(7, () -> {
                     mecanumController.deactivate();
                     outtake.setPosition(Constants.OUTTAKE_LOWERED);
@@ -121,10 +129,10 @@ public class RedFarSide extends BaseAuto {
                         throw new RuntimeException(e);
                     }
                 })
-                .moveTo(new Position2D(44+60, 28, Math.toRadians(180)))
+                .moveTo(new Position2D(44 + 48, 33, Math.toRadians(180)))
                 .addAction(() -> outtake.setPosition(Constants.OUTTAKE_HIDDEN))
-                .moveTo(new Position2D(44+60, 10, Math.toRadians(180)))
-                .moveTo(new Position2D(52+60, 10, Math.toRadians(180)))
+                .moveTo(new Position2D(44 + 48, 15, Math.toRadians(180)))
+                .moveTo(new Position2D(52 + 48, 15, Math.toRadians(180)))
 
                 .enableRetrace()
                 .build();
@@ -132,13 +140,13 @@ public class RedFarSide extends BaseAuto {
         super.runOpMode();
         switch (this.location) {
             case FAR:
-                path = path1;
+                path = pathFar;
                 break;
             case CLOSE:
-                path = path3;
+                path = pathClose;
                 break;
             default:
-                path = path2;
+                path = pathCenter;
                 break;
         }
         path.followAsync(purePursuitFollower, mecanumController);

@@ -45,7 +45,7 @@ public final class Constants {
 
     // Outtake
     public static final double OUTTAKE_STARTING = 0.81;
-    public static final double OUTTAKE_NEUTRAL = 0.69;
+    public static final double OUTTAKE_NEUTRAL = 0.5;
     public static final double OUTTAKE_LOWERED = 0.43;
     public static final double OUTTAKE_ACTIVE = 0.437;
     public static final double OUTTAKE_HIDDEN = 0.213;

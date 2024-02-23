@@ -28,12 +28,12 @@ public class ElementDetectionPipelineBlue extends OpenCvPipeline {
     }
 
     static final Rect LEFT_ROI = new Rect(
-            new Point(1, 1), //TODO: MAGIC NUMBERS ;-;
-            new Point(200, 447)
+            new Point(1, 200), //TODO: MAGIC NUMBERS ;-;
+            new Point(200, 300)
     );
 
     static final Rect RIGHT_ROI = new Rect(
-            new Point(200, 1),
+            new Point(350, 200),
             new Point(500, 300)
     );
 
@@ -107,9 +107,9 @@ public class ElementDetectionPipelineBlue extends OpenCvPipeline {
             return VisionLocation.CLOSE;
         }
         if(rightValue>leftValue && rightValue > THRESHOLD){
-            return VisionLocation.FAR;
+            return VisionLocation.CENTER;
         }
-        return VisionLocation.CENTER;
+        return VisionLocation.FAR;
     }
 
     public int getMaxHeightReadable() {
