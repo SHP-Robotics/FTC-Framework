@@ -15,13 +15,13 @@ public class MecanumTestAuto extends LinearOpMode {
         mecanumController.setDriveSpeed(0.3);
 
         waitForStart();
-        mecanumController.leftFront.setPower(0.7);
+        mecanumController.motors[0].setPower(0.7);
         sleep(1000);
-        mecanumController.rightFront.setPower(0.7);
+        mecanumController.motors[1].setPower(0.7);
         sleep(1000);
-        mecanumController.leftRear.setPower(0.7);
+        mecanumController.motors[2].setPower(0.7);
         sleep(1000);
-        mecanumController.rightRear.setPower(0.7);
+        mecanumController.motors[3].setPower(0.7);
         sleep(1000);
     }
 }

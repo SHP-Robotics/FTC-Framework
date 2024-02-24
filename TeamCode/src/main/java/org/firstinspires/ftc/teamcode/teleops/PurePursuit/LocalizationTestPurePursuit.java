@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.teleops.PurePursuit;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.debug.MecanumController;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.PurePursuitFollower;
@@ -23,10 +22,6 @@ public class LocalizationTestPurePursuit extends LinearOpMode {
         mecanumController.setSpeedController(speedController);
         mecanumController.setMotorsRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        double lastTime = -1;
-        ElapsedTime elapsedTime = new ElapsedTime();
-        elapsedTime.reset();
-
         waitForStart();
 
         while (opModeIsActive()) {
@@ -37,15 +32,14 @@ public class LocalizationTestPurePursuit extends LinearOpMode {
             telemetry.addData("y", purePursuitFollower.getCurrentPosition().getY());
             telemetry.addData("r", purePursuitFollower.getCurrentPosition().getHeadingRadians());
             telemetry.addLine();
-            if (lastTime != -1) {
-                double[] approximatedVelocities = VelocityApproximator.getVelocities(purePursuitFollower.getRobotDeltaPosition(), lastTime - elapsedTime.seconds());
 
-                telemetry.addData("leftFront approximated velocity", approximatedVelocities[0]);
-                telemetry.addData("rightFront approximated velocity", approximatedVelocities[1]);
-                telemetry.addData("leftRear approximated velocity", approximatedVelocities[2]);
-                telemetry.addData("rightRear approximated velocity", approximatedVelocities[3]);
-            }
-            lastTime = elapsedTime.seconds();
+            double[] approximatedVelocities = VelocityApproximator.getVelocities(purePursuitFollower.getRobotVelocity(), 1);
+
+            telemetry.addData("leftFront approximated velocity", approximatedVelocities[0]);
+            telemetry.addData("rightFront approximated velocity", approximatedVelocities[1]);
+            telemetry.addData("leftRear approximated velocity", approximatedVelocities[2]);
+            telemetry.addData("rightRear approximated velocity", approximatedVelocities[3]);
+
             telemetry.update();
         }
     }

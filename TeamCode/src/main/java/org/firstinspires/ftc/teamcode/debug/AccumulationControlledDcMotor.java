@@ -59,7 +59,8 @@ public class AccumulationControlledDcMotor extends DcMotorImplEx {
             super.setPower(0);
         }
 
-        this.setPower(power, power != 0 && this.getPower() != 0 && power/this.getPower() < 0);
+        this.setPower(power, this.getVelocity()!=0 && MAX_VELOCITY*power/this.getVelocity() < 1);
+        this.setPower(power, false);
     }
 
     public void setPower(double power, boolean decelerate) {
@@ -72,7 +73,8 @@ public class AccumulationControlledDcMotor extends DcMotorImplEx {
         double deltaTime = time - lastTime;
 
         if (decelerate) {
-            super.setPower(clamp(getPower() * gamma + (error * kP * gamma * deltaTime)));
+            super.setPower(clamp(getPower() * gamma + (error * kP * deltaTime)));
+//            super.setPower(clamp(getPower() * gamma + (error * kP * gamma * deltaTime)));
         } else {
             super.setPower(clamp(getPower() + (error * kP * deltaTime)));
         }

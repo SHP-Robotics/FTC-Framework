@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.WristSubsystem;
 
 @Autonomous
-public class TestAutoBlue extends BaseAuto {
+public class FarBlueBackdrop extends BaseAuto {
     PurePursuitPath path1;
     PurePursuitPath path2;
     PurePursuitPath path3;
@@ -28,84 +28,43 @@ public class TestAutoBlue extends BaseAuto {
     public void init() {
         this.side = Side.BLUE;
 
+        double tanhPace = 0.5;
+        double minimumTanh = Constants.minimumTanh;
+        double maximumTanh = 0.75;
+
         path1 = new PurePursuitPath.PurePursuitPathBuilder()
-                .moveTo(new Position2D(8, -0, Math.toRadians(90)))
-                .moveTo(new Position2D(8, -27, Math.toRadians(90)))
-                .moveTo(new Position2D(8, -24, Math.toRadians(90)))
+                .moveTo(new Position2D(10, -29, Math.toRadians(90)))
+                .moveTo(new Position2D(10, -19, Math.toRadians(90)))
+                .rotateTo(new Position2D(10, -19, Math.toRadians(90)), Math.toRadians(0))
+                .moveTo(new Position2D(10, -19-5, Math.toRadians(0)))
 
-                .enableRetrace()
-                .build();
-
-        path2 = new PurePursuitPath.PurePursuitPathBuilder()
-                .moveTo(new Position2D(-3, -31, Math.toRadians(90)), Constants.positionBuffer, Constants.rotationBuffer)
-                .moveTo(new Position2D(-3, -22, Math.toRadians(90)))
-                .rotateTo(new Position2D(-3, -22, Math.toRadians(90)), Math.toRadians(0))
-                .moveTo(new Position2D(-10, -20, Math.toRadians(0)))
-                .addAction(2, Math.toRadians(5), () -> {
+                .addAction(() -> {
+                    intake.setState(IntakeSubsystem.State.AUTO_INTAKE);
                     dropDown.setState(DropDownSubsystem.State.RAISED);
+                })
+                .moveTo(new Position2D(20, -19-5, Math.toRadians(0)))
+
+                .moveTo(new Position2D(18-24, -19, Math.toRadians(0)))
+                .addAction(() -> {
+                    intake.crWheel.setPower(-0.5);
+                })
+                .moveTo(new Position2D(18-24, -21, Math.toRadians(0)))
+                .addAction(() -> {
+                    intake.crWheel.setPower(0.5);
+                    intake.setState(IntakeSubsystem.State.REJECT);
+                })
+                .moveTo(new Position2D(18-24, -19-26, Math.toRadians(0)))
+                .addAction(() -> intake.setState(IntakeSubsystem.State.STILL))
+                .moveTo(new Position2D(18-24-72, -19-26, Math.toRadians(0)))
+                .addAction(() -> {
                     arm.setState(ArmSubsystem.State.EXTENDED);
-                    arm.incrementState();
+                    arm.setSlidePos(750);
                     elbow.setState(ElbowSubsystem.State.UP);
                     wrist.setState(WristSubsystem.State.UP);
                 })
-                .moveTo(new Position2D(-44, -24, Math.toRadians(0)))
-                .addAction(3, () -> {
-                    mecanumController.deactivate();
-                    intake.crWheel.setPower(-1.0);
-                    intake.pixelServo.setPosition(0.5);
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                    intake.crWheel.setPower(0);
-                    intake.pixelServo.setPosition(0.9);
-                    arm.setState(ArmSubsystem.State.BOTTOM);
-                    elbow.setState(ElbowSubsystem.State.DOWN);
-                    wrist.setState(WristSubsystem.State.HALFWAY);
-                })
-                .moveTo(new Position2D(-0, -26, Math.toRadians(0)))
-                .addAction(() -> {
-                    wrist.setState(WristSubsystem.State.DOWN);
-                })
-                .moveTo(new Position2D(56, -26, Math.toRadians(0)))
-                .addAction(() -> {
-                    intake.setState(IntakeSubsystem.State.INTAKE);
-                })
-                .moveTo(new Position2D(65, -26, Math.toRadians(0)))
-                .addAction(0.3, Math.toRadians(5), () -> {
-                    mecanumController.deactivate();
-                    dropDown.setState(DropDownSubsystem.State.RAISED);
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                    dropDown.setState(DropDownSubsystem.State.FOUR_HEIGHT);
-                    try {
-                        Thread.sleep(600);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                    dropDown.setState(DropDownSubsystem.State.GROUND_HEIGHT);
-                    try {
-                        Thread.sleep(600);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
-                .moveTo(new Position2D(20, -26, Math.toRadians(0)))
-                .addAction(2, Math.toRadians(5), () -> {
-                    intake.setState(IntakeSubsystem.State.STILL);
-                })
-                .moveTo(new Position2D(-10, -26, Math.toRadians(0)))
-                .addAction(2, Math.toRadians(5), () -> {
-                    arm.setState(ArmSubsystem.State.EXTENDED);
-                    arm.incrementState();
-                    elbow.setState(ElbowSubsystem.State.UP);
-                    wrist.setState(WristSubsystem.State.UP);
-                })
-                .moveTo(new Position2D(-48.7, -26, Math.toRadians(0)))
+                .moveTo(new Position2D(18-24-72, -19-26+23, Math.toRadians(0)))
+                .moveTo(new Position2D(-92, -28, Math.toRadians(0)))
+
                 .addAction(2, () -> {
                     mecanumController.deactivate();
                     intake.crWheel.setPower(-1.0);
@@ -121,16 +80,82 @@ public class TestAutoBlue extends BaseAuto {
                     elbow.setState(ElbowSubsystem.State.DOWN);
                     wrist.setState(WristSubsystem.State.HALFWAY);
                 })
+                .moveTo(new Position2D(-88, -28, Math.toRadians(0)))
+                .moveTo(new Position2D(-88, -3, Math.toRadians(0)))
+                .moveTo(new Position2D(-100, -3, Math.toRadians(0)))
 
                 .enableRetrace()
+                .enableTanh(tanhPace, minimumTanh, maximumTanh)
+                .build();
+
+        path2 = new PurePursuitPath.PurePursuitPathBuilder()
+                .moveTo(new Position2D(0, -31.5, Math.toRadians(90)))
+                .moveTo(new Position2D(0, -22, Math.toRadians(90)))
+                .rotateTo(new Position2D(0, -22, Math.toRadians(90)), Math.toRadians(0))
+                .moveTo(new Position2D(-55, -22, Math.toRadians(0)))
+                .addAction(() -> {
+                    arm.setState(ArmSubsystem.State.EXTENDED);
+                    arm.setSlidePos(250);
+                    elbow.setState(ElbowSubsystem.State.UP);
+                    wrist.setState(WristSubsystem.State.UP);
+                })
+                .moveTo(new Position2D(-44.5-48, -24, Math.toRadians(0)))
+                .addAction(2, () -> {
+                    mecanumController.deactivate();
+                    intake.crWheel.setPower(-1.0);
+                    intake.pixelServo.setPosition(0.5);
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    intake.crWheel.setPower(0);
+                    intake.pixelServo.setPosition(0.9);
+                    arm.setState(ArmSubsystem.State.BOTTOM);
+                    elbow.setState(ElbowSubsystem.State.DOWN);
+                    wrist.setState(WristSubsystem.State.HALFWAY);
+                })
+                .moveTo(new Position2D(-40-48, -24, Math.toRadians(0)))
+                .moveTo(new Position2D(-40-48, -3, Math.toRadians(0)))
+                .moveTo(new Position2D(-52-48, -3, Math.toRadians(0)))
+
+                .enableRetrace()
+                .enableTanh(tanhPace, minimumTanh, maximumTanh)
                 .build();
 
         path3 = new PurePursuitPath.PurePursuitPathBuilder()
-                .moveTo(new Position2D(-12, -0, Math.toRadians(90)))
-                .moveTo(new Position2D(-12, -27, Math.toRadians(90)))
-                .moveTo(new Position2D(-12, -24, Math.toRadians(90)))
+                .moveTo(new Position2D(-14, -25, Math.toRadians(90)))
+                .moveTo(new Position2D(-14, -16, Math.toRadians(90)))
+                .rotateTo(new Position2D(-14, -16, Math.toRadians(90)), Math.toRadians(0))
+                .moveTo(new Position2D(-55, -16, Math.toRadians(0)))
+                .addAction(() -> {
+                    arm.setState(ArmSubsystem.State.EXTENDED);
+                    arm.setSlidePos(250);
+                    elbow.setState(ElbowSubsystem.State.UP);
+                    wrist.setState(WristSubsystem.State.UP);
+                })
+                .moveTo(new Position2D(-45-48, -19, Math.toRadians(0)))
+                .addAction(2, () -> {
+                    mecanumController.deactivate();
+                    intake.crWheel.setPower(-1.0);
+                    intake.pixelServo.setPosition(0.5);
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    intake.crWheel.setPower(0);
+                    intake.pixelServo.setPosition(0.9);
+                    arm.setState(ArmSubsystem.State.BOTTOM);
+                    elbow.setState(ElbowSubsystem.State.DOWN);
+                    wrist.setState(WristSubsystem.State.HALFWAY);
+                })
+                .moveTo(new Position2D(-40-48, -19, Math.toRadians(0)))
+                .moveTo(new Position2D(-40-48, -3, Math.toRadians(0)))
+                .moveTo(new Position2D(-52-48, -3, Math.toRadians(0)))
 
                 .enableRetrace()
+                .enableTanh(tanhPace, minimumTanh, maximumTanh)
                 .build();
 
         purePursuitFollower = new PurePursuitFollower(hardwareMap);

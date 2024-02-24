@@ -13,7 +13,6 @@ public class DropDownSubsystem extends Subsystem {
 
     public enum State {
         RAISED (0.67+0.015),
-        FIVE_HEIGHT (0.73+0.015),
         FOUR_HEIGHT (0.7575+0.015),
         THREE_HEIGHT (0.785+0.015),
         TWO_HEIGHT (0.8125+0.015),
