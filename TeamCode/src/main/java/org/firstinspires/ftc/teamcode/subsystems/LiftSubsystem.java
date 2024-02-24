@@ -63,7 +63,7 @@ public class LiftSubsystem extends Subsystem {
         this.rightMotor.setPositionErrorTolerance(5);
 
 
-        this.state = State.MANUAL;
+        this.state = State.DOWN;
         targetPosition = 0;
 
         power = 1;

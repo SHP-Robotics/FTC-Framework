@@ -34,11 +34,11 @@ public class Constants {
         public static final double kClawOpen = 0.42;
         public static final double kClawClosed = 0.52;
 
-        public static final double kWristDown = 0.2;
+        public static final double kWristDown = 0.25;
 
         public static final double kWristDrive = 0.1;
 
-        public static final double kWristDeposit = 0.53;
+        public static final double kWristDeposit = 0.57;
 
         public static final double kWristInit = 0;
 
@@ -55,9 +55,9 @@ public class Constants {
         public static final String kLeftLiftName = "leftSlide";
         public static final String kRightLiftName = "rightSlide";
 
-        public static final double kLiftDown = 0;
+        public static final double kLiftDown = 15;
         public static final double kLiftDrive = 200;
-        public static final double kLiftDeposit = 2200;
+        public static final double kLiftDeposit = 2600;
 
         public static final double kLiftClimb = 500;
 
