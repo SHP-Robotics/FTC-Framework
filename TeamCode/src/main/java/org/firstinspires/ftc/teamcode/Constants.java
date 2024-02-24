@@ -30,43 +30,13 @@ public class Constants {
         public static final double kTagsizeMeters = 0.0475;
     }
 
-    public static final class Arm {
-
-        public static final String kElbowName = "elbow";
-        public static final String kWristName = "wrist";
-        public static final double kElbowDown = 0;
-        public static final double kElbowDrive = 350;
-
-        public static final double kElbowUp = 5275;
-
-        public static final double kElbowReach = 5800;
-
-        public static final double kElbowClimb = 3500;
-
-        public static final double kWristDrive = 0.8;
-        public static final double kWristDown = 0.5;
-        public static final double kWristDeposit = 1;
-
-        public static final double kWristReach = .9;
-
-
-
-        public static final double kElbowP = 0.0018;
-        public static final double kElbowD = 0;
-        public static final double kElbowTolerance = 20;
-
-        public static final double kElbowS = 0.035; // static friction
-        public static final double kElbowG = 0.07; // gravity
-
-    }
-
     public static final class Claw {
-        public static final String kLeftClawName = "leftClaw";
-        public static final double kLeftClawOpen = .2; //FINAL
-        public static final double kLeftClawClosed = .45; //bigger in
-        public static final String kRightClawName = "rightClaw";
-        public static final double kRightClawOpen = 0.25; //FINAL
-        public static final double kRightClawClosed = 0.0; //smaller in
+        public static final double kClawOpen = 0.0;
+        public static final double kClawClosed = 1.0;
+
+        public static final double kWristDown = 0.0;
+
+        public static final double
 
     }
     public static final class Plane {
@@ -76,11 +46,7 @@ public class Constants {
 
     }
 
-    public static final class Climb {
-        public static final double kClimbHold = 0.5;
 
-        public static final double kClimbRelease = 0.2;
-    }
 //    public static final class Lift {
 //        public static final String kLeftLiftName = "leftLift";
 //        public static final String kRightLiftName = "rightLift";

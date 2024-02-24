@@ -6,33 +6,33 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.teamcode.BaseRobot;
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.MiracleBase;
 import org.firstinspires.ftc.teamcode.debug.OneMotorSystem;
 import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.Trigger;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.PlaneSubsystem;
 
 @TeleOp
-public class CommandBasedTeleOp extends BaseRobot {
+public class CommandBasedTeleOp extends MiracleBase {
     private double debounce;
     private double drivebias;
     // tee hee
-    private OneMotorSystem elbow;
-    private Servo wrist;
+//    private OneMotorSystem elbow;
+//    private Servo wrist;
     private Servo plane;
+    private Servo claw;
 
-    private Servo climb;
+//    private Servo climb;
 
     @Override
     public void init() {
         super.init();
         drivebias = 1.0;
-        claw.close();
-        arm.setState(ArmSubsystem.State.INTAKE);
+        claw.
+//        arm.setState(ArmSubsystem.State.INTAKE);
 
         // Default command runs when no other commands are scheduled for the subsystem
         drive.setDefaultCommand(

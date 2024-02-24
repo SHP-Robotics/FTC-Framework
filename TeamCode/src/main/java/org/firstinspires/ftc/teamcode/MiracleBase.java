@@ -4,14 +4,13 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.debug.Synchronous;
 import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
-import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.PlaneSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
+//import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
+
 
 /**
  * Template created by Ayaan Govil on 8/21/2021.
@@ -24,18 +23,12 @@ import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
  * - Ctrl/Command + Alt/Option + L = Auto format code
  */
 
-public class BaseRobot extends OpMode {
+public class MiracleBase extends OpMode {
     // Declare subsystems and devices
     public DriveSubsystem drive;
-//    public VisionSubsystem vision;
-//    public ArmSubsystem arm;
-//    public ClawSubsystem claw;
-//    public PlaneSubsystem plane;
-    public LiftSubsystem lift;
-    public Servo claw;
-
-
-//    public ScoopSubsystem scoop;
+    public Synchronous lift;
+    public Servo plane;
+    public ClawSubsystem claw;
 
     public double previousTime = 0;
 
@@ -47,16 +40,6 @@ public class BaseRobot extends OpMode {
 
         // Initialize your subsystems and devices
         drive = new DriveSubsystem(hardwareMap);
-//        vision = new VisionSubsystem(hardwareMap);
-//        arm = new ArmSubsystem(hardwareMap);
-//        claw = new ClawSubsystem(hardwareMap);
-//        plane = new PlaneSubsystem(hardwareMap);
-        lift = new LiftSubsystem(hardwareMap, "leftSlide", "rightSlide");
-//        scoop = new ScoopSubsystem(hardwareMap);
-//        intake = new SHPMotor(hardwareMap, "intake");
-        claw = hardwareMap.get(Servo.class, "claw");
-
-
     }
 
     // Called when you press the start button
@@ -71,15 +54,12 @@ public class BaseRobot extends OpMode {
         telemetry.addData("Loop Time (ms): ", Clock.elapsed(previousTime) * 1000);
         previousTime = Clock.now();
 
-
-
         // Handles all subsystem and command execution - DO NOT DELETE!
         try {
             CommandScheduler.getInstance().run();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
     }
 
     // Called when you press the stop button
