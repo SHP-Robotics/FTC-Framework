@@ -21,7 +21,9 @@ public class LiftSubsystem extends Subsystem {
 
         DEPOSIT,
 
-        MANUAL
+        MANUAL,
+
+        CLIMB
     }
 
     public SHPMotor leftMotor;
@@ -110,6 +112,8 @@ public class LiftSubsystem extends Subsystem {
     }
 
     private double processState() {
+        leftMotor.setMaxOutput(1);
+        rightMotor.setMaxOutput(1);
         switch (state) {
             case DOWN:
                 leftMotor.setPosition(Constants.Lift.kLiftDown);
@@ -127,6 +131,11 @@ public class LiftSubsystem extends Subsystem {
                 leftMotor.setPosition(targetPosition);
                 return rightMotor.setPosition(targetPosition);
 
+            case CLIMB:
+                leftMotor.setMaxOutput(1);
+                rightMotor.setMaxOutput(1);
+                leftMotor.setPosition(Constants.Lift.kLiftClimb);
+                return rightMotor.setPosition(Constants.Lift.kLiftClimb);
         }
         return 0;
     }
@@ -166,13 +175,13 @@ public class LiftSubsystem extends Subsystem {
     public void incrementState(){
         if (state == State.DOWN) setState(State.DRIVE);
         else if (state == State.DRIVE) setState(State.DEPOSIT);
-        else if (state == State.MANUAL) setState(State.DEPOSIT);
+        else if (state == State.MANUAL || state == State.CLIMB) setState(State.DEPOSIT);
     }
 
     public void deincrementState(){
         if (state == State.DEPOSIT) setState(State.DRIVE);
         else if (state == State.DRIVE) setState(State.DOWN);
-        else if (state == State.MANUAL) setState(State.DEPOSIT);
+        else if (state == State.MANUAL || state == State.CLIMB) setState(State.DEPOSIT);
     }
 
     public void applyBrakes() {

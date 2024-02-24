@@ -28,6 +28,8 @@ public class MiracleOp extends MiracleBase {
                 )
         );
 
+        claw.closeClaw();
+
     }
 
     @Override
@@ -68,7 +70,7 @@ public class MiracleOp extends MiracleBase {
             if (claw.getState().equals("DEPOSIT")){
                 if (claw.isOpen()){
                     claw.closeClaw();
-                    return;
+
                 } else {
                     claw.setState(ClawSubsystem.State.DRIVE);
                     lift.setState(LiftSubsystem.State.DRIVE);
@@ -108,6 +110,14 @@ public class MiracleOp extends MiracleBase {
             claw.toggleClaw();
             debounce = Clock.now();
 
+        }));
+
+        new Trigger(gamepad1.right_bumper, new RunCommand(() -> {
+            lift.setState(LiftSubsystem.State.CLIMB);
+        }));
+
+        new Trigger(gamepad1.square, new RunCommand(() -> {
+            drive.resetIMUAngle();
         }));
 
     }
