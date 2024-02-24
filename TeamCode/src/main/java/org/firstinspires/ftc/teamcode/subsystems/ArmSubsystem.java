@@ -1,18 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kElbowD;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kElbowDown;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kElbowDrive;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kElbowG;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kElbowName;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kElbowP;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kElbowS;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kElbowTolerance;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kElbowUp;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kWristDeposit;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kWristDown;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kWristDrive;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kWristName;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;

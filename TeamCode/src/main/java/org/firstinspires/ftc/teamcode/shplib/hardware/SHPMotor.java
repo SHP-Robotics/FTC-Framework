@@ -8,6 +8,7 @@ import com.acmerobotics.roadrunner.profile.MotionState;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
@@ -28,7 +29,7 @@ public class SHPMotor {
     private VoltageSensor voltageSensor;
 
     private final MotorUnit unit;
-    private double ticksPerRotation = 384.5; // default for gobilda 5202 @ 435 rpm
+    private double ticksPerRotation = 537.6; // default for gobilda 5202 @ 435 rpm
     private PositionPID positionPID;
     private VelocityPID velocityPID;
     private FFController ff;
@@ -168,6 +169,7 @@ public class SHPMotor {
         if (positionPID == null) return 0.0;
         positionPID.setCurrentPosition(getPosition(unit));
         double power = positionPID.calculate(position);
+//        if (this.motor.getDirection() == DcMotorSimple.Direction.REVERSE) power *= -1;
         setPower(power);
         return power;
     }
@@ -205,7 +207,8 @@ public class SHPMotor {
         return setVelocity(state.getV());
     }
 
-    public void reverseDirection() {
+    public void
+    reverseDirection() {
         if (getDirection() == DcMotorEx.Direction.FORWARD)
             setDirection(DcMotorEx.Direction.REVERSE);
         else setDirection(DcMotorEx.Direction.FORWARD);

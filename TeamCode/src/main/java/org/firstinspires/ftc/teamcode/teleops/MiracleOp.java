@@ -5,10 +5,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.MiracleBase;
 import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
+import org.firstinspires.ftc.teamcode.shplib.commands.Trigger;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
 
 @TeleOp
-public class MiracleTest extends MiracleBase {
+public class MiracleOp extends MiracleBase {
     private double debounce;
     private double drivebias;
     // tee hee
@@ -41,8 +42,27 @@ public class MiracleTest extends MiracleBase {
         super.loop();
         telemetry.update();
 
+        new Trigger(gamepad1.right_trigger > 0.5, new RunCommand(() -> {
+            if (!Clock.hasElapsed(debounce, 0.5)) return;
+            lift.incrementState();
 
 
+            debounce = Clock.now();
+        }));
+
+        new Trigger(gamepad1.left_trigger > 0.5, new RunCommand(() -> {
+            if (!Clock.hasElapsed(debounce, 0.5)) return;
+            lift.deincrementState();
+            debounce = Clock.now();
+        }));
+
+        new Trigger(gamepad1.dpad_up, new RunCommand(() -> {
+            lift.goUp();
+        }));
+
+        new Trigger (gamepad1.dpad_down, new RunCommand(() -> {
+            lift.goDown();
+        }));
 
     }
 }

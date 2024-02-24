@@ -36,7 +36,9 @@ public class Constants {
 
         public static final double kWristDown = 0.0;
 
-        public static final double
+        public static final double kWristDrive = 0.5;
+
+        public static final double kWristDeposit = 1;
 
     }
     public static final class Plane {
@@ -47,13 +49,17 @@ public class Constants {
     }
 
 
-//    public static final class Lift {
-//        public static final String kLeftLiftName = "leftLift";
-//        public static final String kRightLiftName = "rightLift";
-//
-//        public static final double kLiftDisable = 0.0475;
-//        public static final double kLiftPrepare = 0.0475;
-//        public static final double kLiftClimb = 0.0475;
-//
-//    }
+    public static final class Lift {
+        public static final String kLeftLiftName = "leftSlide";
+        public static final String kRightLiftName = "rightSlide";
+
+        public static final double kLiftDown = 0;
+        public static final double kLiftDrive = 200;
+        public static final double kLiftDeposit = 2200;
+
+        public static final double kLiftP = 8;
+        public static final double kLiftI = 0;
+        public static final double kLiftD = 4;
+
+    }
 }
