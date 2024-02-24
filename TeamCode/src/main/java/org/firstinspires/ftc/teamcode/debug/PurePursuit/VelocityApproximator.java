@@ -19,25 +19,37 @@ public class VelocityApproximator {
         r *= Constants.MECANUM_WIDTH / 2;
 
         return new double[]{
-                -(y + x + r) / deltaTime,
-                -(y - x - r) / deltaTime,
-                -(y - x + r) / deltaTime,
-                -(y + x - r) / deltaTime
+                (y + x + r) / deltaTime,
+                (y - x - r) / deltaTime,
+                (y - x + r) / deltaTime,
+                (y + x - r) / deltaTime
         };
     }
 
     public static Position2D getScaledTargetVelocity(Position2D targetVelocity, Position2D currentVelocity) {
-        return Position2D.add(targetVelocity, currentVelocity.getNegative());
+//        return Position2D.add(targetVelocity, currentVelocity.getNegative());
+        return Position2D.add(targetVelocity, Position2D.multiply(currentVelocity, 1/Constants.MAX_VELOCITY).getNegative());
     }
 
-    public static double getBottleneck(double[] velocities) {
-        double min = Math.abs(velocities[0]);
-        for (double velocity: velocities) {
-            if (Math.abs(velocity) < min) {
-                min = Math.abs(velocity);
-            }
+    public static double[] getBottlenecks(double[] targetVelocities, double[] currentVelocities) {
+        double[] velocityErrors = new double[]{
+                VelocityApproximator.velocityError(targetVelocities[0], currentVelocities[0]),
+                VelocityApproximator.velocityError(targetVelocities[1], currentVelocities[1]),
+                VelocityApproximator.velocityError(targetVelocities[2], currentVelocities[2]),
+                VelocityApproximator.velocityError(targetVelocities[3], currentVelocities[3])
+        };
+
+        double max = VelocityApproximator.getMaxVelocity(velocityErrors);
+
+        for (int i = 0; i < 4; i++) {
+            velocityErrors[i] /= (max * max / Constants.MAX_VELOCITY);
         }
-        return min;
+
+        return velocityErrors;
+    }
+
+    public static double velocityError(double targetVelocity, double currentVelocity) {
+        return Math.abs(targetVelocity - currentVelocity);
     }
 
     public static double getMaxVelocity(double[] velocities) {

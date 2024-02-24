@@ -66,7 +66,7 @@ public class SpeedController {
         this.currentSpeed = clampSpeed(speed);
     }
 
-    public void updateSpeed(Gamepad gamepad, double max) {
+    public void updateSpeed(Gamepad gamepad) {
         switch (this.speedType) {
             case SINGLE_OVERRIDE:
                 if (DrivingConfiguration.getValue(gamepad, DrivingConfiguration.SPEED_OVERRIDE_ONE) > 0) {

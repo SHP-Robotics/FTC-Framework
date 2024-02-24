@@ -7,6 +7,7 @@ import static org.firstinspires.ftc.teamcode.shplib.Constants.Arm.kRightSlideNam
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Arm.kSlideTolerance;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -15,8 +16,8 @@ import org.firstinspires.ftc.teamcode.shplib.Constants;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 
 public class ArmSubsystem extends Subsystem {
-    private final DcMotor leftSlide;
-    private final DcMotor rightSlide;
+    private final DcMotorEx leftSlide;
+    private final DcMotorEx rightSlide;
     private int slidePos;
 
     public enum State {
@@ -44,11 +45,11 @@ public class ArmSubsystem extends Subsystem {
     public ArmSubsystem(HardwareMap hardwareMap) {
         slidePos = 0;
 
-        leftSlide = (DcMotor) hardwareMap.get(kLeftSlideName);
+        leftSlide = (DcMotorEx) hardwareMap.get(kLeftSlideName);
         leftSlide.setDirection(DcMotorSimple.Direction.FORWARD);
         leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        rightSlide = (DcMotor) hardwareMap.get(kRightSlideName);
+        rightSlide = (DcMotorEx) hardwareMap.get(kRightSlideName);
         rightSlide.setDirection(DcMotorSimple.Direction.REVERSE);
         rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -88,6 +89,10 @@ public class ArmSubsystem extends Subsystem {
             state = State.HIGH;
     }
 
+    public void setSlidePos(int slidePos) {
+        this.slidePos = slidePos;
+    }
+
     public void incrementState(){
         if(slidePos <= kMaxHeight-kPixelHeight)
              slidePos += kPixelHeight;
@@ -111,6 +116,14 @@ public class ArmSubsystem extends Subsystem {
             leftSlide.setPower(0);
             return;
         }
+//
+//        if (this.state == State.BOTTOM) {
+//            if (this.getSlidePosition() < kSlideTolerance) {
+//                rightSlide.setPower(0);
+//                leftSlide.setPower(0);
+//                return;
+//            }
+//        }
 
         rightSlide.setPower(Constants.Arm.kRunPower);
         leftSlide.setPower(Constants.Arm.kRunPower);
@@ -138,5 +151,7 @@ public class ArmSubsystem extends Subsystem {
         telemetry.addData("State: ", state);
         telemetry.addData("Left Slide Position: ", leftSlide.getCurrentPosition());
         telemetry.addData("Right Slide Position: ", rightSlide.getCurrentPosition());
+//        telemetry.addData("Left Slide Velocity: ", leftSlide.getVelocity());
+//        telemetry.addData("Right Slide Velocity: ", rightSlide.getVelocity());
     }
 }

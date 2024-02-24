@@ -27,6 +27,8 @@ public class PosTuner extends BaseRobot {
     public void start() {
         super.start();
 
+//        servo = (Servo) hardwareMap.get("dropdown");
+
         elbow.setState(ElbowSubsystem.State.DOWN);
         wrist.setState(WristSubsystem.State.DOWN);
     }
@@ -73,8 +75,8 @@ public class PosTuner extends BaseRobot {
         telemetry.addData("kWristDown", Constants.Intake.kWristDown);
         telemetry.addData("kPositionBottom", Constants.Intake.kPositionBottom);
 
-//            servo.setPosition(gamepad1.left_stick_y);
-//            telemetry.addData("pos", servo.getPosition());
+//        servo.setPosition(gamepad1.left_stick_y);
+//        telemetry.addData("pos", servo.getPosition());
         telemetry.update();
     }
 }

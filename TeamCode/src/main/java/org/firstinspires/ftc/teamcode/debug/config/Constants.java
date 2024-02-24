@@ -16,7 +16,7 @@ public final class Constants {
     public static final double positionBuffer = 0.5; // Default positional error admitted *
     public static final double rotationBuffer = Math.toRadians(5); // Default rotational error admitted *
 
-    public static final double tanhPace = 0.6; // Acceleration constant *
+    public static final double tanhPace = 1; // Acceleration constant *
     public static final double minimumTanh = 0.04; // Minimum path following speed *
     public static final double maximumTanh = 1; // Maximum path following speed *
 
@@ -29,6 +29,13 @@ public final class Constants {
     public static final DcMotorSimple.Direction rightFrontDirection = DcMotorSimple.Direction.FORWARD; // **
     public static final DcMotorSimple.Direction leftRearDirection = DcMotorSimple.Direction.REVERSE; // **
     public static final DcMotorSimple.Direction rightRearDirection = DcMotorSimple.Direction.REVERSE; // **
+
+    public static double[] powers = new double[]{
+            1,
+            0.97,
+            1,
+            0.97
+    };
 
     public static double leftFrontPower = 1;
     public static double rightFrontPower = 0.97;

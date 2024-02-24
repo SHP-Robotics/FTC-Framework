@@ -52,8 +52,33 @@ public class Position2D {
         );
     }
 
+    public void multiply(double scalar, boolean clamp) {
+        this.x *= scalar;
+        this.y *= scalar;
+        this.headingRadians = this.headingRadians * scalar;
+        if (clamp) {
+            this.headingRadians = MathUtils.normalizeAngle(this.headingRadians, 0.0);
+        }
+    }
+
+    public static Position2D multiply(Position2D p1, double scalar) {
+        return new Position2D(
+                p1.getX() * scalar,
+                p1.getY() * scalar,
+                MathUtils.normalizeAngle(p1.getHeadingRadians() * scalar, 0.0)
+        );
+    }
+
     public double getMagnitude() {
         return Math.sqrt((this.x*this.x)+(this.y*this.y));
+    }
+
+    public static Position2D normalize(Position2D position2D) {
+        return new Position2D(
+                position2D.getX() / position2D.getMagnitude(),
+                position2D.getY() / position2D.getMagnitude(),
+                position2D.getHeadingRadians()
+        );
     }
 
     public Position2D getNegative() {
@@ -72,6 +97,10 @@ public class Position2D {
 
     public static double dist(Position2D p1, Position2D p2) {
         return Math.sqrt(((p2.x - p1.x) * (p2.x - p1.x)) + ((p2.y - p1.y) * (p2.y - p1.y)));
+    }
+
+    public static double angle(Position2D p1, Position2D p2) {
+        return Math.acos( ((p1.getX()*p2.getX()) + (p1.getY()*p2.getY())) / (p1.getMagnitude() * p2.getMagnitude()) );
     }
 
     public void rotate(double radiansClockwise) {
