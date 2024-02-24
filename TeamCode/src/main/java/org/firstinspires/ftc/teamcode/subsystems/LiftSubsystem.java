@@ -5,12 +5,14 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 import org.firstinspires.ftc.teamcode.shplib.controllers.PositionPID;
 import org.firstinspires.ftc.teamcode.shplib.hardware.SHPMotor;
 import org.firstinspires.ftc.teamcode.shplib.hardware.units.MotorUnit;
 
-public class LiftSubsystem {
+public class LiftSubsystem extends Subsystem {
 
     public enum State {
         DOWN,
@@ -49,10 +51,11 @@ public class LiftSubsystem {
         this.leftMotor.reverseDirection();
 
 
-        this.leftMotor.enablePositionPID(new PositionPID(0.01, Constants.Lift.kLiftI, 0));
-        this.rightMotor.enablePositionPID(new PositionPID(0.01, Constants.Lift.kLiftI, 0));
+        this.leftMotor.enablePositionPID(new PositionPID(0.0018, Constants.Lift.kLiftI, .0001));
+        this.rightMotor.enablePositionPID(new PositionPID(0.0018, Constants.Lift.kLiftI, .0001));
 
-
+        this.leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        this.rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         this.leftMotor.setPositionErrorTolerance(5);
         this.rightMotor.setPositionErrorTolerance(5);
@@ -99,24 +102,42 @@ public class LiftSubsystem {
 
     public void setState(State state){
         this.state = state;
-        switch (state){
-            case DOWN:
-                targetPosition = (int)Constants.Lift.kLiftDown;
-                break;
-            case DRIVE:
-                targetPosition = (int)Constants.Lift.kLiftDrive;
-                break;
-            case DEPOSIT:
-                targetPosition = (int)Constants.Lift.kLiftDeposit;
-                break;
-            case MANUAL:
-               break;
-        }
-
-        leftMotor.setPosition(targetPosition);
-        rightMotor.setPosition(targetPosition);
 
     }
+
+    public boolean atSetpoint() {
+        return leftMotor.atPositionSetpoint() && rightMotor.atPositionSetpoint();
+    }
+
+    private double processState() {
+        switch (state) {
+            case DOWN:
+                leftMotor.setPosition(Constants.Lift.kLiftDown);
+                return rightMotor.setPosition(Constants.Lift.kLiftDown);
+
+            case DRIVE:
+                leftMotor.setPosition(Constants.Lift.kLiftDrive);
+                return rightMotor.setPosition(Constants.Lift.kLiftDrive);
+
+            case DEPOSIT:
+                leftMotor.setPosition(Constants.Lift.kLiftDeposit);
+                return rightMotor.setPosition(Constants.Lift.kLiftDeposit);
+
+            case MANUAL:
+                leftMotor.setPosition(targetPosition);
+                return rightMotor.setPosition(targetPosition);
+
+        }
+        return 0;
+    }
+
+    @Override
+    public void periodic (Telemetry telemetry) {
+        processState();
+
+    }
+
+
 
 //    public void runToPosition(int pos){
 //        rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -161,14 +182,14 @@ public class LiftSubsystem {
 
     public void goUp() {
         setState(State.MANUAL);
-        targetPosition = getAvgPos() + 30;
+        targetPosition = getAvgPos() + 100;
         rightMotor.setPosition(targetPosition);
         leftMotor.setPosition(targetPosition);
     }
 
     public void goDown() {
         setState(State.MANUAL);
-        targetPosition = getAvgPos() - 30;
+        targetPosition = getAvgPos() - 100;
         rightMotor.setPosition(targetPosition);
         leftMotor.setPosition(targetPosition);
     }

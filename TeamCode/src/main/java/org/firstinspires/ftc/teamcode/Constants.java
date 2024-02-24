@@ -31,14 +31,16 @@ public class Constants {
     }
 
     public static final class Claw {
-        public static final double kClawOpen = 0.0;
-        public static final double kClawClosed = 1.0;
+        public static final double kClawOpen = 0.42;
+        public static final double kClawClosed = 0.52;
 
-        public static final double kWristDown = 0.0;
+        public static final double kWristDown = 0.2;
 
-        public static final double kWristDrive = 0.5;
+        public static final double kWristDrive = 0.1;
 
-        public static final double kWristDeposit = 1;
+        public static final double kWristDeposit = 0.53;
+
+        public static final double kWristInit = 0;
 
     }
     public static final class Plane {

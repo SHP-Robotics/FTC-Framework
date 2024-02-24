@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
 import org.firstinspires.ftc.teamcode.shplib.hardware.units.MotorUnit;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
 //import org.firstinspires.ftc.teamcode.subsystems.ClawSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
 //import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
@@ -30,7 +31,7 @@ public class MiracleBase extends OpMode {
     public DriveSubsystem drive;
     public LiftSubsystem lift;
     public Servo plane;
-//    public ClawSubsystem claw;
+    public ClawSubsystem claw;
 
     public double previousTime = 0;
 
@@ -43,6 +44,7 @@ public class MiracleBase extends OpMode {
         // Initialize your subsystems and devices
         drive = new DriveSubsystem(hardwareMap);
         lift = new LiftSubsystem(hardwareMap, "leftSlide", "rightSlide");
+        claw = new ClawSubsystem(hardwareMap);
     }
 
     // Called when you press the start button
@@ -55,11 +57,16 @@ public class MiracleBase extends OpMode {
     @Override
     public void loop() {
         telemetry.addData("Loop Time (ms): ", Clock.elapsed(previousTime) * 1000);
-        telemetry.addData("left slide: ", lift.leftMotor.getPosition(MotorUnit.TICKS));
-        telemetry.addData("right slide: ", lift.rightMotor.getPosition(MotorUnit.TICKS));
+//        telemetry.addData("left slide: ", lift.leftMotor.getPosition(MotorUnit.TICKS));
+//        telemetry.addData("right slide: ", lift.rightMotor.getPosition(MotorUnit.TICKS));
         telemetry.addData("slide state: ", lift.getState());
         telemetry.addData("slide pos: ", lift.getAvgPos());
         telemetry.addData("slide target: ", lift.targetPosition);
+
+        telemetry.addData("wrist state: ", claw.getState());
+
+        telemetry.addData("claw state: ", claw.getSqueezeState());
+
         previousTime = Clock.now();
 
 //        lift.update(20);

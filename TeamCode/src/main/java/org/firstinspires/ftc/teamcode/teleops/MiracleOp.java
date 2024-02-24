@@ -7,6 +7,8 @@ import org.firstinspires.ftc.teamcode.MiracleBase;
 import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.Trigger;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
+import org.firstinspires.ftc.teamcode.subsystems.ClawSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.LiftSubsystem;
 
 @TeleOp
 public class MiracleOp extends MiracleBase {
@@ -44,15 +46,39 @@ public class MiracleOp extends MiracleBase {
 
         new Trigger(gamepad1.right_trigger > 0.5, new RunCommand(() -> {
             if (!Clock.hasElapsed(debounce, 0.5)) return;
-            lift.incrementState();
-
-
+            if (claw.getState().equals("DOWN")){
+                if (claw.isOpen()) claw.closeClaw();
+                else {
+//                    lift.incrementState();
+                    claw.setState(ClawSubsystem.State.DRIVE);
+                    lift.setState(LiftSubsystem.State.DRIVE);
+                }
+            }
+            else if (claw.getState().equals("DRIVE")) {
+                lift.setState(LiftSubsystem.State.DEPOSIT);
+                claw.setState(ClawSubsystem.State.DEPOSIT);
+            } else if (claw.getState().equals("DEPOSIT")) {
+                claw.openClaw();
+            }
             debounce = Clock.now();
         }));
 
         new Trigger(gamepad1.left_trigger > 0.5, new RunCommand(() -> {
             if (!Clock.hasElapsed(debounce, 0.5)) return;
-            lift.deincrementState();
+            if (claw.getState().equals("DEPOSIT")){
+                if (claw.isOpen()){
+                    claw.closeClaw();
+                    return;
+                } else {
+                    claw.setState(ClawSubsystem.State.DRIVE);
+                    lift.setState(LiftSubsystem.State.DRIVE);
+                }
+            } else if (claw.getState().equals("DRIVE")) {
+                claw.setState(ClawSubsystem.State.DOWN);
+                lift.setState(LiftSubsystem.State.DOWN);
+            } else if (claw.getState().equals("DOWN")) {
+                claw.openClaw();
+            }
             debounce = Clock.now();
         }));
 
@@ -62,6 +88,26 @@ public class MiracleOp extends MiracleBase {
 
         new Trigger (gamepad1.dpad_down, new RunCommand(() -> {
             lift.goDown();
+        }));
+
+        new Trigger(gamepad1.dpad_right, new RunCommand(() -> {
+            if (!Clock.hasElapsed(debounce, 0.5)) return;
+            claw.incrementState();
+            debounce = Clock.now();
+        }));
+
+        new Trigger(gamepad1.dpad_left, new RunCommand(() -> {
+            if (!Clock.hasElapsed(debounce, 0.5)) return;
+            claw.deincrementState();
+            debounce = Clock.now();
+        }));
+
+        new Trigger(gamepad1.circle, new RunCommand(() -> {
+            if (!Clock.hasElapsed(debounce, 0.5)) return;
+
+            claw.toggleClaw();
+            debounce = Clock.now();
+
         }));
 
     }
