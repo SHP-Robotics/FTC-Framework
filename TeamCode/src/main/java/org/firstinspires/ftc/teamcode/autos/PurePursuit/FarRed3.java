@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.WristSubsystem;
 
 @Autonomous
-public class FarBlueBackdrop extends BaseAuto {
+public class FarRed3 extends BaseAuto {
     PurePursuitPath path1;
     PurePursuitPath path2;
     PurePursuitPath path3;
@@ -26,7 +26,7 @@ public class FarBlueBackdrop extends BaseAuto {
 
     @Override
     public void init() {
-        this.side = Side.BLUE;
+        this.side = Side.RED;
 
         double tanhPace = 0.5;
         double minimumTanh = Constants.minimumTanh;
@@ -42,7 +42,7 @@ public class FarBlueBackdrop extends BaseAuto {
                     intake.setState(IntakeSubsystem.State.AUTO_INTAKE);
                     dropDown.setState(DropDownSubsystem.State.RAISED);
                 })
-                .moveTo(new Position2D(20, -19-5, Math.toRadians(0)))
+                .moveTo(new Position2D(21, -19-5, Math.toRadians(0)))
 
                 .moveTo(new Position2D(18-24, -19, Math.toRadians(0)))
                 .addAction(() -> {
@@ -51,26 +51,32 @@ public class FarBlueBackdrop extends BaseAuto {
                 .moveTo(new Position2D(18-24, -21, Math.toRadians(0)))
                 .addAction(() -> {
                     intake.crWheel.setPower(0.5);
-                    intake.setState(IntakeSubsystem.State.REJECT);
+                    intake.setState(IntakeSubsystem.State.REJECT_SLOW);
                 })
-                .moveTo(new Position2D(18-24, -19-26, Math.toRadians(0)))
+                .moveTo(new Position2D(18-24, -19-26-2, Math.toRadians(0)))
                 .addAction(() -> intake.setState(IntakeSubsystem.State.STILL))
-                .moveTo(new Position2D(18-24-72, -19-26, Math.toRadians(0)))
+                .moveTo(new Position2D(18-24-72, -19-26-2, Math.toRadians(0)))
                 .addAction(() -> {
                     arm.setState(ArmSubsystem.State.EXTENDED);
-                    arm.setSlidePos(750);
+                    arm.setSlidePos(450);
                     elbow.setState(ElbowSubsystem.State.UP);
                     wrist.setState(WristSubsystem.State.UP);
                 })
-                .moveTo(new Position2D(18-24-72, -19-26+23, Math.toRadians(0)))
-                .moveTo(new Position2D(-92, -28, Math.toRadians(0)))
+                .moveTo(new Position2D(18-24-72, -28.62, Math.toRadians(0)))
+                .moveTo(new Position2D(-92, -28.62, Math.toRadians(0)))
 
                 .addAction(2, () -> {
                     mecanumController.deactivate();
-                    intake.crWheel.setPower(-1.0);
                     intake.pixelServo.setPosition(0.5);
                     try {
-                        Thread.sleep(2000);
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    arm.setPosition(1000);
+                    intake.crWheel.setPower(-1.0);
+                    try {
+                        Thread.sleep(1500);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
@@ -81,8 +87,8 @@ public class FarBlueBackdrop extends BaseAuto {
                     wrist.setState(WristSubsystem.State.HALFWAY);
                 })
                 .moveTo(new Position2D(-88, -28, Math.toRadians(0)))
-                .moveTo(new Position2D(-88, -3, Math.toRadians(0)))
-                .moveTo(new Position2D(-100, -3, Math.toRadians(0)))
+                .moveTo(new Position2D(-88, -47, Math.toRadians(0)))
+                .moveTo(new Position2D(-100, -50, Math.toRadians(0)))
 
                 .enableRetrace()
                 .enableTanh(tanhPace, minimumTanh, maximumTanh)
@@ -90,22 +96,53 @@ public class FarBlueBackdrop extends BaseAuto {
 
         path2 = new PurePursuitPath.PurePursuitPathBuilder()
                 .moveTo(new Position2D(0, -31.5, Math.toRadians(90)))
-                .moveTo(new Position2D(0, -22, Math.toRadians(90)))
-                .rotateTo(new Position2D(0, -22, Math.toRadians(90)), Math.toRadians(0))
-                .moveTo(new Position2D(-55, -22, Math.toRadians(0)))
+                .moveTo(new Position2D(0, -20, Math.toRadians(90)))
+                .rotateTo(new Position2D(0, -20, Math.toRadians(90)), Math.toRadians(0))
+//                .moveTo(new Position2D(0, -20, Math.toRadians(0)))
+
+                .addAction(() -> {
+                    intake.setState(IntakeSubsystem.State.AUTO_INTAKE);
+                    dropDown.setState(DropDownSubsystem.State.RAISED);
+                })
+                .moveTo(new Position2D(21, -19-5, Math.toRadians(0)))
+
+                .moveTo(new Position2D(18, -19-5, Math.toRadians(0)))
+                .addAction(() -> {
+                    intake.crWheel.setPower(-0.5);
+                })
+                .moveTo(new Position2D(18, -19, Math.toRadians(0)))
+                .moveTo(new Position2D(18, -19-5, Math.toRadians(0)))
+
+                .addAction(() -> {
+                    intake.crWheel.setPower(0.5);
+                    intake.setState(IntakeSubsystem.State.REJECT_SLOW);
+                })
+                .moveTo(new Position2D(18, -19-26-2, Math.toRadians(0)))
+
+                .moveTo(new Position2D(18-24, -19-26-2, Math.toRadians(0)))
+                .addAction(() -> intake.setState(IntakeSubsystem.State.STILL))
+                .moveTo(new Position2D(18-24-72, -19-26-2, Math.toRadians(0)))
                 .addAction(() -> {
                     arm.setState(ArmSubsystem.State.EXTENDED);
-                    arm.setSlidePos(250);
+                    arm.setSlidePos(450);
                     elbow.setState(ElbowSubsystem.State.UP);
                     wrist.setState(WristSubsystem.State.UP);
                 })
-                .moveTo(new Position2D(-44.5-48, -24, Math.toRadians(0)))
+                .moveTo(new Position2D(18-24-72, -25+2, Math.toRadians(0)))
+                .moveTo(new Position2D(-92, -25+2, Math.toRadians(0)))
+
                 .addAction(2, () -> {
                     mecanumController.deactivate();
-                    intake.crWheel.setPower(-1.0);
                     intake.pixelServo.setPosition(0.5);
                     try {
-                        Thread.sleep(500);
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    arm.setPosition(1000);
+                    intake.crWheel.setPower(-1.0);
+                    try {
+                        Thread.sleep(1500);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
@@ -115,32 +152,59 @@ public class FarBlueBackdrop extends BaseAuto {
                     elbow.setState(ElbowSubsystem.State.DOWN);
                     wrist.setState(WristSubsystem.State.HALFWAY);
                 })
-                .moveTo(new Position2D(-40-48, -24, Math.toRadians(0)))
-                .moveTo(new Position2D(-40-48, -3, Math.toRadians(0)))
-                .moveTo(new Position2D(-52-48, -3, Math.toRadians(0)))
+                .moveTo(new Position2D(-88, -28, Math.toRadians(0)))
+                .moveTo(new Position2D(-88, -46, Math.toRadians(0)))
+                .moveTo(new Position2D(-100, -50, Math.toRadians(0)))
 
                 .enableRetrace()
                 .enableTanh(tanhPace, minimumTanh, maximumTanh)
                 .build();
 
         path3 = new PurePursuitPath.PurePursuitPathBuilder()
-                .moveTo(new Position2D(-14, -25, Math.toRadians(90)))
-                .moveTo(new Position2D(-14, -16, Math.toRadians(90)))
-                .rotateTo(new Position2D(-14, -16, Math.toRadians(90)), Math.toRadians(0))
-                .moveTo(new Position2D(-55, -16, Math.toRadians(0)))
+                .moveTo(new Position2D(0, -25, Math.toRadians(90)))
+                .rotateTo(new Position2D(0, -25, Math.toRadians(90)), Math.toRadians(0))
+                .moveTo(new Position2D(-7, -23, Math.toRadians(0)))
+//                .moveTo(new Position2D(0, -16, Math.toRadians(0)))
+
+                .addAction(() -> {
+                    intake.setState(IntakeSubsystem.State.AUTO_INTAKE);
+                    dropDown.setState(DropDownSubsystem.State.RAISED);
+                })
+                .moveTo(new Position2D(21, -19-5, Math.toRadians(0)))
+
+                .moveTo(new Position2D(18-24, -19, Math.toRadians(0)))
+                .addAction(() -> {
+                    intake.crWheel.setPower(-0.5);
+                })
+                .moveTo(new Position2D(18-24, -21, Math.toRadians(0)))
+                .addAction(() -> {
+                    intake.crWheel.setPower(0.5);
+                    intake.setState(IntakeSubsystem.State.REJECT_SLOW);
+                })
+                .moveTo(new Position2D(18-24, -19-26-3, Math.toRadians(0)))
+                .addAction(() -> intake.setState(IntakeSubsystem.State.STILL))
+                .moveTo(new Position2D(18-24-72, -19-26-3, Math.toRadians(0)))
                 .addAction(() -> {
                     arm.setState(ArmSubsystem.State.EXTENDED);
-                    arm.setSlidePos(250);
+                    arm.setSlidePos(450);
                     elbow.setState(ElbowSubsystem.State.UP);
                     wrist.setState(WristSubsystem.State.UP);
                 })
-                .moveTo(new Position2D(-45-48, -19, Math.toRadians(0)))
+                .moveTo(new Position2D(18-24-72, -19+1.75, Math.toRadians(0)))
+                .moveTo(new Position2D(-92, -19+1.75, Math.toRadians(0)))
+
                 .addAction(2, () -> {
                     mecanumController.deactivate();
-                    intake.crWheel.setPower(-1.0);
                     intake.pixelServo.setPosition(0.5);
                     try {
-                        Thread.sleep(500);
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    arm.setPosition(1000);
+                    intake.crWheel.setPower(-1.0);
+                    try {
+                        Thread.sleep(1500);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
@@ -150,9 +214,9 @@ public class FarBlueBackdrop extends BaseAuto {
                     elbow.setState(ElbowSubsystem.State.DOWN);
                     wrist.setState(WristSubsystem.State.HALFWAY);
                 })
-                .moveTo(new Position2D(-40-48, -19, Math.toRadians(0)))
-                .moveTo(new Position2D(-40-48, -3, Math.toRadians(0)))
-                .moveTo(new Position2D(-52-48, -3, Math.toRadians(0)))
+                .moveTo(new Position2D(-88, -28, Math.toRadians(0)))
+                .moveTo(new Position2D(-88, -46, Math.toRadians(0)))
+                .moveTo(new Position2D(-100, -50, Math.toRadians(0)))
 
                 .enableRetrace()
                 .enableTanh(tanhPace, minimumTanh, maximumTanh)

@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.subsystems.ElbowSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.WristSubsystem;
 
 @Autonomous
-public class CloseBlueBackdrop extends BaseAuto {
+public class CloseRed2 extends BaseAuto {
     PurePursuitPath path1;
     PurePursuitPath path2;
     PurePursuitPath path3;
@@ -24,7 +24,7 @@ public class CloseBlueBackdrop extends BaseAuto {
 
     @Override
     public void init() {
-        this.side = Side.BLUE;
+        this.side = Side.RED;
 
         double tanhPace = 0.5;
         double minimumTanh = Constants.minimumTanh;
@@ -59,8 +59,8 @@ public class CloseBlueBackdrop extends BaseAuto {
                     wrist.setState(WristSubsystem.State.HALFWAY);
                 })
                 .moveTo(new Position2D(-40, -29, Math.toRadians(0)))
-                .moveTo(new Position2D(-40, -3, Math.toRadians(0)))
-                .moveTo(new Position2D(-52, -3, Math.toRadians(0)))
+                .moveTo(new Position2D(-40, -1, Math.toRadians(0)))
+                .moveTo(new Position2D(-52, -1, Math.toRadians(0)))
 
                 .enableRetrace()
                 .enableTanh(tanhPace, minimumTanh, maximumTanh)
@@ -72,11 +72,11 @@ public class CloseBlueBackdrop extends BaseAuto {
                 .rotateTo(new Position2D(0, -22, Math.toRadians(90)), Math.toRadians(0))
                 .addAction(() -> {
                     arm.setState(ArmSubsystem.State.EXTENDED);
-                    arm.setSlidePos(250);
+                    arm.setSlidePos(200);
                     elbow.setState(ElbowSubsystem.State.UP);
                     wrist.setState(WristSubsystem.State.UP);
                 })
-                .moveTo(new Position2D(-44.5, -24, Math.toRadians(0)))
+                .moveTo(new Position2D(-44.5, -26, Math.toRadians(0)))
                 .addAction(2, () -> {
                     mecanumController.deactivate();
                     intake.crWheel.setPower(-1.0);
@@ -93,8 +93,8 @@ public class CloseBlueBackdrop extends BaseAuto {
                     wrist.setState(WristSubsystem.State.HALFWAY);
                 })
                 .moveTo(new Position2D(-40, -24, Math.toRadians(0)))
-                .moveTo(new Position2D(-40, -3, Math.toRadians(0)))
-                .moveTo(new Position2D(-52, -3, Math.toRadians(0)))
+                .moveTo(new Position2D(-40, -1, Math.toRadians(0)))
+                .moveTo(new Position2D(-52, -1, Math.toRadians(0)))
 
                 .enableRetrace()
                 .enableTanh(tanhPace, minimumTanh, maximumTanh)
@@ -127,8 +127,8 @@ public class CloseBlueBackdrop extends BaseAuto {
                     wrist.setState(WristSubsystem.State.HALFWAY);
                 })
                 .moveTo(new Position2D(-40, -19, Math.toRadians(0)))
-                .moveTo(new Position2D(-40, -3, Math.toRadians(0)))
-                .moveTo(new Position2D(-52, -3, Math.toRadians(0)))
+                .moveTo(new Position2D(-40, -1, Math.toRadians(0)))
+                .moveTo(new Position2D(-52, -1, Math.toRadians(0)))
 
                 .enableRetrace()
                 .enableTanh(tanhPace, minimumTanh, maximumTanh)

@@ -24,6 +24,7 @@ public class IntakeSubsystem extends Subsystem {
         DEPOSIT2,
         STILL,
         REJECT,
+        REJECT_SLOW,
         REJECT_ALL,
         AUTO_INTAKE
     }
@@ -75,9 +76,13 @@ public class IntakeSubsystem extends Subsystem {
                 crWheel.setPower(-1.0);
                 pixelServo.setPosition(0.5);
                 break;
+            case REJECT_SLOW:
+                crWheel.setPower(0);
+                spinningIntake.setPower(-0.45);
+                break;
             case REJECT:
                 crWheel.setPower(0);
-                spinningIntake.setPower(-0.8);
+                spinningIntake.setPower(-0.7);
                 break;
             case STILL:
                 crWheel.setPower(0);

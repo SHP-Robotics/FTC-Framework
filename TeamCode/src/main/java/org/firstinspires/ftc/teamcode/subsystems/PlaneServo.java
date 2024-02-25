@@ -48,10 +48,10 @@ public class PlaneServo extends Subsystem {
     public void periodic(Telemetry telemetry) {
         switch (state) {
             case IN:
-                planeServo.setPosition(0.575);
+                planeServo.setPosition(0); //0
                 break;
             case OUT:
-                planeServo.setPosition(1);
+                planeServo.setPosition(0.5);
                 break;
         }
         telemetry.addData("State: ", state);

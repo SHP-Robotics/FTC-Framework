@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.commands.PrepareClimbCommand;
 import org.firstinspires.ftc.teamcode.commands.RearrangeMosaicCommand;
 import org.firstinspires.ftc.teamcode.shplib.BaseRobot;
 import org.firstinspires.ftc.teamcode.shplib.Constants;
+import org.firstinspires.ftc.teamcode.shplib.TestBaseRobot;
 import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.Trigger;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
@@ -22,16 +23,17 @@ import org.firstinspires.ftc.teamcode.subsystems.PlaneServo;
 import org.firstinspires.ftc.teamcode.subsystems.WristSubsystem;
 
 @TeleOp
-public class AndyRandy extends BaseRobot {
+public class OmicronLee extends TestBaseRobot {
     private double debounce;
     private double driveBias;
+    private int pixels = 0;
 
     // spammable code
     private boolean holdingCross = false;
     private boolean holdingRightBumper = false;
     private boolean holdingRightStick = false;
 
-//    private ElapsedTime elapsedTime;
+    //    private ElapsedTime elapsedTime;
     private boolean holdingTriangle = false;
 
     // dropdown
@@ -96,7 +98,7 @@ public class AndyRandy extends BaseRobot {
 
         // Lower arm
         new Trigger((arm.getState() != ArmSubsystem.State.BOTTOM && gamepad1.left_bumper) || (wrist.getState() == WristSubsystem.State.STAGE_DOOR && !gamepad1.touchpad),
-            new LowerArmCommand(arm, wrist, elbow)
+                new LowerArmCommand(arm, wrist, elbow)
         );
 
         // Set intake to still
@@ -170,7 +172,15 @@ public class AndyRandy extends BaseRobot {
         } else {
             holdingCross = false;
         }
-
+        if(sensor.filled()) {
+            if (pixels != 2){
+                gamepad1.rumble(1000);
+                pixels = 2;
+            }
+        }
+        else{
+            pixels = 0;
+        }
         // launch plane
         new Trigger (gamepad1.dpad_left, new RunCommand(()->{
 //            if (!Clock.hasElapsed(debounce, 60)) return;
