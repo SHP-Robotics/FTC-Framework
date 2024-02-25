@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.shplib.hardware.units.MotorUnit;
 
 public class DriveSubsystem extends Subsystem {
     private final SHPMecanumDrive drive;
-    private final SHPIMU imu;
+    public final SHPIMU imu;
 //    private final SHPIMU imu;
 
     private double bias = kMaximumBias; // will always be between kMinimumBias and 1.0

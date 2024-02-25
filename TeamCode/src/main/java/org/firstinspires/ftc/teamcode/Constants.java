@@ -45,8 +45,8 @@ public class Constants {
     }
     public static final class Plane {
         public static final String kPlaneName = "plane";
-        public static final double kPlaneLaunch = 1.0;
-        public static final double kPlaneLoad = 0.6;
+        public static final double kPlaneLaunch = 0.3;
+        public static final double kPlaneLoad = 0.0;
 
     }
 
@@ -55,7 +55,7 @@ public class Constants {
         public static final String kLeftLiftName = "leftSlide";
         public static final String kRightLiftName = "rightSlide";
 
-        public static final double kLiftDown = 15;
+        public static final double kLiftDown = 5;
         public static final double kLiftDrive = 200;
         public static final double kLiftDeposit = 2600;
 

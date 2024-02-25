@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.teleops;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.MiracleBase;
 import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.Trigger;
@@ -118,6 +119,10 @@ public class MiracleOp extends MiracleBase {
 
         new Trigger(gamepad1.square, new RunCommand(() -> {
             drive.resetIMUAngle();
+        }));
+
+        new Trigger(gamepad1.left_bumper, new RunCommand(() -> {
+            plane.setPosition(Constants.Plane.kPlaneLaunch);
         }));
 
     }

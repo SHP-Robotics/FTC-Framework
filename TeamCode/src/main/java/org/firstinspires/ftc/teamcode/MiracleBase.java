@@ -33,6 +33,8 @@ public class MiracleBase extends OpMode {
     public Servo plane;
     public ClawSubsystem claw;
 
+//    public Servo plane;
+
     public double previousTime = 0;
 
     // Called when you press the init button
@@ -45,11 +47,16 @@ public class MiracleBase extends OpMode {
         drive = new DriveSubsystem(hardwareMap);
         lift = new LiftSubsystem(hardwareMap, "leftSlide", "rightSlide");
         claw = new ClawSubsystem(hardwareMap);
+        plane = hardwareMap.get(Servo.class, "plane");
+
+        plane.setPosition(Constants.Plane.kPlaneLoad);
+
     }
 
     // Called when you press the start button
     @Override
     public void start() {
+
 
     }
 
