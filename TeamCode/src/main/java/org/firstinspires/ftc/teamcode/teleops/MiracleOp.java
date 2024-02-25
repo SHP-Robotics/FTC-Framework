@@ -56,8 +56,11 @@ public class MiracleOp extends MiracleBase {
                     claw.setState(ClawSubsystem.State.DRIVE);
                     lift.setState(LiftSubsystem.State.DRIVE);
                 }
+            } else if (claw.getState().equals("DRIVE")) {
+                lift.setState(LiftSubsystem.State.MID);
+                claw.setState(ClawSubsystem.State.MID);
             }
-            else if (claw.getState().equals("DRIVE")) {
+            else if (claw.getState().equals("MID")) {
                 lift.setState(LiftSubsystem.State.DEPOSIT);
                 claw.setState(ClawSubsystem.State.DEPOSIT);
             } else if (claw.getState().equals("DEPOSIT")) {
@@ -68,7 +71,11 @@ public class MiracleOp extends MiracleBase {
 
         new Trigger(gamepad1.left_trigger > 0.5, new RunCommand(() -> {
             if (!Clock.hasElapsed(debounce, 0.5)) return;
-            if (claw.getState().equals("DEPOSIT")){
+            else if (claw.getState().equals("DEPOSIT")){
+                claw.setState(ClawSubsystem.State.MID);
+                lift.setState(LiftSubsystem.State.MID);
+            }
+            else if (claw.getState().equals("MID")){
                 if (claw.isOpen()){
                     claw.closeClaw();
 
@@ -114,6 +121,7 @@ public class MiracleOp extends MiracleBase {
         }));
 
         new Trigger(gamepad1.right_bumper, new RunCommand(() -> {
+            claw.setState(ClawSubsystem.State.DRIVE);
             lift.setState(LiftSubsystem.State.CLIMB);
         }));
 

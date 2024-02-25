@@ -59,7 +59,7 @@ public class MiracleAutoBlue extends MiracleBase {
                         //.then(new RunCommand(() -> {location = vision.getLocation();}))
 
                         //.then(new DriveCommand(drive,0.025,0,0,3.5))
-                        .then(new DriveCommand(drive,0.3,0,0,1.75,false))
+                        .then(new DriveCommand(drive,0.3,0,0,1.6,false))
                         .then(new WaitCommand(1))
                         //.then(new EncoderTurnZeroCommand(drive))
 
@@ -68,6 +68,7 @@ public class MiracleAutoBlue extends MiracleBase {
                             if (location == 1) {
                                 myCommand.scheduleCommand(
                                         new EncoderTurnDriveCommand(drive,"ccw",85)
+                                                .then(new DriveCommand(drive, 0.3, 0,0,.25, true))
                                                 .then(new WaitCommand(1))
                                                 .then(new DriveCommand(drive,0,0.3,0,0.5,true))
                                                 .then(new OpenClawCommand(claw))
@@ -78,6 +79,8 @@ public class MiracleAutoBlue extends MiracleBase {
                             else if (location == 3) {
                                 myCommand.scheduleCommand(
                                         new EncoderTurnDriveCommand(drive,"cw",85)
+                                                .then(new DriveCommand(drive, 0.3, 0,0,.25, true))
+
                                                 .then(new WaitCommand(1))
                                                 .then(new DriveCommand(drive,0,-0.3,0,0.5,true))
                                                 .then(new OpenClawCommand(claw))
@@ -90,8 +93,9 @@ public class MiracleAutoBlue extends MiracleBase {
                             }
                             else { // loc == 2
                                 myCommand.scheduleCommand(
-                                        new DriveCommand(drive,0.3,0,0,0.75,true)
+                                        new DriveCommand(drive,0.3,0,0,0.45,true)
                                                 .then(new OpenClawCommand(claw))
+                                                .then(new WaitCommand(.5))
                                                 .then(new DriveCommand(drive,-0.25,0,0,1,true))
 //                                                .then(new DriveCommand(drive,0.2,0,0,1.4,true))
 //                                                .then(new EncoderTurnDriveCommand(drive, "ccw", 90))

@@ -19,6 +19,8 @@ public class LiftSubsystem extends Subsystem {
 
         DRIVE,
 
+        MID,
+
         DEPOSIT,
 
         MANUAL,
@@ -123,6 +125,10 @@ public class LiftSubsystem extends Subsystem {
                 leftMotor.setPosition(Constants.Lift.kLiftDrive);
                 return rightMotor.setPosition(Constants.Lift.kLiftDrive);
 
+            case MID:
+                leftMotor.setPosition(Constants.Lift.kLiftMid);
+                return rightMotor.setPosition(Constants.Lift.kLiftMid);
+
             case DEPOSIT:
                 leftMotor.setPosition(Constants.Lift.kLiftDeposit);
                 return rightMotor.setPosition(Constants.Lift.kLiftDeposit);
@@ -174,12 +180,14 @@ public class LiftSubsystem extends Subsystem {
 
     public void incrementState(){
         if (state == State.DOWN) setState(State.DRIVE);
-        else if (state == State.DRIVE) setState(State.DEPOSIT);
+        else if (state == State.DRIVE) setState(State.MID);
+        else if (state == State.MID) setState(State.DEPOSIT);
         else if (state == State.MANUAL || state == State.CLIMB) setState(State.DEPOSIT);
     }
 
     public void deincrementState(){
-        if (state == State.DEPOSIT) setState(State.DRIVE);
+        if (state == State.DEPOSIT) setState(State.MID);
+        else if (state == State.MID) setState(State.DRIVE);
         else if (state == State.DRIVE) setState(State.DOWN);
         else if (state == State.MANUAL || state == State.CLIMB) setState(State.DEPOSIT);
     }

@@ -57,6 +57,8 @@ public class Constants {
 
         public static final double kLiftDown = 5;
         public static final double kLiftDrive = 200;
+
+        public static final double kLiftMid = 1600;
         public static final double kLiftDeposit = 2600;
 
         public static final double kLiftClimb = 500;

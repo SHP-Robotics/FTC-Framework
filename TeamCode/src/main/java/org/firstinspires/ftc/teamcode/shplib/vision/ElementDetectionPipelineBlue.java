@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.shplib.vision;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -16,41 +15,28 @@ import java.util.List;
 public class ElementDetectionPipelineBlue extends OpenCvPipeline {
     ArrayList<double[]> frameList;
 
-    public static double strictLowS = 140; //TODO: Tune in dashboard
-    public static double strictHighS = 255;
-    Telemetry telemetry;
     public double leftValue;
     public double rightValue;
+    public double totalValue;
+
+//    public boolean isReadable = true;
+    public int maxHeightReadable = 0;
 
     public ElementDetectionPipelineBlue() {
         frameList = new ArrayList<>();
     }
 
-    public enum loc{
-        RIGHT,
-        LEFT,
-        NONE
-    };
-    //loc location;
-    //sub matrices to divide image
-    //we can draw rectangles on the screen to find the perfect fit
-    //edit as necessary
     static final Rect LEFT_ROI = new Rect(
-            new Point(1, 100), //TODO: MAGIC NUMBERS ;-;
-            //new Point(399, 447)
-            new Point(210, 447)
+            new Point(1, 200), //TODO: MAGIC NUMBERS ;-;
+            new Point(200, 300)
     );
 
     static final Rect RIGHT_ROI = new Rect(
-            //new Point(400, 1),
-            new Point(400, 100),
-            new Point(700, 300)
+            new Point(350, 200),
+            new Point(500, 300)
     );
 
-    //threshold(lowest possible) percentage of that color
-    static double THRESHOLD = 0.2; //TODO threshold
-
-    //check if we really need this
+    static double THRESHOLD = 0.08; //TODO threshold
 
     @Override
     public Mat processFrame(Mat input){
@@ -61,62 +47,41 @@ public class ElementDetectionPipelineBlue extends OpenCvPipeline {
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
 
         //Lower and upper bounds for the color to detect
-        //Scalar lowHSV= new Scalar(95, 100, 100);
-        //Scalar highHSV= new Scalar(112.5, 255, 255);
-        //change from 210/2
-        Scalar lowHSV = new Scalar(95, 50, 70); //TODO: for BLUE
-        Scalar highHSV = new Scalar(250/2, 255, 255); //bruh red is like 0-15 & 350-360 wtf
+        Scalar lowHSV = new Scalar(210/2, 50, 70);
+        Scalar highHSV = new Scalar(250/2, 255, 255);
 
         Mat detected = new Mat();
         Core.inRange(mat, lowHSV, highHSV, detected); //ONLY returns the pixels in the HSV range
 
-        Mat masked = new Mat();
-        //colors the white portion of detected in with the color and outputs to masked
-        Core.bitwise_and(mat, mat, masked, detected);
-        Scalar average = Core.mean(masked, detected);
-
-        Mat scaledMask = new Mat();
-        //scale the average saturation to 150
-        masked.convertTo(scaledMask, -1, 150 / average.val[1], 0);
-
-        Mat scaledThresh = new Mat();
-        //you probably want to tune this
-        Scalar strictLowHSV = new Scalar(0, strictLowS, 0); //strict lower bound HSV for yellow
-        Scalar strictHighHSV = new Scalar(255, strictHighS, 255); //strict higher bound HSV for yellow
-        //apply strict HSV filter onto scaledMask to get rid of any yellow other than pole
-        Core.inRange(scaledMask, strictLowHSV, strictHighHSV, scaledThresh);
-
-        Mat finalMask = new Mat();
-
-        Core.bitwise_and(mat, mat, finalMask, scaledThresh);
-
-        Mat edges = new Mat();
-        //detect edges(only useful for showing result)(you can delete)
-        Imgproc.Canny(scaledThresh, edges, 100, 200);
-
-        //contours, apply post processing to information
         List<MatOfPoint> contours = new ArrayList<>();
         Mat hierarchy = new Mat();
-        //find contours, input scaledThresh because it has hard edges
-        Imgproc.findContours(scaledThresh, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
-        //
-        //
-        Mat left = scaledThresh.submat(LEFT_ROI);
-        Mat right = scaledThresh.submat(RIGHT_ROI);
+        Imgproc.findContours(detected, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+
+        int maxHeight = 0;
+        for (MatOfPoint contour: contours) {
+            int height = contour.rows();
+            if (height > maxHeight) {
+                maxHeight = height;
+            }
+        }
+//        isReadable = false;
+        maxHeightReadable = maxHeight;
+//        isReadable = true;
+
+        Mat left = detected.submat(LEFT_ROI);
+        Mat right = detected.submat(RIGHT_ROI);
 
         leftValue = Core.sumElems(left).val[0] / LEFT_ROI.area() / 225;
         rightValue = Core.sumElems(right).val[0] / RIGHT_ROI.area() / 225;
-
-        boolean stoneLeft = leftValue > THRESHOLD;
-        boolean stoneRight = rightValue > THRESHOLD;
+        totalValue = Core.sumElems(detected).val[0] / (detected.rows() * detected.cols() * 255);
 
         //        Imgproc.cvtColor(mat, mat, Imgproc.COLOR_GRAY2RGB);
 
         Scalar colorExists = new Scalar (0, 255, 0);
         Scalar colorInexistant = new Scalar (255, 0, 0);
 
-        Imgproc.rectangle(scaledThresh, LEFT_ROI, leftValue>rightValue? colorInexistant:colorExists, 3);
-        Imgproc.rectangle(scaledThresh, RIGHT_ROI, leftValue<rightValue? colorInexistant:colorExists, 3);
+        Imgproc.rectangle(detected, LEFT_ROI, leftValue>rightValue? colorInexistant:colorExists, 3);
+        Imgproc.rectangle(detected, RIGHT_ROI, leftValue<rightValue? colorInexistant:colorExists, 3);
         //
 
         //list of frames to reduce inconsistency, not too many so that it is still real-time, change the number from 5 if you want
@@ -126,29 +91,28 @@ public class ElementDetectionPipelineBlue extends OpenCvPipeline {
 
         //RELEASE EVERYTHING
         input.release();
-        scaledThresh.copyTo(input);
-        scaledThresh.release();
-        scaledMask.release();
         mat.release();
-        masked.release();
-        edges.release();
+        detected.copyTo(input);
         detected.release();
-        finalMask.release();
-        hierarchy.release();
         left.release();
         right.release();
 
         return input;
 
     }
+
     public int getLocation(){
-        if(leftValue>rightValue && leftValue>0.1){
+        if(leftValue>rightValue && leftValue > THRESHOLD){
             return 1;
         }
-        if(rightValue>leftValue && rightValue>0.1){
+        if(rightValue>leftValue && rightValue > THRESHOLD){
             return 2;
         }
         return 3;
+    }
 
+    public int getMaxHeightReadable() {
+//        while (!isReadable) {}
+        return maxHeightReadable;
     }
 }

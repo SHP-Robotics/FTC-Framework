@@ -27,6 +27,8 @@ public class ClawSubsystem extends Subsystem {
         // ENABLED, DISABLED
         DOWN,
         DRIVE,
+
+        MID,
         DEPOSIT,
 
         INIT,
@@ -103,6 +105,8 @@ public class ClawSubsystem extends Subsystem {
                 setDualPos(Constants.Claw.kWristDrive);
                 break;
             case DEPOSIT:
+                setDualPos(Constants.Claw.kWristDeposit);
+            case MID:
                 setDualPos(Constants.Claw.kWristDeposit);
 
         }
