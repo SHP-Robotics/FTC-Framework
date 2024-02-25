@@ -10,10 +10,10 @@ import org.firstinspires.ftc.teamcode.debug.PurePursuit.PurePursuitPath;
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
 
 @Autonomous(preselectTeleOp = "Centerstage Field Oriented")
-public class Blue102 extends BaseAuto {
+public class RedSpike extends BaseAuto {
     @Override
     public void runOpMode() throws InterruptedException {
-        this.side = Side.BLUE;
+        this.side = Side.RED;
 
         PurePursuitFollower purePursuitFollower = new PurePursuitFollower(hardwareMap);
         MecanumController mecanumController = new MecanumController(hardwareMap);
@@ -36,23 +36,13 @@ public class Blue102 extends BaseAuto {
                     }
                 })
                 .moveTo(new Position2D(-0, 30, Math.toRadians(90)))
-                .rotateTo(new Position2D(-0, 30, Math.toRadians(90)), Math.toRadians(0))
-                .moveTo(new Position2D(-0, 37, Math.toRadians(0)))
-                .addAction(() -> claw.setPosition(Constants.CLAW_OPEN))
-                .moveTo(new Position2D(-49, 40, Math.toRadians(0)))
-                .addAction(2, () -> {
-                    mecanumController.deactivate();
-                    outtake.setPosition(Constants.OUTTAKE_LOWERED);
-                    try {
-                        Thread.sleep(1500);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
+                .rotateTo(new Position2D(-0, 30, Math.toRadians(90)), Math.toRadians(180))
+                .moveTo(new Position2D(-0, 37, Math.toRadians(180)))
+                .addAction(() -> {
+                    claw.setPosition(Constants.CLAW_OPEN);
+                    outtake.setPosition(Constants.OUTTAKE_HIDDEN);
                 })
-                .moveTo(new Position2D(-44, 38, Math.toRadians(0)))
-                .addAction(() -> outtake.setPosition(Constants.OUTTAKE_HIDDEN))
-                .moveTo(new Position2D(-44, 60, Math.toRadians(0)))
-                .moveTo(new Position2D(-52, 60, Math.toRadians(0)))
+                .moveTo(new Position2D(-0, 30, Math.toRadians(180)))
 
                 .enableRetrace()
                 .build();
@@ -66,24 +56,11 @@ public class Blue102 extends BaseAuto {
                     }
                 })
                 .moveTo(new Position2D(-0, 37.5, Math.toRadians(90)))
-                .addAction(() -> claw.setPosition(Constants.CLAW_OPEN))
-                .moveTo(new Position2D(-0, 29.5, Math.toRadians(90)))
-                .rotateTo(new Position2D(-0, 29.5, Math.toRadians(90)), Math.toRadians(0))
-                .addAction(() -> outtake.setPosition(Constants.OUTTAKE_NEUTRAL))
-                .moveTo(new Position2D(-49, 34, Math.toRadians(0)))
-                .addAction(2, () -> {
-                    mecanumController.deactivate();
-                    outtake.setPosition(Constants.OUTTAKE_LOWERED);
-                    try {
-                        Thread.sleep(1500);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
+                .addAction(() -> {
+                    claw.setPosition(Constants.CLAW_OPEN);
+                    outtake.setPosition(Constants.OUTTAKE_HIDDEN);
                 })
-                .moveTo(new Position2D(-44, 34.5, Math.toRadians(0)))
-                .addAction(() -> outtake.setPosition(Constants.OUTTAKE_HIDDEN))
-                .moveTo(new Position2D(-44, 60, Math.toRadians(0)))
-                .moveTo(new Position2D(-52, 60, Math.toRadians(0)))
+                .moveTo(new Position2D(-0, 29.5, Math.toRadians(90)))
 
                 .enableRetrace()
                 .build();
@@ -96,23 +73,14 @@ public class Blue102 extends BaseAuto {
                         throw new RuntimeException(e);
                     }
                 })
-                .moveTo(new Position2D(-23.5, 40, Math.toRadians(90)))
-                .rotateTo(new Position2D(-23.5, 40, Math.toRadians(90)), Math.toRadians(0))
-                .addAction(() -> claw.setPosition(Constants.CLAW_OPEN))
-                .moveTo(new Position2D(-49, 28, Math.toRadians(0)))
-                .addAction(2, () -> {
-                    mecanumController.deactivate();
-                    outtake.setPosition(Constants.OUTTAKE_LOWERED);
-                    try {
-                        Thread.sleep(1500);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
+                .moveTo(new Position2D(-0, 34, Math.toRadians(90)))
+                .rotateTo(new Position2D(-0, 34, Math.toRadians(90)), Math.toRadians(0))
+                .moveTo(new Position2D(3, 34, Math.toRadians(0)))
+                .addAction(() -> {
+                    claw.setPosition(Constants.CLAW_OPEN);
+                    outtake.setPosition(Constants.OUTTAKE_HIDDEN);
                 })
-                .moveTo(new Position2D(-44, 28, Math.toRadians(0)))
-                .addAction(() -> outtake.setPosition(Constants.OUTTAKE_HIDDEN))
-                .moveTo(new Position2D(-44, 60, Math.toRadians(0)))
-                .moveTo(new Position2D(-52, 60, Math.toRadians(0)))
+                .moveTo(new Position2D(-0, 34, Math.toRadians(0)))
 
                 .enableRetrace()
                 .build();

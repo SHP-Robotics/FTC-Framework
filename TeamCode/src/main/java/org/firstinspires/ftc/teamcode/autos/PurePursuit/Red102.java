@@ -39,8 +39,8 @@ public class Red102 extends BaseAuto {
                 .rotateTo(new Position2D(0, 30, Math.toRadians(90)), Math.toRadians(180))
                 .moveTo(new Position2D(0, 37, Math.toRadians(180)))
                 .addAction(() -> claw.setPosition(Constants.CLAW_OPEN))
-                .moveTo(new Position2D(48, 38, Math.toRadians(180)))
-                .addAction(7, () -> {
+                .moveTo(new Position2D(49, 40, Math.toRadians(180)))
+                .addAction(2, () -> {
                     mecanumController.deactivate();
                     outtake.setPosition(Constants.OUTTAKE_LOWERED);
                     try {
@@ -53,6 +53,8 @@ public class Red102 extends BaseAuto {
                 .addAction(() -> outtake.setPosition(Constants.OUTTAKE_HIDDEN))
                 .moveTo(new Position2D(44, 60, Math.toRadians(180)))
                 .moveTo(new Position2D(52, 60, Math.toRadians(180)))
+
+                .enableRetrace()
                 .build();
         PurePursuitPath pathCenter = new PurePursuitPath.PurePursuitPathBuilder()
                 .addAction(() -> {
@@ -68,8 +70,8 @@ public class Red102 extends BaseAuto {
                 .moveTo(new Position2D(0, 29.5, Math.toRadians(90)))
                 .rotateTo(new Position2D(0, 29.5, Math.toRadians(90)), Math.toRadians(180))
                 .addAction(() -> outtake.setPosition(Constants.OUTTAKE_NEUTRAL))
-                .moveTo(new Position2D(48, 34, Math.toRadians(180)))
-                .addAction(7, () -> {
+                .moveTo(new Position2D(49, 34, Math.toRadians(180)))
+                .addAction(2, () -> {
                     mecanumController.deactivate();
                     outtake.setPosition(Constants.OUTTAKE_LOWERED);
                     try {
@@ -82,6 +84,8 @@ public class Red102 extends BaseAuto {
                 .addAction(() -> outtake.setPosition(Constants.OUTTAKE_HIDDEN))
                 .moveTo(new Position2D(44, 60, Math.toRadians(180)))
                 .moveTo(new Position2D(52, 60, Math.toRadians(180)))
+
+                .enableRetrace()
                 .build();
         PurePursuitPath pathClose = new PurePursuitPath.PurePursuitPathBuilder()
                 .addAction(() -> {
@@ -96,7 +100,7 @@ public class Red102 extends BaseAuto {
                 .rotateTo(new Position2D(23.5, 40, Math.toRadians(90)), Math.toRadians(180))
                 .addAction(() -> claw.setPosition(Constants.CLAW_OPEN))
                 .moveTo(new Position2D(49, 28, Math.toRadians(180)))
-                .addAction(7, () -> {
+                .addAction(2, () -> {
                     mecanumController.deactivate();
                     outtake.setPosition(Constants.OUTTAKE_LOWERED);
                     try {
@@ -109,6 +113,8 @@ public class Red102 extends BaseAuto {
                 .addAction(() -> outtake.setPosition(Constants.OUTTAKE_HIDDEN))
                 .moveTo(new Position2D(44, 60, Math.toRadians(180)))
                 .moveTo(new Position2D(52, 60, Math.toRadians(180)))
+
+                .enableRetrace()
                 .build();
 
         super.runOpMode();

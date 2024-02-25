@@ -1,11 +1,8 @@
 package org.firstinspires.ftc.teamcode.autos.experimental;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.debug.AccumulationController;
 import org.firstinspires.ftc.teamcode.debug.MecanumController;
 import org.firstinspires.ftc.teamcode.debug.PIDController;
 import org.firstinspires.ftc.teamcode.shplib.vision.PIADFollower;
@@ -14,7 +11,7 @@ import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
-@Disabled
+//@Disabled
 @Autonomous()
 public class AdvancedPixelTracking extends LinearOpMode {
     private double euclidianDistance(double[] point1, double[] point2) {
@@ -27,16 +24,17 @@ public class AdvancedPixelTracking extends LinearOpMode {
         visionSubsystem.pixelDetectionPipeline.setPipelineMode(PixelDetectionPipeline.PipelineMode.PURPLE_ONLY);
 
         MecanumController mecanumController = new MecanumController(hardwareMap);
-        Servo cameraServo = hardwareMap.get(Servo.class, "cameraServo");
-        cameraServo.setDirection(Servo.Direction.REVERSE);
+//        Servo cameraServo = hardwareMap.get(Servo.class, "cameraServo");
+//        cameraServo.setDirection(Servo.Direction.REVERSE);
 
         PIADFollower padFollower = new PIADFollower.PIADFollowerBuilder(
                 mecanumController,
-                cameraServo,
+                null,
                 new PIDController(0.2, 0, 0),
-                new AccumulationController.AccumulationControllerBuilder(0.2)
-                        .setClampFunction(0, 0.6)
-                        .build(),
+//                new AccumulationController.AccumulationControllerBuilder(0.2)
+//                        .setClampFunction(0, 0.6)
+//                        .build(),
+                null,
                 new PIDController(0, 0, 0))
                 .build();
 

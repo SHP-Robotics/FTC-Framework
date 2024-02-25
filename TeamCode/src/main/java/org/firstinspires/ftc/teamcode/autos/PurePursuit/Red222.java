@@ -37,16 +37,17 @@ public class Red222 extends BaseAuto {
                 })
                 .moveTo(new Position2D(0, 37, Math.toRadians(90)))
                 .rotateTo(new Position2D(0, 37, Math.toRadians(90)), Math.toRadians(180))
-                .addAction(() -> {
-                    claw.setPosition(Constants.CLAW_OPEN);
-                    outtake.setPosition(Constants.OUTTAKE_NEUTRAL);
-                })
+                .moveTo(new Position2D(-2, 37, Math.toRadians(180)))
+                .addAction(() -> claw.setPosition(Constants.CLAW_OPEN))
                 .moveTo(new Position2D(6, 37, Math.toRadians(180)))
-                .moveTo(new Position2D(6, 61, Math.toRadians(180)))
-                .moveTo(new Position2D(46+48, 61, Math.toRadians(180)))
-                .moveTo(new Position2D(46+48, 38, Math.toRadians(180)))
-                .moveTo(new Position2D(48+48, 38, Math.toRadians(180)))
-                .addAction(7, () -> {
+                .moveTo(new Position2D(6, 60, Math.toRadians(180)))
+                .addAction(() -> outtake.setPosition(Constants.OUTTAKE_NEUTRAL))
+                .moveTo(new Position2D(60, 60, Math.toRadians(180)))
+                .addAction(() -> outtake.setPosition(Constants.OUTTAKE_STARTING))
+                .moveTo(new Position2D(46+48, 60, Math.toRadians(180)))
+                .moveTo(new Position2D(46+48, 38+2, Math.toRadians(180)))
+                .moveTo(new Position2D(49+48, 38+2, Math.toRadians(180)))
+                .addAction(2, () -> {
                     mecanumController.deactivate();
                     outtake.setPosition(Constants.OUTTAKE_LOWERED);
                     try {
@@ -55,10 +56,10 @@ public class Red222 extends BaseAuto {
                         throw new RuntimeException(e);
                     }
                 })
-                .moveTo(new Position2D(44+48, 38, Math.toRadians(180)))
+                .moveTo(new Position2D(44+48, 38+2, Math.toRadians(180)))
                 .addAction(() -> outtake.setPosition(Constants.OUTTAKE_HIDDEN))
-                .moveTo(new Position2D(44+48, 61, Math.toRadians(180)))
-                .moveTo(new Position2D(52+48, 61, Math.toRadians(180)))
+                .moveTo(new Position2D(44+48, 60, Math.toRadians(180)))
+                .moveTo(new Position2D(52+48, 60, Math.toRadians(180)))
 
                 .enableRetrace()
                 .build();
@@ -71,18 +72,19 @@ public class Red222 extends BaseAuto {
                         throw new RuntimeException(e);
                     }
                 })
-                .moveTo(new Position2D(5, 37.5, Math.toRadians(90)))
-                .addAction(() -> {
-                    claw.setPosition(Constants.CLAW_OPEN);
-                    outtake.setPosition(Constants.OUTTAKE_NEUTRAL);
-                })
-                .moveTo(new Position2D(5, 29.5, Math.toRadians(90)))
-                .rotateTo(new Position2D(5, 29.5, Math.toRadians(90)), Math.toRadians(180))
-                .moveTo(new Position2D(5, 61, Math.toRadians(180)))
-                .moveTo(new Position2D(46+48, 61, Math.toRadians(180)))
-                .moveTo(new Position2D(46+48, 37, Math.toRadians(180)))
-                .moveTo(new Position2D(48+48, 37, Math.toRadians(180)))
-                .addAction(7, () -> {
+                .moveTo(new Position2D(-7, 37.5, Math.toRadians(90)))
+                .rotateTo(new Position2D(-7, 37.5, Math.toRadians(90)), Math.toRadians(-90))
+                .moveTo(new Position2D(3, 56, Math.toRadians(-90)))
+                .addAction(() -> claw.setPosition(Constants.CLAW_OPEN))
+                .moveTo(new Position2D(5, 62, Math.toRadians(-90)))
+                .rotateTo(new Position2D(5, 62, Math.toRadians(-90)), Math.toRadians(180))
+                .addAction(() -> outtake.setPosition(Constants.OUTTAKE_NEUTRAL))
+                .moveTo(new Position2D(60, 58, Math.toRadians(180)))
+                .addAction(() -> outtake.setPosition(Constants.OUTTAKE_STARTING))
+                .moveTo(new Position2D(46+48, 58, Math.toRadians(180)))
+                .moveTo(new Position2D(46+48, 33, Math.toRadians(180)))
+                .moveTo(new Position2D(49.25+48, 33, Math.toRadians(180)))
+                .addAction(2, () -> {
                     mecanumController.deactivate();
                     outtake.setPosition(Constants.OUTTAKE_LOWERED);
                     try {
@@ -91,10 +93,10 @@ public class Red222 extends BaseAuto {
                         throw new RuntimeException(e);
                     }
                 })
-                .moveTo(new Position2D(44+48, 34.5, Math.toRadians(180)))
+                .moveTo(new Position2D(44+48, 33, Math.toRadians(180)))
                 .addAction(() -> outtake.setPosition(Constants.OUTTAKE_HIDDEN))
-                .moveTo(new Position2D(44+48, 61, Math.toRadians(180)))
-                .moveTo(new Position2D(52+48, 61, Math.toRadians(180)))
+                .moveTo(new Position2D(44+48, 60, Math.toRadians(180)))
+                .moveTo(new Position2D(52+48, 60, Math.toRadians(180)))
 
                 .enableRetrace()
                 .build();
@@ -107,20 +109,20 @@ public class Red222 extends BaseAuto {
                         throw new RuntimeException(e);
                     }
                 })
-                .moveTo(new Position2D(0, 28, Math.toRadians(90)))
-                .rotateTo(new Position2D(0, 28, Math.toRadians(90)), Math.toRadians(0))
-                .moveTo(new Position2D(3, 28, Math.toRadians(0)))
-                .addAction(() -> {
-                    claw.setPosition(Constants.CLAW_OPEN);
-                    outtake.setPosition(Constants.OUTTAKE_NEUTRAL);
-                })
-                .moveTo(new Position2D(-5, 28, Math.toRadians(0)))
-                .rotateTo(new Position2D(-5, 28, Math.toRadians(0)), Math.toRadians(180))
-                .moveTo(new Position2D(-5, 61, Math.toRadians(180)))
-                .moveTo(new Position2D(46 + 48, 61, Math.toRadians(180)))
-                .moveTo(new Position2D(46 + 48, 33, Math.toRadians(180)))
-                .moveTo(new Position2D(49 + 48, 33, Math.toRadians(180)))
-                .addAction(7, () -> {
+                .moveTo(new Position2D(0, 34, Math.toRadians(90)))
+                .rotateTo(new Position2D(0, 34, Math.toRadians(90)), Math.toRadians(0))
+                .moveTo(new Position2D(3, 34, Math.toRadians(0)))
+                .addAction(() -> claw.setPosition(Constants.CLAW_OPEN))
+                .moveTo(new Position2D(-5, 34, Math.toRadians(0)))
+                .rotateTo(new Position2D(-5, 34, Math.toRadians(0)), Math.toRadians(180))
+                .addAction(() -> outtake.setPosition(Constants.OUTTAKE_NEUTRAL))
+                .moveTo(new Position2D(-5, 60, Math.toRadians(180)))
+                .moveTo(new Position2D(60, 50, Math.toRadians(180)))
+                .addAction(() -> outtake.setPosition(Constants.OUTTAKE_STARTING))
+                .moveTo(new Position2D(46 + 48, 45, Math.toRadians(180)))
+                .moveTo(new Position2D(46 + 48, 27, Math.toRadians(180)))
+                .moveTo(new Position2D(49.25 + 48, 27, Math.toRadians(180)))
+                .addAction(2, () -> {
                     mecanumController.deactivate();
                     outtake.setPosition(Constants.OUTTAKE_LOWERED);
                     try {
@@ -129,13 +131,14 @@ public class Red222 extends BaseAuto {
                         throw new RuntimeException(e);
                     }
                 })
-                .moveTo(new Position2D(44 + 48, 33, Math.toRadians(180)))
+                .moveTo(new Position2D(44 + 48, 27, Math.toRadians(180)))
                 .addAction(() -> outtake.setPosition(Constants.OUTTAKE_HIDDEN))
-                .moveTo(new Position2D(44 + 48, 61, Math.toRadians(180)))
-                .moveTo(new Position2D(52 + 48, 61, Math.toRadians(180)))
+                .moveTo(new Position2D(44 + 48, 45, Math.toRadians(180)))
+                .moveTo(new Position2D(52 + 48, 45, Math.toRadians(180)))
 
                 .enableRetrace()
                 .build();
+
 
         super.runOpMode();
         switch (this.location) {
