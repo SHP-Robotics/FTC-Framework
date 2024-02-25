@@ -19,11 +19,11 @@ public class CRServoTankDrive extends LinearOpMode {
         right.setDirection(DcMotorSimple.Direction.FORWARD);
 
         AccumulationControlledServo leftPlow = new AccumulationControlledServo.AccumulationControlledServoBuilder((Servo) hardwareMap.get("leftPlow"))
-                .setkP(1)
+                .setkP(0.25)
                 .build();
 
         AccumulationControlledServo rightPlow = new AccumulationControlledServo.AccumulationControlledServoBuilder((Servo) hardwareMap.get("rightPlow"))
-                .setkP(1)
+                .setkP(0.25)
                 .build();
 
         Servo eye = (Servo) hardwareMap.get("eye");
@@ -45,8 +45,12 @@ public class CRServoTankDrive extends LinearOpMode {
                 eye.setPosition(0.25);
             }
             
-            leftPlow.setPosition(gamepad1.left_trigger);
-            rightPlow.setPosition(-gamepad1.left_trigger);
+            leftPlow.setPosition(gamepad1.left_trigger-gamepad1.right_trigger);
+            rightPlow.setPosition(gamepad1.right_trigger-gamepad1.left_trigger);
+
+            telemetry.addData("leftPlow", leftPlow.getPosition());
+            telemetry.addData("rightPlow", rightPlow.getPosition());
+            telemetry.update();
         }
     }
 }

@@ -42,7 +42,7 @@ public class AccumulationControlledServo extends ServoImplEx {
     }
 
     public double clamp(double power) {
-        return Math.min(Math.max(-1, power), 1);
+        return Math.min(Math.max(0, power), 1);
     }
 
     public void setPosition(double error) {
