@@ -45,8 +45,8 @@ public class Red222 extends BaseAuto {
                 .moveTo(new Position2D(60, 60, Math.toRadians(180)))
                 .addAction(() -> outtake.setPosition(Constants.OUTTAKE_STARTING))
                 .moveTo(new Position2D(46+48, 60, Math.toRadians(180)))
-                .moveTo(new Position2D(46+48, 38+2, Math.toRadians(180)))
-                .moveTo(new Position2D(49+48, 38+2, Math.toRadians(180)))
+                .moveTo(new Position2D(46+48, 38, Math.toRadians(180)))
+                .moveTo(new Position2D(49.5+48, 38, Math.toRadians(180)))
                 .addAction(2, () -> {
                     mecanumController.deactivate();
                     outtake.setPosition(Constants.OUTTAKE_LOWERED);
@@ -56,7 +56,7 @@ public class Red222 extends BaseAuto {
                         throw new RuntimeException(e);
                     }
                 })
-                .moveTo(new Position2D(44+48, 38+2, Math.toRadians(180)))
+                .moveTo(new Position2D(44+48, 38, Math.toRadians(180)))
                 .addAction(() -> outtake.setPosition(Constants.OUTTAKE_HIDDEN))
                 .moveTo(new Position2D(44+48, 60, Math.toRadians(180)))
                 .moveTo(new Position2D(52+48, 60, Math.toRadians(180)))
@@ -82,8 +82,8 @@ public class Red222 extends BaseAuto {
                 .moveTo(new Position2D(60, 58, Math.toRadians(180)))
                 .addAction(() -> outtake.setPosition(Constants.OUTTAKE_STARTING))
                 .moveTo(new Position2D(46+48, 58, Math.toRadians(180)))
-                .moveTo(new Position2D(46+48, 33, Math.toRadians(180)))
-                .moveTo(new Position2D(49.25+48, 33, Math.toRadians(180)))
+                .moveTo(new Position2D(46+48, 31.5, Math.toRadians(180)))
+                .moveTo(new Position2D(50+48, 31.5, Math.toRadians(180)))
                 .addAction(2, () -> {
                     mecanumController.deactivate();
                     outtake.setPosition(Constants.OUTTAKE_LOWERED);
@@ -93,7 +93,7 @@ public class Red222 extends BaseAuto {
                         throw new RuntimeException(e);
                     }
                 })
-                .moveTo(new Position2D(44+48, 33, Math.toRadians(180)))
+                .moveTo(new Position2D(44+48, 31.5, Math.toRadians(180)))
                 .addAction(() -> outtake.setPosition(Constants.OUTTAKE_HIDDEN))
                 .moveTo(new Position2D(44+48, 60, Math.toRadians(180)))
                 .moveTo(new Position2D(52+48, 60, Math.toRadians(180)))
@@ -120,8 +120,8 @@ public class Red222 extends BaseAuto {
                 .moveTo(new Position2D(60, 50, Math.toRadians(180)))
                 .addAction(() -> outtake.setPosition(Constants.OUTTAKE_STARTING))
                 .moveTo(new Position2D(46 + 48, 45, Math.toRadians(180)))
-                .moveTo(new Position2D(46 + 48, 27, Math.toRadians(180)))
-                .moveTo(new Position2D(49.25 + 48, 27, Math.toRadians(180)))
+                .moveTo(new Position2D(46 + 48, 24, Math.toRadians(180)))
+                .moveTo(new Position2D(49.5 + 48, 24, Math.toRadians(180)))
                 .addAction(2, () -> {
                     mecanumController.deactivate();
                     outtake.setPosition(Constants.OUTTAKE_LOWERED);
@@ -131,10 +131,10 @@ public class Red222 extends BaseAuto {
                         throw new RuntimeException(e);
                     }
                 })
-                .moveTo(new Position2D(44 + 48, 27, Math.toRadians(180)))
+                .moveTo(new Position2D(44 + 48, 24, Math.toRadians(180)))
                 .addAction(() -> outtake.setPosition(Constants.OUTTAKE_HIDDEN))
-                .moveTo(new Position2D(44 + 48, 45, Math.toRadians(180)))
-                .moveTo(new Position2D(52 + 48, 45, Math.toRadians(180)))
+                .moveTo(new Position2D(44 + 48, 51, Math.toRadians(180)))
+                .moveTo(new Position2D(52 + 48, 51, Math.toRadians(180)))
 
                 .enableRetrace()
                 .build();
@@ -154,6 +154,7 @@ public class Red222 extends BaseAuto {
         }
         path.followAsync(purePursuitFollower, mecanumController);
 
+        sleep(10000);
         while (opModeIsActive() && !isStopRequested()) {
             path.update();
 
