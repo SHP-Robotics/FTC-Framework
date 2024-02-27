@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.teleops.PurePursuit;
 
+import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.teamcode.debug.PurePursuit.PurePursuitFollower;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.VelocityApproximator;
 import org.firstinspires.ftc.teamcode.debug.SpeedController;
 
+@Photon
 @TeleOp()
 public class LocalizationTestPurePursuit extends LinearOpMode {
     @Override
