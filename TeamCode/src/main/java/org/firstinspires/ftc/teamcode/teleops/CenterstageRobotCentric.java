@@ -13,8 +13,8 @@ import org.firstinspires.ftc.teamcode.debug.config.Constants;
 import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
-@TeleOp(name = "CenterStage Driver Oriented")
-public class CenterstageDriverOriented extends LinearOpMode {
+@TeleOp(name = "CenterStage Robot Centric")
+public class CenterstageRobotCentric extends LinearOpMode {
     MecanumController mecanumController;
     VisionSubsystem visionSubsystem;
 

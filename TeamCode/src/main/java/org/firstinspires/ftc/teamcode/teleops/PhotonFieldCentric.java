@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.teleops;
 
+import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -12,8 +13,9 @@ import org.firstinspires.ftc.teamcode.debug.SpeedController;
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
 import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
 
-@TeleOp(name = "CenterStage Field Oriented")
-public class CenterstageFieldOriented extends LinearOpMode {
+@Photon
+@TeleOp(name = "(New) Photon Field-Centric")
+public class PhotonFieldCentric extends LinearOpMode {
 //    private final String soundPath = "/sdcard/FIRST/blocks/sounds";
 //    private final File soundFile = new File(soundPath + "/Holy Moley.wav");
 
