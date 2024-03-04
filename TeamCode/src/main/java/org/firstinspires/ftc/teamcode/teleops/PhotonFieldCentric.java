@@ -31,6 +31,9 @@ public class PhotonFieldCentric extends LinearOpMode {
         mecanumController.setMotorsRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
         mecanumController.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        mecanumController.motors[1].setDirection(Constants.rightFrontDirection.inverted());
+        mecanumController.motors[3].setDirection(Constants.rightRearDirection.inverted());
+
         Servo outtake = hardwareMap.get(Servo.class, "outtake");
         outtake.setDirection(Servo.Direction.REVERSE);
         outtake.setPosition(Constants.OUTTAKE_HIDDEN);

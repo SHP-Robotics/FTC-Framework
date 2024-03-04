@@ -16,7 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
 import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
 
-public class MecanumController extends RobotController {
+public class MecanumController implements RobotController {
     public DcMotorEx[] motors;
 
     public IMU imu;

@@ -30,7 +30,7 @@ public class PurePursuitPath {
     private final double minimumTanh;
     private final double maximumTanh;
 
-    private boolean retrace;
+    private final boolean retrace;
     private Position2D lastIntersection;
 
     private boolean isFollowing = false;
@@ -172,9 +172,6 @@ public class PurePursuitPath {
             double differenceHeading = -MathUtils.normalizeAngle(optimalIntersection.getHeadingRadians() - currentPosition.getHeadingRadians(), 0);
             differenceHeading *= Constants.MECANUM_WIDTH / 2;
 
-//            double deltaTime = elapsedTime.seconds() - lastTime;
-//            lastTime = elapsedTime.seconds();
-
             double max = Math.abs(differenceX) + Math.abs(differenceY) + Math.abs(differenceHeading);
 
             if (max < 1) {
@@ -199,20 +196,10 @@ public class PurePursuitPath {
             Position2D targetVelocity = new Position2D(differenceX, differenceY, differenceHeading);
             targetVelocity.rotate(purePursuitFollower.getCurrentPosition().getHeadingRadians() - (Math.PI/2));
 
-//            double maxVelocity = VelocityApproximator.getMaxVelocity(currentWheelVelocities);
-//            if (maxVelocity != 0) {
-//                targetVelocity.multiply(driveSpeed * maxVelocity / targetVelocity.getMagnitude(), true);
-//            }
             targetVelocity.multiply(driveSpeed * Constants.MAX_VELOCITY / targetVelocity.getMagnitude(), true);
-            double[] targetWheelVelocities = VelocityApproximator.getVelocities(targetVelocity, 1);
 
-            this.targetVelocities = targetWheelVelocities;
+            this.targetVelocities = VelocityApproximator.getVelocities(targetVelocity, 1);
             this.currentVelocities = currentWheelVelocities;
-
-//            double[] bottlenecks = new double[]{1, 1, 1, 1};
-//            double[] bottlenecks = VelocityApproximator.getBottlenecks(targetWheelVelocities, currentWheelVelocities);
-//
-//            this.bottlenecks = bottlenecks;
 
             double x = differenceX / max;
             double y = differenceY / max;
@@ -259,12 +246,17 @@ public class PurePursuitPath {
         return failed;
     }
 
+    public boolean isInterrupted() {
+        // TODO: implement method using avg current from motors, target and current velocity with approximator
+        return false;
+    }
+
     public static class PurePursuitPathBuilder {
         private final ArrayList<GeometricShape> geometries;
         private final ArrayList<Double> admissibleXYErrors;
         private final ArrayList<Double> admissibleRotationalErrors;
         private final ArrayList<Double> timeouts;
-        private Position2D startPosition;
+        private final Position2D startPosition;
         private Position2D lastPosition;
 
         private double followRadius;
