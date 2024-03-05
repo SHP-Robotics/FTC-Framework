@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.shplib.Constants;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 
@@ -151,6 +152,9 @@ public class ArmSubsystem extends Subsystem {
         telemetry.addData("State: ", state);
         telemetry.addData("Left Slide Position: ", leftSlide.getCurrentPosition());
         telemetry.addData("Right Slide Position: ", rightSlide.getCurrentPosition());
+        telemetry.addData("Left current", leftSlide.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("Right current", rightSlide.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("avg current", (leftSlide.getCurrent(CurrentUnit.AMPS) + rightSlide.getCurrent(CurrentUnit.AMPS)) / 2);
 //        telemetry.addData("Left Slide Velocity: ", leftSlide.getVelocity());
 //        telemetry.addData("Right Slide Velocity: ", rightSlide.getVelocity());
     }
