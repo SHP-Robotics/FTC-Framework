@@ -51,10 +51,12 @@ public class TankDrive extends LinearOpMode {
             if (gamepad1.circle){
                 eye.setPosition(0.25);
             }
-            
+
             leftPlow.setPosition(gamepad1.left_trigger-gamepad1.right_trigger);
             rightPlow.setPosition(gamepad1.right_trigger-gamepad1.left_trigger);
 
+            telemetry.addData("Left Velo", left.getVelocity());
+            telemetry.addData("Right Velo", right.getVelocity());
             telemetry.addData("leftPlow", leftPlow.getPosition());
             telemetry.addData("rightPlow", rightPlow.getPosition());
             telemetry.update();
