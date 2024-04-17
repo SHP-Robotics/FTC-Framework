@@ -26,23 +26,6 @@ public class Troll extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
-//            left.setPower(-gamepad1.left_stick_y);
-//            right.setPower(-gamepad1.right_stick_y);
-//
-//            if (gamepad1.square){
-//                eye.setPosition(0.5);
-//            }
-//            if (gamepad1.triangle){
-//                eye.setPosition(0.345);
-//            }
-//
-//            if (gamepad1.circle){
-//                eye.setPosition(0.25);
-//            }
-//
-//            leftPlow.setPosition(gamepad1.left_trigger);
-//            rightPlow.setPosition(-gamepad1.left_trigger);
-
             sleep(2000);
             eye.setPosition(0.5);
             leftPlow.setPosition(0.25);

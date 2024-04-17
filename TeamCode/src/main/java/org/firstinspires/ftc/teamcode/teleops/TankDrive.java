@@ -31,8 +31,8 @@ public class TankDrive extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
-            left.setPower(-gamepad1.left_stick_y);
-            right.setPower(-gamepad1.right_stick_y);
+            left.setPower(-gamepad1.left_stick_y + gamepad1.right_stick_x);
+            right.setPower(-gamepad1.left_stick_y - gamepad1.right_stick_x);
 
             if (gamepad1.square){
                 eye.setPosition(0.5);
