@@ -6,17 +6,24 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.debug.AccumulationControlledDcMotor;
 import org.firstinspires.ftc.teamcode.debug.AccumulationControlledServo;
 
 @TeleOp()
 public class TankDrive extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        DcMotor left = (DcMotor) hardwareMap.get("left");
+        AccumulationControlledDcMotor left = new AccumulationControlledDcMotor.AccumulationControlledDcMotorBuilder((DcMotor) hardwareMap.get("left"))
+                .setkP(0.5)
+                .build();
+
         left.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        DcMotor right = (DcMotor) hardwareMap.get("right");
-        right.setDirection(DcMotorSimple.Direction.FORWARD);
+        AccumulationControlledDcMotor right = new AccumulationControlledDcMotor.AccumulationControlledDcMotorBuilder((DcMotor) hardwareMap.get("right"))
+                .setkP(0.5)
+                .build();
+
+        right.setDirection(DcMotorSimple.Direction.REVERSE);
 
         AccumulationControlledServo leftPlow = new AccumulationControlledServo.AccumulationControlledServoBuilder((Servo) hardwareMap.get("leftPlow"))
                 .setkP(0.25)
