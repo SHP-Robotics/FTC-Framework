@@ -6,28 +6,19 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.shprobotics.pestocore.drivebases.MecanumController;
+import com.shprobotics.pestocore.drivebases.TeleOpController;
 
-import org.firstinspires.ftc.teamcode.debug.MecanumController;
-import org.firstinspires.ftc.teamcode.debug.SpeedController;
+import org.firstinspires.ftc.teamcode.PestoFTCConfig;
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
 import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
 
-@TeleOp(name = "(Old) CenterStage Field-Centric")
+@TeleOp(name = "CenterStage Field Centric")
 public class CenterstageFieldCentric extends LinearOpMode {
-//    private final String soundPath = "/sdcard/FIRST/blocks/sounds";
-//    private final File soundFile = new File(soundPath + "/Holy Moley.wav");
-
     @Override
-    public void runOpMode() throws InterruptedException {
-        SpeedController speedController = new SpeedController.SpeedBuilder(SpeedController.SpeedType.SINGLE_OVERRIDE)
-                .setNaturalSpeed(0.6)
-                .setOverrideOneSpeed(1)
-                .build();
-
-        MecanumController mecanumController = new MecanumController(hardwareMap);
-        mecanumController.setSpeedController(speedController);
-        mecanumController.setMotorsRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        mecanumController.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    public void runOpMode() {
+        MecanumController mecanumController = PestoFTCConfig.getMecanumController(hardwareMap);
+        TeleOpController teleOpController = PestoFTCConfig.getTeleOpController(mecanumController, hardwareMap);
 
         Servo outtake = hardwareMap.get(Servo.class, "outtake");
         outtake.setDirection(Servo.Direction.REVERSE);
@@ -43,10 +34,10 @@ public class CenterstageFieldCentric extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            telemetry.addData("Radians", mecanumController.getCalibratedIMUAngle());
+            telemetry.addData("Radians", teleOpController.getHeading());
             telemetry.update();
 
-            mecanumController.fieldOrientedDrive(gamepad1);
+            teleOpController.driveFieldCentric(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
 
             if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.OPEN_CLAW)) {
                 claw.setPosition(Constants.CLAW_OPEN);
@@ -55,7 +46,7 @@ public class CenterstageFieldCentric extends LinearOpMode {
             }
 
             if (gamepad1.b) {
-                mecanumController.calibrateIMUAngleOffset();
+                teleOpController.resetIMU();
             }
 
             if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER_UP)) {

@@ -6,47 +6,19 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.shprobotics.pestocore.drivebases.MecanumController;
+import com.shprobotics.pestocore.drivebases.TeleOpController;
 
-import org.firstinspires.ftc.teamcode.debug.MecanumController;
-import org.firstinspires.ftc.teamcode.debug.SpeedController;
+import org.firstinspires.ftc.teamcode.PestoFTCConfig;
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
 import org.firstinspires.ftc.teamcode.debug.config.DrivingConfiguration;
-import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 @TeleOp(name = "CenterStage Robot Centric")
 public class CenterstageRobotCentric extends LinearOpMode {
-    MecanumController mecanumController;
-    VisionSubsystem visionSubsystem;
-
-//    private final String soundPath = "/sdcard/FIRST/blocks/sounds";
-//    private final File soundFile = new File(soundPath + "/Holy Moley.wav");
-
-//    final double minimumPixelMass = 0.2;
-
-//    public void pixelSonar() {
-//        while (gamepad1.y && opModeIsActive() && !isStopRequested()) {
-//            if (visionSubsystem.getPixelMass() > minimumPixelMass) {
-//                mecanumController.driveParams(0, 0, 0);
-//                break;
-//            }
-//            mecanumController.driveParams(0, 0.2, 0);
-//        }
-//    }
-
     @Override
-    public void runOpMode() throws InterruptedException {
-        SpeedController speedController = new SpeedController.SpeedBuilder(SpeedController.SpeedType.SINGLE_OVERRIDE)
-                .setNaturalSpeed(0.6)
-                .setOverrideOneSpeed(1)
-                .build();
-
-        mecanumController = new MecanumController(hardwareMap);
-        mecanumController.setSpeedController(speedController);
-        mecanumController.setMotorsRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        mecanumController.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        visionSubsystem = new VisionSubsystem(hardwareMap, "pixel");
-//        boolean holdingY = false;
+    public void runOpMode() {
+        MecanumController mecanumController = PestoFTCConfig.getMecanumController(hardwareMap);
+        TeleOpController teleOpController = PestoFTCConfig.getTeleOpController(mecanumController, hardwareMap);
 
         Servo outtake = hardwareMap.get(Servo.class, "outtake");
         outtake.setDirection(Servo.Direction.REVERSE);
@@ -62,14 +34,12 @@ public class CenterstageRobotCentric extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            mecanumController.drive(gamepad1);
+            teleOpController.driveRobotCentric(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
 
             if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.OPEN_CLAW)) {
                 claw.setPosition(Constants.CLAW_OPEN);
-//                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, soundFile);
             } else if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLOSE_CLAW)) {
                 claw.setPosition(Constants.CLAW_CLOSE);
-//                SoundPlayer.getInstance().startPlaying(hardwareMap.appContext, soundFile);
             }
 
             if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER_UP)) {

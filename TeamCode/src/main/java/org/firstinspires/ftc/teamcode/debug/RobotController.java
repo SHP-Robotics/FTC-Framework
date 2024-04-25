@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.debug;
 
-public abstract interface RobotController {
+public interface RobotController {
     void driveParams(double x, double y, double r);
     void driveParams(double x, double y, double r, double[] bottleneckSpeeds);
     void driveFieldParams(double x, double y, double r, double gyro);

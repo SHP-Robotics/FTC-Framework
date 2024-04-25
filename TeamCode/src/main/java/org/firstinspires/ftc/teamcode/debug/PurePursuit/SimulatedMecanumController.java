@@ -8,7 +8,6 @@ import static org.firstinspires.ftc.teamcode.debug.config.Constants.rightRearDir
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.debug.AccumulationControlledDcMotor;
-import org.firstinspires.ftc.teamcode.debug.MecanumController;
 
 public class SimulatedMecanumController extends MecanumController {
     public SimulatedMecanumController(HardwareMap hardwareMap) {
