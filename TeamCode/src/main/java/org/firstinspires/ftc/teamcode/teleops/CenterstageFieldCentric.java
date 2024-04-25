@@ -37,6 +37,7 @@ public class CenterstageFieldCentric extends LinearOpMode {
             telemetry.addData("Radians", teleOpController.getHeading());
             telemetry.update();
 
+            teleOpController.updateSpeed(gamepad1);
             teleOpController.driveFieldCentric(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
 
             if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.OPEN_CLAW)) {

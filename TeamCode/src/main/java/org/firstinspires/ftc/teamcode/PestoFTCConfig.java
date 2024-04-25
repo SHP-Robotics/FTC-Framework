@@ -61,7 +61,7 @@ public class PestoFTCConfig {
                 RevHubOrientationOnRobot.UsbFacingDirection.UP
         );
 
-        teleOpController.setSpeedController(gamepad -> {
+        teleOpController.setSpeedController((gamepad) -> {
             if (gamepad.right_trigger > 0.1) {
                 return 1.0;
             }

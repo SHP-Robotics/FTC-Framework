@@ -34,6 +34,7 @@ public class CenterstageRobotCentric extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
+            teleOpController.updateSpeed(gamepad1);
             teleOpController.driveRobotCentric(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
 
             if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.OPEN_CLAW)) {
