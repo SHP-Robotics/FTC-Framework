@@ -13,9 +13,8 @@ public class PestoFTCTest extends LinearOpMode {
     @Override
     public void runOpMode() {
         MecanumController mecanumController = PestoFTCConfig.getMecanumController(hardwareMap);
-        TeleOpController teleOpController = PestoFTCConfig.getTeleOpController(mecanumController, hardwareMap);
-
         Tracker tracker = PestoFTCConfig.getTracker(hardwareMap);
+        TeleOpController teleOpController = PestoFTCConfig.getTeleOpController(mecanumController, tracker, hardwareMap);
 
         waitForStart();
 

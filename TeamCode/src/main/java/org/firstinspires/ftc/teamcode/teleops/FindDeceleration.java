@@ -11,12 +11,14 @@ import com.shprobotics.pestocore.geometries.Vector2D;
 import org.firstinspires.ftc.teamcode.PestoFTCConfig;
 
 @TeleOp
-public class LocalizatonTest extends LinearOpMode {
+public class FindDeceleration extends LinearOpMode {
     @Override
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException {
         MecanumController mecanumController = PestoFTCConfig.getMecanumController(hardwareMap);
         Tracker tracker = PestoFTCConfig.getTracker(hardwareMap);
         TeleOpController teleOpController = PestoFTCConfig.getTeleOpController(mecanumController, tracker, hardwareMap);
+
+        Vector2D velocity = Vector2D.ZERO;
 
         waitForStart();
 
@@ -38,6 +40,26 @@ public class LocalizatonTest extends LinearOpMode {
             if (gamepad1.b) {
                 tracker.reset();
             }
+
+            if (gamepad1.a) {
+                teleOpController.driveRobotCentric(0, 0, 0);
+                velocity = currentVelocity.asVector();
+                tracker.reset();
+                break;
+            }
+        }
+
+        while (opModeIsActive() && !isStopRequested()) {
+            tracker.updateOdometry();
+
+            telemetry.addData("X velocity", velocity.getX());
+            telemetry.addData("Y velocity", velocity.getY());
+            telemetry.addLine();
+            telemetry.addLine("Deceleration = -(velocity ^ 2) / (2 * distance)");
+            telemetry.addData("Deceleration", -(velocity.getMagnitude() * velocity.getMagnitude()) / 2 + " / distance");
+            telemetry.addLine();
+            telemetry.addData("Distance", tracker.getCurrentPosition().getMagnitude());
+            telemetry.update();
         }
     }
 }

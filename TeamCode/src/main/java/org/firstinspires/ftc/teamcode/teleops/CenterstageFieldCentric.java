@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.shprobotics.pestocore.drivebases.MecanumController;
 import com.shprobotics.pestocore.drivebases.TeleOpController;
+import com.shprobotics.pestocore.drivebases.Tracker;
 
 import org.firstinspires.ftc.teamcode.PestoFTCConfig;
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
@@ -18,7 +19,8 @@ public class CenterstageFieldCentric extends LinearOpMode {
     @Override
     public void runOpMode() {
         MecanumController mecanumController = PestoFTCConfig.getMecanumController(hardwareMap);
-        TeleOpController teleOpController = PestoFTCConfig.getTeleOpController(mecanumController, hardwareMap);
+        Tracker tracker = PestoFTCConfig.getTracker(hardwareMap);
+        TeleOpController teleOpController = PestoFTCConfig.getTeleOpController(mecanumController, tracker, hardwareMap);
 
         Servo outtake = hardwareMap.get(Servo.class, "outtake");
         outtake.setDirection(Servo.Direction.REVERSE);
@@ -48,6 +50,7 @@ public class CenterstageFieldCentric extends LinearOpMode {
 
             if (gamepad1.b) {
                 teleOpController.resetIMU();
+                tracker.reset();
             }
 
             if (DrivingConfiguration.getValue(gamepad1, DrivingConfiguration.CLIMBER_POWER_UP)) {

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.FORWARD;
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -12,18 +13,21 @@ import com.shprobotics.pestocore.drivebases.TeleOpController;
 import com.shprobotics.pestocore.drivebases.Tracker;
 import com.shprobotics.pestocore.geometries.Vector2D;
 
+@Config
 public class PestoFTCConfig {
-    public static final double ODOMETRY_TICKS_PER_INCH = 336.877962878;
-    public static final double FORWARD_OFFSET = -0.0294066;
-    public static final double ODOMETRY_WIDTH = 23.36825;
+    public static double ODOMETRY_TICKS_PER_INCH = 336.877962878;
+    public static double FORWARD_OFFSET = -0.0294066;
+    public static double ODOMETRY_WIDTH = 23.36825;
+    public static double DECELERATION = -73.8807308633;
+    public static double MAX_VELOCITY = 39;
 
     public static final DcMotorSimple.Direction leftEncoderDirection = REVERSE;
     public static final DcMotorSimple.Direction centerEncoderDirection = FORWARD;
     public static final DcMotorSimple.Direction rightEncoderDirection = FORWARD;
 
-    public static final String leftName = "left";
-    public static final String centerName = "center";
-    public static final String rightName = "right";
+    public static String leftName = "left";
+    public static String centerName = "center";
+    public static String rightName = "right";
 
     public static MecanumController getMecanumController(HardwareMap hardwareMap) {
         MecanumController mecanumController = new MecanumController(hardwareMap, new String[] {
@@ -53,7 +57,7 @@ public class PestoFTCConfig {
         return mecanumController;
     }
 
-    public static TeleOpController getTeleOpController(MecanumController mecanumController, HardwareMap hardwareMap) {
+    public static TeleOpController getTeleOpController(MecanumController mecanumController, Tracker tracker, HardwareMap hardwareMap) {
         TeleOpController teleOpController = new TeleOpController(mecanumController, hardwareMap);
 
         teleOpController.configureIMU(
@@ -67,6 +71,8 @@ public class PestoFTCConfig {
             }
             return 0.6;
         });
+
+        teleOpController.counteractCentripetalForce(tracker, MAX_VELOCITY);
 
         return teleOpController;
     }
