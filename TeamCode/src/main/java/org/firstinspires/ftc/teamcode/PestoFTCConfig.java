@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.shprobotics.pestocore.drivebases.MecanumController;
 import com.shprobotics.pestocore.drivebases.TeleOpController;
 import com.shprobotics.pestocore.drivebases.Tracker;
-import com.shprobotics.pestocore.geometries.Vector2D;
 
 @Config
 public class PestoFTCConfig {
@@ -44,12 +43,12 @@ public class PestoFTCConfig {
                 DcMotorSimple.Direction.FORWARD
         });
 
-        mecanumController.setPowerVectors(new Vector2D[]{
-                Vector2D.scale(new Vector2D(57, 39), 1/69.0651865993),
-                Vector2D.scale(new Vector2D(-57, 39), 1/69.0651865993),
-                Vector2D.scale(new Vector2D(-57, 39), 1/69.0651865993),
-                Vector2D.scale(new Vector2D(57, 39), 1/69.0651865993)
-        });
+//        mecanumController.setPowerVectors(new Vector2D[]{
+//                Vector2D.scale(new Vector2D(57, 39), 1/69.0651865993),
+//                Vector2D.scale(new Vector2D(-57, 39), 1/69.0651865993),
+//                Vector2D.scale(new Vector2D(-57, 39), 1/69.0651865993),
+//                Vector2D.scale(new Vector2D(57, 39), 1/69.0651865993)
+//        });
 
         mecanumController.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         mecanumController.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
