@@ -11,8 +11,8 @@ import com.shprobotics.pestocore.drivebases.Tracker;
 @Config
 public class PestoFTCConfig {
     public static double ODOMETRY_TICKS_PER_INCH = 336.877962878;
-    public static double FORWARD_OFFSET = -1.45;
-    public static double ODOMETRY_WIDTH = 9.1;
+    public static double FORWARD_OFFSET = -1.4666181267717;
+    public static double ODOMETRY_WIDTH = 9.0886313275906;
     public static double DECELERATION = -2398 / 28.9;
     public static double MAX_VELOCITY = 76;
 
