@@ -6,13 +6,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.shprobotics.pestocore.algorithms.KalmanFilter;
 import com.shprobotics.pestocore.drivebases.MecanumController;
 import com.shprobotics.pestocore.drivebases.TeleOpController;
 import com.shprobotics.pestocore.drivebases.Tracker;
 import com.shprobotics.pestocore.geometries.Vector2D;
 
-import org.ejml.data.DMatrixRMaj;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.PestoFTCConfig;
 
@@ -52,29 +50,29 @@ public class RobotCentricDrive extends LinearOpMode {
         FtcDashboard dashboard = FtcDashboard.getInstance();
         Telemetry dashboardTelemetry = dashboard.getTelemetry();
 
-        KalmanFilter kalmanFilter = new KalmanFilter();
+//        KalmanFilter kalmanFilter = new KalmanFilter();
+//
+//        DMatrixRMaj F = new DMatrixRMaj(new double[][]{
+//                {1, 1},
+//                {1, 1}
+//        });
+//
+//        DMatrixRMaj Q = new DMatrixRMaj(new double[][]{
+//                {0, 0},
+//                {0, 0}
+//        });
+//
+//        DMatrixRMaj H = new DMatrixRMaj(new double[][]{
+//                {1, 1},
+//                {1, 1}
+//        });
+//
+//        DMatrixRMaj R = new DMatrixRMaj(new double[][]{
+//                {0, 0},
+//                {0, 0}
+//        });
 
-        DMatrixRMaj F = new DMatrixRMaj(new double[][]{
-                {1, 1},
-                {1, 1}
-        });
-
-        DMatrixRMaj Q = new DMatrixRMaj(new double[][]{
-                {0, 0},
-                {0, 0}
-        });
-
-        DMatrixRMaj H = new DMatrixRMaj(new double[][]{
-                {1, 1},
-                {1, 1}
-        });
-
-        DMatrixRMaj R = new DMatrixRMaj(new double[][]{
-                {0, 0},
-                {0, 0}
-        });
-
-        kalmanFilter.configure(F, Q, H);
+//        kalmanFilter.configure(F, Q, H);
 
         waitForStart();
 
@@ -116,16 +114,16 @@ public class RobotCentricDrive extends LinearOpMode {
             telemetry.addData("Time", timer.time() - start);
             start = timer.time();
 
-            dashboardTelemetry.addData("Voltage", hardwareMap.voltageSensor.iterator().next().getVoltage());
-
-            DMatrixRMaj z = new DMatrixRMaj(new double[][]{
-                    {1}
-            });
-
-            kalmanFilter.update(z, R);
-
-            dashboardTelemetry.addData("Kalman", kalmanFilter.getState().data);
-            dashboardTelemetry.update();
+//            dashboardTelemetry.addData("Voltage", hardwareMap.voltageSensor.iterator().next().getVoltage());
+//
+//            DMatrixRMaj z = new DMatrixRMaj(new double[][]{
+//                    {1}
+//            });
+//
+//            kalmanFilter.update(z, R);
+//
+//            dashboardTelemetry.addData("Kalman", kalmanFilter.getState().data);
+//            dashboardTelemetry.update();
 
             telemetry.update();
         }

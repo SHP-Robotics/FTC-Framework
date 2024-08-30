@@ -70,7 +70,7 @@ public class PestoFTCConfig {
 //                RevHubOrientationOnRobot.UsbFacingDirection.UP
 //        );
 
-        teleOpController.useTrackerIMU(tracker);
+//        teleOpController.useTrackerIMU(tracker);
 
         teleOpController.setSpeedController((gamepad) -> {
             if (gamepad.right_trigger > 0.1) {
