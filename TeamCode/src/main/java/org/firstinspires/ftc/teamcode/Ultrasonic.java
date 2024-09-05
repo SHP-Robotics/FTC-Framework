@@ -10,7 +10,7 @@ public class Ultrasonic extends LinearOpMode {
     AnalogInput distanceSensor2;
 
     public double ff(double x) {
-        return x * 3200;
+        return x * 3.3;
     }
 
     @Override
