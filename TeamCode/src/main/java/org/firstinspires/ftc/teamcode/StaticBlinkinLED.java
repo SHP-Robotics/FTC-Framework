@@ -16,6 +16,8 @@ public class StaticBlinkinLED extends LinearOpMode {
     @Override
     public void runOpMode()
     {
+        boolean holding = false;
+
         blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class, "blinkinLed");
         pattern = RevBlinkinLedDriver.BlinkinPattern.RAINBOW_RAINBOW_PALETTE;
         for (int i = 0; i < patternIndex; i++) {
@@ -27,18 +29,8 @@ public class StaticBlinkinLED extends LinearOpMode {
         telemetry.addData("Pattern: ", pattern.toString());
         telemetry.update();
 
-        while (opModeIsActive() && !isStopRequested()) {
-            if (gamepad1.b) {
-                pattern = pattern.next();
-                blinkinLedDriver.setPattern(pattern);
-                telemetry.addData("Pattern: ", pattern.toString());
-                telemetry.update();
-            } else if (gamepad1.x) {
-                pattern = pattern.previous();
-                blinkinLedDriver.setPattern(pattern);
-                telemetry.addData("Pattern: ", pattern.toString());
-                telemetry.update();
-            }
-        }
+        waitForStart();
+
+        while (opModeIsActive() && !isStopRequested()) {}
     }
 }
