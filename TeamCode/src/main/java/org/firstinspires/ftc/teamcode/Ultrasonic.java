@@ -6,7 +6,8 @@ import com.qualcomm.robotcore.hardware.AnalogInput;
 
 @TeleOp(name = "Ultrasonic")
 public class Ultrasonic extends LinearOpMode {
-    AnalogInput distanceSensor;
+    AnalogInput distanceSensor1;
+    AnalogInput distanceSensor2;
 
     public double ff(double x) {
         return x * 3200;
@@ -14,13 +15,19 @@ public class Ultrasonic extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        distanceSensor = hardwareMap.get(AnalogInput.class, "frontUltra");
+        distanceSensor1 = hardwareMap.get(AnalogInput.class, "ultra1");
+        distanceSensor2 = hardwareMap.get(AnalogInput.class, "ultra2");
 
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
-            telemetry.addData("Voltage", distanceSensor.getVoltage());
-            telemetry.addData("Meters", ff(distanceSensor.getVoltage()));
+            telemetry.addData("U1, Voltage", distanceSensor1.getVoltage());
+            telemetry.addData("U1, Meters", ff(distanceSensor1.getVoltage()));
+
+            telemetry.addLine();
+            
+            telemetry.addData("U2, Voltage", distanceSensor2.getVoltage());
+            telemetry.addData("U2, Meters", ff(distanceSensor2.getVoltage()));
 
             telemetry.update();
         }
