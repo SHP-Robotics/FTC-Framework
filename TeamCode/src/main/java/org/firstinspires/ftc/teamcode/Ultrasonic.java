@@ -22,8 +22,10 @@ public class Ultrasonic extends LinearOpMode {
 
     public static double dR = 1;
 
+    public static double dFF = 3.3/1.782;
+
     public double ff(double x) {
-        return x * 3.3;
+        return x * dFF;
     }
 
     @Override
