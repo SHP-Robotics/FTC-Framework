@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.teleops;
 
 import static org.firstinspires.ftc.teamcode.PestoFTCConfig.ODOMETRY_TICKS_PER_INCH;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,6 +13,7 @@ import com.shprobotics.pestocore.drivebases.Tracker;
 
 import org.firstinspires.ftc.teamcode.PestoFTCConfig;
 
+@Disabled
 @TeleOp
 public class TuneForwardOffset extends LinearOpMode {
     public void runOpMode() {

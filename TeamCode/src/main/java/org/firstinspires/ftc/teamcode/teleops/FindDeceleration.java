@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.teleops;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.shprobotics.pestocore.drivebases.MecanumController;
@@ -10,6 +11,7 @@ import com.shprobotics.pestocore.geometries.Vector2D;
 
 import org.firstinspires.ftc.teamcode.PestoFTCConfig;
 
+@Disabled
 @TeleOp
 public class FindDeceleration extends LinearOpMode {
     @Override
