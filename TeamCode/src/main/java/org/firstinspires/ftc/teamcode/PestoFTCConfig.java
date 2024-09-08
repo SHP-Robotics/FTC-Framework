@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -22,7 +23,7 @@ public class PestoFTCConfig {
     public static String backRightWheelName = "backRight";
 
     public static DcMotorSimple.Direction frontLeftWheelDirection = DcMotorSimple.Direction.REVERSE;
-    public static DcMotorSimple.Direction frontRightWheelDirection = DcMotorSimple.Direction.REVERSE;
+    public static DcMotorSimple.Direction frontRightWheelDirection = DcMotorSimple.Direction.FORWARD;
     public static DcMotorSimple.Direction backLeftWheelDirection = DcMotorSimple.Direction.REVERSE;
     public static DcMotorSimple.Direction backRightWheelDirection = DcMotorSimple.Direction.FORWARD;
 
@@ -65,12 +66,12 @@ public class PestoFTCConfig {
     public static TeleOpController getTeleOpController(MecanumController mecanumController, Tracker tracker, HardwareMap hardwareMap) {
         TeleOpController teleOpController = new TeleOpController(mecanumController, hardwareMap);
 
-//        teleOpController.configureIMU(
-//                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
-//                RevHubOrientationOnRobot.UsbFacingDirection.UP
-//        );
+        teleOpController.configureIMU(
+                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
+                RevHubOrientationOnRobot.UsbFacingDirection.UP
+        );
 
-//        teleOpController.useTrackerIMU(tracker);
+        teleOpController.useIMU();
 
         teleOpController.setSpeedController((gamepad) -> {
             if (gamepad.right_trigger > 0.1) {
