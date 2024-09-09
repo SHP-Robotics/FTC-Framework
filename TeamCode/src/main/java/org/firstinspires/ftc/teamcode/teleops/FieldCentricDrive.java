@@ -27,6 +27,10 @@ public class FieldCentricDrive extends OpMode {
 
     @Override
     public void loop() {
+        if (gamepad1.b) {
+            teleOpController.resetIMU();
+        }
+
         tracker.updateOdometry();
         teleOpController.updateSpeed(gamepad1);
         teleOpController.driveFieldCentric(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);

@@ -42,8 +42,8 @@ public class Arm {
     }
 
     private enum WristState {
-        BOTTOM(0.0),
-        MIDDLE(0.57),
+        BOTTOM(0.57),
+        MIDDLE(0.0),
         ;
 
         WristState(double state) {
