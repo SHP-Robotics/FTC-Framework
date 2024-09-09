@@ -1,61 +1,63 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.config.Config;
+import com.shprobotics.pestocore.geometries.Pose2D;
+import com.shprobotics.pestocore.vision.ComputerVision;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Mat;
+import org.opencv.core.Scalar;
+import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
+import java.util.ArrayList;
+
+@Config
 public class DetectSample extends OpenCvPipeline {
+    ArrayList<double[]> frameList;
+    public static double lowH = 30;
+    public static double highH = 70;
+    public static double lowS = 0;
+    public static double highS = 255;
+    public static double lowV = 0;
+    public static double highV = 255;
+
+    public static double threshold1 = 150;
+    public static double threshold2 = 100;
+
+    Telemetry telemetry;
+
+    public DetectSample() {
+        frameList = new ArrayList<>();
+    }
+
+    public void configure(Telemetry telemetry) {
+        this.telemetry = telemetry;
+    }
+
     @Override
     public Mat processFrame(Mat input){
-//        Mat mat = new Mat();
+        Mat mat = ComputerVision.convertColor(input, Imgproc.COLOR_RGB2HSV);
+        Mat scaledThresh = ComputerVision.filterColor(mat, new Scalar(lowH, lowS, lowV), new Scalar(highH, highS, highV));
+        Mat blurred = ComputerVision.blur(scaledThresh, new Size(5, 5));
+        Pose2D position = ComputerVision.getPose(blurred);
 
-        //From RGB to HSV to for better tuning
-        //EasyOpenCV hue is 0-180
-//        Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
+        telemetry.addData("X", position.getX());
+        telemetry.addData("Y", position.getY());
+        telemetry.addData("Theta", position.getHeadingRadians());
 
-        //Lower and upper bounds for the color to detect
-//        Scalar lowHSV = new Scalar(210.0/2, 50, 70);
-//        Scalar highHSV = new Scalar(250.0/2, 255, 255);
-
-//        Mat detected = new Mat();
-//        Core.inRange(mat, lowHSV, highHSV, detected); //ONLY returns the pixels in the HSV range
-
-//        List<MatOfPoint> contours = new ArrayList<>();
-//        Mat hierarchy = new Mat();
-//        Imgproc.findContours(detected, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
-
-//        int maxHeight = 0;
-//        for (MatOfPoint contour: contours) {
-//            int height = contour.rows();
-//            if (height > maxHeight) {
-//                maxHeight = height;
-//            }
-//        }
-//        isReadable = false;
-//        maxHeightReadable = maxHeight;
-//        isReadable = true;
-
-//        Mat left = detected.submat(LEFT_ROI);
-//        Mat right = detected.submat(RIGHT_ROI);
-
-//        leftValue = Core.sumElems(left).val[0] / LEFT_ROI.area() / 225;
-//        rightValue = Core.sumElems(right).val[0] / RIGHT_ROI.area() / 225;
-//        totalValue = Core.sumElems(detected).val[0] / (detected.rows() * detected.cols() * 255);
-
-        //        Imgproc.cvtColor(mat, mat, Imgproc.COLOR_GRAY2RGB);
-
-//        Scalar colorExists = new Scalar (0, 255, 0);
-//        Scalar colorInexistant = new Scalar (255, 0, 0);
-
-//        Imgproc.rectangle(detected, LEFT_ROI, leftValue>rightValue? colorInexistant:colorExists, 3);
-//        Imgproc.rectangle(detected, RIGHT_ROI, leftValue<rightValue? colorInexistant:colorExists, 3);
+        if (frameList.size() > 5) {
+            frameList.remove(0);
+        }
 
         //RELEASE EVERYTHING
-//        input.release();
-//        mat.release();
-//        detected.copyTo(input);
-//        detected.release();
-//        left.release();
-//        right.release();
+
+        input.release();
+        mat.release();
+        scaledThresh.release();
+        blurred.copyTo(input);
+        blurred.release();
 
         return input;
     }
