@@ -28,7 +28,6 @@ public class ExampleTeleOp extends BaseRobot {
         //Add any additional code here:
 
 
-
     }
 
     @Override
@@ -46,16 +45,16 @@ public class ExampleTeleOp extends BaseRobot {
         // Allows CommandScheduler.run() to be called - DO NOT DELETE!
         super.loop();
 
-        drive.setDriveBias(arm.getDriveBias());
+//        drive.setDriveBias(arm.getDriveBias());
 
-        new Trigger(gamepad1.b, new DropConeCommand(arm));
-
-        new Trigger(gamepad1.x, new RunCommand(() -> {
-            arm.setState(ArmSubsystem.State.STACK);
-        }));
-
-        new Trigger(gamepad1.dpad_down, new RunCommand(() -> {
-            arm.setState(ArmSubsystem.State.BOTTOM);
-        }));
+//        new Trigger(gamepad1.b, new DropConeCommand(arm));
+//
+//        new Trigger(gamepad1.x, new RunCommand(() -> {
+//            arm.setState(ArmSubsystem.State.STACK);
+//        }));
+//
+//        new Trigger(gamepad1.dpad_down, new RunCommand(() -> {
+//            arm.setState(ArmSubsystem.State.BOTTOM);
+//        }));
     }
 }
