@@ -1,7 +1,13 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kClawName;
+import static org.firstinspires.ftc.teamcode.Constants.Arm2.kClaw2Name;
+import static org.firstinspires.ftc.teamcode.Constants.Arm2.kWristName;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
@@ -12,6 +18,9 @@ public class ArmSubsystem2 extends Subsystem {
     // Example:
     // private final SHPMotor motor;
     private final SHPMotor elbow;
+    private final Servo wrist;
+    private final Servo claw;
+
     private final SHPMotor extension;
 
     public enum State {
@@ -28,6 +37,8 @@ public class ArmSubsystem2 extends Subsystem {
         // motor = new SHPMotor(hardwareMap, "motor");
         elbow = new SHPMotor(hardwareMap, "elbow");
         extension = new SHPMotor(hardwareMap, "extension");
+        wrist= hardwareMap.get(Servo.class,kWristName);
+        claw= hardwareMap.get(Servo.class,kClaw2Name);
 
 
         // Set initial state
@@ -35,7 +46,13 @@ public class ArmSubsystem2 extends Subsystem {
 //         setState(State.TOP);
         elbow.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         extension.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        
+        elbow.setDirection(DcMotorSimple.Direction.FORWARD);
+        extension.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        elbow.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        extension.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
 
 
     }

@@ -29,6 +29,15 @@ public class Constants {
     public static final class Vision {
         public static final double kTagsizeMeters = 0.0475;
     }
+    public static final class Arm2{
+
+        public static final String kWristName = "wrist";
+        public static final String kClaw2Name = "claw";
+
+
+
+    }
+
 
     public static final class Arm {
         public static final String kClawName = "claw";
