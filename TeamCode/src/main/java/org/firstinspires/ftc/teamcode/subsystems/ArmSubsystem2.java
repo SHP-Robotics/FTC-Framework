@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kClawName;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideD;
+import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideP;
 import static org.firstinspires.ftc.teamcode.Constants.Arm2.kClaw2Name;
+import static org.firstinspires.ftc.teamcode.Constants.Arm2.kClawOpen;
 import static org.firstinspires.ftc.teamcode.Constants.Arm2.kWristName;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -11,6 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
+import org.firstinspires.ftc.teamcode.shplib.controllers.PositionPID;
 import org.firstinspires.ftc.teamcode.shplib.hardware.SHPMotor;
 
 public class ArmSubsystem2 extends Subsystem {
@@ -40,6 +44,10 @@ public class ArmSubsystem2 extends Subsystem {
         wrist= hardwareMap.get(Servo.class,kWristName);
         claw= hardwareMap.get(Servo.class,kClaw2Name);
 
+        wrist.setDirection(Servo.Direction.FORWARD);
+        claw.setDirection(Servo.Direction.FORWARD);
+//        elbow.enablePositionPID(new PositionPID(kSlideP, 0.0, kSlideD));
+//        extension.enablePositionPID(new PositionPID(kSlideP, 0.0, kSlideD));
 
         // Set initial state
         // Example:
@@ -56,6 +64,14 @@ public class ArmSubsystem2 extends Subsystem {
 
 
     }
+
+
+
+    public void openclaw() {
+        claw.setPosition(kClawOpen);
+
+    }
+
 
     public void setState(State state) {
         this.state = state;

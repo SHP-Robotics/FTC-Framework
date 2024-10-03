@@ -47,12 +47,13 @@ public class ExampleTeleOp extends BaseRobot {
 
 //        drive.setDriveBias(arm.getDriveBias());
 
-//        new Trigger(gamepad1.b, new DropConeCommand(arm));
+//        new Trigger(gamepad1.b, new DropConeCommand());
+
 //
-//        new Trigger(gamepad1.x, new RunCommand(() -> {
-//            arm.setState(ArmSubsystem.State.STACK);
-//        }));
-//
+        new Trigger(gamepad1.x, new RunCommand(() -> {
+            arm.openclaw();
+        }));
+
 //        new Trigger(gamepad1.dpad_down, new RunCommand(() -> {
 //            arm.setState(ArmSubsystem.State.BOTTOM);
 //        }));

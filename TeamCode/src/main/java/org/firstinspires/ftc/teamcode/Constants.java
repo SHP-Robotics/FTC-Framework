@@ -33,7 +33,7 @@ public class Constants {
 
         public static final String kWristName = "wrist";
         public static final String kClaw2Name = "claw";
-
+        public static final Double kClawOpen = 0.6;
 
 
     }
@@ -46,7 +46,6 @@ public class Constants {
 
         public static final String kLeftSlideName = "leftSlide";
         public static final String kRightSlideName = "rightSlide";
-
         public static final double kSlideBottom = 10.0;
         public static final double kSlideHub = 200.0;
         public static final double kSlideLow = 1000.0;
