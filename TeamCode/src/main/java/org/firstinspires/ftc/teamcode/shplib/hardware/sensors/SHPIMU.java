@@ -19,6 +19,6 @@ public class SHPIMU {
     }
 
     public double getYaw(AngleUnit unit) {
-        return imu.getRobotYawPitchRollAngles().getYaw(unit);
+        return imu.getRobotYawPitchRollAngles().getYaw(unit) + Math.PI/14;
     }
 }

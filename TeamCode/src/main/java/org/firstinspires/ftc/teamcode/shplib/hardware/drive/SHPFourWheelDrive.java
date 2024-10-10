@@ -147,7 +147,7 @@ public class SHPFourWheelDrive {
 
     public void enableBuiltInVelocityControl() {
         for (SHPMotor motor : motors) {
-            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
     }
 

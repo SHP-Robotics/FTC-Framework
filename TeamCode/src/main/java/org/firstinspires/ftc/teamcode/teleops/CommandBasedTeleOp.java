@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleops;
 
+import static org.firstinspires.ftc.teamcode.Constants.Drive.kMaximumBias;
+
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.BaseRobot;
@@ -40,48 +42,52 @@ public class CommandBasedTeleOp extends BaseRobot {
         // Allows CommandScheduler.run() to be called - DO NOT DELETE!
         super.loop();
 
-        drive.setDriveBias(arm.getDriveBias());
-
-        new Trigger(gamepad1.a, new RunCommand(() -> {
-            if (!Clock.hasElapsed(debounce, 0.5)) return;
-            if (arm.clawClosed()) {
-                arm.openClaw();
-                if (arm.atHub()) {
-                    arm.setState(ArmSubsystem.State.BOTTOM);
-                }
-            } else {
-                arm.closeClaw();
-                CommandScheduler.getInstance().scheduleCommand(
-                        new WaitCommand(0.5)
-                                .then(new RunCommand(() -> {
-                                    if (arm.atStacks()) arm.setState(ArmSubsystem.State.LOW);
-                                    else arm.setState(ArmSubsystem.State.HUB);
-                                }))
-                );
-            }
-            debounce = Clock.now();
+        new Trigger(gamepad1.right_trigger>0.2, new RunCommand(()->{
+            drive.setDriveBias(0.8);
         }));
 
-        new Trigger(gamepad1.b, new DropConeCommand(arm));
-
-        new Trigger(gamepad1.x, new RunCommand(() -> {
-            arm.setState(ArmSubsystem.State.STACK);
-        }));
-
-        new Trigger(gamepad1.dpad_up, new RunCommand(() -> {
-            arm.setState(ArmSubsystem.State.HIGH);
-        }));
-
-        new Trigger(gamepad1.dpad_right, new RunCommand(() -> {
-            arm.setState(ArmSubsystem.State.MIDDLE);
-        }));
-
-        new Trigger(gamepad1.dpad_left, new RunCommand(() -> {
-            arm.setState(ArmSubsystem.State.LOW);
-        }));
-
-        new Trigger(gamepad1.dpad_down, new RunCommand(() -> {
-            arm.setState(ArmSubsystem.State.BOTTOM);
-        }));
+        drive.setDriveBias(0.5);
+//
+//        new Trigger(gamepad1.a, new RunCommand(() -> {
+//            if (!Clock.hasElapsed(debounce, 0.5)) return;
+//            if (arm.clawClosed()) {
+//                arm.openClaw();
+//                if (arm.atHub()) {
+//                    arm.setState(ArmSubsystem.State.BOTTOM);
+//                }
+//            } else {
+//                arm.closeClaw();
+//                CommandScheduler.getInstance().scheduleCommand(
+//                        new WaitCommand(0.5)
+//                                .then(new RunCommand(() -> {
+//                                    if (arm.atStacks()) arm.setState(ArmSubsystem.State.LOW);
+//                                    else arm.setState(ArmSubsystem.State.HUB);
+//                                }))
+//                );
+//            }
+//            debounce = Clock.now();
+//        }));
+//
+//        new Trigger(gamepad1.b, new DropConeCommand(arm));
+//
+//        new Trigger(gamepad1.x, new RunCommand(() -> {
+//            arm.setState(ArmSubsystem.State.STACK);
+//        }));
+//
+//        new Trigger(gamepad1.dpad_up, new RunCommand(() -> {
+//            arm.setState(ArmSubsystem.State.HIGH);
+//        }));
+//
+//        new Trigger(gamepad1.dpad_right, new RunCommand(() -> {
+//            arm.setState(ArmSubsystem.State.MIDDLE);
+//        }));
+//
+//        new Trigger(gamepad1.dpad_left, new RunCommand(() -> {
+//            arm.setState(ArmSubsystem.State.LOW);
+//        }));
+//
+//        new Trigger(gamepad1.dpad_down, new RunCommand(() -> {
+//            arm.setState(ArmSubsystem.State.BOTTOM);
+//        }));
     }
 }

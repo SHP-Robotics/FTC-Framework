@@ -22,8 +22,8 @@ public class Constants {
                 new FFController(0.045),
                 new FFController(0.035)
         };
-        public static final double kMinimumBias = 0.3;
-        public static final double kMaximumBias = 0.6;
+        public static final double kMinimumBias = 0.2;
+        public static final double kMaximumBias = 1.0;
     }
 
     public static final class Vision {
