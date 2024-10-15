@@ -5,6 +5,12 @@ import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideD;
 import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideP;
 import static org.firstinspires.ftc.teamcode.Constants.Arm2.kClaw2Name;
 import static org.firstinspires.ftc.teamcode.Constants.Arm2.kClawOpen;
+import static org.firstinspires.ftc.teamcode.Constants.Arm2.kElbowDrive;
+import static org.firstinspires.ftc.teamcode.Constants.Arm2.kElbowIntake;
+import static org.firstinspires.ftc.teamcode.Constants.Arm2.kElbowOuttake;
+import static org.firstinspires.ftc.teamcode.Constants.Arm2.kExtensionDrive;
+import static org.firstinspires.ftc.teamcode.Constants.Arm2.kExtensionIntake;
+import static org.firstinspires.ftc.teamcode.Constants.Arm2.kExtensionOuttake;
 import static org.firstinspires.ftc.teamcode.Constants.Arm2.kWristName;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -16,6 +22,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 import org.firstinspires.ftc.teamcode.shplib.controllers.PositionPID;
 import org.firstinspires.ftc.teamcode.shplib.hardware.SHPMotor;
+import org.firstinspires.ftc.teamcode.shplib.hardware.units.MotorUnit;
 
 public class ArmSubsystem2 extends Subsystem {
     // Declare devices
@@ -30,7 +37,8 @@ public class ArmSubsystem2 extends Subsystem {
     public enum State {
         // Define states
         // Example:
-        // ENABLED, DISABLED
+        INTAKE, DRIVING, OUTTAKE
+
     }
 
     private State state;
@@ -59,12 +67,23 @@ public class ArmSubsystem2 extends Subsystem {
 
         elbow.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         extension.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        state=State.DRIVING;
 
-
-
+        setState(State.DRIVING);
 
     }
-
+    public void setState(State state){
+        this.state=state;
+    }
+    public State getState(){
+        return state;
+    }
+    public void setElbowPos(int pos) {
+        elbow.setPosition(pos);
+    }
+    public void setExtensionPos(int pos) {
+        extension.setPosition(pos);
+    }
 
 
     public void openclaw() {
@@ -73,16 +92,54 @@ public class ArmSubsystem2 extends Subsystem {
     }
 
 
-    public void setState(State state) {
-        this.state = state;
-    }
+
+
 
     // Add control methods
     // Example:
     // private void setPower(double power) { motor.setPower(power); }
+    private void processState(){
+        if (this.state==State.DRIVING){
+            extension.setPosition(kExtensionDrive);
+            elbow.setPosition(kElbowDrive);
+        }
+        if (this.state==State.INTAKE){
+            extension.setPosition(kExtensionIntake);
+            elbow.setPosition(kElbowIntake);
+        }
+        if (this.state==State.OUTTAKE){
+            extension.setPosition(kExtensionOuttake);
+            elbow.setPosition(kElbowOuttake);
+        }
 
+    }
+    public void incrementUp() {
+        if (state==State.INTAKE) {
+            state=State.DRIVING;
+
+        }
+        if (state==State.DRIVING) {
+            state=State.OUTTAKE;
+
+        }
+    }
+
+    public void incrementDown() {
+        if (state==State.DRIVING) {
+            state=State.INTAKE;
+
+        }
+        if (state==State.OUTTAKE) {
+            state=State.DRIVING;
+
+        }
+    }
     @Override
     public void periodic(Telemetry telemetry) {
+        telemetry.addData("Elbow Motor Encoder: ", elbow.getPosition(MotorUnit.TICKS));
+        telemetry.addData("Extension Motor Encoder: ", extension.getPosition(MotorUnit.TICKS));
+
+        processState();
         // Add logging if needed
         // Example:
         // telemetry.addData("Motor Encoder: ", motor.getPosition(MotorUnit.TICKS));

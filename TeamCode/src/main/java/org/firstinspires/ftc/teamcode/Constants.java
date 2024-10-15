@@ -34,6 +34,14 @@ public class Constants {
         public static final String kWristName = "wrist";
         public static final String kClaw2Name = "claw";
         public static final Double kClawOpen = 0.6;
+        public static final Double kExtensionDrive = 100.0;
+        public static final Double kElbowDrive = 100.0;
+        public static final Double kExtensionIntake = 100.0;
+        public static final Double kElbowIntake = 100.0;
+        public static final Double kExtensionOuttake = 100.0;
+        public static final Double kElbowOuttake = 100.0;
+
+
 
 
     }
