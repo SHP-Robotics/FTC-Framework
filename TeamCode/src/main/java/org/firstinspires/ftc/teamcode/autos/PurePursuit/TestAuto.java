@@ -7,9 +7,10 @@ import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Position2D;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.PurePursuitFollower;
 import org.firstinspires.ftc.teamcode.debug.PurePursuit.PurePursuitPath;
 import org.firstinspires.ftc.teamcode.debug.config.Constants;
+import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 
 @Autonomous
-public class BlueSpike extends BaseAuto {
+public class TestAuto extends BaseAuto {
     PurePursuitPath path1;
     PurePursuitPath path2;
     PurePursuitPath path3;
@@ -23,40 +24,29 @@ public class BlueSpike extends BaseAuto {
     public void init() {
         this.side = Side.BLUE;
 
-        double tanhPace = 0.5;
-        double minimumTanh = Constants.minimumTanh;
-        double maximumTanh = 0.75;
-
         path1 = new PurePursuitPath.PurePursuitPathBuilder()
-                .moveTo(new Position2D(0, -23, Math.toRadians(90)))
-                .rotateTo(new Position2D(0, -23, Math.toRadians(90)), Math.toRadians(180))
-                .moveTo(new Position2D(6, -23, Math.toRadians(180)))
-                .moveTo(new Position2D(0, -23, Math.toRadians(180)))
-                .rotateTo(new Position2D(0, -23, Math.toRadians(180)), Math.toRadians(90))
-                .moveTo(new Position2D(0, 0, Math.toRadians(90)))
+                .moveTo(new Position2D(8, -0, Math.toRadians(90)))
+                .moveTo(new Position2D(8, -27, Math.toRadians(90)))
+                .moveTo(new Position2D(8, -24, Math.toRadians(90)))
 
                 .enableRetrace()
-                .enableTanh(tanhPace, minimumTanh, maximumTanh)
                 .build();
 
         path2 = new PurePursuitPath.PurePursuitPathBuilder()
-                .moveTo(new Position2D(0, -31.5, Math.toRadians(90)))
-                .moveTo(new Position2D(0, 0, Math.toRadians(90)))
+                .moveTo(new Position2D(-3, -31, Math.toRadians(90)), Constants.positionBuffer, Constants.rotationBuffer)
+                .moveTo(new Position2D(-3, -22, Math.toRadians(90)))
+                .rotateTo(new Position2D(-3, -22, Math.toRadians(90)), Math.toRadians(0))
+                .moveTo(new Position2D(-10, -20, Math.toRadians(0)))
 
                 .enableRetrace()
-                .enableTanh(tanhPace, minimumTanh, maximumTanh)
                 .build();
 
         path3 = new PurePursuitPath.PurePursuitPathBuilder()
-                .moveTo(new Position2D(0, -23, Math.toRadians(90)))
-                .rotateTo(new Position2D(0, -23, Math.toRadians(90)), Math.toRadians(0))
-                .moveTo(new Position2D(-9.5, -23, Math.toRadians(0)))
-                .moveTo(new Position2D(-3.5, -23, Math.toRadians(0)))
-                .rotateTo(new Position2D(-3.5, -23, Math.toRadians(0)), Math.toRadians(90))
-                .moveTo(new Position2D(0, 0, Math.toRadians(90)))
+                .moveTo(new Position2D(-12, -0, Math.toRadians(90)))
+                .moveTo(new Position2D(-12, -27, Math.toRadians(90)))
+                .moveTo(new Position2D(-12, -24, Math.toRadians(90)))
 
                 .enableRetrace()
-                .enableTanh(tanhPace, minimumTanh, maximumTanh)
                 .build();
 
         purePursuitFollower = new PurePursuitFollower(hardwareMap);
