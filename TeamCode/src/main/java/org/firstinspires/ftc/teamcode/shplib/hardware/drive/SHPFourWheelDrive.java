@@ -29,10 +29,13 @@ public class SHPFourWheelDrive {
         for (int i = 0; i < motors.length; i++) {
             motors[i] = new SHPMotor(hardwareMap, motorNames[i]);
         }
-        motors[0].setDirection(DcMotorSimple.Direction.REVERSE);
+        motors[0].setDirection(DcMotorSimple.Direction.REVERSE); //
         motors[1].setDirection(DcMotorSimple.Direction.REVERSE);
-    }
 
+    }
+    public void setPower(double power, int motor){
+        motors[motor].setPower(power);
+    }
     public void setMaxOutput(double maxOutput) {
         for (SHPMotor motor : motors) {
             motor.setMaxOutput(maxOutput);

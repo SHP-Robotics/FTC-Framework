@@ -46,6 +46,19 @@ public class CommandBasedTeleOp extends BaseRobot {
             drive.setDriveBias(0.8);
         }));
 
+        new Trigger(gamepad1.triangle, new RunCommand(() -> {
+            drive.setPower(0);
+        }));
+        new Trigger(gamepad1.square, new RunCommand(() -> {
+            drive.setPower(1);
+        }));
+        new Trigger(gamepad1.cross, new RunCommand(() -> {
+            drive.setPower(2);
+        }));
+        new Trigger(gamepad1.circle, new RunCommand(() -> {
+            drive.setPower(3);
+        }));
+
         drive.setDriveBias(0.5);
 //
 //        new Trigger(gamepad1.a, new RunCommand(() -> {

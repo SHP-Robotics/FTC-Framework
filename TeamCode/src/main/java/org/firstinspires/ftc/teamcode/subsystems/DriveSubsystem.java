@@ -33,19 +33,23 @@ public class DriveSubsystem extends Subsystem {
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD);
     }
-//    public void setBias(double input){
+
+    //    public void setBias(double input){
 //        bias = input;
 //    }
     public void mecanum(double leftY, double leftX, double rightX) {
         Vector2d vector = new Vector2d(
                 leftY,
                 leftX
-        ).rotated(-imu.getYaw(AngleUnit.RADIANS ));
+        ).rotated(-imu.getYaw(AngleUnit.RADIANS));
 
-        drive.mecanum(vector.getX()*bias, vector.getY()*bias, rightX*bias); // field oriented
+        drive.mecanum(vector.getX() * bias, vector.getY() * bias, rightX * bias); // field oriented
 //        drive.mecanum(leftY * bias, leftX * bias, rightX * bias); // robot oriented
     }
 
+    public void setPower(int motor) {
+        drive.setPower(1.0, motor);
+    }
     public void setDriveBias(double driveBias) {
         bias = Range.clip(driveBias, kMinimumBias, kMaximumBias);
     }
