@@ -35,6 +35,7 @@ public class DriveSubsystem extends Subsystem {
     public void mecanum(double leftY, double leftX, double rightX) {
 //        Vector2d vector = new Vector2d(
 //                leftY,
+
 //                leftX
 //        ).rotated(-imu.getYaw());
 
@@ -85,7 +86,7 @@ public class DriveSubsystem extends Subsystem {
     public void periodic(Telemetry telemetry) {
 //        telemetry.addData("Bot Direction: ", Math.toDegrees(imu.getYaw()));
         for (int i = 0; i < 4; i++) {
-            telemetry.addData("Motor " + i + " Position: ", drive.getPositions(MotorUnit.TICKS)[i]);
+//            telemetry.addData("Motor " + i + " Position: ", drive.getPositions(MotorUnit.TICKS)[i]);
         }
 //        telemetry.addData("Drive at position setpoint: ", drive.atPositionSetpoint() ? "true" : "false");
     }

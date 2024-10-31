@@ -1,9 +1,10 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kClawName;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideD;
-import static org.firstinspires.ftc.teamcode.Constants.Arm.kSlideP;
+//import static org.firstinspires.ftc.teamcode.Constants.Arm2.kClawName;
+//import static org.firstinspires.ftc.teamcode.Constants.Arm2.kSlideD;
+//import static org.firstinspires.ftc.teamcode.Constants.Arm2.kSlideP;
 import static org.firstinspires.ftc.teamcode.Constants.Arm2.kClaw2Name;
+import static org.firstinspires.ftc.teamcode.Constants.Arm2.kClawClose;
 import static org.firstinspires.ftc.teamcode.Constants.Arm2.kClawOpen;
 import static org.firstinspires.ftc.teamcode.Constants.Arm2.kElbowDrive;
 import static org.firstinspires.ftc.teamcode.Constants.Arm2.kElbowIntake;
@@ -92,7 +93,10 @@ public class ArmSubsystem2 extends Subsystem {
     }
 
 
+    public void closeClaw() {
+        claw.setPosition(kClawClose);
 
+    }
 
 
     // Add control methods
@@ -138,6 +142,7 @@ public class ArmSubsystem2 extends Subsystem {
     public void periodic(Telemetry telemetry) {
         telemetry.addData("Elbow Motor Encoder: ", elbow.getPosition(MotorUnit.TICKS));
         telemetry.addData("Extension Motor Encoder: ", extension.getPosition(MotorUnit.TICKS));
+        telemetry.addData("Claw Pos:", claw.getPosition());
 
         processState();
         // Add logging if needed
@@ -146,6 +151,7 @@ public class ArmSubsystem2 extends Subsystem {
         // Handle states
         // Example:
 //        switch (state) {
+
 //            case ENABLED:
 //                setPower(1.0);
 //                break;

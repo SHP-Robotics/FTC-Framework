@@ -3,16 +3,12 @@ package org.firstinspires.ftc.teamcode.teleops;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.BaseRobot;
-import org.firstinspires.ftc.teamcode.commands.DropConeCommand;
-import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
 import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.Trigger;
-import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
-import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 
 @TeleOp
-public class teleop extends BaseRobot {
+public class A_WIlliam_Ridham_Code extends BaseRobot {
     private double debounce;
 
     @Override
@@ -52,6 +48,10 @@ public class teleop extends BaseRobot {
 //
         new Trigger(gamepad1.x, new RunCommand(() -> {
             arm.openclaw();
+        }));
+        new Trigger(gamepad1.triangle, new RunCommand(() -> {
+            arm.closeClaw();
+
         }));
 
         new Trigger(gamepad1.left_bumper, new RunCommand(() -> {
