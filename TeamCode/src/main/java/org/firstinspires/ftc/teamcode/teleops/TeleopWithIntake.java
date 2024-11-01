@@ -24,4 +24,9 @@ public class TeleopWithIntake extends BaseRobot {
         debounce = Clock.now();
     }
 
+    @Override
+    public void loop(){
+        super.loop();
+        
+    }
 }
