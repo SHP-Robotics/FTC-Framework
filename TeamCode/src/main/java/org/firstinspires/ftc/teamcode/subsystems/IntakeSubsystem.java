@@ -10,17 +10,26 @@ import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 
 public class IntakeSubsystem extends Subsystem {
     private final CRServo intakeServo;
+
+    public enum State {
+        INTAKING(1.0),
+        OUTAKING(-1.0),
+        PAUSED(0.0);
+
+        final double power;
+
+        State(double power){this.power = power;}
+    }
+    private State state;
     public IntakeSubsystem(HardwareMap hardwareMap){
         intakeServo = (CRServo) hardwareMap.get(kIntakeName);
+       setState(State.PAUSED);
     }
+    public void setState(State state){this.state = state;}
+    public State getState(){return state;}
     public CRServo getIntakeServo(){
         return intakeServo;
     }
-    public void spinIn(){
-        intakeServo.setPower(1.0);
-    }
-    public void spinOut(){
-        intakeServo.setPower(-1.0);
-    }
+    public void runServo(){intakeServo.setPower(state.power);}
 
 }
