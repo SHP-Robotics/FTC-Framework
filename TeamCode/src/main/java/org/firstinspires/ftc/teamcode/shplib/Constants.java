@@ -37,7 +37,7 @@ public class Constants {
     }
 
     public static final class Intake{
-        public static final String kIntakeName = "intakeAxon";
+        public static final String kIntakeName = "intakeServo";
 //        public static final String kLeftAdjust = "LeftAxon";
 //        public static final String kRightAdjust = "RightAxon";
 //        public static final double kPositionBottom = 0.615;
