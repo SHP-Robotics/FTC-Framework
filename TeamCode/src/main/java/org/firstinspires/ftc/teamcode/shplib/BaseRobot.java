@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 /**
@@ -28,7 +29,7 @@ public class BaseRobot extends OpMode {
     public ArmSubsystem arm;
 //    public WristSubsystem wrist;
 //    public PlaneServo planeServo;
-//    public IntakeSubsystem intake;
+    public IntakeSubsystem intake;
 //    public DropDownSubsystem dropDown;
 
     public double previousTime = 0;
