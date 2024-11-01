@@ -24,9 +24,9 @@ import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 public class BaseRobot extends OpMode {
     // Declare subsystems and devices
     public DriveSubsystem drive;
-    public VisionSubsystem vision;
+ //   public VisionSubsystem vision;
     //public ElbowSubsystem elbow;
-    public ArmSubsystem arm;
+   // public ArmSubsystem arm;
 //    public WristSubsystem wrist;
 //    public PlaneServo planeServo;
     public IntakeSubsystem intake;
@@ -42,12 +42,13 @@ public class BaseRobot extends OpMode {
 
         // Initialize your subsystems and devices
         drive = new DriveSubsystem(hardwareMap);
-        arm = new ArmSubsystem(hardwareMap);
+        //arm = new ArmSubsystem(hardwareMap);
 //        elbow = new ElbowSubsystem(hardwareMap);
 //        wrist = new WristSubsystem(hardwareMap);
 //        planeServo = new PlaneServo(hardwareMap);
 //        intake = new IntakeSubsystem(hardwareMap);
 //        dropDown = new DropDownSubsystem(hardwareMap);
+        intake = new IntakeSubsystem(hardwareMap);
     }
 
     // Called when you press the start button
