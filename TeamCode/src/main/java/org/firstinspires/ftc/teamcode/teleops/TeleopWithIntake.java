@@ -4,7 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.shplib.BaseRobot;
 import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
+import org.firstinspires.ftc.teamcode.shplib.commands.Trigger;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 
 @TeleOp
 public class TeleopWithIntake extends BaseRobot {
@@ -17,6 +19,7 @@ public class TeleopWithIntake extends BaseRobot {
                         () -> drive.mecanum(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x)
                 )
         );
+
     }
     @Override
     public void start(){
@@ -27,6 +30,23 @@ public class TeleopWithIntake extends BaseRobot {
     @Override
     public void loop(){
         super.loop();
-        
+        new Trigger(gamepad1.right_bumper,
+                new RunCommand(
+                        () -> {intake.setState(IntakeSubsystem.State.INTAKING);
+                            intake.runServo();
+                        }
+                )
+        );
+        new Trigger(gamepad1.left_bumper,
+                new RunCommand(
+                        () -> {intake.setState(IntakeSubsystem.State.OUTAKING);
+                            intake.runServo();
+                        }
+                )
+        );
+
+
     }
+
+
 }
