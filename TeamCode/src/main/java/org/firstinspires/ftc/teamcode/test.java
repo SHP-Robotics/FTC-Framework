@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.shprobotics.pestocore.drivebases.MecanumController;
 import com.shprobotics.pestocore.drivebases.MecanumTracker;
 import com.shprobotics.pestocore.drivebases.TeleOpController;
@@ -19,6 +20,7 @@ public class test extends LinearOpMode {
 
         DcMotor viperslide = hardwareMap.get(DcMotor.class, "ViperSlide");
         DcMotor wormgear = hardwareMap.get(DcMotor.class, "WormGear");
+        Servo claw = hardwareMap.get(Servo.class, "Claw");
 
 
         waitForStart();
@@ -42,24 +44,45 @@ public class test extends LinearOpMode {
             if (gamepad1.b) {
                 mecanumTracker.reset();
                 teleOpController.resetIMU();
+
             }
 
-            viperslide.setPower(gamepad1.right_stick_y);
+            viperslide.setPower(0);
             wormgear.setPower(gamepad1.right_trigger);
+            wormgear.setPower(-gamepad1.left_trigger);
 
             //arm speed constraints
-            if (gamepad1.right_stick_y > 0.5); {
+            if (gamepad1.right_stick_y > 0.5 && viperslide.getCurrentPosition() > 0
+                    && viperslide.getCurrentPosition() < 2000) {
                 viperslide.setPower(0.5);
 
             }
-            //if gamepad1.right_stick_y is between 10% and 50%)
-            if (gamepad1.right_stick_y > 0.1 && gamepad1.right_stick_y < 0.5); {
+            //if gamepad1.right_stick_y is between 10% and 50%
+            if (gamepad1.right_stick_y > 0.1 && gamepad1.right_stick_y < 0.5
+                    && viperslide.getCurrentPosition() > 0
+                    && viperslide.getCurrentPosition() < 2000) {
                 viperslide.setPower(0.3);
 
             }
-            if (gamepad1.right_stick_y < -0.1 && gamepad1.right_stick_y > -0.5); {
+
+            //if gamepad1.right_stick_y is between -10% and -50%
+            if (gamepad1.right_stick_y < -0.1 && gamepad1.right_stick_y > -0.5
+                    && viperslide.getCurrentPosition() > 0
+                    && viperslide.getCurrentPosition() < 2000) {
                 viperslide.setPower(-0.3);
+
+                if (gamepad1.right_trigger > 0.4) {
+
+                    wormgear.setPower(0.3);
+
+                    }
+
+                if (gamepad1.dpad_left) {
+                  claw.setPosition(0.5);
+                }
             }
+
+       telemetry.addData("Motor 0:", )
         }
     }
-}
+//}

@@ -33,7 +33,7 @@ public class PestoFTCConfig {
 
     public static final DcMotorSimple.Direction frontLeftDirection = REVERSE;
     public static final DcMotorSimple.Direction frontRightDirection = FORWARD;
-    public static final DcMotorSimple.Direction backLeftDirection = FORWARD;
+    public static final DcMotorSimple.Direction backLeftDirection = REVERSE;
     public static final DcMotorSimple.Direction backRightDirection = FORWARD;
 
     public static String frontLeftName = "frontLeft";
@@ -50,10 +50,10 @@ public class PestoFTCConfig {
         });
 
         mecanumController.configureMotorDirections(new DcMotorSimple.Direction[]{
-                DcMotorSimple.Direction.REVERSE,
                 DcMotorSimple.Direction.FORWARD,
-                DcMotorSimple.Direction.REVERSE,
-                DcMotorSimple.Direction.FORWARD
+                DcMotorSimple.Direction.FORWARD,
+                DcMotorSimple.Direction.REVERSE ,
+                DcMotorSimple.Direction.REVERSE
         });
 
 //        mecanumController.setPowerVectors(new Vector2D[]{
@@ -73,7 +73,7 @@ public class PestoFTCConfig {
         TeleOpController teleOpController = new TeleOpController(mecanumController, hardwareMap);
 
         teleOpController.configureIMU(
-                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
+                RevHubOrientationOnRobot.LogoFacingDirection.FORWARD,
                 RevHubOrientationOnRobot.UsbFacingDirection.UP
         );
 
