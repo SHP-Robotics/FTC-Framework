@@ -95,7 +95,7 @@ public class PestoFTCConfig {
    public static MecanumTracker getTracker(HardwareMap hardwareMap) {
         return new MecanumTracker.TrackerBuilder(hardwareMap,
                 ODOMETRY_TICKS_PER_INCH,
-                new Vector3D()(7, 6.25,0.5),
+                new Vector2D(7, 6.25),
                 frontLeftName,
                 frontRightName,
                 backLeftName,
@@ -103,7 +103,7 @@ public class PestoFTCConfig {
                 frontLeftDirection,
                 frontRightDirection,
                 backLeftDirection,
-                backRightDirection.build();
+                backRightDirection).build();
 
     }
 }

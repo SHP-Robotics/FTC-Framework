@@ -75,14 +75,14 @@ public class test extends LinearOpMode {
 
                     wormgear.setPower(0.3);
 
-                    }
+                }
 
                 if (gamepad1.dpad_left) {
-                  claw.setPosition(0.5);
+                    claw.setPosition(0.5);
                 }
             }
 
-       telemetry.addData("Motor 0:", )
+            //telemetry.addData("Motor 0:",)
         }
     }
-//}
+}
