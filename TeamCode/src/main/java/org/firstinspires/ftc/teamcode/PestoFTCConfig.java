@@ -15,6 +15,8 @@ import com.shprobotics.pestocore.drivebases.ThreeWheelOdometryTracker;
 import com.shprobotics.pestocore.drivebases.Tracker;
 import com.shprobotics.pestocore.geometries.Vector2D;
 
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+
 @Config
 public class PestoFTCConfig {
     public static double ODOMETRY_TICKS_PER_INCH = 336.877962878;
@@ -49,12 +51,12 @@ public class PestoFTCConfig {
                 "backRight"
         });
 
-        mecanumController.configureMotorDirections(new DcMotorSimple.Direction[]{
-                DcMotorSimple.Direction.FORWARD,
-                DcMotorSimple.Direction.FORWARD,
-                DcMotorSimple.Direction.REVERSE ,
-                DcMotorSimple.Direction.REVERSE
-        });
+        //mecanumController.configureMotorDirections(new DcMotorSimple.Direction[]{
+          //      DcMotorSimple.Direction.FORWARD,
+            //    DcMotorSimple.Direction.FORWARD,
+              //  DcMotorSimple.Direction.REVERSE ,
+                //DcMotorSimple.Direction.REVERSE
+       // });
 
 //        mecanumController.setPowerVectors(new Vector2D[]{
 //                Vector2D.scale(new Vector2D(57, 39), 1/69.0651865993),
@@ -90,10 +92,10 @@ public class PestoFTCConfig {
         return teleOpController;
     }
 
-    public static MecanumTracker getTracker(HardwareMap hardwareMap) {
+   public static MecanumTracker getTracker(HardwareMap hardwareMap) {
         return new MecanumTracker.TrackerBuilder(hardwareMap,
                 ODOMETRY_TICKS_PER_INCH,
-                new Vector2D(7, 6.25),
+                new Vector3D()(7, 6.25,0.5),
                 frontLeftName,
                 frontRightName,
                 backLeftName,
@@ -101,7 +103,7 @@ public class PestoFTCConfig {
                 frontLeftDirection,
                 frontRightDirection,
                 backLeftDirection,
-                backRightDirection).build();
+                backRightDirection.build();
 
     }
 }
