@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleops;
 
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Pivot.kWristPos;
+
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.shplib.BaseRobot;
@@ -9,7 +11,7 @@ import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 
 @TeleOp
-public class TeleopWithIntake extends BaseRobot {
+public class TestTeleop extends BaseRobot {
     private double debounce;
     @Override
     public void init(){
@@ -17,6 +19,11 @@ public class TeleopWithIntake extends BaseRobot {
         drive.setDefaultCommand(
                 new RunCommand(
                         () -> drive.mecanum(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x)
+                )
+        );
+        pivot.setDefaultCommand(
+                new RunCommand(
+                        ()-> pivot.getWrist().setPosition(kWristPos)
                 )
         );
 
@@ -30,21 +37,17 @@ public class TeleopWithIntake extends BaseRobot {
     @Override
     public void loop(){
         super.loop();
-        new Trigger(gamepad1.right_bumper,
-                new RunCommand(
-                        () -> {intake.setState(IntakeSubsystem.State.INTAKING);
-                            intake.runServo();
-                        }
-                )
-        );
-        new Trigger(gamepad1.left_bumper,
-                new RunCommand(
-                        () -> {intake.setState(IntakeSubsystem.State.OUTAKING);
-                            intake.runServo();
-                        }
-                )
-        );
 
+        new Trigger(gamepad1.right_bumper,
+                    new RunCommand(
+                            () -> {pivot.getIntake().setState(IntakeSubsystem.State.INTAKING);
+                                pivot.getIntake().runServo();
+                                pivot.getWrist().setPosition(kWristPos);
+                            }
+                    )
+                );
+
+        debounce = Clock.now();
 
     }
 

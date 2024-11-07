@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kIntakeName;
-
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Pivot.Intake.kIntakeName;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;

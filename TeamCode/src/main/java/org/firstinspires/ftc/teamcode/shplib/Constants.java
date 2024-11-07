@@ -32,15 +32,22 @@ public class Constants {
         public static final double kTagsizeMeters = 0.0475;
     }
 
-    public static final class Plane{
-        public static final String kPlaneServo = "plane";
-    }
 
-    public static final class Intake{
-        public static final String kIntakeName = "intakeServo";
+    public static final class Pivot{
+        public static final class Intake{
+            public static final String kIntakeName = "intake";
+        }
+        public static final String kWristName = "wrist";
+        public static final String klElbowName = "lElbow";
+        public static final String krElbowName = "rElbow";
+        public static double kWristPos = 0.5;
+    }
+   // public static final class Intake{
+       // public static final String kIntakeName = "intakeServo";
 //        public static final String kLeftAdjust = "LeftAxon";
 //        public static final String kRightAdjust = "RightAxon";
 //        public static final double kPositionBottom = 0.615;
+
 
         // Wrist
 //        public static double kWristDown = 0.505;
@@ -66,7 +73,7 @@ public class Constants {
 //
 //        public static final String kPracticeLeftArmServoName = "LeftAxon";
 //        public static final String kPracticeRightArmServoName = "RightAxon";
-    }
+//    }
 
     public static final class Arm {
         public static final String kLeftSlideName = "leftSlide";
@@ -81,5 +88,10 @@ public class Constants {
     public static final class DropDown {
         public static final String kDropdownName = "dropdown";
         // the positions are in subsystems/DropDownSubsystem/State
+    }
+    public static final class Claw{
+        public static final String kClawName = "clawServo";
+        public static final double kOpen = -0.5;
+        public static final double kClose = 0.5;
     }
 }
