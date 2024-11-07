@@ -70,19 +70,28 @@ public class test extends LinearOpMode {
                     && viperslide.getCurrentPosition() > 0
                     && viperslide.getCurrentPosition() < 2000) {
                 viperslide.setPower(-0.3);
-
-                if (gamepad1.right_trigger > 0.4) {
-
-                    wormgear.setPower(0.3);
-
-                }
-
-                if (gamepad1.dpad_left) {
-                    claw.setPosition(0.5);
-                }
             }
 
-            //telemetry.addData("Motor 0:",)
+            if (gamepad1.right_trigger > 0.4) {
+
+                wormgear.setPower(0.3);
+
+                }
+
+            if (gamepad1.right_bumper) {
+                claw.setPosition(1);
+                //open
+            }
+
+            if (gamepad1.left_bumper) {
+                claw.setPosition(0);
+                //close
+                    }
+
+
+                //telemetry.addData("Motor 0:",)
+
         }
     }
 }
+
