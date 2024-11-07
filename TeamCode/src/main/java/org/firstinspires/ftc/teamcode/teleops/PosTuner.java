@@ -27,8 +27,8 @@ public class PosTuner extends BaseRobot {
 
 //        servo = (Servo) hardwareMap.get("dropdown");
 
-        elbow.setState(ElbowSubsystem.State.DOWN);
-        wrist.setState(WristSubsystem.State.DOWN);
+//        elbow.setState(ElbowSubsystem.State.DOWN);
+//        wrist.setState(WristSubsystem.State.DOWN);
     }
 
     @Override

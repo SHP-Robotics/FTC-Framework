@@ -21,11 +21,11 @@ public class OmicronLee extends BaseRobot {
         super.init();
 
         // Default command runs when no other commands are scheduled for the subsystem
-        drive.setDefaultCommand(
-                new RunCommand(
-                        () -> drive.mecanum(-gamepad1.left_stick_y*driveBias, -gamepad1.left_stick_x*driveBias, -gamepad1.right_stick_x*driveBias)
-                )
-        );
+//        drive.setDefaultCommand(
+//                new RunCommand(
+//                        () -> drive.mecanum(-gamepad1.left_stick_y*driveBias, -gamepad1.left_stick_x*driveBias, -gamepad1.right_stick_x*driveBias)
+//                )
+//        );
 
         driveBias = 1;
     }
