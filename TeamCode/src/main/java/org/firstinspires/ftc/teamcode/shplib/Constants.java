@@ -41,6 +41,8 @@ public class Constants {
         public static final String klElbowName = "lElbow";
         public static final String krElbowName = "rElbow";
         public static double kWristPos = 0.5;
+        public static double kElbowIn = 0;
+        public static double kElbowOut = 0.7;
     }
    // public static final class Intake{
        // public static final String kIntakeName = "intakeServo";

@@ -45,7 +45,15 @@ public class TestTeleop extends BaseRobot {
                                 pivot.getWrist().setPosition(kWristPos);
                             }
                     )
-                );
+        );
+        new Trigger(gamepad1.left_bumper,
+                new RunCommand(
+                        () -> {pivot.getIntake().setState(IntakeSubsystem.State.OUTAKING);
+                            pivot.getIntake().runServo();
+                            pivot.getWrist().setPosition(kWristPos);
+                        }
+                )
+        );
 
         debounce = Clock.now();
 

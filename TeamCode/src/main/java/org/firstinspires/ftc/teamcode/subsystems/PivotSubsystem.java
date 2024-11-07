@@ -30,6 +30,20 @@ public class PivotSubsystem extends Subsystem {
     public Servo getWrist(){
         return wrist;
     }
+    public void tuneElbowUp(){
+        lElbow.setPosition(lElbow.getPosition() + 0.01);
+        rElbow.setPosition(rElbow.getPosition() - 0.01);
+    }
+    public void tuneElbowDown(){
+        lElbow.setPosition(lElbow.getPosition() - 0.01);
+        rElbow.setPosition(rElbow.getPosition() + 0.01);
+    }
+    public void tuneWristUp(){
+        wrist.setPosition(wrist.getPosition()+0.01);
+    }
+    public void tuneWristDown(){
+        wrist.setPosition(wrist.getPosition()-0.01);
+    }
 
 
 }
