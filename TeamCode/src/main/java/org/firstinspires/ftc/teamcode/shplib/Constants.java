@@ -44,7 +44,7 @@ public class Constants {
         public static double kElbowIn = 0;
         public static double kElbowOut = 0.7;
     }
-   // public static final class Intake{
+    public static final class Intake{
        // public static final String kIntakeName = "intakeServo";
 //        public static final String kLeftAdjust = "LeftAxon";
 //        public static final String kRightAdjust = "RightAxon";
@@ -75,7 +75,7 @@ public class Constants {
 //
 //        public static final String kPracticeLeftArmServoName = "LeftAxon";
 //        public static final String kPracticeRightArmServoName = "RightAxon";
-//    }
+    }
 
     public static final class Arm {
         public static final String kLeftSlideName = "leftSlide";

@@ -20,15 +20,16 @@ public class IntakeSubsystem extends Subsystem {
         State(double power){this.power = power;}
     }
     private State state;
+
     public IntakeSubsystem(HardwareMap hardwareMap){
         intakeServo = (CRServo) hardwareMap.get(kIntakeName);
        setState(State.PAUSED);
     }
-    public void setState(State state){this.state = state;}
-    public State getState(){return state;}
+    public void setState(State state){ this.state = state; }
+    public State getState(){ return state; }
     public CRServo getIntakeServo(){
         return intakeServo;
     }
-    public void runServo(){intakeServo.setPower(state.power);}
+    public void runServo(){ intakeServo.setPower(state.power); }
 
 }
