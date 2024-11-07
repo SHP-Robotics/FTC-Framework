@@ -76,6 +76,15 @@ public class Constants {
         public static final double kPixelHeight = 500;
         public static final double kRunPower = 1;
     }
+    public static final class ArmTest {
+        public static final String kSlideName = "slide";
+        public static final String kRotateName = "rotate";
+
+        public static final double kMaxHeight = 4000;
+        public static final double kSlideTolerance = 30;
+        public static final double kPixelHeight = 500;
+        public static final double kRunPower = 1;
+    }
 
     public static final class DropDown {
         public static final String kDropdownName = "dropdown";
