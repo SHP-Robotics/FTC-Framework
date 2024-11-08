@@ -21,46 +21,54 @@ import org.firstinspires.ftc.teamcode.shplib.hardware.SHPMotor;
 import org.firstinspires.ftc.teamcode.shplib.hardware.units.MotorUnit;
 
 public class ArmTestSubsystem extends Subsystem {
-    private final SHPMotor slide;
-    private final SHPMotor rotate;
+    private final DcMotorEx slide;
+    private final DcMotorEx rotate;
     private int slidePos;
 
 
     public ArmTestSubsystem(HardwareMap hardwareMap) {
         slidePos = 0;
 
-        slide = new SHPMotor(hardwareMap, kSlideName);
-                //(DcMotorEx) hardwareMap.get(kSlideName);
-        slide.setDirection(DcMotorSimple.Direction.FORWARD);
-        slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slide = (DcMotorEx) hardwareMap.get(kSlideName);
+        slide.setDirection(DcMotorSimple.Direction.REVERSE);
+        slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        rotate = new SHPMotor(hardwareMap, kRotateName);
-                //(DcMotorEx) hardwareMap.get(kRotateName);
+        rotate = (DcMotorEx) hardwareMap.get(kRotateName);
         rotate.setDirection(DcMotorSimple.Direction.REVERSE);
-        rotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         rotate.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
     }
 
     public void incrementSlide(){
-        slide.setPosition(slide.getPosition(MotorUnit.TICKS)+10);
+        slide.setTargetPosition(slide.getCurrentPosition()+10);
+        slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
     }
     public void decrementSlide(){
-        slide.setPosition(slide.getPosition(MotorUnit.TICKS)-10);
+
+        slide.setTargetPosition(slide.getCurrentPosition()-10);
+        slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
     }
     public void incrementRotate(){
-        rotate.setPosition(rotate.getPosition(MotorUnit.TICKS)+10);
+
+        rotate.setTargetPosition(rotate.getCurrentPosition()+10);
+        rotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
     public void decrementRotate(){
-        rotate.setPosition(rotate.getPosition(MotorUnit.TICKS)-10);
+
+        rotate.setTargetPosition(rotate.getCurrentPosition()-10);
+        rotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     @Override
     public void periodic(Telemetry telemetry) {
 
-        telemetry.addData("Slide Position: ", slide.getPosition(MotorUnit.TICKS));
-        telemetry.addData("Rotate Position: ", rotate.getPosition(MotorUnit.TICKS));
+        telemetry.addData("Slide Position: ", slide.getCurrentPosition());
+        telemetry.addData("Rotate Position: ", rotate.getCurrentPosition());
 
     }
 }
