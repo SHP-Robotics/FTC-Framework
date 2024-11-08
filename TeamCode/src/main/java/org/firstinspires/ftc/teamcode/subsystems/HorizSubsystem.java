@@ -5,11 +5,15 @@ import static org.firstinspires.ftc.teamcode.shplib.Constants.Arm.kMaxHeight;
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Arm.kPixelHeight;
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Arm.kRightSlideName;
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Arm.kSlideTolerance;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Horiz.kLeftHorizSlideName;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Horiz.kRailName;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Horiz.kRightHorizSlideName;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
@@ -17,18 +21,23 @@ import org.firstinspires.ftc.teamcode.shplib.Constants;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 
 public class HorizSubsystem extends Subsystem {
-    private final DcMotorEx leftSlide;
-    private final DcMotorEx rightSlide;
+    private final Servo lHoriz;
+    private final Servo rHoriz;
+    private final Servo rail;
+
     private int slidePos;
 
     public enum State {
-        BOTTOM(0),
-        EXTENDED(250);
+        ALLIN(0, 0),
+        HALFOUT(1,0),
+        ALLOUT(1,1);
 
-        final double position;
+        final double railPos;
+        final double slidePos;
 
-        State(double position) {
-            this.position = position;
+        State(double railPos, double slidePos) {
+            this.railPos = railPos;
+            this.slidePos = slidePos;
         }
     }
 
@@ -37,15 +46,16 @@ public class HorizSubsystem extends Subsystem {
     public HorizSubsystem(HardwareMap hardwareMap) {
         slidePos = 0;
 
-        leftSlide = (DcMotorEx) hardwareMap.get(kLeftSlideName);
-        leftSlide.setDirection(DcMotorSimple.Direction.FORWARD);
-        leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lHoriz = (Servo) hardwareMap.get(kLeftHorizSlideName);
+        lHoriz.setDirection(Servo.Direction.FORWARD);
 
-        rightSlide = (DcMotorEx) hardwareMap.get(kRightSlideName);
-        rightSlide.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rHoriz = (Servo) hardwareMap.get(kRightHorizSlideName);
+        rHoriz.setDirection(Servo.Direction.REVERSE);
 
-        setState(State.BOTTOM);
+        rail = (Servo) hardwareMap.get(kRailName);
+        rail.setDirection(Servo.Direction.REVERSE);
+
+        setState(State.ALLIN);
     }
 
     public void setState(State state) {
@@ -56,29 +66,18 @@ public class HorizSubsystem extends Subsystem {
         return state;
     }
 
-    public double getDriveBias() {
-        double setpoint = this.state == State.EXTENDED ? this.slidePos: this.state.position;
 
-        if (Math.abs(setpoint - this.getSlidePosition()) < kSlideTolerance) {
-            return Constants.Drive.kMinimumBias;
-        }
-
-        return Constants.Drive.kMaximumBias;
-    }
-
-    public double getSlidePosition() {
-        return ((float)leftSlide.getCurrentPosition() + (float)rightSlide.getCurrentPosition()) / 2;
-    }
+//    public double getSlidePosition() {
+//        return ((float)lHoriz.getCurrentPosition() + (float)rHoriz.getCurrentPosition()) / 2;
+//    }
 
     public void nextState(){
-        if(state == State.BOTTOM)
-            state = State.EXTENDED;
-        else if (state == State.EXTENDED) {
-            state = State.MIDDLE;
-        } else if(state==State.MIDDLE)
-            state = State.MIDHIGH;
-        else if(state == State.MIDHIGH)
-            state = State.HIGH;
+        if(state == State.ALLIN)
+            state = State.ALLOUT;
+        else if (state == State.ALLOUT)
+            state = State.HALFOUT;
+        else
+            state = State.ALLIN;
     }
 
     public void setSlidePos(int slidePos) {
@@ -86,50 +85,32 @@ public class HorizSubsystem extends Subsystem {
     }
 
     public void incrementState(){
-        if(slidePos <= kMaxHeight-kPixelHeight)
-            slidePos += kPixelHeight;
+            slidePos += 10;
     }
 
     public void decrementState(){
-        if(slidePos >= kPixelHeight)
-            slidePos -= kPixelHeight;
+            slidePos -= 10;
     }
 
-
     public void setPosition(double position){
-        rightSlide.setTargetPosition((int)position);
-        leftSlide.setTargetPosition((int)position);
-
-        rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        if (Math.abs(this.getSlidePosition() - position) < kSlideTolerance) {
-            rightSlide.setPower(0);
-            leftSlide.setPower(0);
-            return;
-        }
-//
-//        if (this.state == State.BOTTOM) {
-//            if (this.getSlidePosition() < kSlideTolerance) {
-//                rightSlide.setPower(0);
-//                leftSlide.setPower(0);
-//                return;
-//            }
-//        }
-
-        rightSlide.setPower(Constants.Arm.kRunPower);
-        leftSlide.setPower(Constants.Arm.kRunPower);
+        lHoriz.setPosition(position);
+        rHoriz.setPosition(1.0-position);
     }
 
     private void processState() {
-        if (this.state == State.NOPOWER){
-            this.rightSlide.setPower(0);
-            this.leftSlide.setPower(0);
+        if (this.state == State.ALLIN){
+            setPosition(this.state.slidePos);
+            rail.setPosition(this.state.railPos);
             return;
         }
-
-        if (this.state == State.EXTENDED) {
-            this.setPosition(slidePos);
+        else if (this.state == State.ALLOUT) {
+            setPosition(this.state.slidePos);
+            rail.setPosition(this.state.railPos);
+            return;
+        }
+        else if (this.state == State.HALFOUT) {
+            setPosition(this.state.slidePos);
+            rail.setPosition(this.state.railPos);
             return;
         }
 

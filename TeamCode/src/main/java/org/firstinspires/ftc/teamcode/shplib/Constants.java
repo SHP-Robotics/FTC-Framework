@@ -87,6 +87,12 @@ public class Constants {
         public static final double kRunPower = 1;
     }
 
+    public static final class Horiz {
+        public static final String kLeftHorizSlideName = "lHoriz";
+        public static final String kRightHorizSlideName = "rHoriz";
+        public static final String kRailName = "rail";
+    }
+
     public static final class DropDown {
         public static final String kDropdownName = "dropdown";
         // the positions are in subsystems/DropDownSubsystem/State
