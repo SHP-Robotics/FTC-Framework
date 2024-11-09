@@ -9,6 +9,8 @@ import static org.firstinspires.ftc.teamcode.FourBarSubsystem.FourBarState.UP;
 import static org.firstinspires.ftc.teamcode.SlideSubsystem.SlideState.HIGH;
 import static org.firstinspires.ftc.teamcode.SlideSubsystem.SlideState.INTAKE;
 
+import com.outoftheboxrobotics.photoncore.Photon;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -28,8 +30,11 @@ import org.firstinspires.ftc.teamcode.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.PestoFTCConfig;
 import org.firstinspires.ftc.teamcode.SlideSubsystem;
 
-@TeleOp(name = "Field Centric")
-public class FieldCentric extends LinearOpMode {
+import java.util.List;
+
+@Photon
+@TeleOp(name = "Photon Robot Centric")
+public class PhotonRobotCentric extends LinearOpMode {
     private MecanumController mecanumController;
     private Tracker tracker;
     private TeleOpController teleOpController;
@@ -42,6 +47,8 @@ public class FieldCentric extends LinearOpMode {
 
     private Vector2D vector;
     private double heading;
+
+    private List<LynxModule> allHubs;
 
     private PathFollower follower;
 
@@ -62,6 +69,12 @@ public class FieldCentric extends LinearOpMode {
         vector = null;
         heading = 0;
 
+        allHubs = hardwareMap.getAll(LynxModule.class);
+
+        for (LynxModule hub : allHubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
+
         elapsedTime = new ElapsedTime();
 
         waitForStart();
@@ -75,6 +88,10 @@ public class FieldCentric extends LinearOpMode {
     }
 
     public void loopOpMode() {
+        for (LynxModule hub : allHubs) {
+            hub.clearBulkCache();
+        }
+
         gamepadInterface.update();
         tracker.updateOdometry();
 
@@ -143,13 +160,17 @@ public class FieldCentric extends LinearOpMode {
         slideSubsystem.  updateTelemetry(telemetry);
 
         teleOpController.updateSpeed(gamepad1);
-        teleOpController.driveFieldCentric(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+        teleOpController.driveRobotCentric(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
 
         telemetry.addData("Loop Times", elapsedTime.milliseconds());
         telemetry.update();
     }
 
     public void loopReturnToHome() {
+        for (LynxModule hub : allHubs) {
+            hub.clearBulkCache();
+        }
+
         tracker.updateOdometry();
         follower.update();
 

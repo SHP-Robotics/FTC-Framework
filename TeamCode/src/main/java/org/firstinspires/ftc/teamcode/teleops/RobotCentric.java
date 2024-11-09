@@ -11,6 +11,7 @@ import static org.firstinspires.ftc.teamcode.SlideSubsystem.SlideState.INTAKE;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.shprobotics.pestocore.algorithms.PID;
 import com.shprobotics.pestocore.devices.GamepadInterface;
 import com.shprobotics.pestocore.drivebases.MecanumController;
@@ -29,98 +30,130 @@ import org.firstinspires.ftc.teamcode.SlideSubsystem;
 
 @TeleOp(name = "Robot Centric")
 public class RobotCentric extends LinearOpMode {
+    private MecanumController mecanumController;
+    private Tracker tracker;
+    private TeleOpController teleOpController;
+
+    private FourBarSubsystem fourBarSubsystem;
+    private IntakeSubsystem intakeSubsystem;
+    private SlideSubsystem slideSubsystem;
+
+    private GamepadInterface gamepadInterface;
+
+    private Vector2D vector;
+    private double heading;
+
+    private PathFollower follower;
+
+    private ElapsedTime elapsedTime;
+
     @Override
     public void runOpMode() {
-        MecanumController mecanumController = PestoFTCConfig.getMecanumController(hardwareMap);
-        Tracker tracker = PestoFTCConfig.getTracker(hardwareMap);
-        TeleOpController teleOpController = PestoFTCConfig.getTeleOpController(mecanumController, tracker, hardwareMap);
+        mecanumController = PestoFTCConfig.getMecanumController(hardwareMap);
+        tracker = PestoFTCConfig.getTracker(hardwareMap);
+        teleOpController = PestoFTCConfig.getTeleOpController(mecanumController, tracker, hardwareMap);
 
-        FourBarSubsystem fourBarSubsystem = new FourBarSubsystem(hardwareMap);
-        IntakeSubsystem intakeSubsystem = new IntakeSubsystem(hardwareMap);
-        SlideSubsystem slideSubsystem = new SlideSubsystem(hardwareMap);
+        fourBarSubsystem = new FourBarSubsystem(hardwareMap);
+        intakeSubsystem = new IntakeSubsystem(hardwareMap);
+        slideSubsystem = new SlideSubsystem(hardwareMap);
 
-        GamepadInterface gamepadInterface = new GamepadInterface(gamepad1);
+        gamepadInterface = new GamepadInterface(gamepad1);
 
-        Vector2D vector = null;
-        double heading = 0;
+        vector = null;
+        heading = 0;
+
+        elapsedTime = new ElapsedTime();
 
         waitForStart();
 
+        elapsedTime.reset();
         slideSubsystem.init();
 
         while (opModeIsActive()) {
-            gamepadInterface.update();
-            tracker.updateOdometry();
-
-            if (gamepad1.x && vector != null) {
-                PathContainer path = new PathContainer.PathContainerBuilder()
-                        .addCurve(
-                                new BezierCurve(new Vector2D[]{
-                                        tracker.getCurrentPosition(),
-                                        vector
-                                }),
-                                new ParametricHeading(
-                                        tracker.getCurrentHeading(),
-                                        heading
-                                )
-                        )
-                        .setIncrement(0.01)
-                        .build();
-
-                PathFollower follower = new PathFollower.PathFollowerBuilder(
-                        mecanumController,
-                        tracker,
-                        path)
-                        .setDeceleration(PestoFTCConfig.DECELERATION)
-                        .setHeadingPID( new PID(0.1, 0, 0))
-                        .setEndpointPID(new PID(0.1, 0, 0))
-                        .setSpeed(0.3)
-                        .build();
-
-                while (opModeIsActive() && gamepad1.x) {
-                    tracker.updateOdometry();
-                    follower.update();
-                }
-            }
-
-            if (gamepad1.dpad_right) {
-                teleOpController.resetIMU();
-                tracker.reset();
-            }
-
-            mecanumController.setZeroPowerBehavior(gamepad1.b ? BRAKE: FLOAT);
-
-            if (gamepadInterface.isKeyDown(LEFT_BUMPER)) {
-                if (slideSubsystem.getState() == INTAKE) fourBarSubsystem.setState(DOWN);
-                slideSubsystem.setState(INTAKE);
-            }
-
-            if (gamepadInterface.isKeyDown(RIGHT_BUMPER)) {
-                if (fourBarSubsystem.getState() == UP) slideSubsystem.setState(HIGH);
-                fourBarSubsystem.setState(UP);
-            }
-
-            if ((gamepad1.left_trigger > 0.9) == (gamepad1.right_trigger > 0.1)) {
-                intakeSubsystem.setState(IntakeSubsystem.IntakeState.NEUTRAL);
-            } else if (gamepad1.left_trigger > 0.9) {
-                intakeSubsystem.setState(IntakeSubsystem.IntakeState.OUTAKE);
-
-                vector = tracker.getCurrentPosition();
-                heading = tracker.getCurrentHeading();
-            } else {
-                intakeSubsystem.setState(IntakeSubsystem.IntakeState.INTAKE);
-            }
-
-            telemetry.addData("Radians", teleOpController.getHeading());
-
-            fourBarSubsystem.updateTelemetry(telemetry);
-            intakeSubsystem. updateTelemetry(telemetry);
-            slideSubsystem.  updateTelemetry(telemetry);
-
-            teleOpController.updateSpeed(gamepad1);
-            teleOpController.driveRobotCentric(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
-
-            telemetry.update();
+            loopOpMode();
         }
+    }
+
+    public void loopOpMode() {
+        gamepadInterface.update();
+        tracker.updateOdometry();
+
+        if (gamepad1.x && vector != null) {
+            PathContainer path = new PathContainer.PathContainerBuilder()
+                    .addCurve(
+                            new BezierCurve(new Vector2D[]{
+                                    tracker.getCurrentPosition(),
+                                    vector
+                            }),
+                            new ParametricHeading(
+                                    tracker.getCurrentHeading(),
+                                    heading
+                            )
+                    )
+                    .setIncrement(0.01)
+                    .build();
+
+            follower = new PathFollower.PathFollowerBuilder(
+                    mecanumController,
+                    tracker,
+                    path)
+                    .setDeceleration(PestoFTCConfig.DECELERATION)
+                    .setHeadingPID( new PID(0.1, 0, 0))
+                    .setEndpointPID(new PID(0.1, 0, 0))
+                    .setSpeed(0.3)
+                    .build();
+
+            while (opModeIsActive() && gamepad1.x) {
+                loopReturnToHome();
+            }
+        }
+
+        if (gamepad1.dpad_right) {
+            teleOpController.resetIMU();
+            tracker.reset();
+        }
+
+        mecanumController.setZeroPowerBehavior(gamepad1.b ? BRAKE: FLOAT);
+
+        if (gamepadInterface.isKeyDown(LEFT_BUMPER)) {
+            if (slideSubsystem.getState() == INTAKE) fourBarSubsystem.setState(DOWN);
+            slideSubsystem.setState(INTAKE);
+        }
+
+        if (gamepadInterface.isKeyDown(RIGHT_BUMPER)) {
+            if (fourBarSubsystem.getState() == UP) slideSubsystem.setState(HIGH);
+            fourBarSubsystem.setState(UP);
+        }
+
+        if ((gamepad1.left_trigger > 0.9) == (gamepad1.right_trigger > 0.1)) {
+            intakeSubsystem.setState(IntakeSubsystem.IntakeState.NEUTRAL);
+        } else if (gamepad1.left_trigger > 0.9) {
+            intakeSubsystem.setState(IntakeSubsystem.IntakeState.OUTAKE);
+
+            vector = tracker.getCurrentPosition();
+            heading = tracker.getCurrentHeading();
+        } else {
+            intakeSubsystem.setState(IntakeSubsystem.IntakeState.INTAKE);
+        }
+
+        telemetry.addData("Radians", teleOpController.getHeading());
+
+        fourBarSubsystem.updateTelemetry(telemetry);
+        intakeSubsystem. updateTelemetry(telemetry);
+        slideSubsystem.  updateTelemetry(telemetry);
+
+        teleOpController.updateSpeed(gamepad1);
+        teleOpController.driveRobotCentric(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+
+        telemetry.addData("Loop Times", elapsedTime.milliseconds());
+        telemetry.update();
+    }
+
+    public void loopReturnToHome() {
+        tracker.updateOdometry();
+        follower.update();
+
+        telemetry.addData("Loop Times", elapsedTime.milliseconds());
+        telemetry.update();
     }
 }
