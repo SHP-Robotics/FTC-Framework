@@ -34,16 +34,20 @@ public class PestoAuto extends LinearOpMode {
                         new Vector2D(0, 0),
                         new Vector2D(0, 10)
                 }))
-                .setIncrement(0.9)
+                .setIncrement(0.01)
                 .build();
         PathFollower follower = new PathFollower.PathFollowerBuilder(
                 mecanumController,
                 tracker,
-                path,
-                0.3,
-                PestoFTCConfig.DECELERATION,
-                new PID(0.1, 0, 0, elapsedTime),
-                new PID(0.1, 0, 0, elapsedTime))
+                path)
+//                0.3,
+//                PestoFTCConfig.DECELERATION,
+//                new PID(0.1, 0, 0),
+//                new PID(0.1, 0, 0))
+                .setDeceleration(PestoFTCConfig.DECELERATION)
+                .setHeadingPID( new PID(0.1, 0, 0))
+                .setEndpointPID(new PID(0.1, 0, 0))
+                .setSpeed(0.3)
                 .build();
 
         waitForStart();

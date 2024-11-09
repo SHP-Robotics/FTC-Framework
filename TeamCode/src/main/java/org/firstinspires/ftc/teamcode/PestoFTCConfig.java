@@ -82,12 +82,12 @@ public class PestoFTCConfig {
                 ODOMETRY_TICKS_PER_INCH,
                 FORWARD_OFFSET,
                 ODOMETRY_WIDTH,
-                leftEncoderDirection,
-                centerEncoderDirection,
-                rightEncoderDirection,
                 leftName,
                 centerName,
-                rightName
+                rightName,
+                leftEncoderDirection,
+                centerEncoderDirection,
+                rightEncoderDirection
         ).build();
     }
 }
