@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.subsystems;
+package org.firstinspires.ftc.teamcode.subsystems.used;
 
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Drive.kMaximumBias;
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Drive.kMinimumBias;
@@ -43,8 +43,8 @@ public class DriveSubsystem extends Subsystem {
         // Change logo direction and USB direction according to your hub orientation
         // Reference pictures: https://ftc-docs.firstinspires.org/programming_resources/imu/imu.html#orthogonal-mounting
         imu = new SHPIMU(hardwareMap,
-                RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
-                RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD);
+                RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD);
         parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rightRear"));
         perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "leftRear"));
 

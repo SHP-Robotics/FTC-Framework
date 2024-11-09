@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.shplib.BaseRobot;
 import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.Trigger;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
-import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.used.IntakeSubsystem;
 
 @TeleOp
 public class TestTeleop extends BaseRobot {
@@ -39,21 +39,20 @@ public class TestTeleop extends BaseRobot {
         super.loop();
 
         new Trigger(gamepad1.right_bumper,
-                    new RunCommand(
-                            () -> {pivot.getIntake().setState(IntakeSubsystem.State.INTAKING);
-                                pivot.getIntake().runServo();
-                                pivot.getWrist().setPosition(kWristPos);
-                            }
-                    )
-        );
+            new RunCommand(() -> {
+                pivot.getIntake().setState(IntakeSubsystem.State.INTAKING);
+                pivot.getIntake().runServo();
+                pivot.getWrist().setPosition(kWristPos);
+            }
+        ));
         new Trigger(gamepad1.left_bumper,
-                new RunCommand(
-                        () -> {pivot.getIntake().setState(IntakeSubsystem.State.OUTAKING);
-                            pivot.getIntake().runServo();
-                            pivot.getWrist().setPosition(kWristPos);
-                        }
-                )
-        );
+            new RunCommand(
+                () -> {
+                    pivot.getIntake().setState(IntakeSubsystem.State.OUTAKING);
+                    pivot.getIntake().runServo();
+                    pivot.getWrist().setPosition(kWristPos);
+                }
+        ));
 
         debounce = Clock.now();
 

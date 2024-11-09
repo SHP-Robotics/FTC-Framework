@@ -2,13 +2,15 @@ package org.firstinspires.ftc.teamcode.teleops;
 
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Pivot.kWristPos;
 
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
 import org.firstinspires.ftc.teamcode.shplib.BaseRobot;
 import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.Trigger;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
-import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 
-public class TuningTeleop extends BaseRobot {
+@TeleOp
+public class ATuningTeleop extends BaseRobot {
 
     private double debounce;
     @Override
@@ -54,26 +56,42 @@ public class TuningTeleop extends BaseRobot {
 //        );
         new Trigger(gamepad1.dpad_up,
                 new RunCommand(
-                        () -> pivot.tuneElbowUp()
+                        () -> pivot.incrementElbowUp()
                 )
         );
 
         new Trigger(gamepad1.dpad_down,
                 new RunCommand(
-                        ()-> pivot.tuneElbowDown()
+                        ()-> pivot.incrementElbowDown()
                 )
         );
 
-        new Trigger(gamepad1.dpad_left,
-                new RunCommand(
-                        () -> pivot.tuneWristUp()
-                )
-        );
-        new Trigger(gamepad1.dpad_right,
-                new RunCommand(
-                        () -> pivot.tuneWristDown()
-                )
-        );
+        new Trigger(gamepad1.dpad_left, new RunCommand(() ->
+            pivot.incrementWristUp()
+        ));
+        new Trigger(gamepad1.dpad_right, new RunCommand(() ->
+            pivot.incrementWristDown()
+        ));
+
+        new Trigger(gamepad1.right_bumper, new RunCommand(() -> {
+            vertical.incrementSlide();
+        }));
+        new Trigger(gamepad1.left_bumper, new RunCommand(() -> {
+            vertical.decrementSlide();
+        }));
+
+        new Trigger(gamepad1.circle, new RunCommand(() -> {
+            horizontal.incrementHorizSlide();
+        }));
+        new Trigger(gamepad1.square, new RunCommand(() -> {
+            horizontal.decrementHorizSlide();
+        }));
+        new Trigger(gamepad1.triangle, new RunCommand(() -> {
+            horizontal.incrementRail();
+        }));
+        new Trigger(gamepad1.cross, new RunCommand(() -> {
+            horizontal.decrementRail();
+        }));
 
 
         debounce = Clock.now();

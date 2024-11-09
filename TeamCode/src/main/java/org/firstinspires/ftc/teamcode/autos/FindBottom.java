@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.autos;
 
-import static org.firstinspires.ftc.teamcode.shplib.Constants.Arm.kLeftSlideName;
-import static org.firstinspires.ftc.teamcode.shplib.Constants.Arm.kRightSlideName;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Vertical.kLeftSlideName;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Vertical.kRightSlideName;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;

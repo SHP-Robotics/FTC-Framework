@@ -5,9 +5,10 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
-import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.PivotSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.used.DriveSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.used.HorizSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.used.PivotSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.used.VerticalSubsystem;
 
 /**
  * Template created by Ayaan Govil on 8/21/2021.
@@ -23,13 +24,9 @@ import org.firstinspires.ftc.teamcode.subsystems.PivotSubsystem;
 public class BaseRobot extends OpMode {
     // Declare subsystems and devices
     public DriveSubsystem drive;
- //   public VisionSubsystem vision;
-    //public ElbowSubsystem elbow;
-   // public ArmSubsystem arm;
-//    public WristSubsystem wrist;
-//    public PlaneServo planeServo;
+    public HorizSubsystem horizontal;
+    public VerticalSubsystem vertical;
     public PivotSubsystem pivot;
-//    public DropDownSubsystem dropDown;
 
     public double previousTime = 0;
 
@@ -41,12 +38,8 @@ public class BaseRobot extends OpMode {
 
         // Initialize your subsystems and devices
         drive = new DriveSubsystem(hardwareMap);
-        //arm = new ArmSubsystem(hardwareMap);
-//        elbow = new ElbowSubsystem(hardwareMap);
-//        wrist = new WristSubsystem(hardwareMap);
-//        planeServo = new PlaneServo(hardwareMap);
-//        intake = new IntakeSubsystem(hardwareMap);
-//        dropDown = new DropDownSubsystem(hardwareMap);
+        horizontal = new HorizSubsystem(hardwareMap);
+        vertical = new VerticalSubsystem(hardwareMap);
         pivot = new PivotSubsystem(hardwareMap);
     }
 

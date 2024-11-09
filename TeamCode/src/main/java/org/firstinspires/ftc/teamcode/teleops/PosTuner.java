@@ -27,8 +27,8 @@ public class PosTuner extends BaseRobot {
 
 //        servo = (Servo) hardwareMap.get("dropdown");
 
-        elbow.setState(ElbowSubsystem.State.DOWN);
-        wrist.setState(WristSubsystem.State.DOWN);
+//        elbow.setState(ElbowSubsystem.State.DOWN);
+//        wrist.setState(WristSubsystem.State.DOWN);
     }
 
     @Override
@@ -38,9 +38,9 @@ public class PosTuner extends BaseRobot {
         if (gamepad1.dpad_up) {
             if (!holdingUp) {
                 if (changingWrist) {
-                    Constants.Intake.kWristDown += 0.005;
+//                    Constants.Intake.kWristDown += 0.005;
                 } else {
-                    Constants.Intake.kPositionBottom += 0.005;
+//                    Constants.Intake.kPositionBottom += 0.005;
                 }
             }
             holdingUp = true;
@@ -51,9 +51,9 @@ public class PosTuner extends BaseRobot {
         if (gamepad1.dpad_down) {
             if (!holdingDown) {
                 if (changingWrist) {
-                    Constants.Intake.kWristDown -= 0.005;
+//                    Constants.Intake.kWristDown -= 0.005;
                 } else {
-                    Constants.Intake.kPositionBottom -= 0.005;
+//                    Constants.Intake.kPositionBottom -= 0.005;
                 }
             }
             holdingDown = true;
@@ -70,8 +70,8 @@ public class PosTuner extends BaseRobot {
             holdingRight = false;
         }
 
-        telemetry.addData("kWristDown", Constants.Intake.kWristDown);
-        telemetry.addData("kPositionBottom", Constants.Intake.kPositionBottom);
+//        telemetry.addData("kWristDown", Constants.Intake.kWristDown);
+//        telemetry.addData("kPositionBottom", Constants.Intake.kPositionBottom);
 
 //        servo.setPosition(gamepad1.left_stick_y);
 //        telemetry.addData("pos", servo.getPosition());
