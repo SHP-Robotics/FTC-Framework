@@ -45,7 +45,7 @@ public class PestoFTCConfig {
                 DcMotorSimple.Direction.FORWARD
         });
 
-        Vector2D frontLeftPower = new Vector2D(57, 39);
+        Vector2D frontLeftPower = new Vector2D(1, 1);
 
         mecanumController.setPowerVectors(new Vector2D[]{
                 Vector2D.scale(Vector2D.multiply(frontLeftPower, new Vector2D(+1, 1)), 1/frontLeftPower.getMagnitude()),
@@ -70,10 +70,10 @@ public class PestoFTCConfig {
         teleOpController.useTrackerIMU(tracker);
 
         teleOpController.setSpeedController((gamepad) -> {
-            if (gamepad.a) {
-                return 1.0;
+            if (gamepad.dpad_left) {
+                return 0.6;
             }
-            return 0.6;
+            return 1.0;
         });
 
         teleOpController.counteractCentripetalForce(tracker, MAX_VELOCITY);

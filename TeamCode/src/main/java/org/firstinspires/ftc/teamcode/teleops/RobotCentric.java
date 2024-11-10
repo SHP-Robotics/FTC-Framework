@@ -11,6 +11,7 @@ import static org.firstinspires.ftc.teamcode.SlideSubsystem.SlideState.INTAKE;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.shprobotics.pestocore.algorithms.PID;
 import com.shprobotics.pestocore.devices.GamepadInterface;
@@ -136,6 +137,23 @@ public class RobotCentric extends LinearOpMode {
             intakeSubsystem.setState(IntakeSubsystem.IntakeState.INTAKE);
         }
 
+        if (gamepad1.dpad_left) {
+            slideSubsystem.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+            double negativePower = 0.5;
+            slideSubsystem.setPower(-negativePower);
+
+            double stallTorque = 9.2;
+
+            while (gamepad1.dpad_left && (slideSubsystem.getCurrent() * negativePower > stallTorque)) {}
+
+            slideSubsystem.setPower(0);
+
+            slideSubsystem.init();
+            
+            slideSubsystem.setState(INTAKE);
+        }
+
         telemetry.addData("Radians", teleOpController.getHeading());
 
         fourBarSubsystem.updateTelemetry(telemetry);
@@ -146,6 +164,7 @@ public class RobotCentric extends LinearOpMode {
         teleOpController.driveRobotCentric(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
 
         telemetry.addData("Loop Times", elapsedTime.milliseconds());
+        elapsedTime.reset();
         telemetry.update();
     }
 
@@ -154,6 +173,7 @@ public class RobotCentric extends LinearOpMode {
         follower.update();
 
         telemetry.addData("Loop Times", elapsedTime.milliseconds());
+        elapsedTime.reset();
         telemetry.update();
     }
 }

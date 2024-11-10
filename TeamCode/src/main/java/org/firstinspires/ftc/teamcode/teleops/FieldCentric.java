@@ -146,6 +146,7 @@ public class FieldCentric extends LinearOpMode {
         teleOpController.driveFieldCentric(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
 
         telemetry.addData("Loop Times", elapsedTime.milliseconds());
+        elapsedTime.reset();
         telemetry.update();
     }
 
@@ -154,6 +155,7 @@ public class FieldCentric extends LinearOpMode {
         follower.update();
 
         telemetry.addData("Loop Times", elapsedTime.milliseconds());
+        elapsedTime.reset();
         telemetry.update();
     }
 }
