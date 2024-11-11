@@ -51,19 +51,19 @@ public class PestoFTCConfig {
                 "backRight"
         });
 
-        //mecanumController.configureMotorDirections(new DcMotorSimple.Direction[]{
-          //      DcMotorSimple.Direction.FORWARD,
-            //    DcMotorSimple.Direction.FORWARD,
-              //  DcMotorSimple.Direction.REVERSE ,
-                //DcMotorSimple.Direction.REVERSE
-       // });
+        mecanumController.configureMotorDirections(new DcMotorSimple.Direction[]{
+                DcMotorSimple.Direction.FORWARD,
+                DcMotorSimple.Direction.FORWARD,
+                DcMotorSimple.Direction.REVERSE ,
+                DcMotorSimple.Direction.REVERSE
+        });
 
-//        mecanumController.setPowerVectors(new Vector2D[]{
-//                Vector2D.scale(new Vector2D(57, 39), 1/69.0651865993),
-//                Vector2D.scale(new Vector2D(-57, 39), 1/69.0651865993),
-//                Vector2D.scale(new Vector2D(-57, 39), 1/69.0651865993),
-//                Vector2D.scale(new Vector2D(57, 39), 1/69.0651865993)
-//        });
+        mecanumController.setPowerVectors(new Vector2D[]{
+                Vector2D.scale(new Vector2D(57, 39), 1/69.0651865993),
+                Vector2D.scale(new Vector2D(-57, 39), 1/69.0651865993),
+                Vector2D.scale(new Vector2D(-57, 39), 1/69.0651865993),
+                Vector2D.scale(new Vector2D(57, 39), 1/69.0651865993),
+        });
 
         mecanumController.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         mecanumController.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
