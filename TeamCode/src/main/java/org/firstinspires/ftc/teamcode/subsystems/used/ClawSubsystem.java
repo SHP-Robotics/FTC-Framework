@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.subsystems;
+package org.firstinspires.ftc.teamcode.subsystems.used;
 
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Claw.kClawName;
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Claw.kClose;
@@ -17,6 +17,7 @@ public class ClawSubsystem extends Subsystem {
         claw = (Servo) hardwareMap.get(kClawName);
         open = kOpen;
         close = kClose;
+        close();
     }
     public void open(){
         claw.setPosition(open);

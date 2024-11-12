@@ -8,6 +8,8 @@ import org.firstinspires.ftc.teamcode.shplib.BaseRobot;
 import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.Trigger;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
+import org.firstinspires.ftc.teamcode.subsystems.used.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.used.PivotSubsystem;
 
 @TeleOp
 public class ATuningTeleop extends BaseRobot {
@@ -21,11 +23,11 @@ public class ATuningTeleop extends BaseRobot {
                         () -> drive.mecanum(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x)
                 )
         );
-        pivot.setDefaultCommand(
-                new RunCommand(
-                        ()-> pivot.getWrist().setPosition(kWristPos)
-                )
-        );
+//        pivot.setDefaultCommand(
+//                new RunCommand(
+//                        ()-> pivot.getWrist().setPosition(kWristPos)
+//                )
+//        );
 
     }
     @Override
@@ -54,24 +56,25 @@ public class ATuningTeleop extends BaseRobot {
 //                        }
 //                )
 //        );
-        new Trigger(gamepad1.dpad_up,
-                new RunCommand(
-                        () -> pivot.incrementElbowUp()
-                )
-        );
+        new Trigger(gamepad1.touchpad_finger_1, new RunCommand(()->{
+            claw.changeClaw();
+        }));
 
-        new Trigger(gamepad1.dpad_down,
-                new RunCommand(
-                        ()-> pivot.incrementElbowDown()
-                )
-        );
+        new Trigger(gamepad1.left_trigger>0.1, new RunCommand(()->{
+            intake.intaking(-gamepad1.left_trigger);
+        }));
 
-        new Trigger(gamepad1.dpad_left, new RunCommand(() ->
-            pivot.incrementWristUp()
-        ));
-        new Trigger(gamepad1.dpad_right, new RunCommand(() ->
-            pivot.incrementWristDown()
-        ));
+        new Trigger(gamepad1.dpad_down, new RunCommand(()-> {
+            pivot.decrementElbowDown();
+        }));
+
+        new Trigger(gamepad1.dpad_right, new RunCommand(() ->{
+            pivot.incrementWristUp();
+        }));
+        new Trigger(gamepad1.dpad_left, new RunCommand(() ->{
+            pivot.decrementWristDown();
+        }));
+
 
         new Trigger(gamepad1.right_bumper, new RunCommand(() -> {
             vertical.incrementSlide();

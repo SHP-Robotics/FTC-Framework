@@ -5,8 +5,10 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
+import org.firstinspires.ftc.teamcode.subsystems.used.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.used.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.used.HorizSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.used.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.used.PivotSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.used.VerticalSubsystem;
 
@@ -26,7 +28,9 @@ public class BaseRobot extends OpMode {
     public DriveSubsystem drive;
     public HorizSubsystem horizontal;
     public VerticalSubsystem vertical;
+    public IntakeSubsystem intake;
     public PivotSubsystem pivot;
+    public ClawSubsystem claw;
 
     public double previousTime = 0;
 
@@ -40,7 +44,9 @@ public class BaseRobot extends OpMode {
         drive = new DriveSubsystem(hardwareMap);
         horizontal = new HorizSubsystem(hardwareMap);
         vertical = new VerticalSubsystem(hardwareMap);
+        intake = new IntakeSubsystem(hardwareMap);
         pivot = new PivotSubsystem(hardwareMap);
+        claw = new ClawSubsystem(hardwareMap);
     }
 
     // Called when you press the start button

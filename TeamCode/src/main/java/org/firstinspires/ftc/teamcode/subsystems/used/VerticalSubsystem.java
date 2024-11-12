@@ -41,10 +41,12 @@ public class VerticalSubsystem extends Subsystem {
 
         leftSlide = (DcMotorEx) hardwareMap.get(kLeftSlideName);
         leftSlide.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         rightSlide = (DcMotorEx) hardwareMap.get(kRightSlideName);
         rightSlide.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         setState(State.BOTTOM);
@@ -101,17 +103,18 @@ public class VerticalSubsystem extends Subsystem {
 
 
     public void setPosition(double position){
-        rightSlide.setTargetPosition((int)position);
-        leftSlide.setTargetPosition((int)position);
+        if(leftSlide.getCurrentPosition() < kMaxHeight) {
+            rightSlide.setTargetPosition((int) position);
+            leftSlide.setTargetPosition((int) position);
 
-        rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        if (Math.abs(this.getSlidePosition() - position) < kSlideTolerance) {
-            rightSlide.setPower(0);
-            leftSlide.setPower(0);
-            return;
-        }
+            if (Math.abs(this.getSlidePosition() - position) < kSlideTolerance) {
+                rightSlide.setPower(0);
+                leftSlide.setPower(0);
+                return;
+            }
 
 //        if (this.state == State.BOTTOM) {
 //            if (this.getSlidePosition() < kSlideTolerance) {
@@ -121,8 +124,9 @@ public class VerticalSubsystem extends Subsystem {
 //            }
 //        }
 
-        rightSlide.setPower(Constants.Vertical.kRunPower);
-        leftSlide.setPower(Constants.Vertical.kRunPower);
+            rightSlide.setPower(Constants.Vertical.kRunPower);
+            leftSlide.setPower(Constants.Vertical.kRunPower);
+        }
     }
 
     private void processState() {

@@ -18,10 +18,11 @@ public class HorizSubsystem extends Subsystem {
     private int slidePos;
 
     public enum State {
-        ALLIN(0, 0),
-        HALFOUT(1,0),
-        ALLOUT(1,1),
-        MANUAL(0,0);
+        OUTTAKING(1, 1),
+        ALLIN(0.74, 1), //1 is all in
+        HALFOUT(0.17,1),
+        ALLOUT(0.17,0.3), // 0.14 rail max out, 0.3 slide max out
+        MANUAL(1,1);
 
         final double railPos;
         final double slidePos;
@@ -47,7 +48,7 @@ public class HorizSubsystem extends Subsystem {
         rHoriz.setDirection(Servo.Direction.FORWARD);
 
         rail = (Servo) hardwareMap.get(kRailName);
-        rail.setDirection(Servo.Direction.FORWARD);
+        rail.setDirection(Servo.Direction.REVERSE);
 
         setState(State.ALLIN);
     }
@@ -66,6 +67,21 @@ public class HorizSubsystem extends Subsystem {
         else if (state == State.ALLOUT)
             state = State.HALFOUT;
         else
+            state = State.ALLIN;
+    }
+
+    public void incrementState(){
+        if(state == State.ALLIN)
+            state = State.HALFOUT;
+        else if (state == State.HALFOUT)
+            state = State.ALLOUT;
+        else
+            state = State.ALLOUT;
+    }
+    public void decrementState(){
+        if(state == State.ALLOUT)
+            state = State.HALFOUT;
+        else if (state == State.HALFOUT)
             state = State.ALLIN;
     }
 

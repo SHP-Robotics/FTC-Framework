@@ -11,15 +11,15 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 
 public class PivotSubsystem extends Subsystem {
-    private final IntakeSubsystem intake;
     private final Servo wrist;
     private final Servo lElbow;
     private final Servo rElbow;
 
     public enum State {
-        DRIVING(0, 0),
-        INTAKING(1,0),
-        OUTTAKING(1,1),
+        TRANSITION(0.4,0.3), //Rename to some TRANSITION STATE
+        DRIVING(0.4, 0.8), //0 is down
+        INTAKING(0.6,0.05), //  0.85 wrist is level with floor
+        OUTTAKING(0.4,0.83), //0.83 is max up
         MANUAL(0,0);
 
         final double wristPos;
@@ -35,7 +35,6 @@ public class PivotSubsystem extends Subsystem {
     private double manualWristPos, manualElbowPos;
 
     public PivotSubsystem(HardwareMap hardwareMap){
-        intake = new IntakeSubsystem(hardwareMap);
         wrist = (Servo) hardwareMap.get(kWristName);
         lElbow = (Servo) hardwareMap.get(klElbowName);
         lElbow.setDirection(Servo.Direction.REVERSE);
@@ -72,36 +71,32 @@ public class PivotSubsystem extends Subsystem {
         rElbow.setPosition(1.0 - pos);
     }
 
-    public IntakeSubsystem getIntake(){
-        return intake;
-    }
     public Servo getWrist(){
         return wrist;
     }
     public void incrementElbowUp(){
-        if(lElbow.getPosition() < 1.0) {
+        if(lElbow.getPosition() < 0.83) {
             state = State.MANUAL;
-            lElbow.setPosition(lElbow.getPosition() + 0.01);
-            rElbow.setPosition(rElbow.getPosition() - 0.01);
+            manualElbowPos = lElbow.getPosition() + 0.01;
         }
     }
-    public void incrementElbowDown(){
+    public void decrementElbowDown(){
         if(lElbow.getPosition() > 0.0) {
             state = State.MANUAL;
-            lElbow.setPosition(lElbow.getPosition() - 0.01);
-            rElbow.setPosition(rElbow.getPosition() + 0.01);
+            manualElbowPos = lElbow.getPosition() - 0.01;
         }
     }
     public void incrementWristUp(){
         if(wrist.getPosition() < 1.0) {
             state = State.MANUAL;
-            wrist.setPosition(wrist.getPosition() + 0.01);
+            manualWristPos = wrist.getPosition() + 0.01;
         }
     }
-    public void incrementWristDown(){
+    public void decrementWristDown(){
         if(wrist.getPosition() > 0.0) {
             state = State.MANUAL;
-            wrist.setPosition(wrist.getPosition() - 0.01);
+            manualWristPos = wrist.getPosition() - 0.01;
+
         }
     }
 
@@ -110,8 +105,8 @@ public class PivotSubsystem extends Subsystem {
                 || this.state == State.OUTTAKING) {
             setElbowPos(this.state.elbowPos);
             setWristPos(this.state.wristPos);
-            manualElbowPos = state.elbowPos;
-            manualWristPos = state.wristPos;
+            manualElbowPos = this.state.elbowPos;
+            manualWristPos = this.state.wristPos;
             return;
         }
         else if(this.state == State.MANUAL){

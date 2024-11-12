@@ -24,19 +24,19 @@ public class Constants {
                 new FFController(0.07)
         };
 
-        public static final double kMinimumBias = 0.4;
-        public static final double kMaximumBias = 1;
+        public static final double kMinimumBias = 0;
+        public static final double kMaximumBias = 0.6;
     }
 
     public static final class Vision {
         public static final double kTagsizeMeters = 0.0475;
     }
 
-
+    public static final class Intake{
+        public static final String kIntakeName = "intake";
+    }
     public static final class Pivot{
-        public static final class Intake{
-            public static final String kIntakeName = "intake";
-        }
+
         public static final String kWristName = "wrist";
         public static final String klElbowName = "lElbow";
         public static final String krElbowName = "rElbow";
@@ -44,7 +44,7 @@ public class Constants {
         public static double kElbowIn = 0;
         public static double kElbowOut = 0.7;
     }
-    public static final class Intake{
+//    public static final class Intake{
        // public static final String kIntakeName = "intakeServo";
 //        public static final String kLeftAdjust = "LeftAxon";
 //        public static final String kRightAdjust = "RightAxon";
@@ -75,7 +75,7 @@ public class Constants {
 //
 //        public static final String kPracticeLeftArmServoName = "LeftAxon";
 //        public static final String kPracticeRightArmServoName = "RightAxon";
-    }
+//    }
 
 //    public static final class Arm {
 //        public static final String kLeftSlideName = "leftSlide";
@@ -90,9 +90,9 @@ public class Constants {
         public static final String kLeftSlideName = "leftVSlide";
         public static final String kRightSlideName = "rightVSlide";
 
-        public static final double kMaxHeight = 4000;
-        public static final double kSlideTolerance = 30;
-        public static final double kIncrement = 10;
+        public static final double kMaxHeight = 2500;
+        public static final double kSlideTolerance = 1;
+        public static final double kIncrement = 50;
         public static final double kRunPower = 1;
     }
 
@@ -108,7 +108,7 @@ public class Constants {
     }
     public static final class Claw{
         public static final String kClawName = "clawServo";
-        public static final double kOpen = -0.5;
-        public static final double kClose = 0.5;
+        public static final double kOpen = 1.0;
+        public static final double kClose = 0.7;
     }
 }

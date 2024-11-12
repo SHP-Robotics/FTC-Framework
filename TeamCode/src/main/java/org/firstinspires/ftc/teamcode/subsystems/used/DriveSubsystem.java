@@ -52,8 +52,9 @@ public class DriveSubsystem extends Subsystem {
         for (int i = 0; i < motors.length; i++) {
             motors[i] = new SHPMotor(hardwareMap, motorNames[i]);
         }
-        motors[0].setDirection(DcMotorSimple.Direction.REVERSE);
-        motors[1].setDirection(DcMotorSimple.Direction.REVERSE);
+        motors[0].setDirection(DcMotorSimple.Direction.FORWARD);
+        motors[1].setDirection(DcMotorSimple.Direction.FORWARD);
+        motors[2].setDirection(DcMotorSimple.Direction.REVERSE);
         motors[3].setDirection(DcMotorSimple.Direction.REVERSE);
 
 
@@ -62,10 +63,10 @@ public class DriveSubsystem extends Subsystem {
         motors[2].disableEncoder();
         motors[3].disableEncoder();
 
-        motors[0].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        motors[1].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        motors[2].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        motors[3].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        motors[0].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motors[1].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motors[2].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motors[3].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
 //        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "leftRear"));
