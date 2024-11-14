@@ -130,7 +130,7 @@ public class VerticalSubsystem extends Subsystem {
     }
 
     private void processState() {
-        if (this.state == State.NOPOWER){
+        if (slidePos < 10){
             this.rightSlide.setPower(0);
             this.leftSlide.setPower(0);
             return;

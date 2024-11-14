@@ -47,6 +47,7 @@ public class BaseRobot extends OpMode {
         intake = new IntakeSubsystem(hardwareMap);
         pivot = new PivotSubsystem(hardwareMap);
         claw = new ClawSubsystem(hardwareMap);
+
     }
 
     // Called when you press the start button
@@ -60,7 +61,6 @@ public class BaseRobot extends OpMode {
     public void loop() {
         telemetry.addData("Loop Time (ms): ", Clock.elapsed(previousTime) * 1000);
         previousTime = Clock.now();
-
         // Handles all subsystem and command execution - DO NOT DELETE!
         try {
             CommandScheduler.getInstance().run();

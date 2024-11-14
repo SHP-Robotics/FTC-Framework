@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.shplib.hardware.drive;
 
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Drive.kMaximumBias;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -16,7 +18,7 @@ import java.util.Collections;
 
 public class SHPFourWheelDrive {
     final SHPMotor[] motors;
-    double maxVelocity = 0.6;
+    double maxVelocity = kMaximumBias;
 
     PositionPID positionPID = null;
 

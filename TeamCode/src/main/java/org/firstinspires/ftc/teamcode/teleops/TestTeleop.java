@@ -14,13 +14,13 @@ import org.firstinspires.ftc.teamcode.subsystems.used.PivotSubsystem;
 
 @TeleOp
 public class TestTeleop extends BaseRobot {
-    private double debounce, timeElapsed;
+    private double debounce;
     @Override
     public void init(){
         super.init();
         drive.setDefaultCommand(
                 new RunCommand(
-                        () -> drive.mecanum(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x)
+                        () -> drive.newMecanum(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x)
                 )
         );
 
@@ -29,7 +29,6 @@ public class TestTeleop extends BaseRobot {
     public void start(){
         super.start();
         debounce = Clock.now();
-        timeElapsed = Clock.now();
     }
 
     @Override
@@ -60,14 +59,31 @@ public class TestTeleop extends BaseRobot {
 
         //Claw
         new Trigger(gamepad1.triangle, new RunCommand(() -> {
-            if(timeElapsed > 0.5) {
-                timeElapsed = Clock.now();
+            if(debounce > 0.5) {
+                debounce = Clock.now();
                 claw.changeClaw();
             }
         }));
 
+        //resetIMU
+        new Trigger(gamepad1.cross, new RunCommand(()->{
+            drive.resetIMUAngle();
+        }));
         debounce = Clock.now();
 
+        //Driver 2 Manual control
+        new Trigger(gamepad2.dpad_right, new RunCommand(() ->{
+            if(pivot.getState()!= PivotSubsystem.State.MANUAL){
+                pivot.prevState = pivot.getState();
+            }
+            pivot.incrementWristUp();
+        }));
+        new Trigger(gamepad2.dpad_left, new RunCommand(() ->{
+            if(pivot.getState()!= PivotSubsystem.State.MANUAL){
+                pivot.prevState = pivot.getState();
+            }
+            pivot.decrementWristDown();
+        }));
     }
 
 

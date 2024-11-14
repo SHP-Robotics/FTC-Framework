@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.commands.used;
 
+import org.firstinspires.ftc.teamcode.shplib.BaseRobot;
 import org.firstinspires.ftc.teamcode.shplib.commands.Command;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
 import org.firstinspires.ftc.teamcode.subsystems.used.HorizSubsystem;
@@ -17,6 +18,12 @@ public class HorizontalUpInCommand extends Command {
         super(horiz, pivot);
         this.horiz = horiz;
         this.pivot = pivot;
+        if(horiz.getState() == HorizSubsystem.State.MANUAL){
+            horiz.setState(horiz.prevState);
+        }
+        if(pivot.getState() == PivotSubsystem.State.MANUAL){
+            pivot.setState(pivot.prevState);
+        }
     }
 
 
@@ -30,33 +37,25 @@ public class HorizontalUpInCommand extends Command {
     // Called repeatedly until isFinished() returns true
     @Override
     public void execute() {
-        if(horiz.getState() == HorizSubsystem.State.HALFOUT){
+        if(horiz.getState() == HorizSubsystem.State.INTAKINGEXTENDED
+                || horiz.getState() == HorizSubsystem.State.INTAKING){ //intaking to driving
             pivot.setState(PivotSubsystem.State.TRANSITION);
+            horiz.setState(HorizSubsystem.State.DRIVING);
         }
-        else if(horiz.getState() == HorizSubsystem.State.ALLOUT){
-            pivot.setState(PivotSubsystem.State.TRANSITION);
-        }
-        else if(horiz.getState() == HorizSubsystem.State.ALLIN){
+        else if(pivot.getState() == PivotSubsystem.State.DRIVING){ //driving to outtaking
             pivot.setState(PivotSubsystem.State.OUTTAKING);
+            horiz.setState(HorizSubsystem.State.OUTTAKING);
         }
-
-
     }
 
     // Called once after isFinished() returns true
     @Override
     public void end() {
-        if(pivot.getState() == PivotSubsystem.State.DRIVING){
-            horiz.setState(HorizSubsystem.State.OUTTAKING);
+        //set superStates
+        if(pivot.getState() == PivotSubsystem.State.TRANSITION){ //intakingextended to driving
+            pivot.setState(PivotSubsystem.State.DRIVING);
         }
-        else if(horiz.getState() == HorizSubsystem.State.HALFOUT) {
-             horiz.setState(HorizSubsystem.State.ALLIN);
-             pivot.setState(PivotSubsystem.State.DRIVING);
-        }
-        else if(horiz.getState() == HorizSubsystem.State.ALLOUT) {
-            horiz.setState(HorizSubsystem.State.HALFOUT);
-            pivot.setState(PivotSubsystem.State.INTAKING);
-        }
+
 
     }
 

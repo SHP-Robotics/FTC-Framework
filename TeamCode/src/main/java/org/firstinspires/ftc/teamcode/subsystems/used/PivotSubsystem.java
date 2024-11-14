@@ -16,10 +16,11 @@ public class PivotSubsystem extends Subsystem {
     private final Servo rElbow;
 
     public enum State {
-        TRANSITION(0.4,0.3), //Rename to some TRANSITION STATE
-        DRIVING(0.4, 0.8), //0 is down
-        INTAKING(0.6,0.05), //  0.85 wrist is level with floor
-        OUTTAKING(0.4,0.83), //0.83 is max up
+        TRANSITION(0.5,0.3), //Rename to some TRANSITION STATE
+        DRIVING(0.2, 0.8), //0 is down
+        PREPAREINTAKE(0.6, 0.2),
+        INTAKING(0.7,0.125), //  0.85 wrist is level with floor
+        OUTTAKING(0.05,0.83), //0.83 is max up
         MANUAL(0,0);
 
         final double wristPos;
@@ -32,6 +33,7 @@ public class PivotSubsystem extends Subsystem {
     }
 
     private State state;
+    public State prevState;
     private double manualWristPos, manualElbowPos;
 
     public PivotSubsystem(HardwareMap hardwareMap){
@@ -41,7 +43,7 @@ public class PivotSubsystem extends Subsystem {
         rElbow = (Servo) hardwareMap.get(krElbowName);
 
         setState(State.DRIVING);
-
+        prevState = state;
     }
 
     public void setState(State state) {
@@ -102,7 +104,8 @@ public class PivotSubsystem extends Subsystem {
 
     private void processState(State state) {
         if (this.state == State.DRIVING || this.state == State.INTAKING
-                || this.state == State.OUTTAKING) {
+                || this.state == State.OUTTAKING
+                || this.state == State.TRANSITION) {
             setElbowPos(this.state.elbowPos);
             setWristPos(this.state.wristPos);
             manualElbowPos = this.state.elbowPos;
@@ -118,7 +121,7 @@ public class PivotSubsystem extends Subsystem {
     public void periodic(Telemetry telemetry) {
         processState(state);
 
-        telemetry.addData("State: ", state);
+        telemetry.addData("PivotState: ", state);
         telemetry.addData("Left Elbow Position: ", lElbow.getPosition());
         telemetry.addData("Right Elbow Position: ", lElbow.getPosition());
         telemetry.addData("Wrist: ", wrist.getPosition());

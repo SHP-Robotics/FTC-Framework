@@ -19,9 +19,9 @@ public class HorizSubsystem extends Subsystem {
 
     public enum State {
         OUTTAKING(1, 1),
-        ALLIN(0.74, 1), //1 is all in
-        HALFOUT(0.17,1),
-        ALLOUT(0.17,0.3), // 0.14 rail max out, 0.3 slide max out
+        DRIVING(0.74, 1), //1 is all in
+        INTAKING(0.17,1),
+        INTAKINGEXTENDED(0.17,0.3), // 0.14 rail max out, 0.3 slide max out
         MANUAL(1,1);
 
         final double railPos;
@@ -34,6 +34,7 @@ public class HorizSubsystem extends Subsystem {
     }
 
     private State state;
+    public State prevState;
     private double manualHorizPos, manualRailPos;
 
     public HorizSubsystem(HardwareMap hardwareMap) {
@@ -50,7 +51,8 @@ public class HorizSubsystem extends Subsystem {
         rail = (Servo) hardwareMap.get(kRailName);
         rail.setDirection(Servo.Direction.REVERSE);
 
-        setState(State.ALLIN);
+        setState(State.DRIVING);
+        prevState = state;
     }
 
     public void setState(State state) {
@@ -62,27 +64,27 @@ public class HorizSubsystem extends Subsystem {
     }
 
     public void nextState(){
-        if(state == State.ALLIN)
-            state = State.ALLOUT;
-        else if (state == State.ALLOUT)
-            state = State.HALFOUT;
+        if(state == State.DRIVING)
+            state = State.INTAKINGEXTENDED;
+        else if (state == State.INTAKINGEXTENDED)
+            state = State.INTAKING;
         else
-            state = State.ALLIN;
+            state = State.DRIVING;
     }
 
     public void incrementState(){
-        if(state == State.ALLIN)
-            state = State.HALFOUT;
-        else if (state == State.HALFOUT)
-            state = State.ALLOUT;
+        if(state == State.DRIVING)
+            state = State.INTAKING;
+        else if (state == State.INTAKING)
+            state = State.INTAKINGEXTENDED;
         else
-            state = State.ALLOUT;
+            state = State.INTAKINGEXTENDED;
     }
     public void decrementState(){
-        if(state == State.ALLOUT)
-            state = State.HALFOUT;
-        else if (state == State.HALFOUT)
-            state = State.ALLIN;
+        if(state == State.INTAKINGEXTENDED)
+            state = State.INTAKING;
+        else if (state == State.INTAKING)
+            state = State.DRIVING;
     }
 
     public void incrementHorizSlide(){
@@ -118,8 +120,9 @@ public class HorizSubsystem extends Subsystem {
     }
 
     private void processState(State state) {
-        if (this.state == State.ALLIN || this.state == State.ALLOUT
-                || this.state == State.HALFOUT) {
+        if (this.state == State.OUTTAKING || this.state == State.DRIVING
+                || this.state == State.INTAKINGEXTENDED
+                || this.state == State.INTAKING) {
             setHorizPosition(this.state.slidePos);
             rail.setPosition(this.state.railPos);
             manualHorizPos = state.slidePos;
@@ -138,7 +141,7 @@ public class HorizSubsystem extends Subsystem {
     public void periodic(Telemetry telemetry) {
         processState(state);
 
-        telemetry.addData("State: ", state);
+        telemetry.addData("HorizState: ", state);
         telemetry.addData("Left Horiz Slide Position: ", lHoriz.getPosition());
         telemetry.addData("Right Horiz Slide Position: ", rHoriz.getPosition());
         telemetry.addData("rail: ", rail.getPosition());

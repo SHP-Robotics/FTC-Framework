@@ -27,7 +27,8 @@ public class DriveSubsystem extends Subsystem {
     public final Encoder parallelEncoder, perpendicularEncoder;
 
     private double bias = kMaximumBias; // will always be between kMinimumBias and 1.0
-    final SHPMotor[] motors;
+//    final SHPMotor[] motors;
+    final DcMotorEx motor0, motor1, motor2, motor3;
     final String[] motorNames = kMotorNames;
     //    private Encoder leftEncoder, rightEncoder, frontEncoder;
     //    private SHPIMU imu;
@@ -48,25 +49,46 @@ public class DriveSubsystem extends Subsystem {
         parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rightRear"));
         perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "leftRear"));
 
-        motors = new SHPMotor[4];
-        for (int i = 0; i < motors.length; i++) {
-            motors[i] = new SHPMotor(hardwareMap, motorNames[i]);
-        }
-        motors[0].setDirection(DcMotorSimple.Direction.FORWARD);
-        motors[1].setDirection(DcMotorSimple.Direction.FORWARD);
-        motors[2].setDirection(DcMotorSimple.Direction.REVERSE);
-        motors[3].setDirection(DcMotorSimple.Direction.REVERSE);
+
+        motor0 = (DcMotorEx) hardwareMap.get(motorNames[0]);
+        motor1 = (DcMotorEx) hardwareMap.get(motorNames[1]);
+        motor2 = (DcMotorEx) hardwareMap.get(motorNames[2]);
+        motor3 = (DcMotorEx) hardwareMap.get(motorNames[3]);
+
+        motor0.setDirection(DcMotorSimple.Direction.FORWARD);
+        motor1.setDirection(DcMotorSimple.Direction.FORWARD);
+        motor2.setDirection(DcMotorSimple.Direction.REVERSE);
+        motor3.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        motor0.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        motor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        motor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        motor3.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
+        motor0.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor3.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+//        motors = new SHPMotor[4];
+//        for (int i = 0; i < motors.length; i++) {
+//            motors[i] = new SHPMotor(hardwareMap, motorNames[i]);
+//        }
+//        motors[0].setDirection(DcMotorSimple.Direction.FORWARD);
+//        motors[1].setDirection(DcMotorSimple.Direction.FORWARD);
+//        motors[2].setDirection(DcMotorSimple.Direction.REVERSE);
+//        motors[3].setDirection(DcMotorSimple.Direction.REVERSE);
 
 
-        motors[0].disableEncoder();
-        motors[1].disableEncoder();
-        motors[2].disableEncoder();
-        motors[3].disableEncoder();
-
-        motors[0].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motors[1].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motors[2].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motors[3].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        motors[0].disableEncoder();
+//        motors[1].disableEncoder();
+//        motors[2].disableEncoder();
+//        motors[3].disableEncoder();
+//
+//        motors[0].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        motors[1].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        motors[2].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        motors[3].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
 //        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "leftRear"));
@@ -78,19 +100,41 @@ public class DriveSubsystem extends Subsystem {
         buttonClicks++;
     }
     public void resetIMUAngle() {imu.resetYaw();}
+    public void newMecanum(double leftY, double leftX, double rightX){
 
+        Vector2d vector = new Vector2d(
+                leftY,
+                leftX
+        ).rotated(-(imu.getYaw(AngleUnit.RADIANS)));
+        //IF ITS NOT WORKING SWITCH VECTOR GETX AND VECTOR GETY
+        double[] powers = {
+                vector.getX() - vector.getY() - rightX,
+                vector.getX() + vector.getY() - rightX,
+                vector.getX() + vector.getY() + rightX,
+                vector.getX() - vector.getY() + rightX,
+        };
+        motor0.setPower(powers[0]);
+        motor1.setPower(powers[1]);
+        motor2.setPower(powers[2]);
+        motor3.setPower(powers[3]);
+    }
     public void robotmecanum(double leftY, double leftX, double rightX){
         drive.mecanum(leftY, leftX, rightX);
     }
 
     public void mecanum(double leftY, double leftX, double rightX) {
+        double[] powers = {
+                leftY - leftX - rightX,
+                leftY + leftX - rightX,
+                leftY + leftX + rightX,
+                leftY - leftX + rightX,
+        };
         Vector2d vector = new Vector2d(
                 leftY,
                 leftX
         ).rotated(-(imu.getYaw(AngleUnit.RADIANS)));
         //IF ITS NOT WORKING SWITCH VECTOR GETX AND VECTOR GETY
         drive.mecanum(vector.getX(), vector.getY(), rightX); // field oriented
-
 
 //        Vector2d vector2d = new Vector2d(
 //                leftY,
