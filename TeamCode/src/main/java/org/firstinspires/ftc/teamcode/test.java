@@ -131,7 +131,6 @@ public class test extends LinearOpMode {
                     viperslide.setTargetPosition(2150);
                     viperslide.setPower(0.4);
                     viperslide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
                     wormgear.setTargetPosition(100);
                     wormgear.setPower(0.4);
                     wormgear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
