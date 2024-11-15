@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp
-public class test extends LinearOpMode {
+public class up extends LinearOpMode {
     /**
      * @throws InterruptedException
      */
@@ -15,7 +15,7 @@ public class test extends LinearOpMode {
 //        TeleOpController teleOpController = PestoFTCConfig.getTeleOpController(mecanumController, tracker, hardwareMap);
 
         FourBarSubsystem fourBarSubsystem = new FourBarSubsystem(hardwareMap);
-        fourBarSubsystem.setState(FourBarSubsystem.FourBarState.DOWN);
+        fourBarSubsystem.setState(FourBarSubsystem.FourBarState.UP);
         fourBarSubsystem.update();
 
         waitForStart();
