@@ -15,7 +15,8 @@ public class test extends LinearOpMode {
     double clawpos=0.0;
     String mode ="Driving";
     int maxwormgearpos=1000;
-
+    int doublespeed=1;
+    int count=0;
     @Override
     public void runOpMode() {
         MecanumController mecanumController = PestoFTCConfig.getMecanumController(hardwareMap);
@@ -38,27 +39,57 @@ public class test extends LinearOpMode {
             Vector2D currentPosition = mecanumTracker.getCurrentPosition();
             double heading = mecanumTracker.getCurrentHeading();
             teleOpController.updateSpeed(gamepad1);
-            teleOpController.driveRobotCentric(gamepad1.left_stick_y,-gamepad1.left_stick_x, -gamepad1.right_stick_x);
+            teleOpController.driveRobotCentric(gamepad1.left_stick_y * doublespeed, -gamepad1.left_stick_x * doublespeed, -gamepad1.right_stick_x);
+
 //            teleOpController.driveFieldCentric(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
 
-            telemetry.addData("x", currentPosition.getX());
-            telemetry.addData("y", currentPosition.getY());
-            telemetry.addData("rotation", heading);
+//            telemetry.addData("x", currentPosition.getX());
+//            telemetry.addData("y", currentPosition.getY());
+//            telemetry.addData("rotation", heading);
             telemetry.addData("viper", viperslide.getCurrentPosition());
             telemetry.addData("wormgear", wormgear.getCurrentPosition());
             telemetry.addData("claw", clawpos);
             telemetry.addData("wrist", wristPos);
             telemetry.addData("slideon: ", slideon);
+            telemetry.addData("moveSpeed: x", doublespeed);
 
+            telemetry.update();
 //claw close:0.3
 //claw open:0.7
 //wrist close:
 //wrist open:
+            if (gamepad1.left_stick_y >= 0.6) {
+                if( (count % 2)==0 ) {
+                while (gamepad1.left_stick_y>=0.6) {
+                }
+                count += 1;
+                if (count==4){
+                    count=0;
+                    if (doublespeed==2) {
+                        doublespeed = 1;
+                    }else{
+                            doublespeed=1;
+
+                        }
+                    }
+
+                gamepad1.rumble(1000);
+                }
+                }
+            }
+            if (gamepad1.left_stick_y <= -0.6) {
+                if( (count % 2)==1 ) {
+                    while (gamepad1.left_stick_y<=-0.6) {
+                    }
+                    count += 1;
+                }
+            }
 
 
+            if (gamepad1.left_stick_x >= 0.6 || gamepad1.left_stick_x <= -0.6) {
+                count =0;
 
-            telemetry.update();
-
+            }
 
             if (gamepad1.b) {
                 mecanumTracker.reset();
@@ -114,7 +145,6 @@ public class test extends LinearOpMode {
                     // Do nothing, just wait
                 }
                 if(mode.equals("Driving")){
-
                     mode ="Intake";
                     viperslide.setTargetPosition(0);
                     viperslide.setPower(0.4);
