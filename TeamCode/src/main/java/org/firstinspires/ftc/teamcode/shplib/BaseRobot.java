@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
 import org.firstinspires.ftc.teamcode.subsystems.ArmSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ArmTestSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
@@ -23,13 +24,13 @@ import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 
 public class BaseRobot extends OpMode {
     // Declare subsystems and devices
-//    public DriveSubsystem drive;
+    public DriveSubsystem drive;
     public VisionSubsystem vision;
-//    public ElbowSubsystem elbow;
+    public ElbowSubsystem elbow;
     public ArmTestSubsystem arm;
-//    public WristSubsystem wrist;
+    public WristSubsystem wrist;
 //    public PlaneServo planeServo;
-//    public IntakeSubsystem intake;
+    public IntakeSubsystem intake;
 //    public DropDownSubsystem dropDown;
 
     public double previousTime = 0;
@@ -41,12 +42,12 @@ public class BaseRobot extends OpMode {
         configure();
 
         // Initialize your subsystems and devices
-//        drive = new DriveSubsystem(hardwareMap);
+        drive = new DriveSubsystem(hardwareMap);
         arm = new ArmTestSubsystem(hardwareMap);
-//        elbow = new ElbowSubsystem(hardwareMap);
-//        wrist = new WristSubsystem(hardwareMap);
+        elbow = new ElbowSubsystem(hardwareMap);
+        wrist = new WristSubsystem(hardwareMap);
 //        planeServo = new PlaneServo(hardwareMap);
-//        intake = new IntakeSubsystem(hardwareMap);
+        intake = new IntakeSubsystem(hardwareMap);
 //        dropDown = new DropDownSubsystem(hardwareMap);
     }
 
