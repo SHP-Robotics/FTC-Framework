@@ -196,6 +196,7 @@ public class test extends LinearOpMode {
                 if (wristPos<1) {
                     wristPos+=0.05;
 
+                    
                     wrist.setPosition(wristPos);
                 }
             }
