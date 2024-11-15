@@ -58,36 +58,31 @@ public class test extends LinearOpMode {
 
             }
             //if gamepad1.right_stick_y is between 10% and 50%
-            if (gamepad1.right_stick_y > 0) {
-                viperslide.setTargetPosition(5);
+            if (gamepad1.right_stick_y > 0.1 && gamepad1.right_stick_y < 0.5
+                    && viperslide.getCurrentPosition() > 0
+                    && viperslide.getCurrentPosition() < 2000) {
+                viperslide.setPower(0.3);
 
             }
 
             //if gamepad1.right_stick_y is between -10% and -50%
-            //if (gamepad1.right_stick_y) {
-              //  viperslide.setPower();
-            //}
+            if (gamepad1.right_stick_y < -0.1 && gamepad1.right_stick_y > -0.5
+                    && viperslide.getCurrentPosition() > 0
+                    && viperslide.getCurrentPosition() < 2000) {
+                viperslide.setPower(-0.3);
 
-            if (gamepad1.right_trigger > 0.4) {
+                if (gamepad1.right_trigger > 0.4) {
 
-                wormgear.setPower(0.3);
+                    wormgear.setPower(0.3);
 
                 }
 
-            if (gamepad1.right_bumper) {
-                claw.setPosition(0.7);
-                //open
+                if (gamepad1.dpad_left) {
+                    claw.setPosition(0.5);
+                }
             }
 
-            if (gamepad1.left_bumper) {
-                claw.setPosition(0);
-                //close
-                    }
-
-
-                //telemetry.addData("Motor 0:",)
-
+            //telemetry.addData("Motor 0:",)
         }
     }
 }
-
