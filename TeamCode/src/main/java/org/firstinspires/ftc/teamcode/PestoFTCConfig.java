@@ -52,9 +52,9 @@ public class PestoFTCConfig {
         });
 
         mecanumController.configureMotorDirections(new DcMotorSimple.Direction[]{
-                DcMotorSimple.Direction.REVERSE,
                 DcMotorSimple.Direction.FORWARD,
-                DcMotorSimple.Direction.REVERSE,
+                DcMotorSimple.Direction.FORWARD,
+                DcMotorSimple.Direction.FORWARD,
                 DcMotorSimple.Direction.FORWARD
         });
 

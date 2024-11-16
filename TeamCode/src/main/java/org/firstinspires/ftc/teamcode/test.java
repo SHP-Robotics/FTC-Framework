@@ -27,7 +27,6 @@ public class test extends LinearOpMode {
         DcMotor opodC = hardwareMap.get(DcMotor.class, "frontRight");
         DcMotor opodR = hardwareMap.get(DcMotor.class, "backLeft");
 
-
         waitForStart();
 
         while (opModeIsActive()) {
@@ -37,9 +36,11 @@ public class test extends LinearOpMode {
 
             teleOpController.updateSpeed(gamepad1);
 
-            teleOpController.driveFieldCentric(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+            teleOpController.driveRobotCentric(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+//            viperslide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//            viperslide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-            //viperslide.setPower(0);
+
             wormgear.setPower(gamepad1.right_trigger);
             wormgear.setPower(-gamepad1.left_trigger);
 
@@ -48,13 +49,13 @@ public class test extends LinearOpMode {
                 viperslide.setPower(0.5);
                 }
             //if gamepad1.right_stick_y is between 10% and 50%
-            else if (gamepad1.right_stick_y > 0.1 && gamepad1.right_stick_y < 0.5) {
-                viperslide.setPower(0.3);
+            else if (gamepad1.dpad_up) {
+                viperslide.setPower(0.5);
             }
-            else {
-                viperslide.setPower(0);
+            else if (gamepad1.dpad_down){
+                viperslide.setPower(-0.5);
             }
-            
+
 
             if (gamepad1.x) {
                     claw.setPosition(0.5);
@@ -69,6 +70,7 @@ public class test extends LinearOpMode {
             telemetry.addData("OPOD L", opodL.getCurrentPosition());
             telemetry.addData("OPOD C", opodC.getCurrentPosition());
             telemetry.addData("OPOD R", opodR.getCurrentPosition());
+            telemetry.addData("Viper Slide: ", viperslide.getCurrentPosition());
             telemetry.update();
 
 
@@ -76,7 +78,6 @@ public class test extends LinearOpMode {
                 threeWheelOdometryTracker.reset();
                 teleOpController.resetIMU();
             }
-            //telemetry.addData("Motor 0:",)
         }
     }
 }
