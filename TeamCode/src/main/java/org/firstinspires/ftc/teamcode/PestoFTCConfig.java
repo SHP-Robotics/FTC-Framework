@@ -19,11 +19,13 @@ public class PestoFTCConfig {
     public static double ODOMETRY_TICKS_PER_INCH = 505.316944316;
     public static double FORWARD_OFFSET = -1.80413492126;
     public static double ODOMETRY_WIDTH = 6.49606;
+
+    // TODO: tune these
     public static double DECELERATION = -73.8807308633;
     public static double MAX_VELOCITY = 39;
 
-    public static final DcMotorSimple.Direction leftEncoderDirection = REVERSE;
-    public static final DcMotorSimple.Direction centerEncoderDirection = FORWARD;
+    public static final DcMotorSimple.Direction leftEncoderDirection = FORWARD;
+    public static final DcMotorSimple.Direction centerEncoderDirection = REVERSE;
     public static final DcMotorSimple.Direction rightEncoderDirection = FORWARD;
 
     public static String leftName = "frontLeft";
@@ -47,6 +49,7 @@ public class PestoFTCConfig {
 
         Vector2D frontLeftPower = new Vector2D(1, 1);
 
+        // TODO: get power vectors
         mecanumController.setPowerVectors(new Vector2D[]{
                 Vector2D.scale(Vector2D.multiply(frontLeftPower, new Vector2D(+1, 1)), 1/frontLeftPower.getMagnitude()),
                 Vector2D.scale(Vector2D.multiply(frontLeftPower, new Vector2D(-1, 1)), 1/frontLeftPower.getMagnitude()),
@@ -76,6 +79,7 @@ public class PestoFTCConfig {
             return 1.0;
         });
 
+        // TODO: tune max velo
         teleOpController.counteractCentripetalForce(tracker, MAX_VELOCITY);
 
         return teleOpController;

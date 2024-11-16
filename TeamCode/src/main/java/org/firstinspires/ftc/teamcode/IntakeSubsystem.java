@@ -11,6 +11,7 @@ public class IntakeSubsystem {
     public enum IntakeState {
         INTAKE (1),
         OUTAKE (-1),
+        HOLD (0.05),
         NEUTRAL (0);
 
         IntakeState(double power) {
@@ -27,7 +28,7 @@ public class IntakeSubsystem {
     private IntakeState state;
 
     public IntakeSubsystem(HardwareMap hardwareMap) {
-        this.intake = (CRServo) hardwareMap.get("fourBarLeft");
+        this.intake = (CRServo) hardwareMap.get("intake");
         this.intake.setDirection(CRServo.Direction.FORWARD);
         this.state = IntakeState.NEUTRAL;
     }
