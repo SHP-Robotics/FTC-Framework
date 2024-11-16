@@ -40,24 +40,24 @@ public class OmicronLee extends BaseRobot {
     }
 
     @Override
-    public void loop() {
-        // Allows CommandScheduler.run() to be called - DO NOT DELETE!
-        super.loop();
-        telemetry.update();
-
-        new Trigger(gamepad1.dpad_up, new RunCommand(()->{
-            arm.incrementSlide();
-        }));
-        new Trigger(gamepad1.dpad_down, new RunCommand(()->{
-            arm.decrementSlide();
-        }));
-        new Trigger(gamepad1.left_bumper, new RunCommand(()->{
-            arm.incrementRotate();
-        }));
-        new Trigger(gamepad1.right_bumper, new RunCommand(()->{
-            arm.decrementRotate();
-        }));
-        
+   public void loop() {
+//        // Allows CommandScheduler.run() to be called - DO NOT DELETE!
+//        super.loop();
+//        telemetry.update();
+//
+//        new Trigger(gamepad1.dpad_up, new RunCommand(()->{
+//            arm.incrementSlide();
+//        }));
+//        new Trigger(gamepad1.dpad_down, new RunCommand(()->{
+//            arm.decrementSlide();
+//        }));
+//        new Trigger(gamepad1.left_bumper, new RunCommand(()->{
+//            arm.incrementRotate();
+//        }));
+//        new Trigger(gamepad1.right_bumper, new RunCommand(()->{
+//            arm.decrementRotate();
+//        }));
+//
 
 
 
