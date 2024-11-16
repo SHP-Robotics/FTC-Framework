@@ -104,15 +104,17 @@ public class DontPressSquare extends LinearOpMode {
                     viperslide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     viperslide.setPower(0.4);
 
-                    wormgear.setTargetPosition(-1700);
+                    wormgear.setTargetPosition(-1530);
                     wormgear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     wormgear.setPower(0.4);
 
                     claw.setPosition(0.7);
-                    wrist.setPosition(0.4);
+                    wrist.setPosition(0.49);
                 }
 
                 if (mode == RobotMode.OUTTAKE) {
+                    claw.setPosition(0.3);
+
                     viperslide.setTargetPosition(2175);
                     viperslide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     viperslide.setPower(0.4);
@@ -121,8 +123,7 @@ public class DontPressSquare extends LinearOpMode {
                     wormgear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     wormgear.setPower(0.4);
 
-                    claw.setPosition(0.3);
-                    wrist.setPosition(0.7);
+                    wrist.setPosition(0.85);
                 }
 
                 if (mode == RobotMode.DRIVING) {
