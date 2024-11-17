@@ -27,7 +27,7 @@ public class DriveCommand extends Command {
 
     public void init() {
         startTime = Clock.now();
-        drive.mecanum(0,0,0);
+        drive.newMecanum(0,0,0);
 
     }
 
@@ -35,9 +35,9 @@ public class DriveCommand extends Command {
     @Override
     public void execute() {
         if (!robot)
-            drive.mecanum(leftY,leftX,rightX);
+            drive.newMecanum(leftY,leftX,rightX);
         else
-            drive.robotmecanum(leftY,leftX,rightX);
+            drive.newMecanum(leftY,leftX,rightX);
     }
 
     // Called once after isFinished() returns true

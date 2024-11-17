@@ -120,7 +120,8 @@ public class HorizSubsystem extends Subsystem {
     }
 
     private void processState(State state) {
-        if (this.state == State.OUTTAKING || this.state == State.DRIVING
+        if (this.state == State.OUTTAKING
+                || this.state == State.DRIVING
                 || this.state == State.INTAKINGEXTENDED
                 || this.state == State.INTAKING) {
             setHorizPosition(this.state.slidePos);

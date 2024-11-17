@@ -61,9 +61,9 @@ public class EncoderTurnDriveCommand extends Command {
     @Override
     public boolean isFinished() {
         if(direction.equals("cw")) //>0 means turning CW
-            return (drive.imu.getYaw(AngleUnit.DEGREES)*-1)>degrees*0.98;
+            return (drive.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)*-1)>degrees*0.98;
         else //turning CCW
-            return (drive.imu.getYaw(AngleUnit.DEGREES))>degrees*0.98;
+            return (drive.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES))>degrees*0.98;
 
     }
 }

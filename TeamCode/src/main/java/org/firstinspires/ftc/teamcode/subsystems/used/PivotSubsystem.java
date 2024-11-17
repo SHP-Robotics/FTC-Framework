@@ -18,9 +18,9 @@ public class PivotSubsystem extends Subsystem {
     public enum State {
         TRANSITION(0.5,0.3), //Rename to some TRANSITION STATE
         DRIVING(0.2, 0.8), //0 is down
-        PREPAREINTAKE(0.6, 0.2),
+        PREPAREINTAKE(0.6, 0.135),
         INTAKING(0.7,0.125), //  0.85 wrist is level with floor
-        OUTTAKING(0.05,0.83), //0.83 is max up
+        OUTTAKING(0.05,0.95),
         MANUAL(0,0);
 
         final double wristPos;
@@ -103,7 +103,8 @@ public class PivotSubsystem extends Subsystem {
     }
 
     private void processState(State state) {
-        if (this.state == State.DRIVING || this.state == State.INTAKING
+        if (this.state == State.DRIVING
+                || this.state == State.INTAKING
                 || this.state == State.OUTTAKING
                 || this.state == State.TRANSITION) {
             setElbowPos(this.state.elbowPos);

@@ -41,13 +41,16 @@ public class VerticalSubsystem extends Subsystem {
 
         leftSlide = (DcMotorEx) hardwareMap.get(kLeftSlideName);
         leftSlide.setDirection(DcMotorSimple.Direction.FORWARD);
-        leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         rightSlide = (DcMotorEx) hardwareMap.get(kRightSlideName);
         rightSlide.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
 
         setState(State.BOTTOM);
     }
@@ -95,12 +98,15 @@ public class VerticalSubsystem extends Subsystem {
     }
 
     public void decrementSlide(){
-        if(slidePos >= kIncrement) {
+        if(slidePos >= kIncrement ) {
             state = State.MANUAL;
             slidePos -= kIncrement;
         }
     }
-
+    public void resetZeroPosition(){
+        leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
 
     public void setPosition(double position){
         if(leftSlide.getCurrentPosition() < kMaxHeight) {

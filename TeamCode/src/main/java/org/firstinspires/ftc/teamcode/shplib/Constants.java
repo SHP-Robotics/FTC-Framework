@@ -90,9 +90,9 @@ public class Constants {
         public static final String kLeftSlideName = "leftVSlide";
         public static final String kRightSlideName = "rightVSlide";
 
-        public static final double kMaxHeight = 2500;
+        public static final double kMaxHeight = 2300;
         public static final double kSlideTolerance = 1;
-        public static final double kIncrement = 50;
+        public static final double kIncrement = 25;
         public static final double kRunPower = 1;
     }
 

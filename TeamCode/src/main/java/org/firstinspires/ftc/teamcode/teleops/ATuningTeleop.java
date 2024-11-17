@@ -60,9 +60,9 @@ public class ATuningTeleop extends BaseRobot {
             claw.changeClaw();
         }));
 
-        new Trigger(gamepad1.left_trigger>0.1, new RunCommand(()->{
-            intake.intaking(-gamepad1.left_trigger);
-        }));
+//        new Trigger(gamepad1.left_trigger>0.1, new RunCommand(()->{
+//            intake.intaking(-gamepad1.left_trigger);
+//        }));
 
         new Trigger(gamepad1.dpad_down, new RunCommand(()-> {
             pivot.decrementElbowDown();
@@ -76,10 +76,10 @@ public class ATuningTeleop extends BaseRobot {
         }));
 
 
-        new Trigger(gamepad1.right_bumper, new RunCommand(() -> {
+        new Trigger(gamepad1.right_trigger > 0.1, new RunCommand(() -> {
             vertical.incrementSlide();
         }));
-        new Trigger(gamepad1.left_bumper, new RunCommand(() -> {
+        new Trigger(gamepad1.left_trigger > 0.1, new RunCommand(() -> {
             vertical.decrementSlide();
         }));
 

@@ -37,13 +37,15 @@ public class HorizontalDownOutCommand extends Command {
     // Called repeatedly until isFinished() returns true
     @Override
     public void execute() {
-        if(pivot.getState() == PivotSubsystem.State.OUTTAKING){ //outtaking to driving
-            pivot.setState(PivotSubsystem.State.DRIVING);
-            horiz.setState(HorizSubsystem.State.DRIVING);
-        }
-        else if(pivot.getState() == PivotSubsystem.State.DRIVING){ //driving to intake prep
+        if(pivot.getState() != PivotSubsystem.State.OUTTAKING
+                && horiz.getState() != HorizSubsystem.State.OUTTAKING
+                && pivot.getState() == PivotSubsystem.State.DRIVING){ //driving to intake prep
             pivot.setState(PivotSubsystem.State.TRANSITION);
             horiz.setState(HorizSubsystem.State.INTAKING);
+        }
+        else if(pivot.getState() == PivotSubsystem.State.OUTTAKING){ //outtaking to driving
+            pivot.setState(PivotSubsystem.State.DRIVING);
+            horiz.setState(HorizSubsystem.State.DRIVING);
         }
         else if(pivot.getState() == PivotSubsystem.State.PREPAREINTAKE){ //intake prep to intaking
 //            pivot.setState(PivotSubsystem.State.TRANSITION);

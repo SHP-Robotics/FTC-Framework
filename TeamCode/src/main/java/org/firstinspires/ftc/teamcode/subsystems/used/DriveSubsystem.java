@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -23,7 +24,7 @@ import org.firstinspires.ftc.teamcode.shplib.hardware.units.MotorUnit;
 
 public class DriveSubsystem extends Subsystem {
     private final SHPMecanumDrive drive;
-    public final SHPIMU imu;
+    public final IMU imu;
     public final Encoder parallelEncoder, perpendicularEncoder;
 
     private double bias = kMaximumBias; // will always be between kMinimumBias and 1.0
@@ -43,9 +44,11 @@ public class DriveSubsystem extends Subsystem {
 
         // Change logo direction and USB direction according to your hub orientation
         // Reference pictures: https://ftc-docs.firstinspires.org/programming_resources/imu/imu.html#orthogonal-mounting
-        imu = new SHPIMU(hardwareMap,
+        imu = hardwareMap.get(IMU.class, "imu");
+        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD);
+                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
+        imu.initialize(parameters);
         parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rightRear"));
         perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "leftRear"));
 
@@ -105,7 +108,7 @@ public class DriveSubsystem extends Subsystem {
         Vector2d vector = new Vector2d(
                 leftY,
                 leftX
-        ).rotated(-(imu.getYaw(AngleUnit.RADIANS)));
+        ).rotated(-(imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS)));
         //IF ITS NOT WORKING SWITCH VECTOR GETX AND VECTOR GETY
         double[] powers = {
                 vector.getX() - vector.getY() - rightX,
@@ -132,7 +135,7 @@ public class DriveSubsystem extends Subsystem {
         Vector2d vector = new Vector2d(
                 leftY,
                 leftX
-        ).rotated(-(imu.getYaw(AngleUnit.RADIANS)));
+        ).rotated(-(imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS)));
         //IF ITS NOT WORKING SWITCH VECTOR GETX AND VECTOR GETY
         drive.mecanum(vector.getX(), vector.getY(), rightX); // field oriented
 
@@ -234,6 +237,6 @@ public class DriveSubsystem extends Subsystem {
 //        telemetry.addData("YPos:",  encoderTicksToInches(parallelEncoder.getCurrentPosition()));
 //        telemetry.addData("XPos:", encoderTicksToInches(perpendicularEncoder.getCurrentPosition()));
 //        telemetry.addData("frontEncoderVal:", frontEncoder.getCurrentPosition());
-        telemetry.addData("IMU ANGLE:", imu.getYaw(AngleUnit.DEGREES));
+        telemetry.addData("IMU ANGLE:", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
     }
 }

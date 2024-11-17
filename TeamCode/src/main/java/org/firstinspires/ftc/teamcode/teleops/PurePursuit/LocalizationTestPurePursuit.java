@@ -3,43 +3,39 @@ package org.firstinspires.ftc.teamcode.teleops.PurePursuit;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.shprobotics.pestocore.drivebases.MecanumController;
+import com.shprobotics.pestocore.drivebases.TeleOpController;
+import com.shprobotics.pestocore.drivebases.Tracker;
+import com.shprobotics.pestocore.geometries.Pose2D;
+import com.shprobotics.pestocore.geometries.Vector2D;
 
-import org.firstinspires.ftc.teamcode.debug.MecanumController;
-import org.firstinspires.ftc.teamcode.debug.PurePursuit.PurePursuitFollower;
-import org.firstinspires.ftc.teamcode.debug.PurePursuit.VelocityApproximator;
-import org.firstinspires.ftc.teamcode.debug.SpeedController;
+import org.firstinspires.ftc.teamcode.PestoFTCConfig;
 
 @TeleOp()
 public class LocalizationTestPurePursuit extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        PurePursuitFollower purePursuitFollower = new PurePursuitFollower(hardwareMap);
-
-        SpeedController speedController = new SpeedController.SpeedBuilder(SpeedController.SpeedType.NO_CHANGE)
-                .setNaturalSpeed(0.4)
-                .build();
-        MecanumController mecanumController = new MecanumController(hardwareMap);
-        mecanumController.setSpeedController(speedController);
-        mecanumController.setMotorsRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        MecanumController mecanumController = PestoFTCConfig.getMecanumController(hardwareMap);
+        Tracker tracker = PestoFTCConfig.getTracker(hardwareMap);
+        TeleOpController teleOpController = PestoFTCConfig.getTeleOpController(mecanumController, tracker, hardwareMap);
 
         waitForStart();
 
         while (opModeIsActive()) {
-            mecanumController.drive(gamepad1);
-            purePursuitFollower.updateOdometry();
+            teleOpController.driveRobotCentric(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+            tracker.updateOdometry();
 
-            telemetry.addData("x", purePursuitFollower.getCurrentPosition().getX());
-            telemetry.addData("y", purePursuitFollower.getCurrentPosition().getY());
-            telemetry.addData("r", purePursuitFollower.getCurrentPosition().getHeadingRadians());
+            Vector2D pose = tracker.getCurrentPosition();
+            double heading = tracker.getCurrentHeading();
+            Pose2D velocity = tracker.getRobotVelocity();
+
+            telemetry.addData("x", pose.getX());
+            telemetry.addData("y", pose.getY());
+            telemetry.addData("r", heading);
             telemetry.addLine();
-
-            double[] approximatedVelocities = VelocityApproximator.getVelocities(purePursuitFollower.getRobotVelocity(), 1);
-
-            telemetry.addData("leftFront approximated velocity", approximatedVelocities[0]);
-            telemetry.addData("rightFront approximated velocity", approximatedVelocities[1]);
-            telemetry.addData("leftRear approximated velocity", approximatedVelocities[2]);
-            telemetry.addData("rightRear approximated velocity", approximatedVelocities[3]);
-
+            telemetry.addData("Δx", velocity.getX());
+            telemetry.addData("Δy", velocity.getY());
+            telemetry.addData("Δr", velocity.getHeadingRadians());
             telemetry.update();
         }
     }

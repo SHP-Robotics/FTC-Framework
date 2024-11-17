@@ -7,9 +7,7 @@ import org.firstinspires.ftc.teamcode.commands.used.HorizontalUpInCommand;
 import org.firstinspires.ftc.teamcode.shplib.BaseRobot;
 import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.Trigger;
-import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
-import org.firstinspires.ftc.teamcode.subsystems.used.HorizSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.used.PivotSubsystem;
 
 @TeleOp
@@ -46,44 +44,52 @@ public class TestTeleop extends BaseRobot {
 
         //Spinning Intake
         new Trigger(gamepad1.right_trigger>0.1, new RunCommand(() -> {
-            intake.intaking(-gamepad1.right_trigger);
+            intake.setPower(-gamepad1.right_trigger);
         }));
         new Trigger(gamepad1.left_trigger>0.1, new RunCommand(() -> {
-            intake.intaking(gamepad1.left_trigger);
+            intake.setPower(gamepad1.left_trigger);
         }));
 
         //Horizontal + Pivot
+
         new Trigger(gamepad1.right_bumper, new HorizontalDownOutCommand(horizontal, pivot));
         new Trigger(gamepad1.left_bumper, new HorizontalUpInCommand(horizontal, pivot));
 
 
         //Claw
-        new Trigger(gamepad1.triangle, new RunCommand(() -> {
-            if(debounce > 0.5) {
-                debounce = Clock.now();
-                claw.changeClaw();
-            }
+        new Trigger(gamepad2.triangle, new RunCommand(() -> {
+//            if(debounce > 0.5) {
+//                debounce = Clock.now();
+                claw.close();
+//            }
+        }));
+        new Trigger(gamepad2.cross, new RunCommand(()->{
+            claw.open();
+        }));
+
+        //reset Slide Zero Pos
+        new Trigger(gamepad2.square, new RunCommand(()->{
+            vertical.resetZeroPosition();
         }));
 
         //resetIMU
-        new Trigger(gamepad1.cross, new RunCommand(()->{
+        new Trigger(gamepad1.square, new RunCommand(()->{
             drive.resetIMUAngle();
         }));
-        debounce = Clock.now();
 
         //Driver 2 Manual control
-        new Trigger(gamepad2.dpad_right, new RunCommand(() ->{
-            if(pivot.getState()!= PivotSubsystem.State.MANUAL){
-                pivot.prevState = pivot.getState();
-            }
-            pivot.incrementWristUp();
-        }));
-        new Trigger(gamepad2.dpad_left, new RunCommand(() ->{
-            if(pivot.getState()!= PivotSubsystem.State.MANUAL){
-                pivot.prevState = pivot.getState();
-            }
-            pivot.decrementWristDown();
-        }));
+//        new Trigger(gamepad2.dpad_right, new RunCommand(() ->{
+//            if(pivot.getState()!= PivotSubsystem.State.MANUAL){
+//                pivot.prevState = pivot.getState();
+//            }
+//            pivot.incrementWristUp();
+//        }));
+//        new Trigger(gamepad2.dpad_left, new RunCommand(() ->{
+//            if(pivot.getState()!= PivotSubsystem.State.MANUAL){
+//                pivot.prevState = pivot.getState();
+//            }
+//            pivot.decrementWristDown();
+//        }));
     }
 
 

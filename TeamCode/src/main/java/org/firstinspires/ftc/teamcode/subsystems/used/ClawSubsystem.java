@@ -19,18 +19,18 @@ public class ClawSubsystem extends Subsystem {
         close = kClose;
         close();
     }
-    public void open(){
+    public void close(){
         claw.setPosition(open);
     }
-    public void close(){
+    public void open(){
         claw.setPosition(close);
     }
     public void changeClaw(){
         if(claw.getPosition() == open){
-            close();
+            open();
         }
         else{
-            open();
+            close();
         }
     }
 
