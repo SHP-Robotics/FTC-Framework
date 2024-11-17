@@ -28,6 +28,9 @@ public class Constants {
         public static final double kMaximumBias = 0.6;
     }
 
+    public static final class Sensors{
+        public static final String kClawColorName = "clawColor";
+    }
     public static final class Vision {
         public static final double kTagsizeMeters = 0.0475;
     }
