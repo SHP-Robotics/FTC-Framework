@@ -4,6 +4,10 @@ import static org.firstinspires.ftc.teamcode.RobotMode.DRIVING;
 import static org.firstinspires.ftc.teamcode.RobotMode.INTAKE;
 import static org.firstinspires.ftc.teamcode.RobotMode.OUTTAKE;
 
+import static org.firstinspires.ftc.teamcode.HangMode.SETUP;
+import static org.firstinspires.ftc.teamcode.HangMode.VIPERDOWN;
+import static org.firstinspires.ftc.teamcode.HangMode.WORMBACK;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -17,8 +21,10 @@ import com.shprobotics.pestocore.drivebases.TeleOpController;
 public class DontPressSquare extends LinearOpMode {
     double wristPos = 0.0;
     double clawPos = 0.0;
-
+    boolean first=true;
     RobotMode mode = RobotMode.DRIVING;
+    HangMode modePosition = HangMode.SETUP;
+
     int moveSpeed = 2;
     @Override
     public void runOpMode() {
@@ -83,13 +89,24 @@ public class DontPressSquare extends LinearOpMode {
 //            }
 
 
+
+
+
+
             if (gamepad1.left_bumper) {
                 while (gamepad1.left_bumper) {
                 }
 
                 switch (mode) {
                     case DRIVING:
-                        mode = INTAKE;
+                        if (first) {
+                            first=false;
+                            mode = OUTTAKE;
+
+                        }else{
+                            mode = INTAKE;
+
+                        }
                         break;
                     case INTAKE:
                         mode = OUTTAKE;
@@ -102,26 +119,28 @@ public class DontPressSquare extends LinearOpMode {
                 if (mode == INTAKE) {
                     viperslide.setTargetPosition(0);
                     viperslide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    viperslide.setPower(0.4);
+                    viperslide.setPower(0.6);
 
                     wormgear.setTargetPosition(-1530);
                     wormgear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    wormgear.setPower(0.4);
+                    wormgear.setPower(0.6);
 
                     claw.setPosition(0.7);
                     wrist.setPosition(0.49);
                 }
+
+
 
                 if (mode == RobotMode.OUTTAKE) {
                     claw.setPosition(0.3);
 
                     viperslide.setTargetPosition(2175);
                     viperslide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    viperslide.setPower(0.4);
+                    viperslide.setPower(0.6);
 
                     wormgear.setTargetPosition(0);
                     wormgear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    wormgear.setPower(0.4);
+                    wormgear.setPower(0.6);
 
                     wrist.setPosition(0.85);
                 }
@@ -130,16 +149,71 @@ public class DontPressSquare extends LinearOpMode {
 
                     viperslide.setTargetPosition(0);
                     viperslide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    viperslide.setPower(0.4);
+                    viperslide.setPower(0.6);
 
                     wormgear.setTargetPosition(0);
                     wormgear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    wormgear.setPower(0.4);
+                    wormgear.setPower(0.6);
 
                     claw.setPosition(0.3);
                     wrist.setPosition(0.5);
                 }
             }
+
+
+            //testing hang
+            if (gamepad1.right_bumper) {
+                while (gamepad1.right_bumper) {
+                }
+
+                switch (modePosition) {
+                    case SETUP:
+                        modePosition = VIPERDOWN;
+                        break;
+                    case VIPERDOWN:
+                        modePosition = WORMBACK;
+                        break;
+                    case WORMBACK:
+                        modePosition = SETUP;
+                        break;
+                }
+
+                if (modePosition == HangMode.SETUP) {
+                    viperslide.setTargetPosition(1000);
+                    viperslide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    viperslide.setPower(0.6);
+
+                    wormgear.setTargetPosition(0);
+                    wormgear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    wormgear.setPower(0.6);
+
+                    claw.setPosition(0.7);
+                    wrist.setPosition(0.85);
+                }
+
+
+
+
+                if (modePosition == HangMode.WORMBACK) {
+
+
+                    wormgear.setTargetPosition(1700);
+                    wormgear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    wormgear.setPower(0.6);
+
+
+                }
+            }
+
+            if (modePosition == HangMode.WORMBACK || modePosition == HangMode.VIPERDOWN) {
+                viperslide.setTargetPosition(-100);
+                viperslide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                viperslide.setPower(0.8);
+            }
+                //end
+
+
+
 
             if (gamepad1.dpad_left) {
                 clawPos += 0.05;
