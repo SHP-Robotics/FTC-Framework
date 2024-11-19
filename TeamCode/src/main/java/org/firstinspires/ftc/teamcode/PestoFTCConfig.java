@@ -21,8 +21,9 @@ public class PestoFTCConfig {
     public static double ODOMETRY_WIDTH = 6.49606;
 
     // TODO: tune these
-    public static double DECELERATION = -73.8807308633;
-    public static double MAX_VELOCITY = 39;
+    // distance traveled / velocity
+    public static double DECELERATION = 0.80;
+    public static double MAX_VELOCITY = 52;
 
     public static final DcMotorSimple.Direction leftEncoderDirection = FORWARD;
     public static final DcMotorSimple.Direction centerEncoderDirection = REVERSE;

@@ -11,8 +11,10 @@ import static org.firstinspires.ftc.teamcode.SlideSubsystem.SlideState.HIGH;
 import static org.firstinspires.ftc.teamcode.SlideSubsystem.SlideState.INTAKE;
 import static org.firstinspires.ftc.teamcode.SlideSubsystem.SlideState.LOW;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.shprobotics.pestocore.algorithms.PID;
 import com.shprobotics.pestocore.devices.GamepadInterface;
@@ -20,6 +22,7 @@ import com.shprobotics.pestocore.drivebases.MecanumController;
 import com.shprobotics.pestocore.drivebases.TeleOpController;
 import com.shprobotics.pestocore.drivebases.Tracker;
 import com.shprobotics.pestocore.geometries.BezierCurve;
+import com.shprobotics.pestocore.geometries.ParametricHeading;
 import com.shprobotics.pestocore.geometries.PathContainer;
 import com.shprobotics.pestocore.geometries.PathFollower;
 import com.shprobotics.pestocore.geometries.Vector2D;
@@ -29,6 +32,7 @@ import org.firstinspires.ftc.teamcode.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.PestoFTCConfig;
 import org.firstinspires.ftc.teamcode.SlideSubsystem;
 
+@Config
 @TeleOp(name = "Field Centric")
 public class FieldCentric extends LinearOpMode {
     private MecanumController mecanumController;
@@ -47,6 +51,10 @@ public class FieldCentric extends LinearOpMode {
     private PathFollower follower;
 
     private ElapsedTime elapsedTime;
+
+    public static double speed = 1.0;
+    public static double kP = 0.1;
+    public static double kD = 0.0;
 
     @Override
     public void runOpMode() {
@@ -85,11 +93,11 @@ public class FieldCentric extends LinearOpMode {
                             new BezierCurve(new Vector2D[]{
                                     tracker.getCurrentPosition(),
                                     vector
-                            })
-//                            new ParametricHeading(
-//                                    tracker.getCurrentHeading(),
-//                                    heading
-//                            )
+                            }),
+                            new ParametricHeading(
+                                    tracker.getCurrentHeading(),
+                                    heading
+                            )
                     )
                     .setIncrement(0.01)
                     .build();
@@ -98,11 +106,17 @@ public class FieldCentric extends LinearOpMode {
                     mecanumController,
                     tracker,
                     path)
-                    .setDeceleration(0)
-                    .setHeadingPID( new PID(1, 0, 0))
-                    .setEndpointPID(new PID(0.1, 0, 0))
-                    .setSpeed(1)
+                    .setDeceleration(PestoFTCConfig.DECELERATION)
+                    .setHeadingPID( new PID(2, 0, 0))
+                    .setEndpointPID(new PID(kP, 0, kD))
+                    .setSpeed(speed)
                     .build();
+
+//            slideSubsystem.setState(HIGH);
+//            fourBarSubsystem.setState(UP);
+
+//            slideSubsystem.update();
+//            fourBarSubsystem.update();
 
             while (opModeIsActive() && gamepad1.x) {
                 loopReturnToHome();
@@ -133,7 +147,7 @@ public class FieldCentric extends LinearOpMode {
         if (gamepad1.left_trigger > 0.9) {
             intakeSubsystem.setState(IntakeSubsystem.IntakeState.OUTAKE);
 
-            vector = tracker.getCurrentPosition();
+            vector = tracker.getCurrentPosition().copy();
             heading = tracker.getCurrentHeading();
         } else if (gamepad1.right_trigger > 0.05) {
             intakeSubsystem.setState(IntakeSubsystem.IntakeState.INTAKE);
@@ -143,16 +157,16 @@ public class FieldCentric extends LinearOpMode {
             intakeSubsystem.setState(IntakeSubsystem.IntakeState.NEUTRAL);
         }
 
-//        if (gamepad1.dpad_left) {
-//            slideSubsystem.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//            slideSubsystem.setPower(-0.5);
-//
-//            while (gamepad1.dpad_left && (slideSubsystem.getResistance() < 0.8)) {}
-//
-//            slideSubsystem.setPower(0);
-//            slideSubsystem.init();
-//            slideSubsystem.setState(INTAKE);
-//        }
+        if (gamepad1.dpad_left) {
+            slideSubsystem.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            slideSubsystem.setPower(-0.5);
+
+            while (gamepad1.dpad_left) {}
+
+            slideSubsystem.setPower(0);
+            slideSubsystem.setState(INTAKE);
+            slideSubsystem.init();
+        }
 
         telemetry.addData("Radians", teleOpController.getHeading());
 

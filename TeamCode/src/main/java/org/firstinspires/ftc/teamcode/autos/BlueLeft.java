@@ -12,10 +12,7 @@ import com.shprobotics.pestocore.geometries.PathFollower;
 import com.shprobotics.pestocore.geometries.Pose2D;
 import com.shprobotics.pestocore.geometries.Vector2D;
 
-import org.firstinspires.ftc.teamcode.FourBarSubsystem;
-import org.firstinspires.ftc.teamcode.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.PestoFTCConfig;
-import org.firstinspires.ftc.teamcode.SlideSubsystem;
 
 //@Disabled
 @Config
@@ -23,10 +20,6 @@ import org.firstinspires.ftc.teamcode.SlideSubsystem;
 public class BlueLeft extends LinearOpMode {
     @Override
     public void runOpMode() {
-        FourBarSubsystem fourBarSubsystem = new FourBarSubsystem(hardwareMap);
-        IntakeSubsystem intakeSubsystem = new IntakeSubsystem(hardwareMap);
-        SlideSubsystem slideSubsystem = new SlideSubsystem(hardwareMap);
-
         MecanumController mecanumController = PestoFTCConfig.getMecanumController(hardwareMap);
         Tracker tracker = PestoFTCConfig.getTracker(hardwareMap);
 
@@ -37,12 +30,12 @@ public class BlueLeft extends LinearOpMode {
                                 new Vector2D(0, 12)
                         }),
                         () -> {
-                            slideSubsystem.setState(SlideSubsystem.SlideState.HIGH);
-                            intakeSubsystem.setState(IntakeSubsystem.IntakeState.OUTAKE);
-                            while (slideSubsystem.isBusy()) {}
-                            sleep(1000);
-                            intakeSubsystem.setState(IntakeSubsystem.IntakeState.NEUTRAL);
-                            slideSubsystem.setState(SlideSubsystem.SlideState.INTAKE);
+//                            slideSubsystem.setState(SlideSubsystem.SlideState.HIGH);
+//                            intakeSubsystem.setState(IntakeSubsystem.IntakeState.OUTAKE);
+//                            while (slideSubsystem.isBusy()) {}
+//                            sleep(1000);
+//                            intakeSubsystem.setState(IntakeSubsystem.IntakeState.NEUTRAL);
+//                            slideSubsystem.setState(SlideSubsystem.SlideState.INTAKE);
                         }
                 )
                 .setIncrement(0.01)
@@ -52,21 +45,14 @@ public class BlueLeft extends LinearOpMode {
                 mecanumController,
                 tracker,
                 path)
-                .setDeceleration(PestoFTCConfig.DECELERATION)
-                .setHeadingPID( new PID(0.1, 0, 0))
-                .setEndpointPID(new PID(0.1, 0, 0))
-                .setSpeed(0.5)
+                .setDeceleration(50)
+                .setHeadingPID( new PID(0, 0, 0))
+                .setEndpointPID(new PID(0, 0, 0))
+                .setSpeed(0.4)
                 .build();
 
-        slideSubsystem.init();
-
         waitForStart();
-
-        slideSubsystem.setState(SlideSubsystem.SlideState.HIGH);
-        slideSubsystem.update();
-
-        fourBarSubsystem.setState(FourBarSubsystem.FourBarState.UP);
-        fourBarSubsystem.update();
+        tracker.reset();
 
         while (opModeIsActive() && !isStopRequested() && !follower.isFinished(0.3)) {
             follower.update();
@@ -83,9 +69,5 @@ public class BlueLeft extends LinearOpMode {
             telemetry.addData("Rotational velocity", currentVelocity.getHeadingRadians());
             telemetry.update();
         }
-
-        intakeSubsystem.setState(IntakeSubsystem.IntakeState.OUTAKE);
-        intakeSubsystem.update();
-        sleep(3000);
     }
 }
