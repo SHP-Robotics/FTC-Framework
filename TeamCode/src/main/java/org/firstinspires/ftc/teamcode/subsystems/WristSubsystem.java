@@ -11,9 +11,10 @@ public class WristSubsystem extends Subsystem {
     private Servo rightServo;
     private double manualPos;
     public enum State {
-        UP(0.3),
-        MANUAL(0),
-        DOWN(0.7);
+        INTAKING(0.98),
+        OUTTAKING(0.6),
+        DRIVING(0.9);
+
 
         final double wristPos;
 
@@ -26,9 +27,9 @@ public class WristSubsystem extends Subsystem {
     public WristSubsystem(HardwareMap h){
         leftServo = (Servo)h.get("leftWrist");
         rightServo = (Servo)h.get("rightWrist");
-
+        rightServo.setDirection(Servo.Direction.REVERSE);
         leftServo.setDirection(Servo.Direction.REVERSE);
-        state = State.UP;
+        state = State.INTAKING;
         manualPos = rightServo.getPosition();
     }
     public void setState(State state){
@@ -36,8 +37,8 @@ public class WristSubsystem extends Subsystem {
     }
     public State getState(){return state;}
     public void setWristPos(double pos){
-        rightServo.setPosition(pos);
-        leftServo.setPosition(1.0-pos);
+        leftServo.setPosition(pos);
+        //leftServo.setPosition(1.0-pos);
     }
     public void incrementUp(){
         manualPos += 0.1;
@@ -46,13 +47,7 @@ public class WristSubsystem extends Subsystem {
         manualPos -= 0.1;
     }
     public void processState(){
-        if(state == State.UP)
-            setWristPos(State.UP.wristPos);
-        else if(state == State.DOWN)
-            setWristPos(State.DOWN.wristPos);
-        else if (state == State.MANUAL){
-            setWristPos(manualPos);
-        }
+        setWristPos(this.state.wristPos);
     }
     @Override
     public void periodic(Telemetry telemetry){

@@ -10,8 +10,11 @@ import org.firstinspires.ftc.teamcode.subsystems.ElbowSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.ArmTestSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.SlideSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.WristSubsystem;
+
+import kotlin.collections.SlidingWindowKt;
 
 /**
  * Template created by Ayaan Govil on 8/21/2021.
@@ -32,6 +35,7 @@ public class BaseRobot extends OpMode {
     public ArmTestSubsystem arm;
     public WristSubsystem wrist;
 //    public PlaneServo planeServo;
+    public SlideSubsystem slide;
     public IntakeSubsystem intake;
 //    public DropDownSubsystem dropDown;
 
@@ -45,9 +49,10 @@ public class BaseRobot extends OpMode {
 
         // Initialize your subsystems and devices
         drive = new DriveSubsystem(hardwareMap);
-        arm = new ArmTestSubsystem(hardwareMap);
+       // arm = new ArmTestSubsystem(hardwareMap);
         elbow = new ElbowSubsystem(hardwareMap);
-        wrist = new WristSubsystem(hardwareMap);
+        slide = new SlideSubsystem(hardwareMap);
+       wrist = new WristSubsystem(hardwareMap);
 //        planeServo = new PlaneServo(hardwareMap);
         intake = new IntakeSubsystem(hardwareMap);
 //        dropDown = new DropDownSubsystem(hardwareMap);

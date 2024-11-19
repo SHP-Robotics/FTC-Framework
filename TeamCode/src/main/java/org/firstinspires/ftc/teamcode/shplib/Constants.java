@@ -71,10 +71,11 @@ public class Constants {
         public static final String kLeftSlideName = "leftSlide";
         public static final String kRightSlideName = "rightSlide";
 
-        public static final double kMaxHeight = 4000;
-        public static final double kSlideTolerance = 30;
+        public static final double kMaxHeight = 2000;
+        public static final double kSlideTolerance = 1;
         public static final double kPixelHeight = 500;
         public static final double kRunPower = 1;
+        public static final double kIncrement = 10;
     }
     public static final class ArmTest {
         public static final String kSlideName = "slide";

@@ -54,7 +54,7 @@ public class DriveSubsystem extends Subsystem {
         }
         motors[0].setDirection(DcMotorSimple.Direction.REVERSE);
         motors[1].setDirection(DcMotorSimple.Direction.REVERSE);
-        motors[3].setDirection(DcMotorSimple.Direction.REVERSE);
+        //motors[3].setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         motors[0].disableEncoder();

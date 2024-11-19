@@ -19,7 +19,7 @@ public class RoshanTeleop extends BaseRobot {
 
         drive.setDefaultCommand(
                 new RunCommand(
-                        () -> drive.mecanum(-gamepad1.left_stick_y*driveBias, -gamepad1.left_stick_x*driveBias, -gamepad1.right_stick_x*driveBias)
+                        () -> drive.mecanum(-gamepad1.left_stick_y*driveBias, -gamepad1.left_stick_x*driveBias, gamepad1.right_stick_x*driveBias)
                 )
         );
     }
