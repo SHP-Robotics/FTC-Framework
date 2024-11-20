@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.shprobotics.pestocore.drivebases.MecanumController;
 import com.shprobotics.pestocore.drivebases.TeleOpController;
 import com.shprobotics.pestocore.drivebases.Tracker;
-import com.shprobotics.pestocore.geometries.PathFollower;
 import com.shprobotics.pestocore.geometries.Vector2D;
 
 import org.firstinspires.ftc.teamcode.PestoFTCConfig;
@@ -22,8 +21,6 @@ public class JustDrive extends LinearOpMode {
     private MecanumController mecanumController;
     private Tracker tracker;
     private TeleOpController teleOpController;
-
-    private PathFollower follower;
 
     private ElapsedTime elapsedTime;
 

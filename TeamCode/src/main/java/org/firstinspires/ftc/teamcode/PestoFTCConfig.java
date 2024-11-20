@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.FORWARD;
-import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -17,8 +16,8 @@ import com.shprobotics.pestocore.geometries.Vector2D;
 @Config
 public class PestoFTCConfig {
     public static double ODOMETRY_TICKS_PER_INCH = 505.316944316;
-    public static double FORWARD_OFFSET = -1.80413492126;
-    public static double ODOMETRY_WIDTH = 6.49606;
+    public static double FORWARD_OFFSET = -3;
+    public static double ODOMETRY_WIDTH = 11.25;
 
     // TODO: tune these
     // distance traveled / velocity
@@ -26,12 +25,12 @@ public class PestoFTCConfig {
     public static double MAX_VELOCITY = 52;
 
     public static final DcMotorSimple.Direction leftEncoderDirection = FORWARD;
-    public static final DcMotorSimple.Direction centerEncoderDirection = REVERSE;
+    public static final DcMotorSimple.Direction centerEncoderDirection = FORWARD;
     public static final DcMotorSimple.Direction rightEncoderDirection = FORWARD;
 
-    public static String leftName = "frontLeft";
-    public static String centerName = "backLeft";
-    public static String rightName = "frontRight";
+    public static String leftName = "backLeft";
+    public static String centerName = "frontLeft";
+    public static String rightName = "backRight";
 
     public static MecanumController getMecanumController(HardwareMap hardwareMap) {
         MecanumController mecanumController = new MecanumController(hardwareMap, new String[] {
