@@ -11,8 +11,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 @Config
 public class SlideSubsystem {
     public SparkMiniMotor slide;
-    public static double power = 0.2;
-    public static int tolerance = 10;
+    public static double power = 1.0;
+    public static int tolerance = 200;
 //    private static final double encoderResolution = 537.689839572; // 5203 Series Yellow Jacket Planetary Gear Motor (19.2:1 Ratio, 24mm Length 8mm REX™ Shaft, 312 RPM, 3.3 - 5V Encoder)
 //    private static final double inchesPerRotation = 4.724757455393701; // 2mm Pitch GT2 Hub-Mount Timing Belt Pulley (14mm Bore, 60 Tooth)
 
@@ -77,7 +77,7 @@ public class SlideSubsystem {
         if (Math.abs(this.getPosition() - this.state.getPosition()) < tolerance)
             adjustedPower *= Math.abs(this.getPosition() - this.state.getPosition()) / tolerance;
 
-        this.setPower(adjustedPower);
+        this.setPower(-adjustedPower);
     }
 
     public void updateTelemetry(Telemetry telemetry) {
