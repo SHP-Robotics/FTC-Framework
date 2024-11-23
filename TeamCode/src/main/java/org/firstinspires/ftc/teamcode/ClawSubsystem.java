@@ -1,16 +1,16 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class ClawSubsystem {
-    private CRServo intake;
+    private Servo intake;
 
     public enum ClawState {
-        OPEN (1),
-        CLOSE (0);
+        OPEN (0.25),
+        CLOSE (0.06);
 
         ClawState(double position) {
             this.position = position;
@@ -26,14 +26,14 @@ public class ClawSubsystem {
     private ClawState state;
 
     public ClawSubsystem(HardwareMap hardwareMap) {
-        this.intake = (CRServo) hardwareMap.get("intake");
-        this.intake.setDirection(CRServo.Direction.FORWARD);
+        this.intake = (Servo) hardwareMap.get("intake");
+        this.intake.setDirection(Servo.Direction.FORWARD);
         this.state = ClawState.CLOSE;
     }
 
-    public ClawSubsystem(CRServo intake) {
+    public ClawSubsystem(Servo intake) {
         this.intake = intake;
-        this.intake.setDirection(CRServo.Direction.FORWARD);
+        this.intake.setDirection(Servo.Direction.FORWARD);
         this.state = ClawState.CLOSE;
     }
 
@@ -46,7 +46,7 @@ public class ClawSubsystem {
     }
 
     public void update() {
-        this.intake.setPower(state.getPosition());
+        this.intake.setPosition(state.getPosition());
     }
 
     public void updateTelemetry(Telemetry telemetry) {

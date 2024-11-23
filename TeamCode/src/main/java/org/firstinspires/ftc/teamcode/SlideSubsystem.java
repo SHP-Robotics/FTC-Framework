@@ -17,8 +17,11 @@ public class SlideSubsystem {
 //    private static final double inchesPerRotation = 4.724757455393701; // 2mm Pitch GT2 Hub-Mount Timing Belt Pulley (14mm Bore, 60 Tooth)
 
     public enum SlideState {
-        LOW (200),
-        HIGH (2800);
+        INTAKE (158),
+        BELOW_LOW_RUNG (530),
+        ABOVE_LOW_RUNG (900),
+        BELOW_HIGH_RUNG (2764),
+        ABOVE_HIGH_RUNG (3070);
 
         SlideState(int position) {
             this.position = position;
@@ -40,7 +43,7 @@ public class SlideSubsystem {
         this.slide.setServo(power);
 
         this.slide.setDirection(DcMotor.Direction.REVERSE);
-        this.state = SlideState.LOW;
+        this.state = SlideState.INTAKE;
     }
 
     public void setPower(double power) {
@@ -63,13 +66,39 @@ public class SlideSubsystem {
         this.state = state;
     }
 
+    public void increment() {
+        switch (this.state) {
+            case INTAKE:
+            case BELOW_LOW_RUNG:
+                this.state = SlideState.ABOVE_LOW_RUNG;
+                break;
+            default:
+                this.state = SlideState.ABOVE_HIGH_RUNG;
+                break;
+        }
+    }
+
+    public void decrement() {
+        switch (this.state) {
+            case ABOVE_HIGH_RUNG:
+                this.state = SlideState.BELOW_HIGH_RUNG;
+                break;
+            case ABOVE_LOW_RUNG:
+                this.state = SlideState.BELOW_LOW_RUNG;
+                break;
+            default:
+                this.state = SlideState.INTAKE;
+                break;
+        }
+    }
+
     public SlideState getState() {
         return this.state;
     }
 
     public void init() {
         this.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        this.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        this.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public void update() {

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.FORWARD;
+import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -24,12 +25,12 @@ public class PestoFTCConfig {
     public static double DECELERATION = 0.80;
     public static double MAX_VELOCITY = 52;
 
-    public static final DcMotorSimple.Direction leftEncoderDirection = FORWARD;
-    public static final DcMotorSimple.Direction centerEncoderDirection = FORWARD;
+    public static final DcMotorSimple.Direction leftEncoderDirection = REVERSE;
+    public static final DcMotorSimple.Direction centerEncoderDirection = REVERSE;
     public static final DcMotorSimple.Direction rightEncoderDirection = FORWARD;
 
     public static String leftName = "backLeft";
-    public static String centerName = "frontLeft";
+    public static String centerName = "frontRight";
     public static String rightName = "backRight";
 
     public static MecanumController getMecanumController(HardwareMap hardwareMap) {
@@ -41,10 +42,10 @@ public class PestoFTCConfig {
         });
 
         mecanumController.configureMotorDirections(new DcMotorSimple.Direction[]{
-                DcMotorSimple.Direction.REVERSE,
-                DcMotorSimple.Direction.FORWARD,
-                DcMotorSimple.Direction.REVERSE,
-                DcMotorSimple.Direction.FORWARD
+                FORWARD,
+                REVERSE,
+                FORWARD,
+                REVERSE
         });
 
         Vector2D frontLeftPower = new Vector2D(1, 1);
@@ -73,10 +74,10 @@ public class PestoFTCConfig {
         teleOpController.useTrackerIMU(tracker);
 
         teleOpController.setSpeedController((gamepad) -> {
-            if (gamepad.dpad_left) {
-                return 0.6;
+            if (gamepad.left_stick_button) {
+                return 1.0;
             }
-            return 1.0;
+            return 0.6;
         });
 
         // TODO: tune max velo

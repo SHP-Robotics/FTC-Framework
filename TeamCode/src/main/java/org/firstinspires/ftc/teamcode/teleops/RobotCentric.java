@@ -6,8 +6,7 @@ import static com.shprobotics.pestocore.devices.GamepadKey.LEFT_BUMPER;
 import static com.shprobotics.pestocore.devices.GamepadKey.RIGHT_BUMPER;
 import static org.firstinspires.ftc.teamcode.ClawSubsystem.ClawState.CLOSE;
 import static org.firstinspires.ftc.teamcode.ClawSubsystem.ClawState.OPEN;
-import static org.firstinspires.ftc.teamcode.SlideSubsystem.SlideState.HIGH;
-import static org.firstinspires.ftc.teamcode.SlideSubsystem.SlideState.LOW;
+import static org.firstinspires.ftc.teamcode.SlideSubsystem.SlideState.INTAKE;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -49,6 +48,7 @@ public class RobotCentric extends LinearOpMode {
 //        slideSubsystem.init();
 
         waitForStart();
+        slideSubsystem.init();
 
         elapsedTime.reset();
 
@@ -68,8 +68,8 @@ public class RobotCentric extends LinearOpMode {
 
         mecanumController.setZeroPowerBehavior(gamepad1.b ? BRAKE: FLOAT);
 
-        if (gamepadInterface.isKeyDown(RIGHT_BUMPER)) slideSubsystem.setState(HIGH);
-        else if (gamepadInterface.isKeyDown(LEFT_BUMPER)) slideSubsystem.setState(LOW);
+        if (gamepadInterface.isKeyDown(RIGHT_BUMPER)) slideSubsystem.increment();
+        else if (gamepadInterface.isKeyDown(LEFT_BUMPER)) slideSubsystem.decrement();
 
         if (gamepad1.left_trigger > 0.9)
             clawSubsystem.setState(OPEN);
@@ -77,20 +77,18 @@ public class RobotCentric extends LinearOpMode {
             clawSubsystem.setState(CLOSE);
 
         if (gamepad1.dpad_left) {
-//            slideSubsystem.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             slideSubsystem.setPower(-0.5);
 
             while (gamepad1.dpad_left) {}
 
             slideSubsystem.setPower(0);
-            slideSubsystem.setState(LOW);
-//            slideSubsystem.init();
+            slideSubsystem.setState(INTAKE);
         }
 
         telemetry.addData("Radians", teleOpController.getHeading());
 
         clawSubsystem.update();
-//        slideSubsystem.update();
+        slideSubsystem.update();
 
         clawSubsystem. updateTelemetry(telemetry);
         slideSubsystem.  updateTelemetry(telemetry);

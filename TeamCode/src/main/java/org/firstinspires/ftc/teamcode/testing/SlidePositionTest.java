@@ -15,8 +15,8 @@ public class SlidePositionTest extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive() && !isStopRequested()) {
-            if (gamepad1.y) slideSubsystem.setState(SlideSubsystem.SlideState.HIGH);
-            else if (gamepad1.a) slideSubsystem.setState(SlideSubsystem.SlideState.LOW);
+            if (gamepad1.y) slideSubsystem.increment();
+            else if (gamepad1.a) slideSubsystem.decrement();
 
             slideSubsystem.update();
             slideSubsystem.updateTelemetry(telemetry);
