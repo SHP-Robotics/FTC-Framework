@@ -12,9 +12,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.shprobotics.pestocore.devices.GamepadInterface;
+import com.shprobotics.pestocore.drivebases.DeterministicTracker;
 import com.shprobotics.pestocore.drivebases.MecanumController;
 import com.shprobotics.pestocore.drivebases.TeleOpController;
-import com.shprobotics.pestocore.drivebases.Tracker;
 
 import org.firstinspires.ftc.teamcode.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.PestoFTCConfig;
@@ -23,7 +23,7 @@ import org.firstinspires.ftc.teamcode.SlideSubsystem;
 @TeleOp(name = "Robot Centric")
 public class RobotCentric extends LinearOpMode {
     private MecanumController mecanumController;
-    private Tracker tracker;
+    private DeterministicTracker tracker;
     private TeleOpController teleOpController;
 
     private ClawSubsystem clawSubsystem;
@@ -59,7 +59,7 @@ public class RobotCentric extends LinearOpMode {
 
     public void loopOpMode() {
         gamepadInterface.update();
-        tracker.updateOdometry();
+        tracker.update();
 
         if (gamepad1.dpad_right) {
             teleOpController.resetIMU();
@@ -102,7 +102,7 @@ public class RobotCentric extends LinearOpMode {
     }
 
     public void loopReturnToHome() {
-        tracker.updateOdometry();
+        tracker.update();
 
         telemetry.addData("Loop Times", elapsedTime.milliseconds());
         elapsedTime.reset();

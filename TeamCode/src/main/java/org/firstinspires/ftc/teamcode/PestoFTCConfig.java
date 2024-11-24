@@ -8,16 +8,16 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.shprobotics.pestocore.drivebases.DeterministicTracker;
 import com.shprobotics.pestocore.drivebases.MecanumController;
 import com.shprobotics.pestocore.drivebases.TeleOpController;
 import com.shprobotics.pestocore.drivebases.ThreeWheelOdometryTracker;
-import com.shprobotics.pestocore.drivebases.Tracker;
 import com.shprobotics.pestocore.geometries.Vector2D;
 
 @Config
 public class PestoFTCConfig {
     public static double ODOMETRY_TICKS_PER_INCH = 505.316944316;
-    public static double FORWARD_OFFSET = -3;
+    public static double FORWARD_OFFSET = -5;
     public static double ODOMETRY_WIDTH = 11.25;
 
     // TODO: tune these
@@ -63,7 +63,7 @@ public class PestoFTCConfig {
         return mecanumController;
     }
 
-    public static TeleOpController getTeleOpController(MecanumController mecanumController, Tracker tracker, HardwareMap hardwareMap) {
+    public static TeleOpController getTeleOpController(MecanumController mecanumController, DeterministicTracker tracker, HardwareMap hardwareMap) {
         TeleOpController teleOpController = new TeleOpController(mecanumController, hardwareMap);
 
         teleOpController.configureIMU(
@@ -86,7 +86,7 @@ public class PestoFTCConfig {
         return teleOpController;
     }
 
-    public static Tracker getTracker(HardwareMap hardwareMap) {
+    public static DeterministicTracker getTracker(HardwareMap hardwareMap) {
         return new ThreeWheelOdometryTracker.TrackerBuilder(
                 hardwareMap,
                 ODOMETRY_TICKS_PER_INCH,

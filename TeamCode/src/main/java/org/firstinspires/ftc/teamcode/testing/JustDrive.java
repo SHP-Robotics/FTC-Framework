@@ -8,10 +8,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.shprobotics.pestocore.drivebases.DeterministicTracker;
 import com.shprobotics.pestocore.drivebases.MecanumController;
 import com.shprobotics.pestocore.drivebases.TeleOpController;
-import com.shprobotics.pestocore.drivebases.Tracker;
-import com.shprobotics.pestocore.geometries.Vector2D;
+import com.shprobotics.pestocore.geometries.Pose2D;
 
 import org.firstinspires.ftc.teamcode.PestoFTCConfig;
 
@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.PestoFTCConfig;
 @TeleOp(name = "Just Drive")
 public class JustDrive extends LinearOpMode {
     private MecanumController mecanumController;
-    private Tracker tracker;
+    private DeterministicTracker tracker;
     private TeleOpController teleOpController;
 
     private ElapsedTime elapsedTime;
@@ -45,7 +45,7 @@ public class JustDrive extends LinearOpMode {
     }
 
     public void loopOpMode() {
-        tracker.updateOdometry();
+        tracker.update();
 
         if (gamepad1.dpad_right) {
             teleOpController.resetIMU();
@@ -54,12 +54,11 @@ public class JustDrive extends LinearOpMode {
 
         mecanumController.setZeroPowerBehavior(gamepad1.b ? BRAKE: FLOAT);
 
-        Vector2D position = tracker.getCurrentPosition();
-        double heading = tracker.getCurrentHeading();
+        Pose2D position = tracker.getCurrentPosition();
 
         telemetry.addData("x", position.getX());
         telemetry.addData("y", position.getY());
-        telemetry.addData("r", heading);
+        telemetry.addData("r", position.getHeadingRadians());
 
         teleOpController.updateSpeed(gamepad1);
         teleOpController.driveFieldCentric(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
