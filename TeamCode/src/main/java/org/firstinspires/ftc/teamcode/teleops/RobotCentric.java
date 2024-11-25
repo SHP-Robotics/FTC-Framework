@@ -10,6 +10,7 @@ import static org.firstinspires.ftc.teamcode.SlideSubsystem.SlideState.INTAKE;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.shprobotics.pestocore.devices.GamepadInterface;
 import com.shprobotics.pestocore.drivebases.DeterministicTracker;
@@ -82,6 +83,8 @@ public class RobotCentric extends LinearOpMode {
             while (gamepad1.dpad_left) {}
 
             slideSubsystem.setPower(0);
+            slideSubsystem.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            slideSubsystem.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             slideSubsystem.setState(INTAKE);
         }
 

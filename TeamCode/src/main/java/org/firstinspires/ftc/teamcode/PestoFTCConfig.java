@@ -17,12 +17,12 @@ import com.shprobotics.pestocore.geometries.Vector2D;
 @Config
 public class PestoFTCConfig {
     public static double ODOMETRY_TICKS_PER_INCH = 505.316944316;
-    public static double FORWARD_OFFSET = -5;
+    public static double FORWARD_OFFSET = 0.5;
     public static double ODOMETRY_WIDTH = 11.25;
 
     // TODO: tune these
-    // distance traveled / velocity
-    public static double DECELERATION = 0.80;
+    // distance traveled / (2 * velocity)
+    public static double DECELERATION = 0.28147257117*4;
     public static double MAX_VELOCITY = 52;
 
     public static final DcMotorSimple.Direction leftEncoderDirection = REVERSE;
@@ -48,7 +48,7 @@ public class PestoFTCConfig {
                 REVERSE
         });
 
-        Vector2D frontLeftPower = new Vector2D(1, 1);
+        Vector2D frontLeftPower = new Vector2D(45, 55);
 
         // TODO: get power vectors
         mecanumController.setPowerVectors(new Vector2D[]{

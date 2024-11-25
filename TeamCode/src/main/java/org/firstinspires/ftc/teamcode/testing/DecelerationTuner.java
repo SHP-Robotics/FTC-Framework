@@ -18,6 +18,7 @@ public class DecelerationTuner extends LinearOpMode {
     private TeleOpController teleOpController;
 
     private Pose2D before;
+    private Pose2D velocity;
 
     @Override
     public void runOpMode() {
@@ -35,13 +36,15 @@ public class DecelerationTuner extends LinearOpMode {
             tracker.update();
             teleOpController.updateSpeed(gamepad1);
             before = tracker.getCurrentPosition().copy();
+            velocity = tracker.getRobotVelocity().copy();
         }
 
         mecanumController.drive(0, 0, 0);
 
         while (opModeIsActive() && !isStopRequested()) {
             tracker.update();
-            telemetry.addData("deceleration", Vector2D.dist(before.asVector(), tracker.getCurrentPosition().asVector()));
+            telemetry.addData("dist", Vector2D.dist(before.asVector(), tracker.getCurrentPosition().asVector()));
+            telemetry.addData("velocity", velocity.getMagnitude());
             telemetry.update();
         }
     }

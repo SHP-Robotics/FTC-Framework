@@ -18,10 +18,10 @@ public class SlideSubsystem {
 
     public enum SlideState {
         INTAKE (158),
-        BELOW_LOW_RUNG (530),
-        ABOVE_LOW_RUNG (900),
-        BELOW_HIGH_RUNG (2764),
-        ABOVE_HIGH_RUNG (3070);
+        BELOW_LOW_RUNG (186),
+        ABOVE_LOW_RUNG (480),
+        BELOW_HIGH_RUNG (1350),
+        ABOVE_HIGH_RUNG (1933);
 
         SlideState(int position) {
             this.position = position;

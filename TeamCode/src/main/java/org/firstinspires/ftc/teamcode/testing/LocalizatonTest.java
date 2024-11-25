@@ -22,6 +22,7 @@ public class LocalizatonTest extends LinearOpMode {
 
         while (opModeIsActive() && !isStopRequested()) {
             teleOpController.driveRobotCentric(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+            teleOpController.updateSpeed(gamepad1);
             tracker.update();
 
             Pose2D currentPosition = tracker.getCurrentPosition();
