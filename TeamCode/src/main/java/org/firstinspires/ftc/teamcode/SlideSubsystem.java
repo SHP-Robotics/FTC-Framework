@@ -17,7 +17,7 @@ public class SlideSubsystem {
 //    private static final double inchesPerRotation = 4.724757455393701; // 2mm Pitch GT2 Hub-Mount Timing Belt Pulley (14mm Bore, 60 Tooth)
 
     public enum SlideState {
-        INTAKE (158),
+        INTAKE (0),
         BELOW_LOW_RUNG (186),
         ABOVE_LOW_RUNG (480),
         BELOW_HIGH_RUNG (1350),

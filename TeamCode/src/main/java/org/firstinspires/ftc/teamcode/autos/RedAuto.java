@@ -67,18 +67,24 @@ public class RedAuto extends LinearOpMode {
 
         pathFollower = generatePathFollower(startToSub, () -> {
             elapsedTime.reset();
-            while (opModeIsActive() && elapsedTime.seconds() < 0.5)
+            while (opModeIsActive() && elapsedTime.seconds() < 0.5) {
                 slideSubsystem.update();
+                tracker.update();
+            }
             slideSubsystem.setState(BELOW_HIGH_RUNG);
             elapsedTime.reset();
-            while (opModeIsActive() && elapsedTime.seconds() < 1.0)
+            while (opModeIsActive() && elapsedTime.seconds() < 1.0) {
                 slideSubsystem.update();
+                tracker.update();
+            }
 
             elapsedTime.reset();
             clawSubsystem.setState(ClawSubsystem.ClawState.OPEN);
 
-            while (opModeIsActive() && elapsedTime.seconds() < 0.5)
+            while (opModeIsActive() && elapsedTime.seconds() < 0.5) {
                 clawSubsystem.update();
+                tracker.update();
+            }
 
             slideSubsystem.setState(INTAKE);
         }, 0.25, 1.0);
@@ -150,13 +156,16 @@ public class RedAuto extends LinearOpMode {
                 elapsedTime.reset();
 
                 while (elapsedTime.seconds() < 0.2) {
+                    tracker.update();
                 }
 
                 slideSubsystem.setState(ABOVE_HIGH_RUNG);
 
                 elapsedTime.reset();
-                while (elapsedTime.seconds() < 0.5)
+                while (elapsedTime.seconds() < 0.5) {
+                    tracker.update();
                     slideSubsystem.update();
+                }
             }, 0.75, 0.5);
 
             while (opModeIsActive() && !pathFollower.isCompleted()) {
@@ -165,18 +174,24 @@ public class RedAuto extends LinearOpMode {
 
             pathFollower = generatePathFollower(sampleToSub, () -> {
                 elapsedTime.reset();
-                while (opModeIsActive() && elapsedTime.seconds() < 0.5)
+                while (opModeIsActive() && elapsedTime.seconds() < 0.5) {
                     slideSubsystem.update();
+                    tracker.update();
+                }
                 slideSubsystem.setState(BELOW_HIGH_RUNG);
                 elapsedTime.reset();
-                while (opModeIsActive() && elapsedTime.seconds() < 1.0)
+                while (opModeIsActive() && elapsedTime.seconds() < 1.0) {
                     slideSubsystem.update();
+                    tracker.update();
+                }
 
                 elapsedTime.reset();
                 clawSubsystem.setState(ClawSubsystem.ClawState.OPEN);
 
-                while (opModeIsActive() && elapsedTime.seconds() < 0.5)
+                while (opModeIsActive() && elapsedTime.seconds() < 0.5) {
                     clawSubsystem.update();
+                    tracker.update();
+                }
 
                 slideSubsystem.setState(INTAKE);
             }, 0.75, 1.0);
