@@ -8,14 +8,10 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.shprobotics.pestocore.drivebases.DeterministicTracker;
 import com.shprobotics.pestocore.drivebases.MecanumController;
-import com.shprobotics.pestocore.drivebases.MecanumTracker;
 import com.shprobotics.pestocore.drivebases.TeleOpController;
 import com.shprobotics.pestocore.drivebases.ThreeWheelOdometryTracker;
-import com.shprobotics.pestocore.drivebases.Tracker;
-import com.shprobotics.pestocore.geometries.Vector2D;
-
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 @Config
 public class PestoFTCConfig {
@@ -26,13 +22,13 @@ public class PestoFTCConfig {
     public static double MAX_VELOCITY = 39;
 
 
-//    public static final DcMotorSimple.Direction leftEncoderDirection = REVERSE;
-//    public static final DcMotorSimple.Direction centerEncoderDirection = FORWARD;
-//    public static final DcMotorSimple.Direction rightEncoderDirection = FORWARD;
-//
-//    public static String leftName = "left";
-//    public static String centerName = "center";
-//    public static String rightName = "right";
+    public static final DcMotorSimple.Direction leftEncoderDirection = REVERSE;
+    public static final DcMotorSimple.Direction centerEncoderDirection = FORWARD;
+    public static final DcMotorSimple.Direction rightEncoderDirection = REVERSE;
+
+    public static String leftName = "frontLeft";
+    public static String centerName = "backLeft";
+    public static String rightName = "frontRight";
 
     public static final DcMotorSimple.Direction frontLeftDirection = REVERSE;
     public static final DcMotorSimple.Direction frontRightDirection = FORWARD;
@@ -66,13 +62,13 @@ public class PestoFTCConfig {
 //                Vector2D.scale(new Vector2D(57, 39), 1/69.0651865993)
 //        });
 
-        mecanumController.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        mecanumController.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         mecanumController.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         return mecanumController;
     }
 
-    public static TeleOpController getTeleOpController(MecanumController mecanumController, MecanumTracker tracker, HardwareMap hardwareMap) {
+    public static TeleOpController getTeleOpController(MecanumController mecanumController, DeterministicTracker tracker, HardwareMap hardwareMap) {
         TeleOpController teleOpController = new TeleOpController(mecanumController, hardwareMap);
 
         teleOpController.configureIMU(
@@ -93,18 +89,17 @@ public class PestoFTCConfig {
         return teleOpController;
     }
 
-   public static MecanumTracker getTracker(HardwareMap hardwareMap) {
-        return new MecanumTracker.TrackerBuilder(hardwareMap,
+   public static DeterministicTracker getTracker(HardwareMap hardwareMap) {
+        return new ThreeWheelOdometryTracker.TrackerBuilder(hardwareMap,
                 ODOMETRY_TICKS_PER_INCH,
-                new Vector2D(7, 6.25),
-                frontLeftName,
-                frontRightName,
-                backLeftName,
-                backRightName,
-                frontLeftDirection,
-                frontRightDirection,
-                backLeftDirection,
-                backRightDirection).build();
+                FORWARD_OFFSET,
+                ODOMETRY_WIDTH,
+                leftName,
+                centerName,
+                rightName,
+                leftEncoderDirection,
+                centerEncoderDirection,
+                rightEncoderDirection).build();
 
     }
 }
