@@ -1,19 +1,25 @@
 package org.firstinspires.ftc.teamcode;
 
 
-import static org.firstinspires.ftc.teamcode.WormGearSubsystem.HangMode.*;
+import static org.firstinspires.ftc.teamcode.WormGearSubsystem.HangMode.FINISH;
+import static org.firstinspires.ftc.teamcode.WormGearSubsystem.HangMode.NONE;
 import static org.firstinspires.ftc.teamcode.WormGearSubsystem.HangMode.SETUP;
 import static org.firstinspires.ftc.teamcode.WormGearSubsystem.HangMode.VIPERDOWN;
+import static org.firstinspires.ftc.teamcode.WormGearSubsystem.HangMode.VIPERUP;
 import static org.firstinspires.ftc.teamcode.WormGearSubsystem.HangMode.WORMGEARBACK;
+import static org.firstinspires.ftc.teamcode.WormGearSubsystem.HangMode.WORMGEARFOWARD;
 import static org.firstinspires.ftc.teamcode.WormGearSubsystem.WormMode.DRIVING;
 import static org.firstinspires.ftc.teamcode.WormGearSubsystem.WormMode.INTAKE;
 import static org.firstinspires.ftc.teamcode.WormGearSubsystem.WormMode.OUTTAKE;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+
 public class WormGearSubsystem {
     private static final int OFFSET =-1550;
     boolean  zeroed=false;
@@ -40,8 +46,10 @@ public class WormGearSubsystem {
         NONE (0),
         SETUP (OFFSET-150),
         VIPERDOWN (OFFSET-150),
-        WORMGEARBACK (-100);
-
+        WORMGEARBACK (-100),
+        WORMGEARFOWARD (1500),
+        VIPERUP (1500),
+        FINISH (OFFSET);
         HangMode(int position) {
             this.position = position;
         }
@@ -53,12 +61,12 @@ public class WormGearSubsystem {
         private final int position;
     }
 
-    private DcMotor wormGear;
+    private DcMotorEx wormGear;
     private WormMode mode= DRIVING;
     private HangMode hangMode = NONE;
 
     public WormGearSubsystem(HardwareMap hardwareMap) {
-        wormGear = hardwareMap.get(DcMotor.class, "WormGear");
+        wormGear = hardwareMap.get(DcMotorEx.class, "WormGear");
 
     }
 
@@ -89,9 +97,17 @@ public class WormGearSubsystem {
                 hangMode = WORMGEARBACK;
                 break;
             case WORMGEARBACK:
-                hangMode = SETUP;
+                hangMode = WORMGEARFOWARD;
                 break;
-
+            case WORMGEARFOWARD:
+                hangMode = VIPERUP;
+                break;
+            case VIPERUP:
+                hangMode = FINISH;
+                break;
+            case FINISH:
+                hangMode = NONE;
+                break;
         }
 
     }
@@ -101,17 +117,23 @@ public class WormGearSubsystem {
         wormGear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void setToZero(TouchSensor touchSensor) {
+    public void setToZero(TouchSensor touchSensor, Telemetry telemetry) {
         wormGear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        wormGear.setPower(2);
+        wormGear.setPower(0.1);
         while(!touchSensor.isPressed()){
+//        while (!touchSensor.isPressed()) {
+            updateTelemetry(telemetry);
+            telemetry.update();
         }
         reset();
-
+        updateTelemetry(telemetry);
+        telemetry.update();
         wormGear.setPower(0);
+
+        wormGear.setPower(0.1);
         wormGear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         wormGear.setTargetPosition(OFFSET);
-        wormGear.setPower(2);
+        wormGear.setPower(1);
         while(wormGear.getCurrentPosition()>-1560){
         }
         zeroed=true;
@@ -137,5 +159,6 @@ public class WormGearSubsystem {
     public void updateTelemetry(Telemetry telemetry) {
         telemetry.addData("mode", mode);
         telemetry.addData("WormGear Position", wormGear.getCurrentPosition());
+        telemetry.addData("current", wormGear.getCurrent(CurrentUnit.AMPS));
     }
 }

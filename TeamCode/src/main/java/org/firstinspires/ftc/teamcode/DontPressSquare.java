@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import static org.firstinspires.ftc.teamcode.ViperSlideSubsystem.*;
+import static org.firstinspires.ftc.teamcode.ViperSlideSubsystem.HangMode.FINISH;
+import static org.firstinspires.ftc.teamcode.ViperSlideSubsystem.HangMode.VIPERUP;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.TouchSensor;
@@ -45,23 +49,23 @@ public class DontPressSquare extends LinearOpMode {
         teleOpController.resetIMU();
         tracker.reset();
         while (opModeIsActive()) {
-            telemetry.addData("X",tracker.getCurrentPosition().getX());
-            telemetry.addData("Y",tracker.getCurrentPosition().getY());
-            telemetry.addData("HeadingRadians",tracker.getCurrentPosition().getHeadingRadians());
+            telemetry.addData("X", tracker.getCurrentPosition().getX());
+            telemetry.addData("Y", tracker.getCurrentPosition().getY());
+            telemetry.addData("HeadingRadians", tracker.getCurrentPosition().getHeadingRadians());
 
             tracker.update();
             gamepadInterface.update();
 
             teleOpController.updateSpeed(gamepad1);
-            if (gamepad1.right_trigger>0.9) {
+            if (gamepad1.right_trigger > 0.9) {
 
-                teleOpController.driveFieldCentric(gamepad1.left_stick_y*0.2, -gamepad1.left_stick_x*0.2, -gamepad1.right_stick_x*0.2);
-            }else{
+                teleOpController.driveFieldCentric(gamepad1.left_stick_y * 0.2, -gamepad1.left_stick_x * 0.2, -gamepad1.right_stick_x * 0.2);
+            } else {
                 teleOpController.driveFieldCentric(gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x);
 
             }
             if (gamepad1.x) {
-                wormGearSubsystem.setToZero(touchSensor);
+                wormGearSubsystem.setToZero(touchSensor, telemetry );
             }
 
             if (gamepad1.b) {
@@ -83,23 +87,24 @@ public class DontPressSquare extends LinearOpMode {
 
                 wormGearSubsystem.cycleHanging();
                 viperSlideSubsystem.cycleHanging();
-
                 wormGearSubsystem.updateHanging();
                 viperSlideSubsystem.updateHanging();
+                if (hangMode == VIPERUP || hangMode == FINISH) {
+                    teleOpController.driveFieldCentric(1, 0, 0);
+
+                }
 
 
+                clawSubsystem.update();
+                wristSubsystem.update();
+                wormGearSubsystem.updateTelemetry(telemetry);
+                viperSlideSubsystem.updateTelemetry(telemetry);
+                clawSubsystem.updateTelemetry(telemetry);
+                wristSubsystem.updateTelemetry(telemetry);
+                telemetry.update();
             }
 
-
-            clawSubsystem.update();
-            wristSubsystem.update();
-            wormGearSubsystem.updateTelemetry(telemetry);
-            viperSlideSubsystem.updateTelemetry(telemetry);
-            clawSubsystem.updateTelemetry(telemetry);
-            wristSubsystem.updateTelemetry(telemetry);
-            telemetry.update();
         }
-
     }
 }
 

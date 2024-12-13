@@ -34,7 +34,10 @@ public class ViperSlideSubsystem {
 
         SETUP (900),
         VIPERDOWN (0),
-        WORMGEARBACK (0);
+        WORMGEARBACK (0),
+        WORMGEARFOWARD (0),
+        VIPERUP (900),
+        FINISH (0);
 
 
         HangMode(int position) {
@@ -49,7 +52,7 @@ public class ViperSlideSubsystem {
     }
     private DcMotor viperSlide;
     private ViperMode mode = DRIVING;
-    private HangMode hangMode = NONE;
+    public static HangMode hangMode = NONE;
 
     //    private  final int offset=-1540;
     public ViperSlideSubsystem(HardwareMap hardwareMap) {
@@ -88,9 +91,17 @@ public class ViperSlideSubsystem {
                 hangMode = WORMGEARBACK;
                 break;
             case WORMGEARBACK:
-                hangMode = SETUP;
+                hangMode = WORMGEARFOWARD;
                 break;
-
+            case WORMGEARFOWARD:
+                hangMode = VIPERUP;
+                break;
+            case VIPERUP:
+                hangMode = FINISH;
+                break;
+            case FINISH:
+                hangMode = NONE;
+                break;
         }
 
     }
@@ -120,8 +131,11 @@ public class ViperSlideSubsystem {
         viperSlide.setTargetPosition(hangMode.getPosition());
         viperSlide.setPower(1);
 
-        if (hangMode==VIPERDOWN){
+        if (hangMode==VIPERDOWN) {
             viperSlide.setPower(0.5);
+        }else if (hangMode==VIPERUP) {
+            viperSlide.setPower(0.1);
+
         }
 
     }

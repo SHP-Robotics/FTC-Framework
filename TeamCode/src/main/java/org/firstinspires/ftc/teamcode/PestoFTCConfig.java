@@ -100,6 +100,5 @@ public class PestoFTCConfig {
                 leftEncoderDirection,
                 centerEncoderDirection,
                 rightEncoderDirection).build();
-
     }
 }
