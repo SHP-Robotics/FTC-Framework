@@ -3,15 +3,24 @@ package org.firstinspires.ftc.teamcode;
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.FORWARD;
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
 
+import static org.firstinspires.ftc.teamcode.SlideSubsystem.SlideState.ABOVE_HIGH_RUNG;
+import static org.firstinspires.ftc.teamcode.SlideSubsystem.SlideState.BELOW_HIGH_RUNG;
+import static org.firstinspires.ftc.teamcode.SlideSubsystem.SlideState.INTAKE;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.shprobotics.pestocore.algorithms.PID;
 import com.shprobotics.pestocore.drivebases.DeterministicTracker;
 import com.shprobotics.pestocore.drivebases.MecanumController;
 import com.shprobotics.pestocore.drivebases.TeleOpController;
 import com.shprobotics.pestocore.drivebases.ThreeWheelOdometryTracker;
+import com.shprobotics.pestocore.geometries.PathContainer;
+import com.shprobotics.pestocore.geometries.PathFollower;
 import com.shprobotics.pestocore.geometries.Vector2D;
 
 @Config
@@ -99,5 +108,65 @@ public class PestoFTCConfig {
                 centerEncoderDirection,
                 rightEncoderDirection
         ).build();
+    }
+
+    public static PathFollower.PathFollowerBuilder generatePathFollower(PathContainer pathContainer, MecanumController mecanumController, DeterministicTracker tracker) {
+        return new PathFollower.PathFollowerBuilder(mecanumController, tracker, pathContainer)
+                .setEndpointPID(new PID(0.002,0, 0))
+                .setHeadingPID(new PID(1.0, 0, 0))
+                .setDeceleration(DECELERATION)
+                .setSpeed(1.0)
+
+                .setEndTolerance(0.4, Math.toRadians(2))
+                .setEndVelocityTolerance(4);
+    }
+
+    public static final Runnable GRAB_SPECIMEN = () -> {};
+
+    public static Runnable getPlaceSpecimen(DeterministicTracker tracker, SlideSubsystem slideSubsystem, ClawSubsystem clawSubsystem, ElapsedTime elapsedTime, LinearOpMode linearOpMode) {
+        return () -> {
+            elapsedTime.reset();
+            while (linearOpMode.opModeIsActive() && elapsedTime.seconds() < 0.5) {
+                slideSubsystem.update();
+                tracker.update();
+            }
+            slideSubsystem.setState(BELOW_HIGH_RUNG);
+            elapsedTime.reset();
+            while (linearOpMode.opModeIsActive() && elapsedTime.seconds() < 1.0) {
+                slideSubsystem.update();
+                tracker.update();
+            }
+
+            elapsedTime.reset();
+            clawSubsystem.setState(ClawSubsystem.ClawState.OPEN);
+
+            while (linearOpMode.opModeIsActive() && elapsedTime.seconds() < 0.5) {
+                clawSubsystem.update();
+                tracker.update();
+            }
+
+            slideSubsystem.setState(INTAKE);
+        };
+    }
+
+    public static Runnable getGrabSpecimen(DeterministicTracker tracker, SlideSubsystem slideSubsystem, ClawSubsystem clawSubsystem, ElapsedTime elapsedTime, LinearOpMode linearOpMode) {
+        return () -> {
+            clawSubsystem.setState(ClawSubsystem.ClawState.CLOSE);
+            clawSubsystem.update();
+
+            elapsedTime.reset();
+
+            while (linearOpMode.opModeIsActive() && elapsedTime.seconds() < 0.2) {
+                tracker.update();
+            }
+
+            slideSubsystem.setState(ABOVE_HIGH_RUNG);
+
+            elapsedTime.reset();
+            while (linearOpMode.opModeIsActive() && elapsedTime.seconds() < 0.5) {
+                tracker.update();
+                slideSubsystem.update();
+            }
+        };
     }
 }

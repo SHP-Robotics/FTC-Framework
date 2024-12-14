@@ -1,13 +1,13 @@
 package org.firstinspires.ftc.teamcode.autos;
 
+import static org.firstinspires.ftc.teamcode.PestoFTCConfig.generatePathFollower;
+import static org.firstinspires.ftc.teamcode.PestoFTCConfig.getGrabSpecimen;
+import static org.firstinspires.ftc.teamcode.PestoFTCConfig.getPlaceSpecimen;
 import static org.firstinspires.ftc.teamcode.SlideSubsystem.SlideState.ABOVE_HIGH_RUNG;
-import static org.firstinspires.ftc.teamcode.SlideSubsystem.SlideState.BELOW_HIGH_RUNG;
-import static org.firstinspires.ftc.teamcode.SlideSubsystem.SlideState.INTAKE;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.shprobotics.pestocore.algorithms.PID;
 import com.shprobotics.pestocore.drivebases.DeterministicTracker;
 import com.shprobotics.pestocore.drivebases.MecanumController;
 import com.shprobotics.pestocore.geometries.BezierCurve;
@@ -22,7 +22,6 @@ import org.firstinspires.ftc.teamcode.SlideSubsystem;
 
 @Autonomous(name = "Red Auto")
 public class RedAuto extends LinearOpMode {
-    private MecanumController mecanumController;
     private DeterministicTracker tracker;
     PathContainer startToSub;
     PathContainer subToSample;
@@ -36,23 +35,12 @@ public class RedAuto extends LinearOpMode {
 
     private ElapsedTime elapsedTime;
 
-    public PathFollower generatePathFollower(PathContainer pathContainer, Runnable finalAction, double deceleration, double speed) {
-        return new PathFollower.PathFollowerBuilder(mecanumController, tracker, pathContainer)
-                .setEndpointPID(new PID(0.002,0, 0))
-                .setHeadingPID(new PID(1.0, 0, 0))
-                .setDeceleration(PestoFTCConfig.DECELERATION)
-                .setSpeed(speed)
-
-                .setEndTolerance(0.4, Math.toRadians(2))
-                .setEndVelocityTolerance(4)
-                .setTimeAfterDeceleration(deceleration)
-                .addFinalAction(finalAction)
-                .build();
-    }
-
     @Override
     public void runOpMode() {
-        mecanumController = PestoFTCConfig.getMecanumController(hardwareMap);
+        MecanumController mecanumController = PestoFTCConfig.getMecanumController(hardwareMap);
+        Runnable placeSpecimen = getPlaceSpecimen(tracker, slideSubsystem, clawSubsystem, elapsedTime, this);
+        Runnable grabSpecimen = getGrabSpecimen(tracker, slideSubsystem, clawSubsystem, elapsedTime, this);
+
         tracker = PestoFTCConfig.getTracker(hardwareMap);
 
         startToSub = new PathContainer.PathContainerBuilder()
@@ -65,29 +53,10 @@ public class RedAuto extends LinearOpMode {
                 ))
                 .build();
 
-        pathFollower = generatePathFollower(startToSub, () -> {
-            elapsedTime.reset();
-            while (opModeIsActive() && elapsedTime.seconds() < 0.5) {
-                slideSubsystem.update();
-                tracker.update();
-            }
-            slideSubsystem.setState(BELOW_HIGH_RUNG);
-            elapsedTime.reset();
-            while (opModeIsActive() && elapsedTime.seconds() < 1.0) {
-                slideSubsystem.update();
-                tracker.update();
-            }
-
-            elapsedTime.reset();
-            clawSubsystem.setState(ClawSubsystem.ClawState.OPEN);
-
-            while (opModeIsActive() && elapsedTime.seconds() < 0.5) {
-                clawSubsystem.update();
-                tracker.update();
-            }
-
-            slideSubsystem.setState(INTAKE);
-        }, 0.25, 1.0);
+        pathFollower = generatePathFollower(startToSub, mecanumController, tracker)
+                .addFinalAction(placeSpecimen)
+                .setTimeAfterDeceleration(0.25)
+                .build();
 
         clawSubsystem = new ClawSubsystem(hardwareMap);
         slideSubsystem = new SlideSubsystem(hardwareMap);
@@ -143,58 +112,28 @@ public class RedAuto extends LinearOpMode {
 
 
 
-            pathFollower = generatePathFollower(subToSample, () -> {}, 0.75, 1.0);
+            pathFollower = generatePathFollower(subToSample, mecanumController, tracker)
+                    .setTimeAfterDeceleration(0.75)
+                    .build();
 
             while (opModeIsActive() && !pathFollower.isCompleted()) {
                 loopOpMode();
             }
 
-            pathFollower = generatePathFollower(subToSample2, () -> {
-                clawSubsystem.setState(ClawSubsystem.ClawState.CLOSE);
-                clawSubsystem.update();
-
-                elapsedTime.reset();
-
-                while (elapsedTime.seconds() < 0.2) {
-                    tracker.update();
-                }
-
-                slideSubsystem.setState(ABOVE_HIGH_RUNG);
-
-                elapsedTime.reset();
-                while (elapsedTime.seconds() < 0.5) {
-                    tracker.update();
-                    slideSubsystem.update();
-                }
-            }, 0.75, 0.5);
+            pathFollower = generatePathFollower(subToSample2, mecanumController, tracker)
+                    .addFinalAction(grabSpecimen)
+                    .setTimeAfterDeceleration(0.75)
+                    .setSpeed(0.5)
+                    .build();
 
             while (opModeIsActive() && !pathFollower.isCompleted()) {
                 loopOpMode();
             }
 
-            pathFollower = generatePathFollower(sampleToSub, () -> {
-                elapsedTime.reset();
-                while (opModeIsActive() && elapsedTime.seconds() < 0.5) {
-                    slideSubsystem.update();
-                    tracker.update();
-                }
-                slideSubsystem.setState(BELOW_HIGH_RUNG);
-                elapsedTime.reset();
-                while (opModeIsActive() && elapsedTime.seconds() < 1.0) {
-                    slideSubsystem.update();
-                    tracker.update();
-                }
-
-                elapsedTime.reset();
-                clawSubsystem.setState(ClawSubsystem.ClawState.OPEN);
-
-                while (opModeIsActive() && elapsedTime.seconds() < 0.5) {
-                    clawSubsystem.update();
-                    tracker.update();
-                }
-
-                slideSubsystem.setState(INTAKE);
-            }, 0.75, 1.0);
+            pathFollower = generatePathFollower(sampleToSub, mecanumController, tracker)
+                    .addFinalAction(placeSpecimen)
+                    .setTimeAfterDeceleration(0.75)
+                    .build();
 
             while (opModeIsActive() && !pathFollower.isCompleted()) {
                 loopOpMode();
@@ -217,8 +156,6 @@ public class RedAuto extends LinearOpMode {
         telemetry.addData("x", tracker.getCurrentPosition().getX());
         telemetry.addData("y", tracker.getCurrentPosition().getY());
         telemetry.addData("r", tracker.getCurrentPosition().getHeadingRadians());
-//        telemetry.addData("ex", subToSample.getEndpoint().getX());
-//        telemetry.addData("ey", subToSample.getEndpoint().getY());
         elapsedTime.reset();
         telemetry.update();
     }
