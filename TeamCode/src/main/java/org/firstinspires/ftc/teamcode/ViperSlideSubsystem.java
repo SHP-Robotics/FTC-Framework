@@ -1,13 +1,21 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.teamcode.ViperSlideSubsystem.HangMode.*;
+import static org.firstinspires.ftc.teamcode.ViperSlideSubsystem.HangMode.FINISH;
+import static org.firstinspires.ftc.teamcode.ViperSlideSubsystem.HangMode.NONE;
+import static org.firstinspires.ftc.teamcode.ViperSlideSubsystem.HangMode.SETUP;
+import static org.firstinspires.ftc.teamcode.ViperSlideSubsystem.HangMode.VIPERDOWN;
+import static org.firstinspires.ftc.teamcode.ViperSlideSubsystem.HangMode.VIPERUP;
+import static org.firstinspires.ftc.teamcode.ViperSlideSubsystem.HangMode.WORMGEARBACK;
+import static org.firstinspires.ftc.teamcode.ViperSlideSubsystem.HangMode.WORMGEARFOWARD;
 import static org.firstinspires.ftc.teamcode.ViperSlideSubsystem.ViperMode.DRIVING;
+import static org.firstinspires.ftc.teamcode.ViperSlideSubsystem.ViperMode.DRIVING2;
 import static org.firstinspires.ftc.teamcode.ViperSlideSubsystem.ViperMode.INTAKE;
 import static org.firstinspires.ftc.teamcode.ViperSlideSubsystem.ViperMode.OUTTAKE;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -16,6 +24,8 @@ public class ViperSlideSubsystem {
     public enum ViperMode {
         DRIVING (0),
         INTAKE (0),
+        DRIVING2 (0),
+
         OUTTAKE (2000);
 
 
@@ -53,7 +63,8 @@ public class ViperSlideSubsystem {
     private DcMotor viperSlide;
     private ViperMode mode = DRIVING;
     public static HangMode hangMode = NONE;
-
+    ElapsedTime elapsedTime=new ElapsedTime();
+    boolean isStartingOuttake = false;
     //    private  final int offset=-1540;
     public ViperSlideSubsystem(HardwareMap hardwareMap) {
         viperSlide = hardwareMap.get(DcMotor.class, "viperSlide");
@@ -70,6 +81,10 @@ public class ViperSlideSubsystem {
                 mode = INTAKE;
                 break;
             case INTAKE:
+                mode = DRIVING2;
+                isStartingOuttake=true;
+                break;
+            case DRIVING2:
                 mode = OUTTAKE;
                 break;
             case OUTTAKE:
@@ -108,8 +123,8 @@ public class ViperSlideSubsystem {
 
     public void  switchPower(){
         if (mode.getPosition()==0 && hangMode !=VIPERDOWN &&  hangMode !=WORMGEARBACK) {
-            while (viperSlide.getCurrentPosition() > 30) {
-
+            if (viperSlide.getCurrentPosition() > 30) {
+return;
             }
             viperSlide.setPower(0);
 
@@ -121,9 +136,28 @@ public class ViperSlideSubsystem {
     public void update() {
         if (hangMode==NONE){
 
+//            if (mode==OUTTAKE) {
+//                if (isStartingOuttake) {
+//                    elapsedTime = new ElapsedTime();
+//                    elapsedTime.reset();
+//                    isStartingOuttake = false;
+//                }
+//                if (elapsedTime.seconds() > 1.0) {
 
-        viperSlide.setTargetPosition(mode.getPosition());
-        switchPower();
+//
+//                    viperSlide.setTargetPosition(mode.getPosition());
+//                    viperSlide.setPower(1);
+//
+//                }
+//            }else{
+                viperSlide.setTargetPosition(mode.getPosition());
+                switchPower();
+
+
+//            }
+
+
+
         }
     }
 
@@ -141,6 +175,7 @@ public class ViperSlideSubsystem {
     }
 
     public void updateTelemetry(Telemetry telemetry) {
+
         telemetry.addData("Viper Mode", mode);
         telemetry.addData("Viper Position", viperSlide.getCurrentPosition());
 

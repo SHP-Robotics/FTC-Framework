@@ -49,21 +49,26 @@ public class DontPressSquare extends LinearOpMode {
         teleOpController.resetIMU();
         tracker.reset();
         while (opModeIsActive()) {
+            wormGearSubsystem.updateTelemetry(telemetry);
+            viperSlideSubsystem.updateTelemetry(telemetry);
+            clawSubsystem.updateTelemetry(telemetry);
+            wristSubsystem.updateTelemetry(telemetry);
             telemetry.addData("X", tracker.getCurrentPosition().getX());
             telemetry.addData("Y", tracker.getCurrentPosition().getY());
             telemetry.addData("HeadingRadians", tracker.getCurrentPosition().getHeadingRadians());
 
+            telemetry.update();
             tracker.update();
             gamepadInterface.update();
 
             teleOpController.updateSpeed(gamepad1);
-            if (gamepad1.right_trigger > 0.9) {
-
-                teleOpController.driveFieldCentric(gamepad1.left_stick_y * 0.2, -gamepad1.left_stick_x * 0.2, -gamepad1.right_stick_x * 0.2);
-            } else {
+//            if (gamepad1.right_trigger > 0.9) {
+//
+//                teleOpController.driveFieldCentric(gamepad1.left_stick_y * 0.2, -gamepad1.left_stick_x * 0.2, -gamepad1.right_stick_x * 0.2);
+//            } else {
                 teleOpController.driveFieldCentric(gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x);
 
-            }
+//            }
             if (gamepad1.x) {
                 wormGearSubsystem.setToZero(touchSensor, telemetry );
             }
@@ -79,8 +84,6 @@ public class DontPressSquare extends LinearOpMode {
                 viperSlideSubsystem.cycle();
 
 
-                wormGearSubsystem.update();
-                viperSlideSubsystem.update();
 
             }
             if (gamepadInterface.isKeyUp(GamepadKey.RIGHT_BUMPER)) {
@@ -95,15 +98,18 @@ public class DontPressSquare extends LinearOpMode {
                 }
 
 
-                clawSubsystem.update();
-                wristSubsystem.update();
-                wormGearSubsystem.updateTelemetry(telemetry);
-                viperSlideSubsystem.updateTelemetry(telemetry);
-                clawSubsystem.updateTelemetry(telemetry);
-                wristSubsystem.updateTelemetry(telemetry);
-                telemetry.update();
-            }
 
+
+
+            }
+            if (wormGearSubsystem.zeroed){
+
+
+            clawSubsystem.update();
+            wristSubsystem.update();
+            wormGearSubsystem.update();
+            viperSlideSubsystem.update();
+            }
         }
     }
 }

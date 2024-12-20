@@ -30,35 +30,45 @@ public class DontPressSquareAutonomous extends LinearOpMode {
                                 new Vector2D(-1,10),
                         }
                 ))
-                .addCurve(new BezierCurve(
-                        new Vector2D[]{
-                                new Vector2D(-1,10),
-                                new Vector2D(-1.1,10.25),
-                                new Vector2D(0,15),
-                                new Vector2D(-10,15),
-                        }
-                ))
-                .setIncrement(0.01)
-                .build();
+//                .addCurve(new BezierCurve(
+//                        new Vector2D[]{
+//                                new Vector2D(-1,10),
+//                                new Vector2D(-1.1,10.25),
+//                                new Vector2D(0,15),
+//                                new Vector2D(-10,15),
+//                        }
+//                ))
+                .setIncrement(0.01).build();
         PathFollower pathFollower = new PathFollower.PathFollowerBuilder(
                 mecanumController,
                 tracker,
                 pathContainer
+
         )
-                .setDeceleration(0.0)
+                .setDeceleration(0)
                 .setEndpointPID(new PID(0, 0, 0))
                 .setHeadingPID(new PID(0, 0, 0))
+                .setSpeed(1)
                 .build();
+
+        pathFollower.reset(); // Reset once, before the loop
 
         waitForStart();
 
         while (opModeIsActive()) {
             telemetry.addData("position",tracker.getCurrentPosition());
             telemetry.addData("velocity",tracker.getRobotVelocity());
-
+            telemetry.addData("completed",  pathFollower.isCompleted());
+            telemetry.addData("Path Progress", pathFollower.isCompleted() ? "Completed" : "In Progress");
             telemetry.update();
-            tracker.update();
-            pathFollower.update();
+            if (gamepad1.x) {
+                gamepad1.rumble(1000);
+                pathFollower.reset(); // Reset once, before the loop
+                tracker.update();
+
+                pathFollower.update();
+            }
+
         }
     }
 }
