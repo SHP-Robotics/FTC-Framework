@@ -146,6 +146,8 @@ public class test extends LinearOpMode {
             if (gamepad1.b) {
                 threeWheelOdometryTracker.reset();
                 teleOpController.resetIMU();
+                teleOpController.updateSpeed(gamepad1);
+                teleOpController.updateSpeed(gamepad2);
                 telemetry.update();
             }
         }
