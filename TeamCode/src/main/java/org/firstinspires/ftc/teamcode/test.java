@@ -13,8 +13,9 @@ import com.shprobotics.pestocore.drivebases.TeleOpController;
 import com.shprobotics.pestocore.drivebases.ThreeWheelOdometryTracker;
 import com.shprobotics.pestocore.geometries.Pose2D;
 import com.shprobotics.pestocore.geometries.Vector2D;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 
 @TeleOp
@@ -185,9 +186,7 @@ public class test extends LinearOpMode {
     }
 
     public void updateTelemetry(Telemetry telemetry) {
-        // Get the current distance
         double distanceInches = distanceSensor.getDistance(DistanceUnit.INCH);
-        // Update telemetry with the distance
         telemetry.addData("Distance (inches)", distanceInches);
         telemetry.update();
     }
@@ -197,19 +196,22 @@ public class test extends LinearOpMode {
         updateTelemetry(telemetry);
     }
 }
-    DcMotor threewheelOdometryTracker = null;
 
+    double distanceInches; {
+        distanceInches = distanceSensor.getDistance(DistanceUnit.INCH);
+    }
+
+    DcMotor threewheelOdometryTracker = null;
     public void updateTelemetry(Telemetry telemetry) {
-        double distanceInches = distanceSensor.getDistance(DistanceUnit.INCH);
-        telemetry.addData("X", getX); // Ensure getX() is defined
-        telemetry.addData("Y", getY); // Ensure getY() is defined
-        telemetry.addData("Heading/Rotation", ""); // Add actual heading/rotation data
+        telemetry.addData("X Coordinate", getX);
+        telemetry.addData("Y Coordinate", getY);
+        telemetry.addData("Heading/Rotation", "");
         telemetry.addData("WormGear", wormGearMotor.getCurrentPosition());
         telemetry.addData("StrongArm", strongArmMotor.getCurrentPosition());
         telemetry.addData("ViperSlide", viperslide.getCurrentPosition());
         telemetry.addData("Claw", claw.getPosition());
         telemetry.addData("Odometry", threewheelOdometryTracker.getCurrentPosition());
-        telemetry.addData("Distance (inches)", distanceInches);
+        telemetry.addData("Distance", distanceInches);
         telemetry.update();
     }
 }
