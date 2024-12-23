@@ -1,0 +1,85 @@
+package org.firstinspires.ftc.teamcode; 
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.shprobotics.pestocore.drivebases.ThreeWheelOdometryTracker;
+import com.shprobotics.pestocore.geometries.Pose2D;
+import com.shprobotics.pestocore.geometries.Vector2D;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
+
+@Autonomous
+Public class MyAuto extends LinearOpMode {
+
+    private DcMotor frontLeft;
+    private DcMotor frontRight;
+    private DcMotor backLeft;
+    private DcMotor backRight;
+    private DcMotor wormGearMotor;
+    private DcMotor strongArmMotor;
+    private DcMotor viperslide;
+    private Servo claw;
+    private DistanceSensor distanceSensor;
+
+    public double getX;
+    public double getY;
+
+    private void threewheelOdometryTracker() {
+    }
+
+    MecanumController mecanumController = PestoFTCConfig.getMecanumController(hardwareMap);
+    ThreeWheelOdometryTracker threeWheelOdometryTracker = PestoFTCConfig.getTracker(hardwareMap);
+    TeleOpController teleOpController = PestoFTCConfig.getTeleOpController(mecanumController, threeWheelOdometryTracker, hardwareMap);
+
+    wormGearMotor = hardwareMap.get(DcMotor.class, "wormGear");
+    strongArmMotor = hardwareMap.get(DcMotor.class, "strongArm");
+    viperslide = hardwareMap.get(DcMotor.class, "arm");
+    claw = hardwareMap.get(Servo.class, "Claw");
+    distanceSensor = hardwareMap.get(DistanceSensor.class, "Distance Sensor");
+    frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
+    frontRight = hardwareMap.get(DcMotor.class, "frontRight");
+    backRight = hardwareMap.get(DcMotor.class, "backRight");
+    backLeft = hardwareMap.get(DcMotor.class, "backLeft");
+    
+            frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+            frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+            backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+            backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+    
+            waitForStart();
+    
+            frontLeft.setPower(0.3);
+            frontRight.setPower(0.3);
+            backLeft.setPower(0.3);
+            backRight.setPower(0.3);
+
+            if (distanceInches = )
+    
+            sleep(1400);
+    
+            frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+            frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+            backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+            backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+            //frontleft and backleft wheels spin forwards because the direction is relative
+            // Simply put, "FORWARD" here is backwards on the bot BUT ONLY FOR THESE TWO MOTORS
+
+            frontLeft.setPower(0.3);
+            frontRight.setPower(0.3);
+            backLeft.setPower(0.3);
+            backRight.setPower(0.3);
+        }
+    
+    }
+
+}
+
+
+
