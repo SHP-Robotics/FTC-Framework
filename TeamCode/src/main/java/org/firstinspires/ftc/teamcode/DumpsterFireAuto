@@ -12,7 +12,7 @@ package org.firstinspires.ftc.teamcode;
 // FIX THESE!!!
 
 @Autonomous
-Public class MyAuto extends LinearOpMode {
+Public class DumpsterFireAuto extends LinearOpMode {
 
     private DcMotor frontLeft;
     private DcMotor frontRight;
@@ -27,6 +27,7 @@ Public class MyAuto extends LinearOpMode {
     public double getX;
     public double getY;
 
+    @Override
     private void threewheelOdometryTracker() {
     }
 
