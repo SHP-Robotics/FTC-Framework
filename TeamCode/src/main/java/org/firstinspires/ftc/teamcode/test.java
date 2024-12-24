@@ -113,10 +113,10 @@ public class test extends LinearOpMode {
                 strongArmMotor.setPower(0.0);
             }
 
-            if (gamepad1.right_stick_y > 0.2) {
-                strongArm2Motor.setPower(gamepad2.right_stick_y);
-            } else if (gamepad2.right_stick_y < 0.2) {
-                strongArm2Motor.setPower(gamepad2.right_stick_y);
+            if (gamepad2.left_stick_y > 0.2) {
+                strongArm2Motor.setPower(gamepad2.left_stick_y);
+            } else if (gamepad2.left_stick_y < 0.2) {
+                strongArm2Motor.setPower(gamepad2.left_stick_y);
             } else {
                 strongArm2Motor.setPower(0.0);
             }
