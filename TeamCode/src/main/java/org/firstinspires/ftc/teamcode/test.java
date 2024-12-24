@@ -101,6 +101,14 @@ public class test extends LinearOpMode {
                 strongArmMotor.setPower(0.0);
             }
 
+            if (gamepad1.right_stick_y > 0.2) {
+                strongArm2Motor.setPower(gamepad2.right_stick_y);
+            } else if (gamepad2.right_stick_y < 0.2) {
+                strongArm2Motor.setPower(gamepad2.right_stick_y);
+            } else {
+                strongArm2Motor.setPower(0.0);
+            }
+
             if (gamepad1.right_stick_y > 0.2 && !(viperslide.getCurrentPosition() < -1500 && wormGearMotor.getCurrentPosition() > 15000)) {
                 viperslide.setPower(gamepad1.right_stick_y);
             } else if (gamepad1.right_stick_y < 0.2) {
@@ -203,6 +211,7 @@ public class test extends LinearOpMode {
     }
 
     DcMotor threewheelOdometryTracker = null;
+    
     public void updateTelemetry(Telemetry telemetry) {
         telemetry.addData("X Coordinate", getX);
         telemetry.addData("Y Coordinate", getY);
