@@ -22,6 +22,8 @@ public class test extends LinearOpMode {
 
     private DcMotor wormGearMotor;
     private DcMotor strongArmMotor;
+
+    private DcMotor strongArm2Motor;
     private DcMotor viperslide;
     private Servo claw;
 
@@ -29,6 +31,10 @@ public class test extends LinearOpMode {
 
     public double getX;
     public double getY;
+
+    public test(DcMotor strongArm2Motor) {
+        this.strongArm2Motor = strongArm2Motor;
+    }
 
     private void threewheelOdometryTracker() {
     }
@@ -49,6 +55,12 @@ public class test extends LinearOpMode {
         strongArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         strongArmMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        strongArm2Motor = hardwareMap.get(DcMotor.class, "strongArm2");
+        strongArm2Motor.setDirection(DcMotorSimple.Direction.REVERSE);
+        strongArm2Motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        strongArm2Motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
         viperslide = hardwareMap.get(DcMotor.class, "arm");
         viperslide.setDirection(DcMotorSimple.Direction.FORWARD);
         viperslide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -57,7 +69,7 @@ public class test extends LinearOpMode {
         claw = hardwareMap.get(Servo.class, "Claw");
         claw.setDirection(Servo.Direction.FORWARD);
 
-        ColorSensor rgbIndicator = hardwareMap.get(ColorSensor.class, "LED Indicator");
+        hardwareMap.get(ColorSensor.class, "LED Indicator");
         distanceSensor = hardwareMap.get(DistanceSensor.class, "Distance Sensor");
 
         waitForStart();
@@ -169,7 +181,7 @@ public class test extends LinearOpMode {
     private DistanceSensor distanceSensor;
 
     public void init (HardwareMap hardwareMap) {
-        rgbIndicator = hardwareMap.get(ColorSensor.class, "rgbIndicator");
+        rgbIndicator = hardwareMap.get(ColorSensor.class, "LED Indicator");
         distanceSensor = hardwareMap.get(DistanceSensor.class, "distanceSensor");
     }
 
