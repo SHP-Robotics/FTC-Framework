@@ -2,20 +2,14 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.shprobotics.pestocore.drivebases.MecanumController;
 import com.shprobotics.pestocore.drivebases.TeleOpController;
 import com.shprobotics.pestocore.drivebases.ThreeWheelOdometryTracker;
 import com.shprobotics.pestocore.geometries.Pose2D;
 import com.shprobotics.pestocore.geometries.Vector2D;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
 
 @TeleOp
 public class test extends LinearOpMode {
@@ -27,14 +21,7 @@ public class test extends LinearOpMode {
     private DcMotor viperslide;
     private Servo claw;
 
-    private DistanceSensor distanceSensor;
-
-    public double getX;
-    public double getY;
-
-    public test(DcMotor strongArm2Motor) {
-        this.strongArm2Motor = strongArm2Motor;
-    }
+//    private DistanceSensor distanceSensor;
 
     private void threewheelOdometryTracker() {
     }
@@ -60,7 +47,6 @@ public class test extends LinearOpMode {
         strongArm2Motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         strongArm2Motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-
         viperslide = hardwareMap.get(DcMotor.class, "arm");
         viperslide.setDirection(DcMotorSimple.Direction.FORWARD);
         viperslide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -69,8 +55,8 @@ public class test extends LinearOpMode {
         claw = hardwareMap.get(Servo.class, "Claw");
         claw.setDirection(Servo.Direction.FORWARD);
 
-        hardwareMap.get(ColorSensor.class, "LED Indicator");
-        distanceSensor = hardwareMap.get(DistanceSensor.class, "Distance Sensor");
+//        hardwareMap.get(ColorSensor.class, "LED Indicator");
+//        distanceSensor = hardwareMap.get(DistanceSensor.class, "Distance Sensor");
 
         waitForStart();
 
@@ -80,6 +66,7 @@ public class test extends LinearOpMode {
             Vector2D currentPosition = threeWheelOdometryTracker.getCurrentPosition().asVector();
             Pose2D heading = threeWheelOdometryTracker.getCurrentPosition();
 
+            updateTelemetry(telemetry);
             teleOpController.updateSpeed(gamepad1);
             teleOpController.updateSpeed(gamepad2);
 
@@ -103,7 +90,6 @@ public class test extends LinearOpMode {
 //                }
 //                wormGearMotor.setPower(0.0);
 //                wormGearMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
 
             if (gamepad2.right_stick_y > 0.2) {
                 strongArmMotor.setPower(gamepad2.right_stick_y);
@@ -155,85 +141,91 @@ public class test extends LinearOpMode {
 
             if (gamepad2.x) {
                 strongArmMotor.setTargetPosition(-1104);
+//                strongArm2Motor.setTargetPosition(INSERT HERE...);
                 wormGearMotor.setTargetPosition(908);
                 claw.setPosition(1.0);
             }
 
-            updateLEDColor();
-            updateTelemetry(telemetry);
-
             if (gamepad1.b) {
                 threeWheelOdometryTracker.reset();
                 teleOpController.resetIMU();
-                teleOpController.updateSpeed(gamepad1);
-                teleOpController.updateSpeed(gamepad2);
                 telemetry.update();
             }
+
+
+
+//    private void updateLEDColor() {
         }
-    }
-
-    private void updateLEDColor() {
-    }
 
 
-    public static class MyRobot {
-    private ColorSensor rgbIndicator;
-    private DistanceSensor distanceSensor;
+//    public static class test {
+//    private ColorSensor rgbIndicator;
+//    private DistanceSensor distanceSensor;
 
-    public void init (HardwareMap hardwareMap) {
-        rgbIndicator = hardwareMap.get(ColorSensor.class, "LED Indicator");
-        distanceSensor = hardwareMap.get(DistanceSensor.class, "distanceSensor");
-    }
+//    public void init (HardwareMap hardwareMap) {
+//        rgbIndicator = hardwareMap.get(ColorSensor.class, "LED Indicator");
+//        distanceSensor = hardwareMap.get(DistanceSensor.class, "distanceSensor");
+//    }
 
-    public void updateLEDColor() {
-        double distanceInches = distanceSensor.getDistance(DistanceUnit.INCH);
+//    public void updateLEDColor() {
+//        double distanceInches = distanceSensor.getDistance(DistanceUnit.INCH);
 
-        if (distanceInches == 5.0) {
-            setRGBColor(0.0, 1.0, 0.0);
-        } else {
-            setRGBColor(1.0, 0.0, 0.0);
+//        if (distanceInches == 5.0) {
+//            setRGBColor(0.0, 1.0, 0.0);
+//        } else {
+//            setRGBColor(1.0, 0.0, 0.0);
+//        }
+//    }
+//
+//    public void setRGBColor(double red, double green, double blue) {
+//        if (red >= 0.0 && red <= 1.0 && green >= 0.0 && green <= 1.0 && blue >= 0.0 && blue <= 1.0) {
+//            //if red, green, and blue are all between 0 and 1, then set the colors accordingly
+//            rgbIndicator.argb();
+//            rgbIndicator.argb();
+//            rgbIndicator.argb();
+//        } else {
+//            throw new IllegalArgumentException("Color values must be between 0.0 and 1.0");
+//        }
+//    }
+//
+//    public void updateTelemetry(Telemetry telemetry) {
+//        double distanceInches = distanceSensor.getDistance(DistanceUnit.INCH);
+//        telemetry.addData("Distance (inches)", distanceInches);
+//        telemetry.update();
+//    }
+//
+//    public void loop (Telemetry telemetry) {
+//        updateLEDColor();
+//        updateTelemetry(telemetry);
+//    }
+//}
+//
+//    double distanceInches; {
+//        distanceInches = distanceSensor.getDistance(DistanceUnit.INCH);
+//    }
+
+//    DcMotor threewheelOdometryTracker = null;
+
+//    public void updateTelemetry(Telemetry telemetry) {
+
+
+        // Assuming getX() and getY() are methods that return the respective coordinates
+            telemetry.addData("X", getX());
+            telemetry.addData("Y", getY());
+            telemetry.addData("Heading/Rotation", threeWheelOdometryTracker.getCentripetalRadius());
+            telemetry.addData("WormGear", wormGearMotor.getCurrentPosition());
+            telemetry.addData("StrongArm", strongArmMotor.getCurrentPosition());
+            telemetry.addData("ViperSlide", viperslide.getCurrentPosition());
+            telemetry.addData("Claw", claw.getPosition());
+            telemetry.addData("Odometry", threeWheelOdometryTracker.getCurrentPosition());
+//        telemetry.addData("Distance", distanceInches);
+//        telemetry.addData("LED Color", hardwareMap.colorSensor);
+            telemetry.update();
         }
+    private String getY() {
+        return null;
     }
-
-    public void setRGBColor(double red, double green, double blue) {
-        if (red >= 0.0 && red <= 1.0 && green >= 0.0 && green <= 1.0 && blue >= 0.0 && blue <= 1.0) {
-            //if red, green, and blue are all between 0 and 1, then set the colors accordingly
-            rgbIndicator.argb();
-            rgbIndicator.argb();
-            rgbIndicator.argb();
-        } else {
-            throw new IllegalArgumentException("Color values must be between 0.0 and 1.0");
-        }
-    }
-
-    public void updateTelemetry(Telemetry telemetry) {
-        double distanceInches = distanceSensor.getDistance(DistanceUnit.INCH);
-        telemetry.addData("Distance (inches)", distanceInches);
-        telemetry.update();
-    }
-
-    public void loop (Telemetry telemetry) {
-        updateLEDColor();
-        updateTelemetry(telemetry);
-    }
-}
-
-    double distanceInches; {
-        distanceInches = distanceSensor.getDistance(DistanceUnit.INCH);
-    }
-
-    DcMotor threewheelOdometryTracker = null;
-    
-    public void updateTelemetry(Telemetry telemetry) {
-        telemetry.addData("X Coordinate", getX);
-        telemetry.addData("Y Coordinate", getY);
-        telemetry.addData("Heading/Rotation", "");
-        telemetry.addData("WormGear", wormGearMotor.getCurrentPosition());
-        telemetry.addData("StrongArm", strongArmMotor.getCurrentPosition());
-        telemetry.addData("ViperSlide", viperslide.getCurrentPosition());
-        telemetry.addData("Claw", claw.getPosition());
-        telemetry.addData("Odometry", threewheelOdometryTracker.getCurrentPosition());
-        telemetry.addData("Distance", distanceInches);
-        telemetry.update();
+    private String getX() {
+        return null;
     }
 }
