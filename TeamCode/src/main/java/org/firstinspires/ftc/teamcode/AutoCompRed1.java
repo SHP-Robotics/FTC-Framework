@@ -73,7 +73,7 @@ public class AutoCompRed1 extends LinearOpMode {
             backRight.setDirection(DcMotorSimple.Direction.REVERSE);
             //Turn Right (Technically)
 
-            frontLeft.setZeroPowerBehavior();
+//            frontLeft.setZeroPowerBehavior();
 
         }
     }
