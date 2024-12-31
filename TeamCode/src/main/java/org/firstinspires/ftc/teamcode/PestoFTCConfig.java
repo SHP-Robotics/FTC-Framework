@@ -8,6 +8,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.shprobotics.pestocore.drivebases.DeterministicTracker;
 import com.shprobotics.pestocore.drivebases.MecanumController;
 import com.shprobotics.pestocore.drivebases.TeleOpController;
 import com.shprobotics.pestocore.drivebases.ThreeWheelOdometryTracker;
@@ -25,8 +26,8 @@ public class PestoFTCConfig {
     public static final DcMotorSimple.Direction centerEncoderDirection = FORWARD;
     public static final DcMotorSimple.Direction rightEncoderDirection = FORWARD;
 
-    public static String leftName = "rightFront";
-    public static String centerName = "leftRear";
+    public static String leftName = "leftFront";
+    public static String centerName = "rightFront";
     public static String rightName = "rightRear";
 
     public static MecanumController getMecanumController(HardwareMap hardwareMap) {
@@ -61,8 +62,8 @@ public class PestoFTCConfig {
         TeleOpController teleOpController = new TeleOpController(mecanumController, hardwareMap);
 
         teleOpController.configureIMU(
-                RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
+                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
+                RevHubOrientationOnRobot.UsbFacingDirection.UP
         );
 
         teleOpController.setSpeedController((gamepad) -> {
@@ -77,7 +78,7 @@ public class PestoFTCConfig {
         return teleOpController;
     }
 
-    public static Tracker getTracker(HardwareMap hardwareMap) {
+    public static DeterministicTracker getTracker(HardwareMap hardwareMap) {
         return new ThreeWheelOdometryTracker.TrackerBuilder(
                 hardwareMap,
                 ODOMETRY_TICKS_PER_INCH,

@@ -16,11 +16,17 @@ public class PivotSubsystem extends Subsystem {
     private final Servo rElbow;
 
     public enum State {
-        TRANSITION(0.5,0.3), //Rename to some TRANSITION STATE
-        DRIVING(0.2, 0.8), //0 is down
-        PREPAREINTAKE(0.6, 0.135),
-        INTAKING(0.7,0.125), //  0.85 wrist is level with floor
-        OUTTAKING(0.05,0.95),
+//        TRANSITION(0.6,0.3), //Rename to some TRANSITION STATE
+        DRIVING(0.6, 0.2), //0 is down
+        PREPAREDRIVING(0.2, 0.2), //0 is down
+
+        PREPAREINTAKE(0.6, 0.06),
+        INTAKE(0.63,0), //  0.63 wrist is level with floor
+        PICKUP(0.925,0.2),
+        PICKUP2(0.925,0.4),
+        PICKUP3(0.6,0.3),
+
+        OUTTAKE(0.05,0.6),
         MANUAL(0,0);
 
         final double wristPos;
@@ -53,28 +59,13 @@ public class PivotSubsystem extends Subsystem {
     public State getState() {
         return state;
     }
-    public void incrementState(){
-        if(state == State.INTAKING)
-            state = State.DRIVING;
-        else
-            state = State.OUTTAKING;
-    }
-    public void decrementState(){
-        if(state == State.OUTTAKING)
-            state = State.DRIVING;
-        else
-            state = State.INTAKING;
-    }
+
     public void setWristPos(double pos){
         wrist.setPosition(pos);
     }
     public void setElbowPos(double pos){
         lElbow.setPosition(pos);
-        rElbow.setPosition(1.0 - pos);
-    }
-
-    public Servo getWrist(){
-        return wrist;
+        rElbow.setPosition(pos);
     }
     public void incrementElbowUp(){
         if(lElbow.getPosition() < 0.83) {
@@ -103,17 +94,11 @@ public class PivotSubsystem extends Subsystem {
     }
 
     private void processState(State state) {
-        if (this.state == State.DRIVING
-                || this.state == State.INTAKING
-                || this.state == State.OUTTAKING
-                || this.state == State.TRANSITION) {
+        if (this.state != State.MANUAL) {
             setElbowPos(this.state.elbowPos);
             setWristPos(this.state.wristPos);
-            manualElbowPos = this.state.elbowPos;
-            manualWristPos = this.state.wristPos;
-            return;
         }
-        else if(this.state == State.MANUAL){
+        else {
             setElbowPos(manualElbowPos);
             setWristPos(manualWristPos);
         }
@@ -122,7 +107,7 @@ public class PivotSubsystem extends Subsystem {
     public void periodic(Telemetry telemetry) {
         processState(state);
 
-        telemetry.addData("PivotState: ", state);
+        telemetry.addData("Pivot State: ", state);
         telemetry.addData("Left Elbow Position: ", lElbow.getPosition());
         telemetry.addData("Right Elbow Position: ", lElbow.getPosition());
         telemetry.addData("Wrist: ", wrist.getPosition());

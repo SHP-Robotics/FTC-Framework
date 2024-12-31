@@ -3,35 +3,70 @@ package org.firstinspires.ftc.teamcode.subsystems.used;
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Claw.kClawName;
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Claw.kClose;
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Claw.kOpen;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Rotate.kNeutral;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Rotate.kPickup;
+import static org.firstinspires.ftc.teamcode.subsystems.used.ClawSubsystem.State.OPEN;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 
 public class ClawSubsystem extends Subsystem {
     private final Servo claw;
-    private final double open;
-    private final double close;
+
+    public enum State {
+        OPEN,
+        CLOSE,
+        MANUAL;
+    }
+    private State state;
+
     public ClawSubsystem(HardwareMap hardwareMap){
         claw = (Servo) hardwareMap.get(kClawName);
-        open = kOpen;
-        close = kClose;
-        close();
+        setState(State.CLOSE);
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public State getState() {
+        return state;
+    }
+    public void increment(){
+        state = State.MANUAL;
+        claw.setPosition(claw.getPosition() + 0.01);
+    }
+    public void decrement(){
+        state = State.MANUAL;
+        claw.setPosition(claw.getPosition() - 0.01);
+    }
+
+    public void open(){
+        state = State.OPEN;
     }
     public void close(){
-        claw.setPosition(open);
+        state = State.CLOSE;
     }
-    public void open(){
-        claw.setPosition(close);
-    }
-    public void changeClaw(){
-        if(claw.getPosition() == open){
-            open();
+
+
+    private void processState(State state) {
+        if (this.state == State.CLOSE) {
+            claw.setPosition(kClose);
         }
-        else{
-            close();
+        else if (this.state == OPEN){
+            claw.setPosition(kOpen);
         }
     }
+    @Override
+    public void periodic(Telemetry telemetry) {
+        processState(state);
+
+        telemetry.addData("Claw State: ", state);
+        telemetry.addData("Claw Position: ", claw.getPosition());
+    }
+
 
 }

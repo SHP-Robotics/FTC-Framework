@@ -2,13 +2,10 @@ package org.firstinspires.ftc.teamcode.teleops;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.commands.used.HorizontalDownOutCommand;
-import org.firstinspires.ftc.teamcode.commands.used.HorizontalUpInCommand;
 import org.firstinspires.ftc.teamcode.shplib.BaseRobot;
 import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.Trigger;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
-import org.firstinspires.ftc.teamcode.subsystems.used.PivotSubsystem;
 
 @TeleOp
 public class TestTeleop extends BaseRobot {
@@ -34,37 +31,37 @@ public class TestTeleop extends BaseRobot {
         super.loop();
 
         //Vertical Slides
-        new Trigger(gamepad2.right_bumper, new RunCommand(() -> {
+        new Trigger(gamepad1.touchpad_finger_1, new RunCommand(() -> {
             vertical.incrementSlide();
 
         }));
-        new Trigger(gamepad2.left_bumper, new RunCommand(() -> {
+        new Trigger(gamepad1.left_bumper, new RunCommand(() -> {
             vertical.decrementSlide();
         }));
 
         //Spinning Intake
         new Trigger(gamepad1.right_trigger>0.1, new RunCommand(() -> {
-            intake.setPower(-gamepad1.right_trigger);
+//            intake.setPower(-gamepad1.right_trigger);
         }));
         new Trigger(gamepad1.left_trigger>0.1, new RunCommand(() -> {
-            intake.setPower(gamepad1.left_trigger);
+//            intake.setPower(gamepad1.left_trigger);
         }));
 
         //Horizontal + Pivot
 
-        new Trigger(gamepad1.right_bumper, new HorizontalDownOutCommand(horizontal, pivot));
-        new Trigger(gamepad1.left_bumper, new HorizontalUpInCommand(horizontal, pivot));
+//        new Trigger(gamepad1.right_bumper, new HorizontalDownOutCommand(horizontal, pivot));
+//        new Trigger(gamepad1.left_bumper, new HorizontalUpInCommand(horizontal, pivot));
 
 
         //Claw
         new Trigger(gamepad2.triangle, new RunCommand(() -> {
 //            if(debounce > 0.5) {
 //                debounce = Clock.now();
-                claw.close();
+//                claw.close();
 //            }
         }));
         new Trigger(gamepad2.cross, new RunCommand(()->{
-            claw.open();
+//            claw.open();
         }));
 
         //reset Slide Zero Pos
@@ -77,19 +74,6 @@ public class TestTeleop extends BaseRobot {
             drive.resetIMUAngle();
         }));
 
-        //Driver 2 Manual control
-//        new Trigger(gamepad2.dpad_right, new RunCommand(() ->{
-//            if(pivot.getState()!= PivotSubsystem.State.MANUAL){
-//                pivot.prevState = pivot.getState();
-//            }
-//            pivot.incrementWristUp();
-//        }));
-//        new Trigger(gamepad2.dpad_left, new RunCommand(() ->{
-//            if(pivot.getState()!= PivotSubsystem.State.MANUAL){
-//                pivot.prevState = pivot.getState();
-//            }
-//            pivot.decrementWristDown();
-//        }));
     }
 
 

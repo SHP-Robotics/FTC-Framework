@@ -25,7 +25,7 @@ import org.firstinspires.ftc.teamcode.shplib.hardware.units.MotorUnit;
 public class DriveSubsystem extends Subsystem {
     private final SHPMecanumDrive drive;
     public final IMU imu;
-    public final Encoder parallelEncoder, perpendicularEncoder;
+    public final Encoder leftEncoder, rightEncoder, perpendicularEncoder;
 
     private double bias = kMaximumBias; // will always be between kMinimumBias and 1.0
 //    final SHPMotor[] motors;
@@ -46,11 +46,12 @@ public class DriveSubsystem extends Subsystem {
         // Reference pictures: https://ftc-docs.firstinspires.org/programming_resources/imu/imu.html#orthogonal-mounting
         imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
+                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
+                RevHubOrientationOnRobot.UsbFacingDirection.UP));
         imu.initialize(parameters);
-        parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rightRear"));
-        perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "leftRear"));
+        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "leftFront"));
+        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rightRear"));
+        perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rightFront"));
 
 
         motor0 = (DcMotorEx) hardwareMap.get(motorNames[0]);

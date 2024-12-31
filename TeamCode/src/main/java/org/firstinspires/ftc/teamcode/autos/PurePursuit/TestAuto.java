@@ -1,155 +1,189 @@
 package org.firstinspires.ftc.teamcode.autos.PurePursuit;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.shprobotics.pestocore.algorithms.PID;
+import com.shprobotics.pestocore.drivebases.DeterministicTracker;
 import com.shprobotics.pestocore.drivebases.MecanumController;
-import com.shprobotics.pestocore.drivebases.ThreeWheelOdometryTracker;
-import com.shprobotics.pestocore.drivebases.Tracker;
 import com.shprobotics.pestocore.geometries.BezierCurve;
 import com.shprobotics.pestocore.geometries.ParametricHeading;
 import com.shprobotics.pestocore.geometries.PathContainer;
 import com.shprobotics.pestocore.geometries.PathFollower;
-import com.shprobotics.pestocore.geometries.Pose2D;
 import com.shprobotics.pestocore.geometries.Vector2D;
 
 import org.firstinspires.ftc.teamcode.PestoFTCConfig;
 
-//import org.firstinspires.ftc.teamcode.PestoFTCConfig.MecanumController;
-//import org.firstinspires.ftc.teamcode.debug.PurePursuit.Geometry.Position2D;
-//import org.firstinspires.ftc.teamcode.debug.PurePursuit.PurePursuitFollower;
-//import org.firstinspires.ftc.teamcode.debug.PurePursuit.PurePursuitPath;
-//import org.firstinspires.ftc.teamcode.debug.config.Constants;
+@Autonomous(name = "Red Auto")
+public class TestAuto extends LinearOpMode {
+    private MecanumController mecanumController;
+    private DeterministicTracker tracker;
+    PathContainer startToSub;
+    PathContainer subToSample;
+    PathContainer subToSample2;
+    PathContainer sampleToSub;
 
-@Config
-@Autonomous
-public class TestAuto extends BaseAuto {
-    public static double speed = 0.5;
-
-    PathContainer path1, path2, path3;
     PathFollower pathFollower;
-    MecanumController mecanumController;
-    Tracker tracker;
+
+    private ElapsedTime elapsedTime;
+
+    public PathFollower generatePathFollower(PathContainer pathContainer, Runnable finalAction, double deceleration, double speed) {
+        return new PathFollower.PathFollowerBuilder(mecanumController, tracker, pathContainer)
+                .setEndpointPID(new PID(0.002,0, 0))
+                .setHeadingPID(new PID(1.0, 0, 0))
+                .setDeceleration(PestoFTCConfig.DECELERATION)
+                .setSpeed(speed)
+
+                .setEndTolerance(0.4, Math.toRadians(2))
+                .setEndVelocityTolerance(4)
+                .setTimeAfterDeceleration(deceleration)
+                .addFinalAction(finalAction)
+                .build();
+    }
 
     @Override
-    public void init() {
+    public void runOpMode() {
         mecanumController = PestoFTCConfig.getMecanumController(hardwareMap);
         tracker = PestoFTCConfig.getTracker(hardwareMap);
 
-        path1 = new PathContainer.PathContainerBuilder(
-                new Pose2D(0, 0, Math.toRadians(180))
-        )
-                .addCurve(
-                        new BezierCurve(
-                                new Vector2D[]{
-                                        new Vector2D(0, 0),
-                                        new Vector2D(0, -30),
-                                }
-                        ),
-                        new ParametricHeading(Math.toRadians(180), Math.toRadians(180)),
-                        () -> vertical.setPosition(100)
-
-                )
-//                .addCurve(
-//                        new BezierCurve(
-//                                new Vector2D[]{
-//                                        new Vector2D(0,30),
-//                                        new Vector2D(0, 32),
-//                                }
-//                        ),
-//                        () -> {
-//                            vertical.setPosition(50);
-//                            claw.close();
-//                        }
-//
-//                )
-//                .addCurve(
-//                        new BezierCurve(
-//                                new Vector2D[]{
-//                                        new Vector2D(0,32),
-//                                        new Vector2D(0, 30),
-//                                }
-//                        ),
-//                        () -> vertical.setPosition(0)
-//                )
-                .setIncrement(0.01)
-                .build();
-//        path2 = new PathContainer.PathContainerBuilder(
-//                new Pose2D(5, 5, 0)
-//        )
-//                .addCurve(
-//                        new BezierCurve(
-//                                new Vector2D[]{
-//                                        new Vector2D(5,5),
-//                                        new Vector2D(5, 20),
-//                                        new Vector2D(10, 20),
-//                                        new Vector2D(10, 5),
-//                                }
-//                        ),
-//                        new ParametricHeading(Math.toRadians(0), Math.toRadians(0))
-//                )
-//
-//                .build();
-//        path3 = new PathContainer.PathContainerBuilder(
-//                new Pose2D(10, 5, 0)
-//        )
-//                .addCurve(
-//                        new BezierCurve(
-//                                new Vector2D[]{
-//                                        new Vector2D(10,5),
-//                                        new Vector2D(10, 20),
-//                                        new Vector2D(10, 5),
-//                                }
-//                        ),
-//                        new ParametricHeading(Math.toRadians(0), Math.toRadians(0))
-//                )
-//
-//                .build();
-
-        pathFollower = new PathFollower.PathFollowerBuilder(
-                mecanumController,
-                (ThreeWheelOdometryTracker) tracker,
-                path1
-        )
-                .setDeceleration(PestoFTCConfig.DECELERATION)
-                .setEndpointPID(new PID(1, 0, 0))
-                .setHeadingPID(new PID(1, 0, 0))
-                .setSpeed(speed)
+        startToSub = new PathContainer.PathContainerBuilder()
+                .setIncrement(0.1)
+                .addCurve(new BezierCurve(
+                        new Vector2D[]{
+                                new Vector2D(0, 0),
+                                new Vector2D(0, 32)
+                        }
+                ))
                 .build();
 
-        super.init();
+        pathFollower = generatePathFollower(startToSub, () -> {
+            elapsedTime.reset();
+            while (opModeIsActive() && elapsedTime.seconds() < 0.5) {
+//                slideSubsystem.update();
+                tracker.update();
+            }
+            elapsedTime.reset();
+            while (opModeIsActive() && elapsedTime.seconds() < 1.0) {
+                tracker.update();
+            }
+            elapsedTime.reset();
+            while (opModeIsActive() && elapsedTime.seconds() < 0.5) {
+                tracker.update();
+            }
+
+        }, 0.25, 1.0);
+
+        elapsedTime = new ElapsedTime();
+
+        waitForStart();
+
+        elapsedTime.reset();
+
+        while (opModeIsActive() && !pathFollower.isCompleted()) {
+            loopOpMode();
+        }
+
+//        for (int i = 0; i < 4; i++) {
+//            subToSample = new PathContainer.PathContainerBuilder()
+//                    .setIncrement(0.1)
+//                    .addCurve(new BezierCurve(
+//                                    new Vector2D[]{
+//                                            new Vector2D(0, 32),
+//                                            new Vector2D(49-0.3*i, 20)
+//                                    }
+//                            ),
+//                            new ParametricHeading(0, Math.PI)
+//                    )
+//                    .build();
+//
+//            subToSample2 = new PathContainer.PathContainerBuilder()
+//                    .setIncrement(0.1)
+//                    .addCurve(new BezierCurve(
+//                                    new Vector2D[]{
+//                                            new Vector2D(49-0.3*i, 20),
+//                                            new Vector2D(48.5-0.3*i, -9-0.75*i)
+//                                    }
+//                            ),
+//                            new ParametricHeading(Math.PI, Math.PI)
+//                    )
+//                    .build();
+//
+//            sampleToSub = new PathContainer.PathContainerBuilder()
+//                    .setIncrement(0.1)
+//                    .addCurve(new BezierCurve(
+//                                    new Vector2D[]{
+//                                            new Vector2D(48.5-0.3*i, -9-0.75*i),
+//                                            new Vector2D(0, 32.05)
+//                                    }
+//                            ),
+//                            new ParametricHeading(Math.PI, 0)
+//                    )
+//                    .build();
+//
+//
+//
+//            pathFollower = generatePathFollower(subToSample, () -> {}, 0.75, 1.0);
+//
+//            while (opModeIsActive() && !pathFollower.isCompleted()) {
+//                loopOpMode();
+//            }
+//
+//            pathFollower = generatePathFollower(subToSample2, () -> {
+//
+//                elapsedTime.reset();
+//
+//                while (elapsedTime.seconds() < 0.2) {
+//                    tracker.update();
+//                }
+//
+//
+//                elapsedTime.reset();
+//                while (elapsedTime.seconds() < 0.5) {
+//                    tracker.update();
+//                }
+//            }, 0.75, 0.5);
+//
+//            while (opModeIsActive() && !pathFollower.isCompleted()) {
+//                loopOpMode();
+//            }
+//
+//            pathFollower = generatePathFollower(sampleToSub, () -> {
+//                elapsedTime.reset();
+//                while (opModeIsActive() && elapsedTime.seconds() < 0.5) {
+//                    tracker.update();
+//                }
+//                elapsedTime.reset();
+//                while (opModeIsActive() && elapsedTime.seconds() < 1.0) {
+//                    tracker.update();
+//                }
+//
+//                elapsedTime.reset();
+//
+//                while (opModeIsActive() && elapsedTime.seconds() < 0.5) {
+//                    tracker.update();
+//                }
+//
+//            }, 0.75, 1.0);
+//
+//            while (opModeIsActive() && !pathFollower.isCompleted()) {
+//                loopOpMode();
+//            }
+//        }
     }
 
-    @Override
-    public void init_loop() {
-        super.init_loop();
-        claw.open();
-    }
-
-    @Override
-    public void start() {
-        super.start();
-    }
-
-    @Override
-    public void loop() {
-        Vector2D position = tracker.getCurrentPosition();
-        double heading = tracker.getCurrentHeading();
-
-        Pose2D velocity = tracker.getRobotVelocity();
-
-        telemetry.addData("x", position.getX());
-        telemetry.addData("y", position.getY());
-        telemetry.addData("r", heading);
-        telemetry.addLine();
-        telemetry.addData("Δx", velocity.getX());
-        telemetry.addData("Δy", velocity.getY());
-        telemetry.addData("Δr", velocity.getHeadingRadians());
-        telemetry.update();
+    public void loopOpMode() {
+        tracker.update();
 
         pathFollower.update();
-        tracker.updateOdometry();
 
-        super.loop();
+
+        telemetry.addData("Loop Times", elapsedTime.milliseconds());
+        telemetry.addData("x", tracker.getCurrentPosition().getX());
+        telemetry.addData("y", tracker.getCurrentPosition().getY());
+        telemetry.addData("r", tracker.getCurrentPosition().getHeadingRadians());
+//        telemetry.addData("ex", subToSample.getEndpoint().getX());
+//        telemetry.addData("ey", subToSample.getEndpoint().getY());
+        elapsedTime.reset();
+        telemetry.update();
     }
 }

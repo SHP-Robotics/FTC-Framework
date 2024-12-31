@@ -4,8 +4,8 @@
 //import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 //import com.qualcomm.robotcore.hardware.DcMotor;
 //
-//import org.firstinspires.ftc.teamcode.debug.MecanumController;
-//import org.firstinspires.ftc.teamcode.debug.PurePursuit.PurePursuitFollower;
+//import com.shprobotics.pestocore.drivebases.MecanumController;
+//import com.shprobotics.pestocore.PurePursuit.PurePursuitFollower;
 //import org.firstinspires.ftc.teamcode.debug.SpeedController;
 //import org.firstinspires.ftc.teamcode.debug.config.Constants;
 //

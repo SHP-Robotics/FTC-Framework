@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems.used;
 
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Drive.kMaximumBias;
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Vertical.kLeftSlideName;
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Vertical.kMaxHeight;
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Vertical.kIncrement;
@@ -22,8 +23,11 @@ public class VerticalSubsystem extends Subsystem {
 
     public enum State {
         BOTTOM(0),
-        MIDDLE(500),
-        HIGH(2100),
+        DEPOSITING(1000),
+        LOWBAR(500), //TODO TUNE
+        HIGHBAR(1000),
+        LOWBUCKET(750),
+        HIGHBUCKET(1500),
         MANUAL(0),
         NOPOWER(0);
 
@@ -34,7 +38,7 @@ public class VerticalSubsystem extends Subsystem {
         }
     }
 
-    private State state;
+    private State state, depositState;
 
     public VerticalSubsystem(HardwareMap hardwareMap) {
         slidePos = 0;
@@ -52,7 +56,8 @@ public class VerticalSubsystem extends Subsystem {
         rightSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
-        setState(State.BOTTOM);
+        setState(State.MANUAL);
+        depositState = State.HIGHBAR;
     }
 
     public void setState(State state) {
@@ -64,30 +69,11 @@ public class VerticalSubsystem extends Subsystem {
     }
 
     public double getDriveBias() {
-        double setpoint = this.state == State.MANUAL ? this.slidePos: this.state.position;
-
-        if (Math.abs(setpoint - this.getSlidePosition()) < kSlideTolerance) {
-            return Constants.Drive.kMinimumBias;
-        }
-
-        return Constants.Drive.kMaximumBias;
+        return kMaximumBias * (1.0 - getSlidePosition()/kMaxHeight);
     }
 
     public double getSlidePosition() {
         return ((float)leftSlide.getCurrentPosition() + (float)rightSlide.getCurrentPosition()) / 2;
-    }
-
-    public void nextState(){
-        if(state == State.BOTTOM)
-            state = State.MIDDLE;
-        else if(state==State.MIDDLE)
-            state = State.HIGH;
-        else if(state == State.HIGH)
-            state = State.BOTTOM;
-    }
-
-    public void setSlidePos(int slidePos) {
-        this.slidePos = slidePos;
     }
 
     public void incrementSlide(){
@@ -108,7 +94,23 @@ public class VerticalSubsystem extends Subsystem {
         rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
-    public void setPosition(double position){
+    public void cycleStates(boolean bar){
+        if(bar) {
+            if (depositState == State.HIGHBAR) {
+                depositState = State.LOWBAR;
+            } else {
+                depositState = State.HIGHBAR;
+            }
+        }
+        else{
+            if (depositState == State.HIGHBUCKET) {
+                depositState = State.LOWBUCKET;
+            } else {
+                depositState = State.HIGHBUCKET;
+            }
+        }
+    }
+    private void setPosition(double position){
         if(leftSlide.getCurrentPosition() < kMaxHeight) {
             rightSlide.setTargetPosition((int) position);
             leftSlide.setTargetPosition((int) position);
@@ -122,45 +124,29 @@ public class VerticalSubsystem extends Subsystem {
                 return;
             }
 
-//        if (this.state == State.BOTTOM) {
-//            if (this.getSlidePosition() < kSlideTolerance) {
-//                rightSlide.setPower(0);
-//                leftSlide.setPower(0);
-//                return;
-//            }
-//        }
-
             rightSlide.setPower(Constants.Vertical.kRunPower);
             leftSlide.setPower(Constants.Vertical.kRunPower);
         }
     }
 
     private void processState() {
-        if (slidePos < 10){
-            this.rightSlide.setPower(0);
-            this.leftSlide.setPower(0);
-            return;
-        }
-
         if (this.state == State.MANUAL) {
             this.setPosition(slidePos);
             return;
         }
-
+        if (this.state == State.DEPOSITING){
+            this.setPosition(this.depositState.position);
+            return;
+        }
         this.setPosition(this.state.position);
     }
 
     @Override
     public void periodic(Telemetry telemetry) {
         processState();
-
-        telemetry.addData("State: ", state);
+        telemetry.addData("DEPOSIT STATE:", depositState);
+        telemetry.addData("Slide State: ", state);
         telemetry.addData("Left Slide Position: ", leftSlide.getCurrentPosition());
         telemetry.addData("Right Slide Position: ", rightSlide.getCurrentPosition());
-//        telemetry.addData("Left current", leftSlide.getCurrent(CurrentUnit.AMPS));
-//        telemetry.addData("Right current", rightSlide.getCurrent(CurrentUnit.AMPS));
-//        telemetry.addData("avg current", (leftSlide.getCurrent(CurrentUnit.AMPS) + rightSlide.getCurrent(CurrentUnit.AMPS)) / 2);
-//        telemetry.addData("Left Slide Velocity: ", leftSlide.getVelocity());
-//        telemetry.addData("Right Slide Velocity: ", rightSlide.getVelocity());
     }
 }
