@@ -5,15 +5,11 @@ package org.firstinspires.ftc.teamcode.subsystems;
 //import static org.firstinspires.ftc.teamcode.shplib.Constants.Intake.kPixelServo;
 
 import com.qualcomm.hardware.rev.RevColorSensorV3;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
-import org.firstinspires.ftc.teamcode.shplib.hardware.SHPMotor;
 
 public class SensorSubsystem extends Subsystem {
     public final RevColorSensorV3 firstCS;

@@ -5,12 +5,12 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
 import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
-import org.firstinspires.ftc.teamcode.subsystems.used.ClawSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.used.DriveSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.used.HorizSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.used.PivotSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.used.RotateSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.used.VerticalSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.ClawSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.HorizSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.PivotSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.RotateSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.VerticalSubsystem;
 
 /**
  * Template created by Ayaan Govil on 8/21/2021.
@@ -43,18 +43,19 @@ public class BaseRobot extends OpMode {
 
         // Initialize your subsystems and devices
         drive = new DriveSubsystem(hardwareMap);
-        horizontal = new HorizSubsystem(hardwareMap);
         vertical = new VerticalSubsystem(hardwareMap);
         rotate = new RotateSubsystem(hardwareMap);
         pivot = new PivotSubsystem(hardwareMap);
-        claw = new ClawSubsystem(hardwareMap);
+        pivot.setState(PivotSubsystem.State.DRIVING);
+        pivot.periodic(telemetry);
 
+        claw = new ClawSubsystem(hardwareMap);
+        horizontal = new HorizSubsystem(hardwareMap);
     }
 
     // Called when you press the start button
     @Override
     public void start() {
-
     }
 
     // Called repeatedly while an OpMode is running

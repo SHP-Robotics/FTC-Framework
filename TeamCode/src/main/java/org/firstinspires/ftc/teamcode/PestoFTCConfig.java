@@ -5,25 +5,23 @@ import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.shprobotics.pestocore.drivebases.DeterministicTracker;
 import com.shprobotics.pestocore.drivebases.MecanumController;
 import com.shprobotics.pestocore.drivebases.TeleOpController;
 import com.shprobotics.pestocore.drivebases.ThreeWheelOdometryTracker;
-import com.shprobotics.pestocore.drivebases.Tracker;
 
 @Config
 public class PestoFTCConfig {
     public static double ODOMETRY_TICKS_PER_INCH = 505.3169;
     public static double FORWARD_OFFSET = 0;
-    public static double ODOMETRY_WIDTH = 14.25;
-    public static double DECELERATION = -5;
-    public static double MAX_VELOCITY = 39;
+    public static double ODOMETRY_WIDTH = 14.35782;
+    public static double DECELERATION = 1.15; //TODO run a few more times... (the correct way)
+    public static double MAX_VELOCITY = 46;
 
     public static final DcMotorSimple.Direction leftEncoderDirection = FORWARD;
-    public static final DcMotorSimple.Direction centerEncoderDirection = FORWARD;
+    public static final DcMotorSimple.Direction centerEncoderDirection = REVERSE;
     public static final DcMotorSimple.Direction rightEncoderDirection = FORWARD;
 
     public static String leftName = "leftFront";
@@ -45,21 +43,22 @@ public class PestoFTCConfig {
                 FORWARD
         });
 
-//        mecanumController.setPowerVectors(new Vector2D[]{
-//                Vector2D.scale(new Vector2D(57, 39), 1/69.0651865993),
-//                Vector2D.scale(new Vector2D(-57, 39), 1/69.0651865993),
-//                Vector2D.scale(new Vector2D(-57, 39), 1/69.0651865993),
-//                Vector2D.scale(new Vector2D(57, 39), 1/69.0651865993)
-//        });
-
-//        mecanumController.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        mecanumController.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//            mecanumController.setPowerVectors(new Vector2D[]{
+//                    Vector2D.scale(new Vector2D(57, 39), 1/69.0651865993),
+//                    Vector2D.scale(new Vector2D(-57, 39), 1/69.0651865993),
+//                    Vector2D.scale(new Vector2D(-57, 39), 1/69.0651865993),
+//                    Vector2D.scale(new Vector2D(57, 39), 1/69.0651865993)
+//            });
+//
+//            mecanumController.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            mecanumController.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         return mecanumController;
     }
 
-    public static TeleOpController getTeleOpController(MecanumController mecanumController, Tracker tracker, HardwareMap hardwareMap) {
+    public static TeleOpController getTeleOpController(MecanumController mecanumController, DeterministicTracker tracker, HardwareMap hardwareMap) {
         TeleOpController teleOpController = new TeleOpController(mecanumController, hardwareMap);
+        teleOpController.useTrackerIMU(tracker);
 
         teleOpController.configureIMU(
                 RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
@@ -67,13 +66,13 @@ public class PestoFTCConfig {
         );
 
         teleOpController.setSpeedController((gamepad) -> {
-            if (gamepad.right_trigger > 0.1) {
-                return 1.0;
+            if (gamepad.right_bumper) {
+                return 0.6;
             }
-            return 0.6;
+            return 1.0;
         });
 
-        teleOpController.counteractCentripetalForce((ThreeWheelOdometryTracker)tracker, MAX_VELOCITY);
+        teleOpController.counteractCentripetalForce(tracker, MAX_VELOCITY); //TODO PUT IN NOTEBOOK
 
         return teleOpController;
     }

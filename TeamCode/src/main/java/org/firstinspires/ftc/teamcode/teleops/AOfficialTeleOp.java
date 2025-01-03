@@ -1,61 +1,66 @@
 package org.firstinspires.ftc.teamcode.teleops;
 
-import static org.firstinspires.ftc.teamcode.shplib.Constants.Drive.kMaximumBias;
-
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.shprobotics.pestocore.devices.GamepadInterface;
+import com.shprobotics.pestocore.devices.GamepadKey;
 
-import org.firstinspires.ftc.teamcode.R;
-import org.firstinspires.ftc.teamcode.commands.used.DrivetoSpecimenCommand;
-import org.firstinspires.ftc.teamcode.commands.used.DrivetoSubCommand;
-import org.firstinspires.ftc.teamcode.commands.used.DrivetoWallCommand;
-import org.firstinspires.ftc.teamcode.commands.used.SpecimentoDriveCommand;
-import org.firstinspires.ftc.teamcode.commands.used.SubtoDriveCommand;
-import org.firstinspires.ftc.teamcode.commands.used.WalltoDriveCommand;
+import org.firstinspires.ftc.teamcode.commands.BuckettoDriveCommand;
+import org.firstinspires.ftc.teamcode.commands.DrivetoBucketCommand;
+import org.firstinspires.ftc.teamcode.commands.DrivetoHumanCommand;
+import org.firstinspires.ftc.teamcode.commands.DrivetoSpecimenCommand;
+import org.firstinspires.ftc.teamcode.commands.DrivetoSubCommand;
+import org.firstinspires.ftc.teamcode.commands.DrivetoWallCommand;
+import org.firstinspires.ftc.teamcode.commands.HumantoDriveCommand;
+import org.firstinspires.ftc.teamcode.commands.SpecimentoDriveCommand;
+import org.firstinspires.ftc.teamcode.commands.SubtoDriveCommand;
+import org.firstinspires.ftc.teamcode.commands.WalltoDriveCommand;
 import org.firstinspires.ftc.teamcode.shplib.BaseRobot;
 import org.firstinspires.ftc.teamcode.shplib.commands.RunCommand;
 import org.firstinspires.ftc.teamcode.shplib.commands.Trigger;
 import org.firstinspires.ftc.teamcode.shplib.commands.WaitCommand;
-import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
-import org.firstinspires.ftc.teamcode.subsystems.used.HorizSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.used.PivotSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.used.RotateSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.used.VerticalSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.HorizSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.PivotSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.RotateSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.VerticalSubsystem;
 
 @TeleOp
 public class AOfficialTeleOp extends BaseRobot {
     private double driveBias;
-    private boolean holdingRightBumper, holdingLeftBumper, holdingLeftTrigger;
+    private boolean holdingRightBumper, LBTrigger, LTTrigger, crossTrigger;
+
+    GamepadInterface gamepadInterface1;
+
     @Override
     public void init(){
         super.init();
         drive.setDefaultCommand(
                 new RunCommand(
-                        () -> drive.newMecanum(driveBias*gamepad1.left_stick_y, driveBias*gamepad1.left_stick_x, driveBias*gamepad1.right_stick_x)
+                        () -> drive.mecanum(-driveBias*gamepad1.left_stick_y, driveBias*gamepad1.left_stick_x, driveBias*gamepad1.right_stick_x)
                 )
         );
         holdingRightBumper = false;
-        holdingLeftBumper = false;
-        holdingLeftTrigger = false;
+        LBTrigger = true;
+        LTTrigger = true;
+        crossTrigger = true;
+
+        gamepadInterface1 = new GamepadInterface(gamepad1);
     }
     @Override
     public void start(){
         super.start();
         driveBias = vertical.getDriveBias();
+
+        //pivot.setState(PivotSubsystem.State.DRIVING);
     }
 
     @Override
     public void loop(){
         super.loop();
         driveBias = vertical.getDriveBias();
-
-        //Vertical Slides
-        new Trigger(gamepad1.dpad_up, new RunCommand(() -> {
-            vertical.incrementSlide();
-
-        }));
-        new Trigger(gamepad1.dpad_down, new RunCommand(() -> {
-            vertical.decrementSlide();
-        }));
+        gamepadInterface1.update();
+        drive.update(gamepad1);
+//        drive.drive.setZeroPowerBehavior(gamepad2.cross ? BRAKE : FLOAT);
+        // use gamepad2.right_bumper as speed boost
 
         //Intake from submersible
         new Trigger(gamepad1.right_bumper,
@@ -64,7 +69,7 @@ public class AOfficialTeleOp extends BaseRobot {
                         holdingRightBumper = true;
                     }))
         );
-        new Trigger(holdingRightBumper && !gamepad1.right_bumper,
+        new Trigger((holdingRightBumper && !gamepad1.right_bumper),
             new SubtoDriveCommand(rotate, claw, pivot, horizontal)
                     .then(new RunCommand(()->{
                         holdingRightBumper = false;
@@ -77,58 +82,83 @@ public class AOfficialTeleOp extends BaseRobot {
                     }))
         );
 
-
         //intake specimen
-        new Trigger(gamepad1.left_bumper,
-            new DrivetoWallCommand(rotate, claw, pivot, horizontal)
-                    .then(new RunCommand(()->{
-                        holdingLeftBumper = true;
-                    }))
+        new Trigger(gamepadInterface1.isKeyDown(GamepadKey.LEFT_BUMPER) && LBTrigger,
+                new DrivetoWallCommand(rotate, claw, pivot, horizontal)
+                        .then(new RunCommand(()->{
+                            LBTrigger = false;
+                        }))
         );
-        new Trigger(holdingLeftBumper && !gamepad1.left_bumper,
-            new WalltoDriveCommand(rotate, claw, pivot, horizontal)
-                    .then(new RunCommand(()->{
-                        holdingLeftBumper = false;
-                    }))
-                    .then(new WaitCommand(0.5))
-                    .then(new RunCommand(()->{
-                        pivot.setState(PivotSubsystem.State.DRIVING);
-                    }))
+
+        new Trigger(gamepadInterface1.isKeyDown(GamepadKey.LEFT_BUMPER) && !LBTrigger,
+                new WalltoDriveCommand(rotate, claw, pivot, horizontal)
+                        .then(new RunCommand(()->{
+                            LBTrigger = true;
+                        }))
+                        .then(new WaitCommand(0.5))
+                        .then(new RunCommand(()->{
+                            pivot.setState(PivotSubsystem.State.DRIVING);
+                        }))
         );
 
         //deposit specimen
-        new Trigger(gamepad1.left_trigger > 0.5,
+        new Trigger(gamepadInterface1.isKeyDown(GamepadKey.LEFT_TRIGGER) && LTTrigger,
                 new DrivetoSpecimenCommand(rotate, claw, pivot, horizontal, vertical)
-                        .then(new RunCommand(()->{
-                            holdingLeftTrigger = true;
-                        }))
+                .then(new RunCommand(()->{
+                    LTTrigger = false;
+                }))
         );
-        new Trigger(holdingLeftTrigger && gamepad1.left_trigger < 0.25,
+        new Trigger(gamepadInterface1.isKeyDown(GamepadKey.LEFT_TRIGGER) && !LTTrigger,
                 new SpecimentoDriveCommand(rotate, claw, pivot, horizontal, vertical)
+                .then(new RunCommand(()->{
+                    LTTrigger = true;
+                }))
+                .then(new WaitCommand(0.5))
+                .then(new RunCommand(()->{
+                    pivot.setState(PivotSubsystem.State.PREPAREDRIVING);
+                    claw.close();
+                }))
+                .then(new WaitCommand(0.5))
+                .then(new RunCommand(()->{
+                    pivot.setState(PivotSubsystem.State.DRIVING);
+                    vertical.setState(VerticalSubsystem.State.BOTTOM);
+                }))
+        );
+
+        //deposit bucket TODO FIX??
+        new Trigger(gamepadInterface1.isKeyDown(GamepadKey.A) && crossTrigger,
+                new DrivetoBucketCommand(rotate, claw, pivot, horizontal, vertical)
+                .then(new RunCommand(()->{
+                    crossTrigger = false;
+                }))
+
+        );
+        new Trigger(gamepadInterface1.isKeyDown(GamepadKey.A) && !crossTrigger,
+                new BuckettoDriveCommand(rotate, claw, pivot, horizontal, vertical)
                         .then(new RunCommand(()->{
-                            holdingLeftTrigger = false;
+                            crossTrigger = true;
                         }))
                         .then(new WaitCommand(0.5))
                         .then(new RunCommand(()->{
                             pivot.setState(PivotSubsystem.State.DRIVING);
                             vertical.setState(VerticalSubsystem.State.BOTTOM);
                         }))
+
         );
 
-        //deposit sample
-//        new Trigger(gamepad1.left_trigger > 0.5, new RunCommand(()->{
-//            //if driving deposit, if deposit, drive
-//        }));
-
-        //Claw
-        new Trigger(gamepad1.left_bumper && gamepad1.right_bumper, new RunCommand(() -> {
-            if(pivot.getState()== PivotSubsystem.State.PREPAREINTAKE)
+        //Claw //TODO FIX
+        new Trigger(gamepadInterface1.isKeyDown(GamepadKey.DPAD_LEFT), new RunCommand(() -> {
                 rotate.rotateCW();
         }));
-        new Trigger(gamepad1.left_trigger>0.25 && gamepad1.right_bumper, new RunCommand(()->{
-            if(pivot.getState()== PivotSubsystem.State.PREPAREINTAKE)
+        new Trigger(gamepadInterface1.isKeyDown(GamepadKey.DPAD_RIGHT), new RunCommand(()->{
                 rotate.rotateCCW();
         }));
+
+        //give sample to human player
+        new Trigger(gamepad1.square, new DrivetoHumanCommand(rotate, claw, pivot, horizontal)
+                .then(new WaitCommand(0.75))
+                .then(new HumantoDriveCommand(rotate, claw, pivot, horizontal)));
+
 
         //resetIMU
         new Trigger(gamepad1.triangle, new RunCommand(()->{
@@ -141,6 +171,15 @@ public class AOfficialTeleOp extends BaseRobot {
             vertical.resetZeroPosition();
         }));
 
+        //Vertical Slides
+        new Trigger(gamepad2.dpad_up, new RunCommand(() -> {
+            vertical.incrementSlide();
+
+        }));
+        new Trigger(gamepad2.dpad_down, new RunCommand(() -> {
+            vertical.decrementSlide();
+        }));
+
         //toggle high or low bars
         new Trigger(gamepad2.triangle, new RunCommand(()->{
             vertical.cycleStates(true); //FOR BAR
@@ -150,6 +189,4 @@ public class AOfficialTeleOp extends BaseRobot {
         }));
 
     }
-
-
 }

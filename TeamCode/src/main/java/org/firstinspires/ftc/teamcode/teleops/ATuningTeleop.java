@@ -16,7 +16,7 @@ public class ATuningTeleop extends BaseRobot {
         super.init();
         drive.setDefaultCommand(
                 new RunCommand(
-                        () -> drive.mecanum(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x)
+                        () -> drive.mecanum(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x)
                 )
         );
 
