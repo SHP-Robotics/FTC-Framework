@@ -77,7 +77,7 @@ public class test extends LinearOpMode {
         while (opModeIsActive()) {
             threeWheelOdometryTracker.update();
             Vector2D currentPosition = threeWheelOdometryTracker.getCurrentPosition().asVector();
-//            double heading = threeWheelOdometryTracker.getCurrentHeading();
+//            double heading = ThreeWheelOdometryTracker.getCurrentHeading();
 
             teleOpController.updateSpeed(gamepad1);
             teleOpController.updateSpeed(gamepad2);
