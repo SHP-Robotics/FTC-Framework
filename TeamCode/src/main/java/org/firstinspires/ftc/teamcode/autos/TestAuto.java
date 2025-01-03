@@ -7,13 +7,13 @@ import com.shprobotics.pestocore.algorithms.PID;
 import com.shprobotics.pestocore.drivebases.DeterministicTracker;
 import com.shprobotics.pestocore.drivebases.MecanumController;
 import com.shprobotics.pestocore.geometries.BezierCurve;
-import com.shprobotics.pestocore.geometries.ParametricHeading;
 import com.shprobotics.pestocore.geometries.PathContainer;
 import com.shprobotics.pestocore.geometries.PathFollower;
 import com.shprobotics.pestocore.geometries.Vector2D;
 
 import org.firstinspires.ftc.teamcode.PestoFTCConfig;
-import org.firstinspires.ftc.teamcode.commands.DrivetoSpecimenCommand;
+import org.firstinspires.ftc.teamcode.shplib.commands.CommandScheduler;
+import org.firstinspires.ftc.teamcode.shplib.utility.Clock;
 import org.firstinspires.ftc.teamcode.subsystems.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.HorizSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.PivotSubsystem;
@@ -29,10 +29,7 @@ public class TestAuto extends LinearOpMode {
     RotateSubsystem rotate;
     HorizSubsystem horizontal;
     ClawSubsystem claw;
-    PathContainer startToBucket;
-    PathContainer subToSample;
-    PathContainer subToSample2;
-    PathContainer sampleToSub;
+    PathContainer startToSub, depositToSub, subToBlock1, subToBlock2, subToBlock3, subToBlock4;
 
     PathFollower pathFollower;
 
@@ -44,8 +41,8 @@ public class TestAuto extends LinearOpMode {
                 .setHeadingPID(new PID(1.0, 0, 0))
                 .setDeceleration(PestoFTCConfig.DECELERATION)
                 .setSpeed(speed)
-                .setDecelerationFunction(PathFollower.SQUID_DECELERATION)
-                //^^^TODO  combats static friction
+//                .setDecelerationFunction(PathFollower.SQUID_DECELERATION)
+                //^^^ combats static friction
                 // takes the square root of PID. PID controls drive speed
                 // call this "SQUID"
                 //.setCheckFinishedFunction()
@@ -58,6 +55,12 @@ public class TestAuto extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        Clock.start();
+        CommandScheduler.getInstance().setTelemetry(telemetry);
+
+        elapsedTime = new ElapsedTime();
+        elapsedTime.reset();
+
         mecanumController = PestoFTCConfig.getMecanumController(hardwareMap);
         tracker = PestoFTCConfig.getTracker(hardwareMap);
         vertical = new VerticalSubsystem(hardwareMap);
@@ -67,29 +70,150 @@ public class TestAuto extends LinearOpMode {
         claw = new ClawSubsystem(hardwareMap);
 
         claw.close();
-        vertical.setDepositState(VerticalSubsystem.State.HIGHBUCKET);
+        pivot.processState(PivotSubsystem.State.DRIVING);
 
-        startToBucket = new PathContainer.PathContainerBuilder()
+        waitForStart();
+
+        //drop off preload
+        startToSub = new PathContainer.PathContainerBuilder()
                 .setIncrement(0.1)
                 .addCurve(new BezierCurve(
                                 new Vector2D[]{
                                         new Vector2D(0, 0),
-                                        new Vector2D(-4.3, 4.8)
+                                        new Vector2D(4, -29)
                                 }
-                        ),
-                        new ParametricHeading(new double[]{0.0,0.762})
+                        )
                 )
                 .build();
 
-        pathFollower = generatePathFollower(startToBucket, () -> {
-            new DrivetoSpecimenCommand(rotate,claw,pivot,horizontal,vertical);
-        }, 0.25, 1.0);
+        pathFollower = generatePathFollower(startToSub, () -> {
+            tracker.update();
+        }, 1.0, 0.6);
 
-        waitForStart();
+//        waitForStart();
 
         while (opModeIsActive() && !pathFollower.isCompleted()) {
             loopOpMode();
         }
+
+        horizontal.setState(HorizSubsystem.State.DRIVING);
+        pivot.setState(PivotSubsystem.State.OUTTAKE1);
+        vertical.setDepositState(VerticalSubsystem.State.HIGHBAR);
+        vertical.setState(VerticalSubsystem.State.DEPOSITING);
+        updateCommands(0.5);
+        pivot.setState(PivotSubsystem.State.OUTTAKE2);
+        rotate.setState(RotateSubsystem.State.DROPOFF);
+        updateCommands(1);
+
+        depositToSub = new PathContainer.PathContainerBuilder()
+                .setIncrement(0.1)
+                .addCurve(new BezierCurve(
+                                new Vector2D[]{
+                                        new Vector2D(4, -29),
+                                        new Vector2D(4, -32)
+                                }
+                        )
+                )
+                .build();
+
+        pathFollower = generatePathFollower(depositToSub, () -> {
+            tracker.update();
+        }, 1.0, 0.6);
+
+        while (opModeIsActive() && !pathFollower.isCompleted()) {
+            loopOpMode();
+        }
+        pivot.setState(PivotSubsystem.State.OUTTAKE3);
+        vertical.setState(VerticalSubsystem.State.DOWN);
+        updateCommands(0.5);
+        claw.open();
+        updateCommands(0.5);
+        claw.close();
+        vertical.setState(VerticalSubsystem.State.BOTTOM);
+        pivot.setState(PivotSubsystem.State.DRIVING);
+        updateCommands(1); //TODO test to make smaller
+
+        //drive to block
+        subToBlock1 = new PathContainer.PathContainerBuilder()
+                .setIncrement(0.1)
+                .addCurve(new BezierCurve(
+                                new Vector2D[]{
+                                        new Vector2D(4, -30),
+                                        new Vector2D(-37, -15) //-40
+                                }
+                        )
+                )
+                .build();
+
+        pathFollower = generatePathFollower(subToBlock1, () -> {
+            tracker.update();
+        }, 1.0, 0.6);
+
+        while (opModeIsActive() && !pathFollower.isCompleted()) {
+            loopOpMode();
+        }
+
+        subToBlock2 = new PathContainer.PathContainerBuilder()
+                .setIncrement(0.1)
+                .addCurve(new BezierCurve(
+                                new Vector2D[]{
+                                        new Vector2D(-37, -15),
+                                        new Vector2D(-37, -46)
+                                }
+                        )
+                )
+                .build();
+
+        pathFollower = generatePathFollower(subToBlock2, () -> {
+            tracker.update();
+        }, 1.0, 0.6);
+
+        while (opModeIsActive() && !pathFollower.isCompleted()) {
+            loopOpMode();
+        }
+
+        subToBlock3 = new PathContainer.PathContainerBuilder()
+                .setIncrement(0.1)
+                .addCurve(new BezierCurve(
+                                new Vector2D[]{
+                                        new Vector2D(-37, -46),
+                                        new Vector2D(-42, -46)
+                                }
+                        )
+                )
+                .build();
+
+        pathFollower = generatePathFollower(subToBlock3, () -> {
+            tracker.update();
+        }, 1.0, 0.6);
+
+        while (opModeIsActive() && !pathFollower.isCompleted()) {
+            loopOpMode();
+        }
+
+        subToBlock4 = new PathContainer.PathContainerBuilder()
+                .setIncrement(0.1)
+                .addCurve(new BezierCurve(
+                                new Vector2D[]{
+                                        new Vector2D(-42, -46),
+                                        new Vector2D(-42, -5),
+                                        new Vector2D(-42, -5),
+                                        new Vector2D(-42, -5)
+                                }
+                        )
+                )
+                .build();
+
+        pathFollower = generatePathFollower(subToBlock4, () -> {
+            tracker.update();
+        }, 0.2, 0.6);
+
+        while (opModeIsActive() && !pathFollower.isCompleted()) {
+            loopOpMode();
+        }
+
+
+
 
 //        for (int i = 0; i < 4; i++) {
 //            subToSample = new PathContainer.PathContainerBuilder()
@@ -180,18 +304,37 @@ public class TestAuto extends LinearOpMode {
     }
 
     public void loopOpMode() {
+        try {
+            CommandScheduler.getInstance().run();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         tracker.update();
 
         pathFollower.update();
-
 
         telemetry.addData("Loop Times", elapsedTime.milliseconds());
         telemetry.addData("x", tracker.getCurrentPosition().getX());
         telemetry.addData("y", tracker.getCurrentPosition().getY());
         telemetry.addData("r", tracker.getCurrentPosition().getHeadingRadians());
+        telemetry.addData("fini", startToSub.isFinished());
 //        telemetry.addData("ex", subToSample.getEndpoint().getX());
 //        telemetry.addData("ey", subToSample.getEndpoint().getY());
         elapsedTime.reset();
         telemetry.update();
+    }
+
+    public void updateCommands(double seconds){
+        elapsedTime.reset();
+        while (elapsedTime.seconds() < seconds)
+            try {
+                CommandScheduler.getInstance().run();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+    }
+
+    public void update(){
     }
 }

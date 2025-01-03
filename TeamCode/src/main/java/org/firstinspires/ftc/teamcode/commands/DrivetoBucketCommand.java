@@ -14,7 +14,7 @@ public class DrivetoBucketCommand extends Command {
     PivotSubsystem pivot;
     HorizSubsystem horiz;
     VerticalSubsystem vertical;
-    double trigger, startTime, endTime;
+    double startTime, endTime;
 
     public DrivetoBucketCommand(RotateSubsystem rotate, ClawSubsystem claw, PivotSubsystem pivot, HorizSubsystem horiz, VerticalSubsystem vertical) {
         // You MUST call the parent class constructor and pass through any subsystems you use

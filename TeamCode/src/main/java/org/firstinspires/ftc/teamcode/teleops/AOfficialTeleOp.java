@@ -125,7 +125,7 @@ public class AOfficialTeleOp extends BaseRobot {
                 }))
         );
 
-        //deposit bucket TODO FIX??
+        //deposit bucket T
         new Trigger(gamepadInterface1.isKeyDown(GamepadKey.A) && crossTrigger,
                 new DrivetoBucketCommand(rotate, claw, pivot, horizontal, vertical)
                 .then(new RunCommand(()->{

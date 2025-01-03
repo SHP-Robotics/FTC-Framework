@@ -94,7 +94,7 @@ public class PivotSubsystem extends Subsystem {
         }
     }
 
-    private void processState(State state) {
+    public void processState(State state) {
         if (this.state != State.MANUAL) {
             setElbowPos(this.state.elbowPos);
             setWristPos(this.state.wristPos);

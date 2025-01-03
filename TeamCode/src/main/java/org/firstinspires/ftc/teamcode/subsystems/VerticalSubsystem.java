@@ -26,9 +26,9 @@ public class VerticalSubsystem extends Subsystem {
         DEPOSITING(1000),
         DOWN(50),
         LOWBAR(0),
-        HIGHBAR(650),
+        HIGHBAR(800),
         LOWBUCKET(800), //TODO TUNE
-        HIGHBUCKET(3000), //TODO TUNE
+        HIGHBUCKET(3100), //TODO TUNE
         MANUAL(0),
         NOPOWER(0);
 
