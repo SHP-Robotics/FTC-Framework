@@ -13,6 +13,7 @@ import com.shprobotics.pestocore.drivebases.ThreeWheelOdometryTracker;
 
 @Autonomous
 public class AutoCompRed1 extends LinearOpMode {
+
     private DcMotor frontLeft;
     private DcMotor frontRight;
     private DcMotor backLeft;
@@ -34,6 +35,7 @@ public class AutoCompRed1 extends LinearOpMode {
         frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         backRight = hardwareMap.get(DcMotor.class, "backRight");
+        strongArmMotor = hardwareMap.get(DcMotor.class, "strongArm");
 
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -43,37 +45,38 @@ public class AutoCompRed1 extends LinearOpMode {
 
         waitForStart();
 
-        while (opModeIsActive()) loop(); {
+        while (opModeIsActive())  {
 
-            frontLeft.setPower(0.3);
-            frontRight.setPower(0.3);
-            backLeft.setPower(0.3);
-            backRight.setPower(0.3);
+            frontLeft.setPower(0.5);
+            frontRight.setPower(0.5);
+            backLeft.setPower(0.5);
+            backRight.setPower(0.5);
             //Drive Forward
 
-            sleep(1400);
+            sleep(1500);
 
-            frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-            frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-            backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-            backRight.setDirection(DcMotorSimple.Direction.FORWARD);
-            //Turn Left (Technically)
+            frontLeft.setPower(-0.5);
+            frontRight.setPower(0.5);
+            backLeft.setPower(-0.5);
+            backRight.setPower(0.5);
+            //Turn Left
 
-            frontLeft.setPower(0.3);
-            frontRight.setPower(0.3);
-            backLeft.setPower(0.3);
-            backRight.setPower(0.3);
+            frontLeft.setPower(0.5);
+            frontRight.setPower(0.5);
+            backLeft.setPower(0.5);
+            backRight.setPower(0.5);
             //Drive Forward
 
-            sleep(1400);
+            sleep(1500);
 
-            frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-            frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-            backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-            backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+            frontLeft.setPower(0.5);
+            frontRight.setPower(-0.5);
+            backLeft.setPower(0.5);
+            backRight.setPower(-0.5);
             //Turn Right (Technically)
 
-//            frontLeft.setZeroPowerBehavior();
+            strongArmMotor.setTargetPosition(-1104);
+            strongArmMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         }
     }
