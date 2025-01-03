@@ -2,8 +2,10 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.shprobotics.pestocore.drivebases.MecanumController;
 import com.shprobotics.pestocore.drivebases.TeleOpController;
@@ -22,6 +24,8 @@ public class test extends LinearOpMode {
     private DcMotor opodL;
     private DcMotor opodC;
     private DcMotor opodR;
+    private DistanceSensor distanceSensor;
+    private ColorSensor LEDIndicator;
 
 
 
@@ -65,6 +69,8 @@ public class test extends LinearOpMode {
         ThreeWheelOdometryTracker opodC = hardwareMap.get(ThreeWheelOdometryTracker.class, "backCenter");
         ThreeWheelOdometryTracker opodR = hardwareMap.get(ThreeWheelOdometryTracker.class, "frontRight");
 
+        LEDIndicator = hardwareMap.get(ColorSensor.class, "LED Indicator");
+        distanceSensor = hardwareMap.get(DistanceSensor.class, "Distance Sensor");
 
         waitForStart();
 
