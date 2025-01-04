@@ -31,17 +31,35 @@ public class AutoCompRed1 extends LinearOpMode {
         ThreeWheelOdometryTracker threeWheelOdometryTracker = PestoFTCConfig.getTracker(hardwareMap);
 
 
-        frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
-        frontRight = hardwareMap.get(DcMotor.class, "frontRight");
-        backLeft = hardwareMap.get(DcMotor.class, "backLeft");
-        backRight = hardwareMap.get(DcMotor.class, "backRight");
-        strongArmMotor = hardwareMap.get(DcMotor.class, "strongArm");
+//        frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
+//        frontRight = hardwareMap.get(DcMotor.class, "frontRight");
+//        backLeft = hardwareMap.get(DcMotor.class, "backLeft");
+//        backRight = hardwareMap.get(DcMotor.class, "backRight");
+//
+//        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+//        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+//        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+//        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
+        frontLeft = hardwareMap.get(DcMotor.class, "frontLeft");
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        frontRight = hardwareMap.get(DcMotor.class, "frontRight");
         frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        backLeft = hardwareMap.get(DcMotor.class, "backLeft");
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        backRight = hardwareMap.get(DcMotor.class, "backRight");
         backRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        //ALL SPIN FORWARD (Technically)
+        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         waitForStart();
 
@@ -74,10 +92,6 @@ public class AutoCompRed1 extends LinearOpMode {
             backLeft.setPower(0.5);
             backRight.setPower(-0.5);
             //Turn Right (Technically)
-
-            strongArmMotor.setTargetPosition(-1104);
-            strongArmMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-
         }
     }
 }

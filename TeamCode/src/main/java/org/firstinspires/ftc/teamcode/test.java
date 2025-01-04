@@ -2,15 +2,13 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.shprobotics.pestocore.drivebases.MecanumController;
 import com.shprobotics.pestocore.drivebases.TeleOpController;
 import com.shprobotics.pestocore.drivebases.ThreeWheelOdometryTracker;
-import com.shprobotics.pestocore.geometries.Vector2D;
+import com.shprobotics.pestocore.geometries.Pose2D;
 
 @TeleOp
 public class test extends LinearOpMode {
@@ -24,9 +22,8 @@ public class test extends LinearOpMode {
     private DcMotor opodL;
     private DcMotor opodC;
     private DcMotor opodR;
-    private DistanceSensor distanceSensor;
-    private ColorSensor LEDIndicator;
 
+    //ADD DISTANCE SENSOR AND COLOR SENSOR
 
 
     @Override
@@ -35,9 +32,10 @@ public class test extends LinearOpMode {
         ThreeWheelOdometryTracker threeWheelOdometryTracker = PestoFTCConfig.getTracker(hardwareMap);
         TeleOpController teleOpController = PestoFTCConfig.getTeleOpController(mecanumController, threeWheelOdometryTracker, hardwareMap);
         threeWheelOdometryTracker.update();
-//            threewheelOdometryTracker();
-//            Vector2D currentPosition = threeWheelOdometryTracker.getCurrentPosition().asVector();
-//            Pose2D heading = threeWheelOdometryTracker.getCurrentPosition();
+
+        Pose2D currentPosition;
+        threeWheelOdometryTracker.getCurrentPosition().asVector();
+        double heading = threeWheelOdometryTracker.getCurrentPosition().getHeadingRadians();
 
         wormGearMotor = hardwareMap.get(DcMotor.class, "wormGear");
         wormGearMotor.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -65,19 +63,15 @@ public class test extends LinearOpMode {
         spinner = hardwareMap.get(Servo.class, "Spinner");
         spinner.setDirection(Servo.Direction.FORWARD);
 
-        ThreeWheelOdometryTracker opodL = hardwareMap.get(ThreeWheelOdometryTracker.class, "frontLeft");
-        ThreeWheelOdometryTracker opodC = hardwareMap.get(ThreeWheelOdometryTracker.class, "backCenter");
-        ThreeWheelOdometryTracker opodR = hardwareMap.get(ThreeWheelOdometryTracker.class, "frontRight");
-
-        LEDIndicator = hardwareMap.get(ColorSensor.class, "LED Indicator");
-        distanceSensor = hardwareMap.get(DistanceSensor.class, "Distance Sensor");
+        DcMotor opodL = hardwareMap.get(DcMotor.class, "frontLeft");
+        DcMotor opodC = hardwareMap.get(DcMotor.class, "backRight");
+        DcMotor opodR = hardwareMap.get(DcMotor.class, "frontRight");
 
         waitForStart();
 
         while (opModeIsActive()) {
             threeWheelOdometryTracker.update();
-            Vector2D currentPosition = threeWheelOdometryTracker.getCurrentPosition().asVector();
-//            double heading = ThreeWheelOdometryTracker.getCurrentHeading();
+            currentPosition = threeWheelOdometryTracker.getCurrentPosition();
 
             teleOpController.updateSpeed(gamepad1);
             teleOpController.updateSpeed(gamepad2);
@@ -135,7 +129,7 @@ public class test extends LinearOpMode {
 
             telemetry.addData("X", currentPosition.getX());
             telemetry.addData("Y", currentPosition.getY());
-//            telemetry.addData("Rotation", heading);
+            telemetry.addData("Rotation", heading);
             telemetry.addData("IMU", currentPosition);
             telemetry.addData("opodL", opodL.getCurrentPosition());
             telemetry.addData("opodC", opodC.getCurrentPosition());
