@@ -17,7 +17,7 @@ public class PestoFTCConfig {
     public static double ODOMETRY_TICKS_PER_INCH = 505.3169;
     public static double FORWARD_OFFSET = 0;
     public static double ODOMETRY_WIDTH = 14.35782;
-    public static double DECELERATION = 0.455;
+    public static double DECELERATION = 2.0;
     public static double MAX_VELOCITY = 46;
 
     public static final DcMotorSimple.Direction leftEncoderDirection = FORWARD;

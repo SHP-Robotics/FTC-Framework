@@ -21,5 +21,9 @@ public class DecelerationOpMode extends DecelerationTuner {
     @Override
     public void setTeleOpController(MecanumController mecanumController, DeterministicTracker deterministicTracker, HardwareMap hardwareMap) {
         this.teleOpController = PestoFTCConfig.getTeleOpController(mecanumController, deterministicTracker, hardwareMap);
+
+        teleOpController.setSpeedController((gamepad) -> {
+            return 0.6;
+        });
     }
 }

@@ -1,11 +1,9 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+import static org.firstinspires.ftc.teamcode.shplib.Constants.Vertical.kIncrement;
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Vertical.kLeftSlideName;
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Vertical.kMaxHeight;
-import static org.firstinspires.ftc.teamcode.shplib.Constants.Vertical.kIncrement;
 import static org.firstinspires.ftc.teamcode.shplib.Constants.Vertical.kRightSlideName;
-import static org.firstinspires.ftc.teamcode.shplib.Constants.Vertical.kSlideTolerance;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -47,15 +45,12 @@ public class VerticalSubsystem extends Subsystem {
         leftSlide = (DcMotorEx) hardwareMap.get(kLeftSlideName);
         leftSlide.setDirection(DcMotorSimple.Direction.FORWARD);
         leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         rightSlide = (DcMotorEx) hardwareMap.get(kRightSlideName);
         rightSlide.setDirection(DcMotorSimple.Direction.REVERSE);
         rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        resetZeroPosition();
 
         setState(State.MANUAL);
         depositState = State.HIGHBAR;
@@ -90,9 +85,18 @@ public class VerticalSubsystem extends Subsystem {
             slidePos -= kIncrement;
         }
     }
-    public void resetZeroPosition(){ //TODO Switch to William's stalling detection 
+    public void resetZeroPosition() { //TODO Switch to William's stalling detection
         leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        leftSlide.setTargetPosition(0);
+        rightSlide.setTargetPosition(0);
+
+        rightSlide.setPower(Constants.Vertical.kRunPower);
+        leftSlide.setPower(Constants.Vertical.kRunPower);
+
+        rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void setDepositState(State state){
@@ -115,22 +119,8 @@ public class VerticalSubsystem extends Subsystem {
         }
     }
     private void setPosition(double position){
-        if(leftSlide.getCurrentPosition() < kMaxHeight) {
-            rightSlide.setTargetPosition((int) position);
-            leftSlide.setTargetPosition((int) position);
-
-            rightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            leftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            if (Math.abs(this.getSlidePosition() - position) < kSlideTolerance) {
-                rightSlide.setPower(0);
-                leftSlide.setPower(0);
-                return;
-            }
-
-            rightSlide.setPower(Constants.Vertical.kRunPower);
-            leftSlide.setPower(Constants.Vertical.kRunPower);
-        }
+        rightSlide.setTargetPosition((int) position);
+        leftSlide.setTargetPosition((int) position);
     }
 
     private void processState() {
@@ -146,9 +136,6 @@ public class VerticalSubsystem extends Subsystem {
 
     }
 
-    public void update(){
-        periodic(telemetry);
-    }
     @Override
     public void periodic(Telemetry telemetry) {
         processState();

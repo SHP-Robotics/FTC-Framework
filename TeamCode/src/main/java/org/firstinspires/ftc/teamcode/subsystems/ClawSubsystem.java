@@ -44,9 +44,11 @@ public class ClawSubsystem extends Subsystem {
 
     public void open(){
         state = State.OPEN;
+        claw.setPosition(kOpen);
     }
     public void close(){
         state = State.CLOSE;
+        claw.setPosition(kClose);
     }
 
 

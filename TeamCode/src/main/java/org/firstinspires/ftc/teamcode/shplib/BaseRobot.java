@@ -38,6 +38,7 @@ public class BaseRobot extends OpMode {
     // Called when you press the init button
     @Override
     public void init() {
+        CommandScheduler.resetInstance();
         // Configures universal clock and scheduler - DO NOT DELETE!
         configure();
 
@@ -61,6 +62,10 @@ public class BaseRobot extends OpMode {
     // Called repeatedly while an OpMode is running
     @Override
     public void loop() {
+//        for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
+//            module.clearBulkCache();
+//        }
+
         telemetry.addData("Loop Time (ms): ", Clock.elapsed(previousTime) * 1000);
         previousTime = Clock.now();
         // Handles all subsystem and command execution - DO NOT DELETE!
@@ -86,6 +91,7 @@ public class BaseRobot extends OpMode {
         // Turn on bulk reads to help optimize loop times
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+//            module.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         }
     }
 }

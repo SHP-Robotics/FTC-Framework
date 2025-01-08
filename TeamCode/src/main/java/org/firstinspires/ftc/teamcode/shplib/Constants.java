@@ -25,7 +25,7 @@ public class Constants {
         public static final double kMaxHeight = 3200;
         public static final double kSlideTolerance = 5;
         public static final double kIncrement = 25;
-        public static final double kRunPower = 1;
+        public static final double kRunPower = 0.75;
     }
 
     public static final class Horiz {
@@ -42,6 +42,6 @@ public class Constants {
     public static final class Claw{
         public static final String kClawName = "clawServo";
         public static final double kOpen = 0.45;
-        public static final double kClose = 0;
+        public static final double kClose = 0.05;
     }
 }
