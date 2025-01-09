@@ -10,10 +10,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 
+import dev.frozenmilk.dairy.cachinghardware.CachingServo;
+
 public class PivotSubsystem extends Subsystem {
-    private final Servo wrist;
-    private final Servo lElbow;
-    private final Servo rElbow;
+    private final CachingServo wrist;
+    private final CachingServo lElbow;
+    private final CachingServo rElbow;
 
     public enum State {
 //        TRANSITION(0.6,0.3), //Rename to some TRANSITION STATE
@@ -44,10 +46,10 @@ public class PivotSubsystem extends Subsystem {
     private double manualWristPos, manualElbowPos;
 
     public PivotSubsystem(HardwareMap hardwareMap){
-        wrist = (Servo) hardwareMap.get(kWristName);
-        lElbow = (Servo) hardwareMap.get(klElbowName);
+        wrist = new CachingServo((Servo) hardwareMap.get(kWristName));
+        lElbow = new CachingServo((Servo) hardwareMap.get(klElbowName));
         lElbow.setDirection(Servo.Direction.REVERSE);
-        rElbow = (Servo) hardwareMap.get(krElbowName);
+        rElbow = new CachingServo((Servo) hardwareMap.get(krElbowName));
 
         setState(State.DRIVING);
         manualElbowPos = 0.3;

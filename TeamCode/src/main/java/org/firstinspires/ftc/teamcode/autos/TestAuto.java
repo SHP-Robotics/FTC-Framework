@@ -4,10 +4,10 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.shprobotics.pestocore.algorithms.PID;
 import com.shprobotics.pestocore.drivebases.DeterministicTracker;
 import com.shprobotics.pestocore.drivebases.MecanumController;
 import com.shprobotics.pestocore.geometries.BezierCurve;
+import com.shprobotics.pestocore.geometries.ParametricHeading;
 import com.shprobotics.pestocore.geometries.PathContainer;
 import com.shprobotics.pestocore.geometries.PathFollower;
 import com.shprobotics.pestocore.geometries.Vector2D;
@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.subsystems.RotateSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.VerticalSubsystem;
 
 @Config
-@Autonomous(name = "Test Auto")
+@Autonomous(name = "Test Auto - 0+4")
 public class TestAuto extends LinearOpMode {
     private MecanumController mecanumController;
     private DeterministicTracker tracker;
@@ -31,17 +31,16 @@ public class TestAuto extends LinearOpMode {
     RotateSubsystem rotate;
     HorizSubsystem horizontal;
     ClawSubsystem claw;
-    PathContainer startToSub, pushBlock1, pushBlock2, depositBlock1, subToBlock2, depositBlock2;
+    PathContainer depositBlock1, getBlock2, depositBlock2;
 
     PathFollower pathFollower;
 
     private ElapsedTime elapsedTime;
-    public static double kp = 0.0;
 
     public PathFollower generatePathFollower(PathContainer pathContainer, double deceleration, double speed) {
         return new PathFollower.PathFollowerBuilder(mecanumController, tracker, pathContainer)
-                .setEndpointPID(new PID(kp,0, 0)) //make 0.02
-                .setHeadingPID(new PID(0.3, 0, 0))
+                .setEndpointPID(PestoFTCConfig.endpointPID)
+                .setHeadingPID(PestoFTCConfig.headingPID)
                 .setDeceleration(PestoFTCConfig.DECELERATION)
                 .setSpeed(speed)
 //                .setDecelerationFunction(PathFollower.SQUID_DECELERATION)
@@ -58,143 +57,54 @@ public class TestAuto extends LinearOpMode {
     @Override
     public void runOpMode() {
         CommandScheduler.resetInstance();
-
-        startToSub = new PathContainer.PathContainerBuilder()
-                .setIncrement(0.1)
-                .addCurve(new BezierCurve(
-                                new Vector2D[]{
-                                        new Vector2D(0, 0),
-                                        new Vector2D(5, -31)
-                                }
-                        )
-                )
-                .build();
-
-        pushBlock1 = new PathContainer.PathContainerBuilder()
-                .setIncrement(0.03)
-                .addCurve(
-                        new BezierCurve(
-                                new Vector2D[]{
-                                        new Vector2D(5, -31),
-                                        new Vector2D(-34, -25) //-40
-                                }
-                        )
-                )
-                .addCurve(
-                        new BezierCurve(
-                        new Vector2D[]{
-                            new Vector2D(-34, -25),
-                            new Vector2D(-34, -50)
-                        }
-                ))
-                .addCurve(
-                        new BezierCurve(
-                            new Vector2D[]{
-                                    new Vector2D(-34, -50),
-                                    new Vector2D(-37, -50)
-                            }
-                        ),
-                        this::prepIntake
-                )
-                .addCurve(new BezierCurve(
-                                new Vector2D[]{
-                                        new Vector2D(-37, -50),
-                                        new Vector2D(-37, -6) //if 2 blocks (-38, -10)
-                                }
-                        )
-                )
-
-                .build();
-        //PUSH BLOCK 2
-        /*
-//        pushBlock2 = new PathContainer.PathContainerBuilder()
-//                .setIncrement(0.03)
-//                .addCurve(new BezierCurve(
-//                                new Vector2D[]{
-//                                        new Vector2D(-38, -10),
-//                                        new Vector2D(-38, -47) //-40
-//                                }
-//                        )
-//                )
-//                .addCurve(new BezierCurve(
-//                                new Vector2D[]{
-//                                        new Vector2D(-38, -47),
-//                                        new Vector2D(-47, -47)
-//                                }
-//                        )
-//                )
-//                .addCurve(new BezierCurve(
-//                                new Vector2D[]{
-//                                        new Vector2D(-47, -47),
-////                                        new Vector2D(-26, -49),
-//                                        new Vector2D(-47, -10)
-//                                }
-//                        )
-//                )
-//
-//                .build();
-*/
+        PestoFTCConfig.configure();
 
         depositBlock1 = new PathContainer.PathContainerBuilder()
                 .setIncrement(0.03)
                 .addCurve(new BezierCurve(
                                 new Vector2D[]{
-                                        new Vector2D(-37, -6), //with 2 blocks (-47, 10)
-                                        new Vector2D(5, -10)
+                                        new Vector2D(0, 0),
+                                        new Vector2D(-10, -27)
                                 }
-                        )
-                )
-                .addCurve(new BezierCurve(
-                                new Vector2D[]{
-                                        new Vector2D(5, -10), //with 2 blocks (-47, 10)
-                                        new Vector2D(14, -31)
-                                }
-                        )
+                        ),
+                        new ParametricHeading(new double[]{
+                                0, Math.toRadians(45) //90
+                        })
                 )
                 .build();
 
-        subToBlock2 = new PathContainer.PathContainerBuilder()
-                .setIncrement(0.03)
-                .addCurve(new BezierCurve(
+        getBlock2 = new PathContainer.PathContainerBuilder()
+                .setIncrement(0.02)
+                .addCurve(
+                        new BezierCurve(
                                 new Vector2D[]{
-                                        new Vector2D(14, -31), //with 2 blocks (-47, 10)
-                                        new Vector2D(-5, -25)
+                                        new Vector2D(-10, -27),
+                                        new Vector2D(-12, -20)
                                 }
-                        )
+                        ),
+                        new ParametricHeading(new double[]{
+                                Math.toRadians(45), Math.toRadians(150) //150
+                        })
                 )
-                .addCurve(new BezierCurve(
-                                new Vector2D[]{
-                                        new Vector2D(-5, -25),
-                                        new Vector2D(-30, -25)
-                                }
-                        )
-                )
-                .addCurve(new BezierCurve(
-                                new Vector2D[]{
-                                        new Vector2D(-30, -20), //with 2 blocks (-47, 10)
-                                        new Vector2D(-30, -6)
-                                }
-                        )
-                )
+
                 .build();
 
         depositBlock2 = new PathContainer.PathContainerBuilder()
-                .setIncrement(0.03)
-                .addCurve(new BezierCurve(
+                .setIncrement(0.02)
+                .addCurve(
+                        new BezierCurve(
                                 new Vector2D[]{
-                                        new Vector2D(-37, -6), //with 2 blocks (-47, 10)
-                                        new Vector2D(5, -10)
+                                        new Vector2D(-12, -20),
+                                        new Vector2D(-6, -24)
                                 }
-                        )
+                        ),
+                        new ParametricHeading(new double[]{
+                                Math.toRadians(150), Math.toRadians(45)
+                        })
                 )
-                .addCurve(new BezierCurve(
-                                new Vector2D[]{
-                                        new Vector2D(5, -10), //with 2 blocks (-47, 10)
-                                        new Vector2D(10, -31)
-                                }
-                        )
-                )
+
                 .build();
+
 
         Clock.start();
         CommandScheduler.getInstance().setTelemetry(telemetry);
@@ -218,37 +128,26 @@ public class TestAuto extends LinearOpMode {
         waitForStart();
 
         //Prepare to deposit preload
-        prepArm();
         raiseArm();
 
         //drive to sub
-        followPath(startToSub, 1.0, 0.6);
+        followPath(depositBlock1, 2, 0.6);
 
         //Deposit preload
         lowerArm();
+        prepIntake();
 
         //Push Block 1
-        followPath(pushBlock1, 0.6, 0.6);
+        followPath(getBlock2, 2, 0.6);
 
         //Grab Block 1
         finishIntake();
-        prepArm();
         raiseArm();
 
-        //Deposit Block 1
-        followPath(depositBlock1, 0.6, 0.6);
+        followPath(depositBlock2, 2, 0.6);
+
         lowerArm();
 
-        //Grab Block 2
-        prepIntake();
-        followPath(subToBlock2, 0.6, 0.6);
-        finishIntake();
-        prepArm();
-        raiseArm();
-
-        //Deposit block 2
-        followPath(depositBlock2, 0.6, 0.6);
-        lowerArm();
     }
 
     public void loopOpMode() {
@@ -294,54 +193,52 @@ public class TestAuto extends LinearOpMode {
         }
     }
 
-    /** Prepares the intake for wall, opens claw */
+    /** Prepares the intake sample */
     public void prepIntake(){
         //prep intake
-        pivot.setState(PivotSubsystem.State.PICKUP);
-        horizontal.setState(HorizSubsystem.State.AUTOINTAKE);
-        updateCommands();
-        rotate.setState(RotateSubsystem.State.PICKUP);
+        pivot.setState(PivotSubsystem.State.PREPAREINTAKE);
+        rotate.setState(RotateSubsystem.State.INTAKE);
         claw.open();
+        horizontal.setState(HorizSubsystem.State.INTAKINGEXTENDED);
         updateCommands();
     }
-    /** Grabs specimen and returns to driving mode */
+    /** Grabs sample and returns to driving mode */
     public void finishIntake(){
-        updateCommands(1);
+        pivot.setState(PivotSubsystem.State.INTAKE);
+        updateCommands(0.5);
 
         claw.close();
         updateCommands(0.5);
 
-        pivot.setState(PivotSubsystem.State.PICKUP2);
         rotate.setState(RotateSubsystem.State.NEUTRAL);
-        updateCommands(0.5);
+        pivot.setState(PivotSubsystem.State.DRIVING);
+        horizontal.setState(HorizSubsystem.State.DRIVING);
+        updateCommands(0.5); //removed wait
     }
 
-    /** Raises the pivot */
-    public void prepArm(){
+    /** Raises the Vertical */
+    public void raiseArm(){
         horizontal.setState(HorizSubsystem.State.DRIVING);
         pivot.setState(PivotSubsystem.State.OUTTAKE1);
         updateCommands(0.5);
 
         pivot.setState(PivotSubsystem.State.OUTTAKE2);
         rotate.setState(RotateSubsystem.State.DROPOFF);
-        updateCommands();
-    }
-    /** Raises the Vertical */
-    public void raiseArm(){
-        vertical.setDepositState(VerticalSubsystem.State.HIGHBAR);
+        vertical.setDepositState(VerticalSubsystem.State.HIGHBUCKET);
         vertical.setState(VerticalSubsystem.State.DEPOSITING);
-        updateCommands(0.5);
+        updateCommands(1.0); //removed wait
     }
 
     /** Deposits, and lowers arm */
     public void lowerArm(){
-
-        vertical.setState(VerticalSubsystem.State.DOWN);
         updateCommands(0.5);
 
         claw.open();
-        vertical.setState(VerticalSubsystem.State.BOTTOM);
         pivot.setState(PivotSubsystem.State.DRIVING);
         updateCommands(0.5);
+
+        claw.close();
+        vertical.setState(VerticalSubsystem.State.BOTTOM);
+        updateCommands(0.5); //removed wait
     }
 }

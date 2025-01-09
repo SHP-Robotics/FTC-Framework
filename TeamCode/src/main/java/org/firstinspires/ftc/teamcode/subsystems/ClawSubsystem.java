@@ -11,8 +11,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 
+import dev.frozenmilk.dairy.cachinghardware.CachingServo;
+
 public class ClawSubsystem extends Subsystem {
-    private final Servo claw;
+    private final CachingServo claw;
 
     public enum State {
         OPEN,
@@ -22,7 +24,7 @@ public class ClawSubsystem extends Subsystem {
     private State state;
 
     public ClawSubsystem(HardwareMap hardwareMap){
-        claw = (Servo) hardwareMap.get(kClawName);
+        claw = new CachingServo((Servo) hardwareMap.get(kClawName));
         setState(State.CLOSE);
     }
 

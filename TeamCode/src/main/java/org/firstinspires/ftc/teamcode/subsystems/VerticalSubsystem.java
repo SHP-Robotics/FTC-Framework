@@ -14,9 +14,11 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.shplib.Constants;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 
+import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx;
+
 public class VerticalSubsystem extends Subsystem {
-    private final DcMotorEx leftSlide;
-    private final DcMotorEx rightSlide;
+    private final CachingDcMotorEx leftSlide;
+    private final CachingDcMotorEx rightSlide;
     private int slidePos;
 
     public enum State {
@@ -42,11 +44,11 @@ public class VerticalSubsystem extends Subsystem {
     public VerticalSubsystem(HardwareMap hardwareMap) {
         slidePos = 0;
 
-        leftSlide = (DcMotorEx) hardwareMap.get(kLeftSlideName);
+        leftSlide = new CachingDcMotorEx((DcMotorEx) hardwareMap.get(kLeftSlideName));
         leftSlide.setDirection(DcMotorSimple.Direction.FORWARD);
         leftSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        rightSlide = (DcMotorEx) hardwareMap.get(kRightSlideName);
+        rightSlide = new CachingDcMotorEx((DcMotorEx) hardwareMap.get(kRightSlideName));
         rightSlide.setDirection(DcMotorSimple.Direction.REVERSE);
         rightSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 

@@ -10,10 +10,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 
+import dev.frozenmilk.dairy.cachinghardware.CachingServo;
+
 public class HorizSubsystem extends Subsystem {
-    private final Servo lHoriz;
-    private final Servo rHoriz;
-    private final Servo rail;
+    private final CachingServo lHoriz;
+    private final CachingServo rHoriz;
+    private final CachingServo rail;
 
     public enum State {
         INTAKEWALL(0, 0),
@@ -40,15 +42,15 @@ public class HorizSubsystem extends Subsystem {
         manualHorizPos = 0.0;
         manualRailPos = 0.0;
 
-        lHoriz = (Servo) hardwareMap.get(kLeftHorizSlideName);
+        lHoriz = new CachingServo((Servo) hardwareMap.get(kLeftHorizSlideName));
         lHoriz.scaleRange(0.325, 0.9);
         lHoriz.setDirection(Servo.Direction.REVERSE);
 
-        rHoriz = (Servo) hardwareMap.get(kRightHorizSlideName);
+        rHoriz = new CachingServo((Servo) hardwareMap.get(kRightHorizSlideName));
         lHoriz.scaleRange(0.325, 0.9);
         rHoriz.setDirection(Servo.Direction.FORWARD);
 
-        rail = (Servo) hardwareMap.get(kRailName);
+        rail = new CachingServo((Servo) hardwareMap.get(kRailName));
         rail.setDirection(Servo.Direction.FORWARD);
         rail.scaleRange(0, 0.45); //0 in, 0.45 out
 

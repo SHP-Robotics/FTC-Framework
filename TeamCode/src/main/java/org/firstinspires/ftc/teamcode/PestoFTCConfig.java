@@ -7,6 +7,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.shprobotics.pestocore.algorithms.PID;
 import com.shprobotics.pestocore.drivebases.DeterministicTracker;
 import com.shprobotics.pestocore.drivebases.MecanumController;
 import com.shprobotics.pestocore.drivebases.TeleOpController;
@@ -19,7 +20,18 @@ public class PestoFTCConfig {
     public static double ODOMETRY_WIDTH = 14.35782;
     public static double DECELERATION = 2.0;
     public static double MAX_VELOCITY = 46;
+    public static double headingP = 0.8;
+    public static double headingI = 0;
+    public static double headingD = 0;
+    public static double maxHeadingI = 0;
+    public static PID headingPID = new PID(headingP, headingI, headingD);
 
+    public static double endpointP = 0.04;
+    public static double endpointI = 0;
+    public static double endpointD = 0;
+    public static double maxEndpointI = 0;
+
+    public static PID endpointPID = new PID(endpointP, endpointI, endpointD);
     public static final DcMotorSimple.Direction leftEncoderDirection = FORWARD;
     public static final DcMotorSimple.Direction centerEncoderDirection = REVERSE;
     public static final DcMotorSimple.Direction rightEncoderDirection = FORWARD;
@@ -90,5 +102,12 @@ public class PestoFTCConfig {
                 centerEncoderDirection,
                 rightEncoderDirection
         ).build();
+    }
+
+    public static void configure(){
+        headingPID.setMaxIntegralProportionRatio(maxHeadingI);
+        endpointPID.setMaxIntegralProportionRatio(maxEndpointI);
+
+
     }
 }

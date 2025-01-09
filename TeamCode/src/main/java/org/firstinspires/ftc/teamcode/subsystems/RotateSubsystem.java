@@ -10,8 +10,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.shplib.commands.Subsystem;
 
+import dev.frozenmilk.dairy.cachinghardware.CachingServo;
+
 public class RotateSubsystem extends Subsystem {
-    private final Servo rotate;
+    private final CachingServo rotate;
     private double rotatePos;
 
     public enum State {
@@ -23,7 +25,7 @@ public class RotateSubsystem extends Subsystem {
     private State state;
 
     public RotateSubsystem(HardwareMap hardwareMap){
-        rotate = (Servo) hardwareMap.get(kRotateName);
+        rotate = new CachingServo((Servo) hardwareMap.get(kRotateName));
         rotate.setDirection(Servo.Direction.FORWARD);
         rotatePos = kNeutral;
         setState(State.NEUTRAL);
