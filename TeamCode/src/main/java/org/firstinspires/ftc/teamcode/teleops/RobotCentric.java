@@ -8,6 +8,7 @@ import static org.firstinspires.ftc.teamcode.ClawSubsystem.ClawState.CLOSE;
 import static org.firstinspires.ftc.teamcode.ClawSubsystem.ClawState.OPEN;
 import static org.firstinspires.ftc.teamcode.SlideSubsystem.SlideState.INTAKE;
 
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -21,11 +22,14 @@ import org.firstinspires.ftc.teamcode.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.PestoFTCConfig;
 import org.firstinspires.ftc.teamcode.SlideSubsystem;
 
+import java.util.List;
+
 @TeleOp(name = "Robot Centric")
 public class RobotCentric extends LinearOpMode {
     private MecanumController mecanumController;
     private DeterministicTracker tracker;
     private TeleOpController teleOpController;
+    private List<LynxModule> modules;
 
     private ClawSubsystem clawSubsystem;
     private SlideSubsystem slideSubsystem;
@@ -48,6 +52,12 @@ public class RobotCentric extends LinearOpMode {
         elapsedTime = new ElapsedTime();
 //        slideSubsystem.init();
 
+        modules = hardwareMap.getAll(LynxModule.class);
+
+        for (LynxModule module: modules) {
+            module.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
+
         waitForStart();
         slideSubsystem.init();
 
@@ -59,6 +69,10 @@ public class RobotCentric extends LinearOpMode {
     }
 
     public void loopOpMode() {
+        for (LynxModule module: modules) {
+            module.clearBulkCache();
+        }
+
         gamepadInterface.update();
         tracker.update();
 

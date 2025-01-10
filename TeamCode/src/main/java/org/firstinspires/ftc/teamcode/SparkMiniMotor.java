@@ -7,8 +7,10 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
+import dev.frozenmilk.dairy.cachinghardware.CachingCRServo;
+
 public class SparkMiniMotor extends DcMotorImplEx {
-    CRServo servo;
+    CachingCRServo servo;
 
     public SparkMiniMotor(DcMotorController controller, int portNumber) {
         super(controller, portNumber);
@@ -23,14 +25,14 @@ public class SparkMiniMotor extends DcMotorImplEx {
     }
 
     public void setServo(CRServo servo) {
-        this.servo = servo;
+        this.servo = new CachingCRServo(servo);
     }
 
     @Override
     public synchronized void setPower(double power) {
         byte direction = 1;
         if (this.direction == Direction.REVERSE) direction = -1;
-        this.servo.setPower(power * direction);
+        this.servo.setPowerResult(power * direction);
     }
 
     @Override
