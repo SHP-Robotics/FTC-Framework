@@ -66,7 +66,7 @@ public class DontPressSquare extends LinearOpMode {
 //
 //                teleOpController.driveFieldCentric(gamepad1.left_stick_y * 0.2, -gamepad1.left_stick_x * 0.2, -gamepad1.right_stick_x * 0.2);
 //            } else {
-                teleOpController.driveFieldCentric(gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x);
+                teleOpController.driveFieldCentric(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
 
 //            }
             if (gamepad1.x) {

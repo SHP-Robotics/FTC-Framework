@@ -12,63 +12,101 @@ import com.shprobotics.pestocore.geometries.Vector2D;
 
 @Autonomous
 public class DontPressSquareAutonomous extends LinearOpMode {
+    MecanumController mecanumController;
+    DeterministicTracker tracker;
+    PathFollower pathFollower;
+    ViperSlideSubsystem viperSlideSubsystem;
+    WormGearSubsystem wormGearSubsystem;
+    public PathFollower generatePathFollower(PathContainer pathContainer, double deceleration, double speed) {
+        return new PathFollower.PathFollowerBuilder(mecanumController, tracker, pathContainer)
+                .setEndpointPID(new PID(0.04,0, 0))
+                .setHeadingPID(new PID(0.8, 0, 0))
+                .setDeceleration(PestoFTCConfig.DECELERATION)
+                .setSpeed(1)
+                .setEndTolerance(0.4, Math.toRadians(2))
+                .setEndVelocityTolerance(4)
+                .setTimeAfterDeceleration(4)
+                .build();
+
+
+    }
 
     @Override
     public void runOpMode() throws InterruptedException {
-        MecanumController mecanumController = PestoFTCConfig.getMecanumController(hardwareMap);
-        DeterministicTracker tracker = PestoFTCConfig.getTracker(hardwareMap);
-        ViperSlideSubsystem viperSlideSubsystem;
-        WormGearSubsystem wormGearSubsystem;
+        mecanumController = PestoFTCConfig.getMecanumController(hardwareMap);
+        tracker = PestoFTCConfig.getTracker(hardwareMap);
+
+
         wormGearSubsystem = new WormGearSubsystem(hardwareMap);
         viperSlideSubsystem = new ViperSlideSubsystem(hardwareMap);
 
-        PathContainer pathContainer = new PathContainer.PathContainerBuilder()
-                .addCurve(new BezierCurve(
-                        new Vector2D[]{
-                                new Vector2D(0,0),
-                                new Vector2D(1,5),
-                                new Vector2D(-1,10),
-                        }
-                ))
-//                .addCurve(new BezierCurve(
-//                        new Vector2D[]{
-//                                new Vector2D(-1,10),
-//                                new Vector2D(-1.1,10.25),
-//                                new Vector2D(0,15),
-//                                new Vector2D(-10,15),
-//                        }
-//                ))
-                .setIncrement(0.01).build();
-        PathFollower pathFollower = new PathFollower.PathFollowerBuilder(
-                mecanumController,
-                tracker,
-                pathContainer
+        PathContainer Intake1 = new PathContainer.PathContainerBuilder()
+                .setIncrement(0.01)
+                .addCurve(
 
-        )
-                .setDeceleration(0)
-                .setEndpointPID(new PID(0, 0, 0))
-                .setHeadingPID(new PID(0, 0, 0))
-                .setSpeed(1)
+                        new BezierCurve(
+                                new Vector2D[]{
+                                        new Vector2D(0, 0),
+                                        new Vector2D(-32, 57),
+                                }
+                        )
+                )
+                .build();
+        PathContainer Intake2 = new PathContainer.PathContainerBuilder()
+                .setIncrement(0.01)
+                .addCurve(
+
+                        new BezierCurve(
+                                new Vector2D[]{
+                                        new Vector2D(0, 0),
+                                        new Vector2D(-32, 57),
+                                }
+                        )
+                )
                 .build();
 
-        pathFollower.reset(); // Reset once, before the loop
 
         waitForStart();
+        tracker.reset();
 
-        while (opModeIsActive()) {
-            telemetry.addData("position",tracker.getCurrentPosition());
-            telemetry.addData("velocity",tracker.getRobotVelocity());
-            telemetry.addData("completed",  pathFollower.isCompleted());
-            telemetry.addData("Path Progress", pathFollower.isCompleted() ? "Completed" : "In Progress");
-            telemetry.update();
-            if (gamepad1.x) {
-                gamepad1.rumble(1000);
-                pathFollower.reset(); // Reset once, before the loop
-                tracker.update();
+        followPath(Intake1, 2, 1);
+        cycle();
+        followPath(Intake2, 2, 1);
+        cycle();
 
-                pathFollower.update();
-            }
 
+    }
+
+    public void loopOpMode () {
+        telemetry.addData("position", tracker.getCurrentPosition());
+        telemetry.addData("velocity", tracker.getRobotVelocity());
+        telemetry.addData("Path Progress", pathFollower.isCompleted() ? "Completed" : "In Progress");
+        tracker.update();
+        pathFollower.update();
+        telemetry.update();
+    }
+
+    public void followPath (PathContainer path,double deceleration, double speed){
+        if (isStopRequested()) return;
+        pathFollower = generatePathFollower(path, deceleration, speed);
+
+        while (opModeIsActive() && !isStopRequested() && !pathFollower.isCompleted()) {
+            loopOpMode();
         }
     }
+    /**
+     * make functions out here
+     */
+    public void cycle(){
+        wormGearSubsystem.update();
+        viperSlideSubsystem.update();
+        wormGearSubsystem.cycle();
+        viperSlideSubsystem.cycle();
+
+    }
+
+
 }
+
+
+

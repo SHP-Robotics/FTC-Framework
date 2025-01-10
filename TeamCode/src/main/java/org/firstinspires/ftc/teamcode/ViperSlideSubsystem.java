@@ -122,11 +122,10 @@ public class ViperSlideSubsystem {
     }
 
     public void  switchPower(){
-        if (mode.getPosition()==0 && hangMode !=VIPERDOWN &&  hangMode !=WORMGEARBACK) {
+        if (mode.getPosition()==0 && hangMode !=VIPERDOWN &&  hangMode !=WORMGEARBACK ) {
             if (viperSlide.getCurrentPosition() > 30) {
-return;
+                viperSlide.setPower(0);
             }
-            viperSlide.setPower(0);
 
         }else{
             viperSlide.setPower(1);

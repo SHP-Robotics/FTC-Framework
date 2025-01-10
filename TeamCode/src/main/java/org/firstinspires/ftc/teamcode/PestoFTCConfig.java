@@ -42,17 +42,17 @@ public class PestoFTCConfig {
 
     public static MecanumController getMecanumController(HardwareMap hardwareMap) {
         MecanumController mecanumController = new MecanumController(hardwareMap, new String[] {
-                "frontLeft",
-                "frontRight",
-                "backLeft",
-                "backRight"
+                frontLeftName,
+                frontRightName,
+                backLeftName,
+                backRightName
         });
 
         mecanumController.configureMotorDirections(new DcMotorSimple.Direction[]{
-                DcMotorSimple.Direction.FORWARD,
-                DcMotorSimple.Direction.REVERSE,
-                DcMotorSimple.Direction.FORWARD ,
-                DcMotorSimple.Direction.REVERSE
+                frontLeftDirection,
+                frontRightDirection,
+                backLeftDirection,
+                backRightDirection
         });
 
 //        mecanumController.setPowerVectors(new Vector2D[]{
