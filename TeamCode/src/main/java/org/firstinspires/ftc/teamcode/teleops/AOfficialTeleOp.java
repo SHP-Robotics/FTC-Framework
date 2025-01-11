@@ -130,7 +130,7 @@ public class AOfficialTeleOp extends BaseRobot {
                 }))
         );
 
-        //deposit bucket T
+        //deposit bucket
         new Trigger(gamepadInterface1.isKeyDown(GamepadKey.A) && crossTrigger,
                 new DrivetoBucketCommand(rotate, claw, pivot, horizontal, vertical)
                 .then(new RunCommand(()->{
@@ -151,7 +151,7 @@ public class AOfficialTeleOp extends BaseRobot {
 
         );
 
-        //Claw //TODO FIX
+        //Claw
         new Trigger(gamepadInterface1.isKeyDown(GamepadKey.DPAD_LEFT), new RunCommand(() -> {
                 rotate.rotateCW();
         }));

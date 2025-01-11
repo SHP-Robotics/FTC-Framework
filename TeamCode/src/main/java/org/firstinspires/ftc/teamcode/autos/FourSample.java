@@ -138,7 +138,7 @@ public class FourSample extends LinearOpMode {
                         new BezierCurve(
                                 new Vector2D[]{
                                         new Vector2D(-14, -29),
-                                        new Vector2D(-9, -29.5)
+                                        new Vector2D(-9, -30)
                                 }
                         ),
                         new ParametricHeading(new double[]{
@@ -156,8 +156,8 @@ public class FourSample extends LinearOpMode {
                 .addCurve(
                         new BezierCurve(
                                 new Vector2D[]{
-                                        new Vector2D(-9, -29.5),
-                                        new Vector2D(-15, -29.5)
+                                        new Vector2D(-9, -30),
+                                        new Vector2D(-15, -30)
                                 }
                         ),
                         new ParametricHeading(new double[]{
@@ -175,7 +175,7 @@ public class FourSample extends LinearOpMode {
                 .addCurve(
                         new BezierCurve(
                                 new Vector2D[]{
-                                        new Vector2D(-19, -29.5),
+                                        new Vector2D(-19, -30),
                                         new Vector2D(-9, -28)
                                 }
                         ),
@@ -243,7 +243,7 @@ public class FourSample extends LinearOpMode {
         //Get Block 4
         prepIntake();
         rotateIntake();
-        followPath(getBlock4, 1, 0.6);
+        followPath(getBlock4, 1.5, 0.6);
         finishIntake();
 
         //Deposit Block 4
@@ -348,9 +348,9 @@ public class FourSample extends LinearOpMode {
 //        updateCommands(0.5);
 
         claw.open();
-        pivot.setState(PivotSubsystem.State.DRIVING);
         updateCommands(0.5);
 
+        pivot.setState(PivotSubsystem.State.DRIVING);
         claw.close();
         vertical.setState(VerticalSubsystem.State.BOTTOM);
         updateCommands(0.5); //removed wait
