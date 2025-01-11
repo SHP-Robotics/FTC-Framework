@@ -28,7 +28,7 @@ public class AOfficialTeleOp extends BaseRobot {
     private double driveBias;
     private boolean holdingRightBumper, LBTrigger, LTTrigger, crossTrigger;
 
-    GamepadInterface gamepadInterface1;
+    GamepadInterface gamepadInterface1, gamepadInterface2;
 
     @Override
     public void init(){
@@ -44,6 +44,8 @@ public class AOfficialTeleOp extends BaseRobot {
         crossTrigger = true;
 
         gamepadInterface1 = new GamepadInterface(gamepad1);
+        gamepadInterface2 = new GamepadInterface(gamepad2);
+
     }
     @Override
     public void start(){
@@ -59,6 +61,9 @@ public class AOfficialTeleOp extends BaseRobot {
         driveBias = vertical.getDriveBias();
         gamepadInterface1.update();
         drive.update(gamepad1);
+
+        gamepadInterface2.update();
+        drive.update(gamepad2);
 //        drive.drive.setZeroPowerBehavior(gamepad2.cross ? BRAKE : FLOAT);
         // use gamepad2.right_bumper as speed boost
 
@@ -171,14 +176,18 @@ public class AOfficialTeleOp extends BaseRobot {
             vertical.resetZeroPosition();
         }));
 
-        //Vertical Slides
-        new Trigger(gamepad2.dpad_up, new RunCommand(() -> {
+        //Reset encoders
+        new Trigger(gamepadInterface2.isKeyDown(GamepadKey.DPAD_UP), new RunCommand(() -> {
             vertical.incrementSlide();
+        }));
+        new Trigger(gamepadInterface2.isKeyDown(GamepadKey.DPAD_DOWN), new RunCommand(()->{
+            vertical.emergencyDecrementSlide();
+        }));
 
+        new Trigger(gamepadInterface2.isKeyDown(GamepadKey.DPAD_LEFT), new RunCommand(()->{
+            vertical.endReset();
         }));
-        new Trigger(gamepad2.dpad_down, new RunCommand(() -> {
-            vertical.decrementSlide();
-        }));
+
 
         //toggle high or low bars
         new Trigger(gamepad2.triangle, new RunCommand(()->{

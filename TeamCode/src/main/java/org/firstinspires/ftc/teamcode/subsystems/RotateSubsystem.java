@@ -20,6 +20,7 @@ public class RotateSubsystem extends Subsystem {
         DROPOFF,
         INTAKE,
         PICKUP,
+        AUTO,
         NEUTRAL;
     }
     private State state;
@@ -62,6 +63,9 @@ public class RotateSubsystem extends Subsystem {
         }
         else if (this.state == State.PICKUP){
             rotatePos = kPickup;
+        }
+        else if (this.state == State.AUTO){
+            rotatePos = 1;
         }
         rotate.setPosition(rotatePos);
 

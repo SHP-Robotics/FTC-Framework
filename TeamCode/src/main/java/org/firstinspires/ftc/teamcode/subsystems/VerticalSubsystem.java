@@ -20,6 +20,7 @@ public class VerticalSubsystem extends Subsystem {
     private final CachingDcMotorEx leftSlide;
     private final CachingDcMotorEx rightSlide;
     private int slidePos;
+    private int offset;
 
     public enum State {
         BOTTOM(0),
@@ -43,6 +44,7 @@ public class VerticalSubsystem extends Subsystem {
 
     public VerticalSubsystem(HardwareMap hardwareMap) {
         slidePos = 0;
+        offset = 0;
 
         leftSlide = new CachingDcMotorEx((DcMotorEx) hardwareMap.get(kLeftSlideName));
         leftSlide.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -87,6 +89,14 @@ public class VerticalSubsystem extends Subsystem {
             slidePos -= kIncrement;
         }
     }
+    public void emergencyDecrementSlide(){
+        state = State.MANUAL;
+        slidePos -= kIncrement;
+    }
+    public void endReset(){
+        offset = (leftSlide.getCurrentPosition()+rightSlide.getCurrentPosition())/2;
+        slidePos = 0;
+    }
     public void resetZeroPosition() { //TODO Switch to William's stalling detection
         leftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -127,14 +137,14 @@ public class VerticalSubsystem extends Subsystem {
 
     private void processState() {
         if (this.state == State.MANUAL) {
-            this.setPosition(slidePos);
+            this.setPosition(slidePos+offset);
             return;
         }
         if (this.state == State.DEPOSITING){
-            this.setPosition(this.depositState.position);
+            this.setPosition(this.depositState.position+offset);
             return;
         }
-        this.setPosition(this.state.position);
+        this.setPosition(this.state.position+offset);
 
     }
 

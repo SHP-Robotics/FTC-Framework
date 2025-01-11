@@ -20,13 +20,16 @@ public class PestoFTCConfig {
     public static double ODOMETRY_WIDTH = 14.35782;
     public static double DECELERATION = 2.0;
     public static double MAX_VELOCITY = 46;
-    public static double headingP = 0.8;
+//    public static double headingP = 0.65;
+    public static double headingP = 3.0;
+//    public static double headingI = 0.5;
     public static double headingI = 0;
     public static double headingD = 0;
+//    public static double maxHeadingI = 0.3;
     public static double maxHeadingI = 0;
     public static PID headingPID = new PID(headingP, headingI, headingD);
 
-    public static double endpointP = 0.04;
+    public static double endpointP = 0.03;
     public static double endpointI = 0;
     public static double endpointD = 0;
     public static double maxEndpointI = 0;

@@ -22,8 +22,8 @@ import org.firstinspires.ftc.teamcode.subsystems.RotateSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.VerticalSubsystem;
 
 @Config
-@Autonomous(name = "Test Auto - 0+4")
-public class TestAuto extends LinearOpMode {
+@Autonomous(name = "0 + 4 SAMPLE")
+public class FourSample extends LinearOpMode {
     private MecanumController mecanumController;
     private DeterministicTracker tracker;
     VerticalSubsystem vertical;
@@ -124,6 +124,8 @@ public class TestAuto extends LinearOpMode {
                                 Math.toRadians(45),
                                 Math.toRadians(90),
                                 Math.toRadians(90),
+                                Math.toRadians(90),
+                                Math.toRadians(90),
                                 Math.toRadians(90)
                         })
                 )
@@ -155,7 +157,7 @@ public class TestAuto extends LinearOpMode {
                         new BezierCurve(
                                 new Vector2D[]{
                                         new Vector2D(-9, -29.5),
-                                        new Vector2D(-15, -29)
+                                        new Vector2D(-15, -29.5)
                                 }
                         ),
                         new ParametricHeading(new double[]{
@@ -173,12 +175,14 @@ public class TestAuto extends LinearOpMode {
                 .addCurve(
                         new BezierCurve(
                                 new Vector2D[]{
-                                        new Vector2D(-19, -29),
-                                        new Vector2D(-9, -29)
+                                        new Vector2D(-19, -29.5),
+                                        new Vector2D(-9, -28)
                                 }
                         ),
                         new ParametricHeading(new double[]{
                                 Math.toRadians(120),
+                                Math.toRadians(45),
+                                Math.toRadians(45),
                                 Math.toRadians(45),
                                 Math.toRadians(45),
                                 Math.toRadians(45)
