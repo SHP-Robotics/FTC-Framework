@@ -80,7 +80,7 @@ public class ThreeSpecimen extends LinearOpMode {
                         new BezierCurve(
                                 new Vector2D[]{
                                         new Vector2D(5, -31),
-                                        new Vector2D(-35, -25) //-35, -25
+                                        new Vector2D(-36, -25) //-35, -25
                                 }
                         ),
                         new ParametricHeading(new double[]{
@@ -90,8 +90,8 @@ public class ThreeSpecimen extends LinearOpMode {
                 .addCurve(
                         new BezierCurve(
                                 new Vector2D[]{
-                                        new Vector2D(-35, -25),
-                                        new Vector2D(-35, -50)
+                                        new Vector2D(-36, -25),
+                                        new Vector2D(-36, -50)
                                 }
                         ),
                         new ParametricHeading(new double[]{
@@ -100,7 +100,7 @@ public class ThreeSpecimen extends LinearOpMode {
                 .addCurve(
                         new BezierCurve(
                                 new Vector2D[]{
-                                        new Vector2D(-35, -50),
+                                        new Vector2D(-36, -50),
                                         new Vector2D(-38, -50)
                                 }
                         ),
@@ -211,11 +211,11 @@ public class ThreeSpecimen extends LinearOpMode {
                 .build();
 
         depositBlock2 = new PathContainer.PathContainerBuilder()
-                .setIncrement(0.03)
+                .setIncrement(0.02)
                 .addCurve(new BezierCurve(
                                 new Vector2D[]{
                                         new Vector2D(-35, -7), //with 2 blocks (-47, 10)
-                                        new Vector2D(10, -10)
+                                        new Vector2D(15, -5)
                                 }
                         ),
                         new ParametricHeading(new double[]{
@@ -224,8 +224,8 @@ public class ThreeSpecimen extends LinearOpMode {
                 )
                 .addCurve(new BezierCurve(
                                 new Vector2D[]{
-                                        new Vector2D(10, -10), //with 2 blocks (-47, 10)
-                                        new Vector2D(5, -31)
+                                        new Vector2D(15, -5), //with 2 blocks (-47, 10)
+                                        new Vector2D(10, -31)
                                 }
                         ),
                         new ParametricHeading(new double[]{
@@ -237,7 +237,7 @@ public class ThreeSpecimen extends LinearOpMode {
                 .setIncrement(0.03)
                 .addCurve(new BezierCurve(
                                 new Vector2D[]{
-                                        new Vector2D(5, -31), //with 2 blocks (-47, 10)
+                                        new Vector2D(10, -31), //with 2 blocks (-47, 10)
                                         new Vector2D(-30, -6)
                                 }
                         ),

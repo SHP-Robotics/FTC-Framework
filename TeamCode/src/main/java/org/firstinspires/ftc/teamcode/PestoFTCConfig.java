@@ -58,12 +58,13 @@ public class PestoFTCConfig {
                 FORWARD
         });
 
-//            mecanumController.setPowerVectors(new Vector2D[]{
-//                    Vector2D.scale(new Vector2D(57, 39), 1/69.0651865993),
-//                    Vector2D.scale(new Vector2D(-57, 39), 1/69.0651865993),
-//                    Vector2D.scale(new Vector2D(-57, 39), 1/69.0651865993),
-//                    Vector2D.scale(new Vector2D(57, 39), 1/69.0651865993)
-//            });
+//        double magnitude = new Vector2D(70, 60).getMagnitude();
+//        mecanumController.setPowerVectors(new Vector2D[]{
+//                Vector2D.scale(new Vector2D(70, 60), 1/magnitude),
+//                Vector2D.scale(new Vector2D(-70, 60), 1/magnitude),
+//                Vector2D.scale(new Vector2D(-70, 60), 1/magnitude),
+//                Vector2D.scale(new Vector2D(70, 60), 1/magnitude)
+//        });
 //
 //            mecanumController.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //            mecanumController.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
