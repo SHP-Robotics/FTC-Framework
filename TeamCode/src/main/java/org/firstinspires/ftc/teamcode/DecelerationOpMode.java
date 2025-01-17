@@ -6,8 +6,8 @@ import com.shprobotics.pestocore.drivebases.DeterministicTracker;
 import com.shprobotics.pestocore.drivebases.MecanumController;
 import com.shprobotics.pestocore.drivebases.ThreeWheelOdometryTracker;
 import com.shprobotics.pestocore.tuners.DecelerationTuner;
-@TeleOp
 
+@TeleOp
 public class DecelerationOpMode extends DecelerationTuner {
     @Override
     public void setMecanumController(HardwareMap hardwareMap) {

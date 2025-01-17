@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.teamcode.ClawSubsystem.ClawMode.CLOSE;
 import static org.firstinspires.ftc.teamcode.ClawSubsystem.ClawMode.OPEN;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -25,16 +26,17 @@ public class ClawSubsystem {
     }
 
     private Servo claw;
-    private ClawMode mode= OPEN;
+    private ClawMode mode= CLOSE;
     //    private  final int offset=-1540;
     public ClawSubsystem(HardwareMap hardwareMap) {
         claw = hardwareMap.get(Servo.class, "claw");
     }
     public void setOpen() {
-        mode= OPEN;
+        mode=OPEN;
     }
     public void setClose() {
-        mode=ClawMode.CLOSE;
+        mode=CLOSE;
+
     }
     public void update() {
         claw.setPosition(mode.getPosition());

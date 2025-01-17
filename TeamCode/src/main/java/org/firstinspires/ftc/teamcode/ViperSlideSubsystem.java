@@ -26,7 +26,7 @@ public class ViperSlideSubsystem {
         INTAKE (0),
         DRIVING2 (0),
 
-        OUTTAKE (2000);
+        OUTTAKE (2650);
 
 
         ViperMode(int position) {
@@ -61,10 +61,9 @@ public class ViperSlideSubsystem {
         private final int position;
     }
     private DcMotor viperSlide;
-    private ViperMode mode = DRIVING;
+    private ViperMode mode = DRIVING2;
     public static HangMode hangMode = NONE;
     ElapsedTime elapsedTime=new ElapsedTime();
-    boolean isStartingOuttake = false;
     //    private  final int offset=-1540;
     public ViperSlideSubsystem(HardwareMap hardwareMap) {
         viperSlide = hardwareMap.get(DcMotor.class, "viperSlide");
@@ -82,7 +81,6 @@ public class ViperSlideSubsystem {
                 break;
             case INTAKE:
                 mode = DRIVING2;
-                isStartingOuttake=true;
                 break;
             case DRIVING2:
                 mode = OUTTAKE;
@@ -123,8 +121,12 @@ public class ViperSlideSubsystem {
 
     public void  switchPower(){
         if (mode.getPosition()==0 && hangMode !=VIPERDOWN &&  hangMode !=WORMGEARBACK ) {
-            if (viperSlide.getCurrentPosition() > 30) {
+            if (viperSlide.getCurrentPosition() < 50) {
                 viperSlide.setPower(0);
+
+            }else{
+                viperSlide.setPower(-0.5);
+
             }
 
         }else{
@@ -133,31 +135,10 @@ public class ViperSlideSubsystem {
         }
     }
     public void update() {
-        if (hangMode==NONE){
-
-//            if (mode==OUTTAKE) {
-//                if (isStartingOuttake) {
-//                    elapsedTime = new ElapsedTime();
-//                    elapsedTime.reset();
-//                    isStartingOuttake = false;
-//                }
-//                if (elapsedTime.seconds() > 1.0) {
-
-//
-//                    viperSlide.setTargetPosition(mode.getPosition());
-//                    viperSlide.setPower(1);
-//
-//                }
-//            }else{
-                viperSlide.setTargetPosition(mode.getPosition());
-                switchPower();
+        viperSlide.setTargetPosition(mode.getPosition());
+        switchPower();
 
 
-//            }
-
-
-
-        }
     }
 
     public void updateHanging() {

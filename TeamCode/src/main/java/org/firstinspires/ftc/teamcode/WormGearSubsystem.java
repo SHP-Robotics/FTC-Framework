@@ -24,7 +24,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 public class WormGearSubsystem {
     private static final int OFFSET =-1550;
     boolean  zeroed=false;
-
+boolean thing=false;
     public enum WormMode {
         DRIVING (OFFSET),
         INTAKE (-3450),
@@ -47,8 +47,8 @@ public class WormGearSubsystem {
     public enum HangMode {
 
         NONE (0),
-        SETUP (OFFSET-150),
-        VIPERDOWN (OFFSET-150),
+        SETUP (1100),
+        VIPERDOWN (OFFSET+100),
         WORMGEARBACK (-100),
         WORMGEARFOWARD (0),
         VIPERUP (0),
@@ -65,8 +65,8 @@ public class WormGearSubsystem {
     }
 
     private DcMotorEx wormGear;
-    private WormMode mode= DRIVING;
-    private HangMode hangMode = NONE;
+    private WormMode mode= DRIVING2;
+    public HangMode hangMode = NONE;
 
     public WormGearSubsystem(HardwareMap hardwareMap) {
         wormGear = hardwareMap.get(DcMotorEx.class, "WormGear");
@@ -127,7 +127,6 @@ public class WormGearSubsystem {
         wormGear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         wormGear.setPower(1);
         while(!touchSensor.isPressed()){
-//        while (!touchSensor.isPressed()) {
             updateTelemetry(telemetry);
             telemetry.update();
         }
@@ -135,7 +134,6 @@ public class WormGearSubsystem {
         updateTelemetry(telemetry);
         telemetry.update();
         wormGear.setPower(0);
-
         wormGear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         wormGear.setTargetPosition(OFFSET);
         wormGear.setPower(1);
@@ -157,8 +155,7 @@ public class WormGearSubsystem {
 
     public void updateHanging() {
         wormGear.setTargetPosition(hangMode.getPosition());
-        wormGear.setPower(0.5);
-
+        wormGear.setPower(0.6);
     }
 
 
@@ -166,6 +163,8 @@ public class WormGearSubsystem {
         telemetry.addData("mode", mode);
         telemetry.addData("WormGear Position", wormGear.getCurrentPosition());
         telemetry.addData("current", wormGear.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("hangmode", hangMode);
+
     }
 
 }

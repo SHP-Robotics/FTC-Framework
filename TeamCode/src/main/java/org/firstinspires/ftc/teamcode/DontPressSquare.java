@@ -1,10 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 
-import static org.firstinspires.ftc.teamcode.ViperSlideSubsystem.*;
-import static org.firstinspires.ftc.teamcode.ViperSlideSubsystem.HangMode.FINISH;
-import static org.firstinspires.ftc.teamcode.ViperSlideSubsystem.HangMode.VIPERUP;
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.TouchSensor;
@@ -70,7 +66,7 @@ public class DontPressSquare extends LinearOpMode {
 
 //            }
             if (gamepad1.x) {
-                wormGearSubsystem.setToZero(touchSensor, telemetry );
+                wormGearSubsystem.setToZero(touchSensor, telemetry);
             }
 
             if (gamepad1.b) {
@@ -86,25 +82,31 @@ public class DontPressSquare extends LinearOpMode {
 
 
             }
-            if (gamepadInterface.isKeyUp(GamepadKey.RIGHT_BUMPER)) {
+            if (gamepadInterface.isKeyDown(GamepadKey.RIGHT_BUMPER)) {
 
                 wormGearSubsystem.cycleHanging();
                 viperSlideSubsystem.cycleHanging();
                 wormGearSubsystem.updateHanging();
                 viperSlideSubsystem.updateHanging();
-                if (hangMode == VIPERUP || hangMode == FINISH) {
-                    teleOpController.driveFieldCentric(1, 0, 0);
-
-                }
-
-
+//                if (hangMode == VIPERUP || hangMode == FINISH) {
+//                    teleOpController.driveFieldCentric(1, 0, 0);
+//
+//                }
 
 
 
             }
+            if (gamepad1.dpad_right){
+                clawSubsystem.setOpen();
+                clawSubsystem.update();
+
+            }
+            if (gamepad1.dpad_left){
+                clawSubsystem.setClose();
+                clawSubsystem.update();
+
+            }
             if (wormGearSubsystem.zeroed){
-
-
             clawSubsystem.update();
             wristSubsystem.update();
             wormGearSubsystem.update();

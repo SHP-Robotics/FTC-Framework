@@ -15,11 +15,11 @@ import com.shprobotics.pestocore.drivebases.ThreeWheelOdometryTracker;
 
 @Config
 public class PestoFTCConfig {
-    public static double ODOMETRY_TICKS_PER_INCH = 336.877962878;
-    public static double FORWARD_OFFSET = -0.0294066;
-    public static double ODOMETRY_WIDTH = 23.36825;
-    public static double DECELERATION = -73.8807308633;
-    public static double MAX_VELOCITY = 39;
+    public static double ODOMETRY_TICKS_PER_INCH = 505.3169;
+    public static double FORWARD_OFFSET = -6.5;
+    public static double ODOMETRY_WIDTH = 14;
+    public static double DECELERATION = 2.3;
+    public static double MAX_VELOCITY = 56;
 
 
     public static final DcMotorSimple.Direction leftEncoderDirection = REVERSE;
@@ -78,13 +78,13 @@ public class PestoFTCConfig {
 
         teleOpController.setSpeedController((gamepad) -> {
             if (gamepad.right_trigger > 0.1) {
-                return 1.0;
+                return 0.6;
             }
-            return 0.6;
+            return 1.0;
         });
 
-//        teleOpController.counteractCentripetalForce(tracker, MAX_VELOCITY);
-        teleOpController.deactivateCentripetalForce();
+        teleOpController.counteractCentripetalForce(tracker, MAX_VELOCITY);
+//        teleOpController.deactivateCentripetalForce();
 
         return teleOpController;
     }
