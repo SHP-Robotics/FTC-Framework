@@ -23,6 +23,13 @@ public class WristSubsystem {
         double getPosition() {
             return this.position;
         }
+
+        public WristState cycle() {
+            if (this == DOWN) {
+                return UP;
+            }
+            return DOWN;
+        }
     }
 
     private WristState state;

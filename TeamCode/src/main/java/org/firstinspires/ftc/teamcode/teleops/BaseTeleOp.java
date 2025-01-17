@@ -3,15 +3,12 @@ package org.firstinspires.ftc.teamcode.teleops;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.FLOAT;
+import static com.shprobotics.pestocore.devices.GamepadKey.DPAD_DOWN;
 import static com.shprobotics.pestocore.devices.GamepadKey.DPAD_UP;
 import static com.shprobotics.pestocore.devices.GamepadKey.LEFT_BUMPER;
 import static com.shprobotics.pestocore.devices.GamepadKey.RIGHT_BUMPER;
-import static org.firstinspires.ftc.teamcode.FourBarSubsystem.FourBarState.DOWN;
-import static org.firstinspires.ftc.teamcode.FourBarSubsystem.FourBarState.GLIDE;
-import static org.firstinspires.ftc.teamcode.FourBarSubsystem.FourBarState.UP;
 import static org.firstinspires.ftc.teamcode.SlideSubsystem.SlideState.HIGH;
 import static org.firstinspires.ftc.teamcode.SlideSubsystem.SlideState.INTAKE;
-import static org.firstinspires.ftc.teamcode.SlideSubsystem.SlideState.LOW;
 import static org.firstinspires.ftc.teamcode.teleops.BaseTeleOp.SystemMode.SAMPLE;
 import static org.firstinspires.ftc.teamcode.teleops.BaseTeleOp.SystemMode.SPECIMEN;
 
@@ -40,11 +37,9 @@ public abstract class BaseTeleOp extends LinearOpMode {
     // intake, right trigger
     // outtake, left trigger
 
-    // slide up, wrist up, right bumper
-    // slide down, wrist down, left bumper
+    // slide up, four bar up, right bumper
+    // slide down, four bar down, left bumper
 
-
-    // brake, touchpad
     // xmode, square
 
     protected MecanumController mecanumController;
@@ -183,19 +178,19 @@ public abstract class BaseTeleOp extends LinearOpMode {
             systemMode = systemMode.toggle();
 
         if (systemMode == SAMPLE) {
+            if (gamepadInterface.isKeyDown(DPAD_DOWN))
+                wristSubsystem.setState(wristSubsystem.getState().cycle());
+
             if (gamepadInterface.isKeyDown(RIGHT_BUMPER)) {
-                if (fourBarSubsystem.getState() == GLIDE) fourBarSubsystem.setState(DOWN);
-                if (slideSubsystem.getState() == LOW) slideSubsystem.setState(INTAKE);
-                if (slideSubsystem.getState() == HIGH) slideSubsystem.setState(LOW);
-                if (slideSubsystem.getState() == INTAKE && fourBarSubsystem.getState() == UP)
-                    fourBarSubsystem.setState(GLIDE);
+                if (slideSubsystem.getState() == HIGH)
+                    fourBarSubsystem.setState(fourBarSubsystem.getState().increment());
+                slideSubsystem.setState(slideSubsystem.getState().increment());
             }
 
             if (gamepadInterface.isKeyDown(LEFT_BUMPER)) {
-                if (fourBarSubsystem.getState() == UP) slideSubsystem.setState(LOW);
-                if (fourBarSubsystem.getState() == GLIDE) fourBarSubsystem.setState(UP);
-                if (fourBarSubsystem.getState() == DOWN) fourBarSubsystem.setState(GLIDE);
-                if (slideSubsystem.getState() == LOW) slideSubsystem.setState(HIGH);
+                if (slideSubsystem.getState() == INTAKE)
+                    fourBarSubsystem.setState(fourBarSubsystem.getState().decrement());
+                slideSubsystem.setState(slideSubsystem.getState().decrement());
             }
 
             if (gamepad1.left_trigger > 0.9) {
@@ -203,13 +198,12 @@ public abstract class BaseTeleOp extends LinearOpMode {
 
                 vector = tracker.getCurrentPosition().asVector();
                 heading = tracker.getCurrentPosition().getHeadingRadians();
-            } else if (gamepad1.right_trigger > 0.05) {
+            } else if (gamepad1.right_trigger > 0.05)
                 intakeSubsystem.setState(IntakeSubsystem.IntakeState.INTAKE);
-            } else if (slideSubsystem.getState() != INTAKE) {
+            else if (slideSubsystem.getState() != INTAKE)
                 intakeSubsystem.setState(IntakeSubsystem.IntakeState.HOLD);
-            } else {
+            else
                 intakeSubsystem.setState(IntakeSubsystem.IntakeState.NEUTRAL);
-            }
 
             if (gamepad1.dpad_left) {
                 slideSubsystem.setMode(RUN_WITHOUT_ENCODER);

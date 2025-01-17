@@ -28,6 +28,18 @@ public class SlideSubsystem {
         int getPosition() {
             return this.position;
         }
+
+        public SlideState increment() {
+            if (this == INTAKE)
+                return LOW;
+            return HIGH;
+        }
+
+        public SlideState decrement() {
+            if (this == HIGH)
+                return LOW;
+            return INTAKE;
+        }
     }
 
     private SlideState state;

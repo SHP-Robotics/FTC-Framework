@@ -24,6 +24,18 @@ public class FourBarSubsystem {
         double getPosition() {
             return this.position;
         }
+
+        public FourBarState increment() {
+            if (this == DOWN)
+                return GLIDE;
+            return UP;
+        }
+
+        public FourBarState decrement() {
+            if (this == UP)
+                return GLIDE;
+            return DOWN;
+        }
     }
 
     private FourBarState state;
