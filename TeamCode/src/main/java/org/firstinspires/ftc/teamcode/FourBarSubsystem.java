@@ -5,13 +5,15 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+import dev.frozenmilk.dairy.cachinghardware.CachingServo;
+
 public class FourBarSubsystem {
-    private final Servo fourBarLeft, fourBarRight;
+    private final CachingServo fourBarLeft, fourBarRight;
 
     public enum FourBarState {
-        DOWN (0.03),
-        GLIDE (0.2),
-        UP (0.65);
+        DOWN (0.23),
+        GLIDE (0.4),
+        UP (0.80);
 
         FourBarState(double position) {
             this.position = position;
@@ -27,18 +29,8 @@ public class FourBarSubsystem {
     private FourBarState state;
 
     public FourBarSubsystem(HardwareMap hardwareMap) {
-        this.fourBarLeft = (Servo) hardwareMap.get("fourBarLeft");
-        this.fourBarRight = (Servo) hardwareMap.get("fourBarRight");
-
-        this.fourBarLeft.setDirection(Servo.Direction.REVERSE);
-        this.fourBarRight.setDirection(Servo.Direction.FORWARD);
-
-        this.state = FourBarState.UP;
-    }
-
-    public FourBarSubsystem(Servo fourBarLeft, Servo fourBarRight) {
-        this.fourBarLeft = fourBarLeft;
-        this.fourBarRight = fourBarRight;
+        this.fourBarLeft = new CachingServo((Servo) hardwareMap.get("left"));
+        this.fourBarRight = new CachingServo((Servo) hardwareMap.get("right"));
 
         this.fourBarLeft.setDirection(Servo.Direction.REVERSE);
         this.fourBarRight.setDirection(Servo.Direction.FORWARD);
@@ -55,8 +47,8 @@ public class FourBarSubsystem {
     }
 
     public void update() {
-        this.fourBarLeft.setPosition(this.getState().getPosition());
-        this.fourBarRight.setPosition(this.getState().getPosition());
+        this.fourBarLeft.setPositionResult(this.getState().getPosition());
+        this.fourBarRight.setPositionResult(this.getState().getPosition());
     }
 
     public void updateTelemetry(Telemetry telemetry) {

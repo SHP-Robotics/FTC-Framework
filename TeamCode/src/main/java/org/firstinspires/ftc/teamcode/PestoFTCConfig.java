@@ -8,10 +8,11 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.shprobotics.pestocore.algorithms.PID;
+import com.shprobotics.pestocore.drivebases.DeterministicTracker;
 import com.shprobotics.pestocore.drivebases.MecanumController;
 import com.shprobotics.pestocore.drivebases.TeleOpController;
 import com.shprobotics.pestocore.drivebases.ThreeWheelOdometryTracker;
-import com.shprobotics.pestocore.drivebases.Tracker;
 import com.shprobotics.pestocore.geometries.Vector2D;
 
 @Config
@@ -24,6 +25,9 @@ public class PestoFTCConfig {
     // distance traveled / velocity
     public static double DECELERATION = 0.80;
     public static double MAX_VELOCITY = 52;
+
+    public static PID endpointPID = new PID(0, 0, 0);
+    public static PID headingPID = new PID(0, 0, 0);
 
     public static final DcMotorSimple.Direction leftEncoderDirection = FORWARD;
     public static final DcMotorSimple.Direction centerEncoderDirection = REVERSE;
@@ -63,7 +67,7 @@ public class PestoFTCConfig {
         return mecanumController;
     }
 
-    public static TeleOpController getTeleOpController(MecanumController mecanumController, Tracker tracker, HardwareMap hardwareMap) {
+    public static TeleOpController getTeleOpController(MecanumController mecanumController, DeterministicTracker tracker, HardwareMap hardwareMap) {
         TeleOpController teleOpController = new TeleOpController(mecanumController, hardwareMap);
 
         teleOpController.configureIMU(
@@ -86,7 +90,7 @@ public class PestoFTCConfig {
         return teleOpController;
     }
 
-    public static Tracker getTracker(HardwareMap hardwareMap) {
+    public static DeterministicTracker getTracker(HardwareMap hardwareMap) {
         return new ThreeWheelOdometryTracker.TrackerBuilder(
                 hardwareMap,
                 ODOMETRY_TICKS_PER_INCH,
