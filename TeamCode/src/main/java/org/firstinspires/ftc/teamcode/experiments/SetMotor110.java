@@ -10,9 +10,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.UnhingedSetMotorConstantPowerCommand;
-import org.firstinspires.ftc.teamcode.UnhingedSetMotorTargetVelocityCommand;
-
 import java.util.List;
 
 @Disabled
