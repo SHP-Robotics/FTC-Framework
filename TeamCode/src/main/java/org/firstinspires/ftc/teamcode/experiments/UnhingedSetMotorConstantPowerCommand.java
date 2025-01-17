@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.experiments;
 
 import com.qualcomm.hardware.lynx.LynxModuleIntf;
 import com.qualcomm.hardware.lynx.commands.LynxDatagram;
@@ -11,35 +11,35 @@ import java.nio.ByteBuffer;
 /**
  * Created by bob on 2016-03-07.
  */
-public class UnhingedSetMotorTargetVelocityCommand extends LynxDekaInterfaceCommand<LynxAck>
+public class UnhingedSetMotorConstantPowerCommand extends LynxDekaInterfaceCommand<LynxAck>
 {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
     public final static int cbPayload = 3;
-//    public final static int apiVelocityFirst = -32767;
-//    public final static int apiVelocityLast  =  32767;
+//    public final static int apiPowerLast  =  32767;
+//    public final static int apiPowerFirst = -apiPowerLast;
 
     private byte motor;
-    private short velocity;    // in encoder ticks per second / sec, +CW, -CCW
+    private short power;    // Power level (+CW, -CCW)
 
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    public UnhingedSetMotorTargetVelocityCommand(LynxModuleIntf module)
+    public UnhingedSetMotorConstantPowerCommand(LynxModuleIntf module)
     {
         super(module);
     }
 
-    public UnhingedSetMotorTargetVelocityCommand(LynxModuleIntf module, int motorZ, int velocity)
+    public UnhingedSetMotorConstantPowerCommand(LynxModuleIntf module, int motorZ, int power)
     {
         this(module);
         LynxConstants.validateMotorZ(motorZ);
-//        if (velocity < apiVelocityFirst || velocity > apiVelocityLast) throw new IllegalArgumentException(String.format("illegal velocity: %d", velocity));
+//        if (power < apiPowerFirst || power > apiPowerLast) throw new IllegalArgumentException(String.format("illegal power: %d", power));
         this.motor = (byte)motorZ;
-        this.velocity = (short)velocity;
+        this.power = (short)power;
     }
 
     //----------------------------------------------------------------------------------------------
@@ -51,7 +51,7 @@ public class UnhingedSetMotorTargetVelocityCommand extends LynxDekaInterfaceComm
     {
         ByteBuffer buffer = ByteBuffer.allocate(cbPayload).order(LynxDatagram.LYNX_ENDIAN);
         buffer.put(this.motor);
-        buffer.putShort(this.velocity);
+        buffer.putShort(this.power);
         return buffer.array();
     }
 
@@ -60,12 +60,12 @@ public class UnhingedSetMotorTargetVelocityCommand extends LynxDekaInterfaceComm
     {
         ByteBuffer buffer = ByteBuffer.wrap(rgb).order(LynxDatagram.LYNX_ENDIAN);
         this.motor = buffer.get();
-        this.velocity = buffer.getShort();
+        this.power = buffer.getShort();
     }
 
     @Override
     public boolean isDangerous()
     {
-        return velocity != 0;
+        return power != 0;
     }
 }
