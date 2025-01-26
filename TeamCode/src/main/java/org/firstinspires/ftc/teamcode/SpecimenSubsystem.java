@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.shprobotics.pestocore.algorithms.PID;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -12,10 +13,11 @@ import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx;
 @Config
 public class SpecimenSubsystem {
     public CachingDcMotorEx specimenSlide;
-    public static double power = 1.0;
+//    public static double power = 1.0;
+    public static PID powerPID = new PID(0.003, 0, 0);
 
     public enum SpecimenState {
-        INTAKE (0),
+        INTAKE (10),
         HIGH (1700),
         DEPOSIT_HIGH (1200);
 
@@ -35,6 +37,8 @@ public class SpecimenSubsystem {
     public SpecimenSubsystem(HardwareMap hardwareMap) {
         this.specimenSlide = new CachingDcMotorEx((DcMotorEx) hardwareMap.get("specimen"));
         this.specimenSlide.setDirection(DcMotor.Direction.REVERSE);
+        this.specimenSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        this.specimenSlide.setCachingTolerance(0.05);
 
         this.state = SpecimenState.INTAKE;
     }
@@ -83,11 +87,12 @@ public class SpecimenSubsystem {
 
     public void update() {
         this.specimenSlide.setTargetPosition(state.getPosition());
-        this.setPower(power);
+        this.setPower(powerPID.getOutput(this.specimenSlide.getCurrentPosition(), state.getPosition()));
     }
 
     public void updateTelemetry(Telemetry telemetry) {
         telemetry.addData("SpecimenState", this.state);
+        telemetry.addData("SpecimenPower", this.specimenSlide.getPower());
         telemetry.addData("SpecimenPosition", this.getPosition());
     }
 }

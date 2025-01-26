@@ -3,14 +3,12 @@ package org.firstinspires.ftc.teamcode.teleops;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.FLOAT;
-import static com.shprobotics.pestocore.devices.GamepadKey.DPAD_DOWN;
-import static com.shprobotics.pestocore.devices.GamepadKey.DPAD_UP;
+import static com.shprobotics.pestocore.devices.GamepadKey.A;
 import static com.shprobotics.pestocore.devices.GamepadKey.LEFT_BUMPER;
 import static com.shprobotics.pestocore.devices.GamepadKey.RIGHT_BUMPER;
-import static org.firstinspires.ftc.teamcode.SlideSubsystem.SlideState.HIGH;
+import static com.shprobotics.pestocore.devices.GamepadKey.Y;
+import static org.firstinspires.ftc.teamcode.FourBarSubsystem.FourBarState.UP;
 import static org.firstinspires.ftc.teamcode.SlideSubsystem.SlideState.INTAKE;
-import static org.firstinspires.ftc.teamcode.teleops.BaseTeleOp.SystemMode.SAMPLE;
-import static org.firstinspires.ftc.teamcode.teleops.BaseTeleOp.SystemMode.SPECIMEN;
 
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -29,25 +27,16 @@ import org.firstinspires.ftc.teamcode.PestoFTCConfig;
 import org.firstinspires.ftc.teamcode.SlideSubsystem;
 import org.firstinspires.ftc.teamcode.SpecimenSubsystem;
 import org.firstinspires.ftc.teamcode.StaticVariables;
-import org.firstinspires.ftc.teamcode.WristSubsystem;
 
 import java.util.List;
 
 public abstract class BaseTeleOp extends LinearOpMode {
-    // intake, right trigger
-    // outtake, left trigger
-
-    // slide up, four bar up, right bumper
-    // slide down, four bar down, left bumper
-
-    // xmode, square
-
     protected MecanumController mecanumController;
     protected DeterministicTracker tracker;
     protected TeleOpController teleOpController;
 
     protected FourBarSubsystem fourBarSubsystem;
-    protected WristSubsystem wristSubsystem;
+//    protected WristSubsystem wristSubsystem;
     protected IntakeSubsystem intakeSubsystem;
     protected SlideSubsystem slideSubsystem;
 
@@ -65,19 +54,6 @@ public abstract class BaseTeleOp extends LinearOpMode {
 
     protected ElapsedTime elapsedTime;
 
-    public enum SystemMode {
-        SAMPLE,
-        SPECIMEN;
-
-        public SystemMode toggle() {
-            if (this == SAMPLE)
-                return SPECIMEN;
-            return SAMPLE;
-        }
-    }
-
-    protected SystemMode systemMode;
-
     @Override
     public void runOpMode() {
         mecanumController = PestoFTCConfig.getMecanumController(hardwareMap);
@@ -85,7 +61,7 @@ public abstract class BaseTeleOp extends LinearOpMode {
         teleOpController = PestoFTCConfig.getTeleOpController(mecanumController, tracker, hardwareMap);
 
         fourBarSubsystem = new FourBarSubsystem(hardwareMap);
-        wristSubsystem = new WristSubsystem(hardwareMap);
+//        wristSubsystem = new WristSubsystem(hardwareMap);
         intakeSubsystem = new IntakeSubsystem(hardwareMap);
         slideSubsystem = new SlideSubsystem(hardwareMap);
 
@@ -101,11 +77,12 @@ public abstract class BaseTeleOp extends LinearOpMode {
 
         elapsedTime = new ElapsedTime();
 
-        systemMode = SPECIMEN;
-
-        wristSubsystem.setState(WristSubsystem.WristState.UP);
-//        slideSubsystem.init();
+//        wristSubsystem.setState(WristSubsystem.WristState.UP);
+        slideSubsystem.init();
         specimenSubsystem.init();
+
+        fourBarSubsystem.setState(FourBarSubsystem.FourBarState.DOWN);
+        fourBarSubsystem.update();
 
         for (LynxModule module: modules)
             module.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
@@ -129,128 +106,117 @@ public abstract class BaseTeleOp extends LinearOpMode {
         gamepadInterface.update();
         tracker.update();
 
-//        if (gamepad1.x && vector != null) {
-//            PathContainer path = new PathContainer.PathContainerBuilder()
-//                    .addCurve(
-//                            new BezierCurve(new Vector2D[]{
-//                                    tracker.getCurrentPosition().asVector(),
-//                                    vector
-//                            }),
-//                            new ParametricHeading(
-//                                    new double[]{
-//                                            tracker.getCurrentPosition().getHeadingRadians(),
-//                                            heading
-//                                    }
-//                            )
-//                    )
-//                    .setIncrement(0.01)
-//                    .build();
-//
-//            follower = new PathFollower.PathFollowerBuilder(
-//                    mecanumController,
-//                    tracker,
-//                    path)
-//                    .setDeceleration(PestoFTCConfig.DECELERATION)
-//                    .setHeadingPID( new PID(2, 0, 0))
-//                    .setEndpointPID(new PID(kP, 0, kD))
-//                    .setSpeed(speed)
-//                    .build();
-//
-//            slideSubsystem.setState(HIGH);
-//            fourBarSubsystem.setState(UP);
-//
-//            slideSubsystem.update();
-//            fourBarSubsystem.update();
-//
-//            while (opModeIsActive() && gamepad1.x) {
-//                loopReturnToHome();
-//            }
-//        }
-
-        if (gamepad1.dpad_right) {
+        if (gamepad1.dpad_down) {
             teleOpController.resetIMU();
             tracker.reset();
         }
 
         mecanumController.setZeroPowerBehavior(gamepad1.touchpad ? BRAKE: FLOAT);
 
-        if (gamepadInterface.isKeyDown(DPAD_UP))
-            systemMode = systemMode.toggle();
+//            if (gamepad1.x && vector != null) {
+//                PathContainer path = new PathContainer.PathContainerBuilder()
+//                        .addCurve(
+//                                new BezierCurve(new Vector2D[]{
+//                                        tracker.getCurrentPosition().asVector(),
+//                                        vector
+//                                }),
+//                                new ParametricHeading(
+//                                        new double[]{
+//                                                tracker.getCurrentPosition().getHeadingRadians(),
+//                                                heading
+//                                        }
+//                                )
+//                        )
+//                        .setIncrement(0.01)
+//                        .build();
+//
+//                follower = new PathFollower.PathFollowerBuilder(
+//                        mecanumController,
+//                        tracker,
+//                        path)
+//                        .setDeceleration(PestoFTCConfig.DECELERATION)
+//                        .setHeadingPID(new PID(PestoFTCConfig.headingKP, 0, 0))
+//                        .setEndpointPID(new PID(PestoFTCConfig.endpointKP, 0, 0))
+//                        .setSpeed(1.0)
+//                        .build();
+//
+//                slideSubsystem.setState(HIGH);
+//                fourBarSubsystem.setState(UP);
+////                wristSubsystem.setState(WristSubsystem.WristState.DEPOSIT);
+//
+//                slideSubsystem.update();
+//                fourBarSubsystem.update();
+//
+//                while (opModeIsActive() && gamepad1.x) {
+//                    loopReturnToHome();
+//                }
+//            }
 
-        if (systemMode == SAMPLE) {
-            if (gamepadInterface.isKeyDown(DPAD_DOWN))
-                wristSubsystem.setState(wristSubsystem.getState().cycle());
+//            if (slideSubsystem.getState() == HIGH)
+//                wristSubsystem.setState(WristSubsystem.WristState.DEPOSIT);
+//            else
+//                wristSubsystem.setState(WristSubsystem.WristState.UP);
 
-            if (gamepadInterface.isKeyDown(RIGHT_BUMPER)) {
-                if (slideSubsystem.getState() == HIGH)
-                    fourBarSubsystem.setState(fourBarSubsystem.getState().increment());
+        if (gamepadInterface.isKeyDown(LEFT_BUMPER)) {
+            if (fourBarSubsystem.getState() == UP)
                 slideSubsystem.setState(slideSubsystem.getState().increment());
+            fourBarSubsystem.setState(fourBarSubsystem.getState().increment());
+        }
+
+        if (gamepadInterface.isKeyDown(RIGHT_BUMPER)) {
+            if (slideSubsystem.getState() == INTAKE)
+                fourBarSubsystem.setState(fourBarSubsystem.getState().decrement());
+            slideSubsystem.setState(slideSubsystem.getState().decrement());
+        }
+
+        if (gamepad1.left_trigger > 0.9) {
+            intakeSubsystem.setState(IntakeSubsystem.IntakeState.OUTTAKE);
+
+            vector = tracker.getCurrentPosition().asVector();
+            heading = tracker.getCurrentPosition().getHeadingRadians();
+        } else if (gamepad1.right_trigger > 0.05)
+            intakeSubsystem.setState(IntakeSubsystem.IntakeState.INTAKE);
+        else if (slideSubsystem.getState() != INTAKE)
+            intakeSubsystem.setState(IntakeSubsystem.IntakeState.HOLD);
+        else
+            intakeSubsystem.setState(IntakeSubsystem.IntakeState.NEUTRAL);
+
+        if (gamepad1.dpad_left) {
+            slideSubsystem.setMode(RUN_WITHOUT_ENCODER);
+            slideSubsystem.setPower(-0.5);
+            mecanumController.drive(0, 0, 0);
+
+            while (gamepad1.dpad_left) {
             }
 
-            if (gamepadInterface.isKeyDown(LEFT_BUMPER)) {
-                if (slideSubsystem.getState() == INTAKE)
-                    fourBarSubsystem.setState(fourBarSubsystem.getState().decrement());
-                slideSubsystem.setState(slideSubsystem.getState().decrement());
+            slideSubsystem.setPower(0);
+            slideSubsystem.setState(INTAKE);
+            slideSubsystem.init();
+        }
+
+        if (gamepadInterface.isKeyDown(Y))
+            specimenSubsystem.increment();
+        else if (gamepadInterface.isKeyDown(A))
+            specimenSubsystem.decrement();
+
+        if (gamepad1.dpad_right) {
+            specimenSubsystem.setMode(RUN_WITHOUT_ENCODER);
+            specimenSubsystem.setPower(-0.5);
+            mecanumController.drive(0, 0, 0);
+
+            while (gamepad1.dpad_right) {
             }
 
-            if (gamepad1.left_trigger > 0.9) {
-                intakeSubsystem.setState(IntakeSubsystem.IntakeState.OUTTAKE);
-
-                vector = tracker.getCurrentPosition().asVector();
-                heading = tracker.getCurrentPosition().getHeadingRadians();
-            } else if (gamepad1.right_trigger > 0.05)
-                intakeSubsystem.setState(IntakeSubsystem.IntakeState.INTAKE);
-            else if (slideSubsystem.getState() != INTAKE)
-                intakeSubsystem.setState(IntakeSubsystem.IntakeState.HOLD);
-            else
-                intakeSubsystem.setState(IntakeSubsystem.IntakeState.NEUTRAL);
-
-            if (gamepad1.dpad_left) {
-                slideSubsystem.setMode(RUN_WITHOUT_ENCODER);
-                slideSubsystem.setPower(-0.5);
-                mecanumController.drive(0, 0, 0);
-
-                while (gamepad1.dpad_left) {
-                }
-
-                slideSubsystem.setPower(0);
-                slideSubsystem.setState(INTAKE);
-                slideSubsystem.init();
-            }
-        } else {
-            if (gamepadInterface.isKeyDown(RIGHT_BUMPER))
-                specimenSubsystem.increment();
-            else if (gamepadInterface.isKeyDown(LEFT_BUMPER))
-                specimenSubsystem.decrement();
-
-            if (gamepad1.left_trigger > 0.9) {
-                clawSubsystem.setState(ClawSubsystem.ClawState.OPEN);
-
-                vector = tracker.getCurrentPosition().asVector();
-                heading = tracker.getCurrentPosition().getHeadingRadians();
-            } else if (gamepad1.right_trigger > 0.05) {
-                clawSubsystem.setState(ClawSubsystem.ClawState.CLOSE);
-            }
-
-            if (gamepad1.dpad_left) {
-                specimenSubsystem.setMode(RUN_WITHOUT_ENCODER);
-                specimenSubsystem.setPower(-0.5);
-                mecanumController.drive(0, 0, 0);
-
-                while (gamepad1.dpad_left) {
-                }
-
-                specimenSubsystem.setPower(0);
-                specimenSubsystem.setState(SpecimenSubsystem.SpecimenState.INTAKE);
-                specimenSubsystem.init();
-            }
+            specimenSubsystem.setPower(0);
+            specimenSubsystem.setState(SpecimenSubsystem.SpecimenState.INTAKE);
+            specimenSubsystem.init();
         }
 
         telemetry.addData("Radians", teleOpController.getHeading());
 
         fourBarSubsystem.update();
-//        intakeSubsystem.update();
-//        slideSubsystem.update();
+        intakeSubsystem.update();
+        slideSubsystem.update();
 //        wristSubsystem.update();
 
         specimenSubsystem.update();
@@ -259,7 +225,7 @@ public abstract class BaseTeleOp extends LinearOpMode {
         fourBarSubsystem.updateTelemetry(telemetry);
         intakeSubsystem.updateTelemetry(telemetry);
         slideSubsystem.updateTelemetry(telemetry);
-        wristSubsystem.updateTelemetry(telemetry);
+//        wristSubsystem.updateTelemetry(telemetry);
 
         specimenSubsystem.updateTelemetry(telemetry);
         clawSubsystem.updateTelemetry(telemetry);

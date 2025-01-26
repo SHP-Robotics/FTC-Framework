@@ -12,12 +12,12 @@ import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx;
 @Config
 public class SlideSubsystem {
     public CachingDcMotorEx slideLeft, slideRight;
-    public static double power = 0.0;
+    public static double power = 1.0;
 
     public enum SlideState {
-        INTAKE (170),
-        LOW (2050),
-        HIGH (4250);
+        INTAKE (170);
+//        LOW (2050);
+//        HIGH (4050);
 
         SlideState(int position) {
             this.position = position;
@@ -30,14 +30,15 @@ public class SlideSubsystem {
         }
 
         public SlideState increment() {
-            if (this == INTAKE)
-                return LOW;
-            return HIGH;
+//            if (this == INTAKE)
+//                return LOW;
+//            return HIGH;
+            return INTAKE;
         }
 
         public SlideState decrement() {
-            if (this == HIGH)
-                return LOW;
+//            if (this == HIGH)
+//                return LOW;
             return INTAKE;
         }
     }
@@ -80,6 +81,10 @@ public class SlideSubsystem {
         return this.slideLeft.isBusy() || this.slideRight.isBusy();
     }
 
+    public double getPower() {
+        return (this.slideLeft.getPower() + this.slideRight.getPower()) / 2;
+    }
+
     public void init() {
         this.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -95,7 +100,8 @@ public class SlideSubsystem {
     }
 
     public void updateTelemetry(Telemetry telemetry) {
-        telemetry.addData("SpecimenState", this.state);
-        telemetry.addData("SpecimenPosition", this.getPosition());
+        telemetry.addData("SlideState", this.state);
+        telemetry.addData("SlidePosition", this.getPower());
+        telemetry.addData("SlidePosition", this.getPosition());
     }
 }

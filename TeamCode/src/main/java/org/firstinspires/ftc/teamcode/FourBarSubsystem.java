@@ -12,8 +12,8 @@ public class FourBarSubsystem {
 
     public enum FourBarState {
         DOWN (0.23),
-        GLIDE (0.4),
-        UP (0.80);
+        GLIDE (0.6),
+        UP (0.83);
 
         FourBarState(double position) {
             this.position = position;

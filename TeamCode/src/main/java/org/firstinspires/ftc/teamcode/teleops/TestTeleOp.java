@@ -1,14 +1,11 @@
 package org.firstinspires.ftc.teamcode.teleops;
 
-import static org.firstinspires.ftc.teamcode.WristSubsystem.WristState.DOWN;
-import static org.firstinspires.ftc.teamcode.WristSubsystem.WristState.UP;
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.shprobotics.pestocore.devices.GamepadInterface;
-import com.shprobotics.pestocore.devices.GamepadKey;
 
-import org.firstinspires.ftc.teamcode.WristSubsystem;
+import org.firstinspires.ftc.teamcode.SlideSubsystem;
 
 @TeleOp
 public class TestTeleOp extends LinearOpMode {
@@ -18,23 +15,15 @@ public class TestTeleOp extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         GamepadInterface gamepadInterface = new GamepadInterface(gamepad1);
-        WristSubsystem wristSubsystem = new WristSubsystem(hardwareMap);
+        SlideSubsystem slideSubsystem = new SlideSubsystem(hardwareMap);
+        slideSubsystem.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         waitForStart();
 
         while (opModeIsActive()) {
             gamepadInterface.update();
 
-            if (gamepadInterface.isKeyDown(GamepadKey.RIGHT_BUMPER)) {
-                if (wristSubsystem.getState() == DOWN)
-                    wristSubsystem.setState(UP);
-                else
-                    wristSubsystem.setState(DOWN);
-            }
-
-            wristSubsystem.update();
-
-            telemetry.addData("state", wristSubsystem.getState());
+            telemetry.addData("position", slideSubsystem.getPosition());
             telemetry.update();
         }
     }

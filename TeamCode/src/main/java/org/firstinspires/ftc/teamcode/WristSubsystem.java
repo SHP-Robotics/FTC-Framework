@@ -11,7 +11,7 @@ public class WristSubsystem {
     private CachingServo wrist;
 
     public enum WristState {
-        DOWN(0),
+        DEPOSIT(0.5),
         UP(1);
 
         WristState(double position) {
@@ -22,13 +22,6 @@ public class WristSubsystem {
 
         double getPosition() {
             return this.position;
-        }
-
-        public WristState cycle() {
-            if (this == DOWN) {
-                return UP;
-            }
-            return DOWN;
         }
     }
 

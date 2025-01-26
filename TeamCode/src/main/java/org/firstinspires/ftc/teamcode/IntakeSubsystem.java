@@ -10,7 +10,7 @@ public class IntakeSubsystem {
 
     public enum IntakeState {
         INTAKE (1),
-        OUTTAKE(-1),
+        OUTTAKE(-0.6),
         HOLD (0.05),
         NEUTRAL (0);
 

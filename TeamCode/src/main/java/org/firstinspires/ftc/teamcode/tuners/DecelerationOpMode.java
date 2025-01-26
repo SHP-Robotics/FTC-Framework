@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.tuners;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.shprobotics.pestocore.drivebases.DeterministicTracker;
@@ -9,7 +8,7 @@ import com.shprobotics.pestocore.tuners.DecelerationTuner;
 
 import org.firstinspires.ftc.teamcode.PestoFTCConfig;
 
-@Disabled
+//@Disabled
 @TeleOp
 public class DecelerationOpMode extends DecelerationTuner {
     @Override
