@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+import java.util.Objects;
+
 @Config
 public class SlideSubsystem {
     public SparkMiniMotor slide;
@@ -17,8 +19,7 @@ public class SlideSubsystem {
 //    private static final double inchesPerRotation = 4.724757455393701; // 2mm Pitch GT2 Hub-Mount Timing Belt Pulley (14mm Bore, 60 Tooth)
 
     public enum SlideState {
-        INTAKE (0),
-        BELOW_LOW_RUNG (186),
+        INTAKE (130),
         ABOVE_LOW_RUNG (480),
         BELOW_HIGH_RUNG (1350),
         ABOVE_HIGH_RUNG (1933);
@@ -37,7 +38,8 @@ public class SlideSubsystem {
     private SlideState state;
 
     public SlideSubsystem(HardwareMap hardwareMap) {
-        DcMotorEx motor = (DcMotorEx) hardwareMap.get("frontLeft");
+        DcMotorEx motor = (DcMotorEx) hardwareMap.get("backLeft");
+        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         CRServo power = (CRServo) hardwareMap.get("slide");
         this.slide = new SparkMiniMotor(motor.getController(), motor.getPortNumber());
         this.slide.setServo(power);
@@ -67,29 +69,17 @@ public class SlideSubsystem {
     }
 
     public void increment() {
-        switch (this.state) {
-            case INTAKE:
-            case BELOW_LOW_RUNG:
-                this.state = SlideState.ABOVE_LOW_RUNG;
-                break;
-            default:
-                this.state = SlideState.ABOVE_HIGH_RUNG;
-                break;
-        }
+        if (Objects.requireNonNull(this.state) == SlideState.INTAKE)
+//            this.state = SlideState.ABOVE_LOW_RUNG;
+//        else
+            this.state = SlideState.ABOVE_HIGH_RUNG;
     }
 
     public void decrement() {
-        switch (this.state) {
-            case ABOVE_HIGH_RUNG:
-                this.state = SlideState.BELOW_HIGH_RUNG;
-                break;
-            case ABOVE_LOW_RUNG:
-                this.state = SlideState.BELOW_LOW_RUNG;
-                break;
-            default:
-                this.state = SlideState.INTAKE;
-                break;
-        }
+        if (Objects.requireNonNull(this.state) == SlideState.ABOVE_HIGH_RUNG)
+            this.state = SlideState.BELOW_HIGH_RUNG;
+        else
+            this.state = SlideState.INTAKE;
     }
 
     public SlideState getState() {
