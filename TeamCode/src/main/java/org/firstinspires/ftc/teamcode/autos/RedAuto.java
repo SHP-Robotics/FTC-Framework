@@ -39,8 +39,8 @@ public class RedAuto extends LinearOpMode {
 
     public PathFollower generatePathFollower(PathContainer pathContainer, Runnable finalAction, double decelerationSpeed, double decelerationTime, double speed) {
         return new PathFollower.PathFollowerBuilder(mecanumController, tracker, pathContainer)
-                .setEndpointPID(new PID(0.008,0, 0))//0.008
-                .setHeadingPID(new PID(1.6, 0, 0))
+                .setEndpointPID(new PID(0.012,0, 0))//0.008
+                .setHeadingPID(new PID(0.8, 0, 0))
                 .setDeceleration(decelerationSpeed)
                 .setSpeed(speed)
 
@@ -99,7 +99,7 @@ public class RedAuto extends LinearOpMode {
             loopOpMode();
         }
 
-        for (int i = 0; i < 3; i++) {
+       // for (int i = 0; i < 3; i++) {
             subToSample = new PathContainer.PathContainerBuilder()
                     .setIncrement(0.1)
                     .addCurve(new BezierCurve(
@@ -117,7 +117,7 @@ public class RedAuto extends LinearOpMode {
                     .addCurve(new BezierCurve(
                                     new Vector2D[]{
                                             new Vector2D(-49, -20),
-                                            new Vector2D(-49, 12.5)
+                                            new Vector2D(-49, 13.5) //12.5
                                     }
                             ),
                             new ParametricHeading(Math.PI, Math.PI)
@@ -210,7 +210,7 @@ public class RedAuto extends LinearOpMode {
 //            while (opModeIsActive() && !pathFollower.isCompleted()) {
 //                loopOpMode();
 //            }
-        }
+       // }
     }
 
     public void loopOpMode() {
