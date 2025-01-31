@@ -8,7 +8,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import dev.frozenmilk.dairy.cachinghardware.CachingServo;
 
 public class WristSubsystem {
-    private CachingServo wrist;
+    private final CachingServo wrist;
 
     public enum WristState {
         DEPOSIT(0.5),

@@ -22,13 +22,13 @@ import com.shprobotics.pestocore.geometries.Vector2D;
 @Config
 public class PestoFTCConfig {
     public static double ODOMETRY_TICKS_PER_INCH = 505.316944316;
-    public static double FORWARD_OFFSET = 0.8;
+    public static double FORWARD_OFFSET = 0.794;
     public static double ODOMETRY_WIDTH = 6.65;
 
     // TODO: tune these
     // distance traveled / velocity
-    public static double DECELERATION = 0.9;
-    public static double MAX_VELOCITY = 52;
+    public static double DECELERATION = 1.7;
+    public static double MAX_VELOCITY = 80;
 
     public static double endpointKP = 0.005;
     public static double headingKP = 0.8;
@@ -114,42 +114,42 @@ public class PestoFTCConfig {
                 .setEndpointPID(new PID(endpointKP, 0, 0))
                 .setHeadingPID(new PID(headingKP, 0, 0))
                 .setDeceleration(DECELERATION)
-                .setSpeed(1.0);
+                .setSpeed(1.0)
 
-//                .setEndTolerance(0.4, Math.toRadians(2))
-//                .setEndVelocityTolerance(4);
+                .setEndTolerance(0.4, Math.toRadians(0.5))
+                .setEndVelocityTolerance(4);
     }
 
-    public static Runnable getPlaceSpecimen(DeterministicTracker tracker, SpecimenSubsystem specimenSubsystem, ClawSubsystem clawSubsystem, ElapsedTime elapsedTime, LinearOpMode linearOpMode) {
+    public static Runnable getPlaceSpecimen(DeterministicTracker tracker, SpecimenSlideSubsystem specimenSlideSubsystem, SpecimenClawSubsystem specimenClawSubsystem, ElapsedTime elapsedTime, LinearOpMode linearOpMode) {
         return () -> {
             elapsedTime.reset();
             while (linearOpMode.opModeIsActive() && elapsedTime.seconds() < 0.5) {
-                specimenSubsystem.update();
+                specimenSlideSubsystem.update();
                 tracker.update();
             }
-            specimenSubsystem.setState(SpecimenSubsystem.SpecimenState.DEPOSIT_HIGH);
+            specimenSlideSubsystem.setState(SpecimenSlideSubsystem.SpecimenState.BELOW_HIGH);
             elapsedTime.reset();
             while (linearOpMode.opModeIsActive() && elapsedTime.seconds() < 1.0) {
-                specimenSubsystem.update();
+                specimenSlideSubsystem.update();
                 tracker.update();
             }
 
             elapsedTime.reset();
-            clawSubsystem.setState(ClawSubsystem.ClawState.OPEN);
+            specimenClawSubsystem.setState(SpecimenClawSubsystem.ClawState.OPEN);
 
             while (linearOpMode.opModeIsActive() && elapsedTime.seconds() < 0.5) {
-                clawSubsystem.update();
+                specimenClawSubsystem.update();
                 tracker.update();
             }
 
-            specimenSubsystem.setState(SpecimenSubsystem.SpecimenState.INTAKE);
+            specimenSlideSubsystem.setState(SpecimenSlideSubsystem.SpecimenState.INTAKE);
         };
     }
 
-    public static Runnable getGrabSpecimen(DeterministicTracker tracker, SpecimenSubsystem specimenSubsystem, ClawSubsystem clawSubsystem, ElapsedTime elapsedTime, LinearOpMode linearOpMode) {
+    public static Runnable getGrabSpecimen(DeterministicTracker tracker, SpecimenSlideSubsystem specimenSlideSubsystem, SpecimenClawSubsystem specimenClawSubsystem, ElapsedTime elapsedTime, LinearOpMode linearOpMode) {
         return () -> {
-            clawSubsystem.setState(ClawSubsystem.ClawState.CLOSE);
-            clawSubsystem.update();
+            specimenClawSubsystem.setState(SpecimenClawSubsystem.ClawState.CLOSE);
+            specimenClawSubsystem.update();
 
             elapsedTime.reset();
 
@@ -157,12 +157,12 @@ public class PestoFTCConfig {
                 tracker.update();
             }
 
-            specimenSubsystem.setState(SpecimenSubsystem.SpecimenState.HIGH);
+            specimenSlideSubsystem.setState(SpecimenSlideSubsystem.SpecimenState.HIGH);
 
             elapsedTime.reset();
             while (linearOpMode.opModeIsActive() && elapsedTime.seconds() < 0.5) {
                 tracker.update();
-                specimenSubsystem.update();
+                specimenSlideSubsystem.update();
             }
         };
     }

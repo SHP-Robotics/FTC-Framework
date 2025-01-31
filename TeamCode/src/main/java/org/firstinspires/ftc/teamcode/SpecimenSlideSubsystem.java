@@ -11,15 +11,15 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx;
 
 @Config
-public class SpecimenSubsystem {
+public class SpecimenSlideSubsystem {
     public CachingDcMotorEx specimenSlide;
 //    public static double power = 1.0;
     public static PID powerPID = new PID(0.003, 0, 0);
 
     public enum SpecimenState {
         INTAKE (10),
-        HIGH (1700),
-        DEPOSIT_HIGH (1200);
+        BELOW_HIGH (1250),
+        HIGH (1833);
 
         SpecimenState(int position) {
             this.position = position;
@@ -34,7 +34,7 @@ public class SpecimenSubsystem {
 
     private SpecimenState state;
 
-    public SpecimenSubsystem(HardwareMap hardwareMap) {
+    public SpecimenSlideSubsystem(HardwareMap hardwareMap) {
         this.specimenSlide = new CachingDcMotorEx((DcMotorEx) hardwareMap.get("specimen"));
         this.specimenSlide.setDirection(DcMotor.Direction.REVERSE);
         this.specimenSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -64,13 +64,13 @@ public class SpecimenSubsystem {
     }
 
     public void increment() {
-        if (this.getState() == SpecimenSubsystem.SpecimenState.DEPOSIT_HIGH) this.setState(SpecimenSubsystem.SpecimenState.HIGH);
-        if (this.getState() == SpecimenSubsystem.SpecimenState.INTAKE) this.setState(SpecimenSubsystem.SpecimenState.HIGH);
+        if (this.getState() == SpecimenState.BELOW_HIGH) this.setState(SpecimenSlideSubsystem.SpecimenState.HIGH);
+        if (this.getState() == SpecimenSlideSubsystem.SpecimenState.INTAKE) this.setState(SpecimenSlideSubsystem.SpecimenState.HIGH);
     }
 
     public void decrement() {
-        if (this.getState() == SpecimenSubsystem.SpecimenState.DEPOSIT_HIGH) this.setState(SpecimenSubsystem.SpecimenState.INTAKE);
-        if (this.getState() == SpecimenSubsystem.SpecimenState.HIGH) this.setState(SpecimenSubsystem.SpecimenState.DEPOSIT_HIGH);
+        if (this.getState() == SpecimenSlideSubsystem.SpecimenState.BELOW_HIGH) this.setState(SpecimenSlideSubsystem.SpecimenState.INTAKE);
+        if (this.getState() == SpecimenSlideSubsystem.SpecimenState.HIGH) this.setState(SpecimenState.BELOW_HIGH);
     }
 
     public boolean isBusy() {

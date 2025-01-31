@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.teamcode.FourBarSubsystem.FourBarState.DOWN;
+import static org.firstinspires.ftc.teamcode.FourBarSubsystem.FourBarState.GLIDE;
+import static org.firstinspires.ftc.teamcode.FourBarSubsystem.FourBarState.UP;
+
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -11,9 +15,9 @@ public class FourBarSubsystem {
     private final CachingServo fourBarLeft, fourBarRight;
 
     public enum FourBarState {
-        DOWN (0.23),
-        GLIDE (0.6),
-        UP (0.83);
+        UP (0.33),
+        GLIDE (0.70),
+        DOWN (0.86);
 
         FourBarState(double position) {
             this.position = position;
@@ -23,18 +27,6 @@ public class FourBarSubsystem {
 
         double getPosition() {
             return this.position;
-        }
-
-        public FourBarState increment() {
-            if (this == DOWN)
-                return GLIDE;
-            return UP;
-        }
-
-        public FourBarState decrement() {
-            if (this == UP)
-                return GLIDE;
-            return DOWN;
         }
     }
 
@@ -47,7 +39,7 @@ public class FourBarSubsystem {
         this.fourBarLeft.setDirection(Servo.Direction.REVERSE);
         this.fourBarRight.setDirection(Servo.Direction.FORWARD);
 
-        this.state = FourBarState.UP;
+        this.state = UP;
     }
 
     public void setState(FourBarState state) {
@@ -56,6 +48,20 @@ public class FourBarSubsystem {
 
     public FourBarState getState() {
         return this.state;
+    }
+
+    public void increment() {
+        if (state == DOWN)
+            state = GLIDE;
+        else
+            state = UP;
+    }
+
+    public void decrement() {
+        if (state == UP)
+            state = GLIDE;
+        else
+            state = DOWN;
     }
 
     public void update() {

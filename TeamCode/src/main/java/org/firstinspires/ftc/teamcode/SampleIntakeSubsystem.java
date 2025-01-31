@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class IntakeSubsystem {
-    private CRServo intake;
+public class SampleIntakeSubsystem {
+    private final CRServo intake;
 
     public enum IntakeState {
         INTAKE (1),
@@ -27,7 +27,7 @@ public class IntakeSubsystem {
 
     private IntakeState state;
 
-    public IntakeSubsystem(HardwareMap hardwareMap) {
+    public SampleIntakeSubsystem(HardwareMap hardwareMap) {
         this.intake = (CRServo) hardwareMap.get("intake");
         this.intake.setDirection(CRServo.Direction.FORWARD);
         this.state = IntakeState.NEUTRAL;

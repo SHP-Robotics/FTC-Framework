@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.teamcode.SampleSlideSubsystem.SlideState.HIGH;
+import static org.firstinspires.ftc.teamcode.SampleSlideSubsystem.SlideState.INTAKE;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -10,14 +13,13 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import dev.frozenmilk.dairy.cachinghardware.CachingDcMotorEx;
 
 @Config
-public class SlideSubsystem {
+public class SampleSlideSubsystem {
     public CachingDcMotorEx slideLeft, slideRight;
     public static double power = 1.0;
 
     public enum SlideState {
-        INTAKE (170);
-//        LOW (2050);
-//        HIGH (4050);
+        INTAKE (170),
+        HIGH (4050);
 
         SlideState(int position) {
             this.position = position;
@@ -28,31 +30,18 @@ public class SlideSubsystem {
         int getPosition() {
             return this.position;
         }
-
-        public SlideState increment() {
-//            if (this == INTAKE)
-//                return LOW;
-//            return HIGH;
-            return INTAKE;
-        }
-
-        public SlideState decrement() {
-//            if (this == HIGH)
-//                return LOW;
-            return INTAKE;
-        }
     }
 
     private SlideState state;
 
-    public SlideSubsystem(HardwareMap hardwareMap) {
+    public SampleSlideSubsystem(HardwareMap hardwareMap) {
         this.slideLeft = new CachingDcMotorEx((DcMotorEx) hardwareMap.get("slideLeft"));
         this.slideRight = new CachingDcMotorEx((DcMotorEx) hardwareMap.get("slideRight"));
 
         this.slideLeft.setDirection(DcMotor.Direction.FORWARD);
         this.slideRight.setDirection(DcMotor.Direction.REVERSE);
 
-        this.state = SlideState.INTAKE;
+        this.state = INTAKE;
     }
 
     public void setMode(DcMotor.RunMode mode) {
@@ -75,6 +64,14 @@ public class SlideSubsystem {
 
     public SlideState getState() {
         return this.state;
+    }
+
+    public void increment() {
+        state = HIGH;
+    }
+
+    public void decrement() {
+        state = INTAKE;
     }
 
     public boolean isBusy() {
@@ -103,5 +100,7 @@ public class SlideSubsystem {
         telemetry.addData("SlideState", this.state);
         telemetry.addData("SlidePosition", this.getPower());
         telemetry.addData("SlidePosition", this.getPosition());
+        telemetry.addData("SlidePositionL", this.slideLeft.getCurrentPosition());
+        telemetry.addData("SlidePositionR", this.slideRight.getCurrentPosition());
     }
 }

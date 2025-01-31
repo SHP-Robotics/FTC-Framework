@@ -7,8 +7,7 @@ import static com.shprobotics.pestocore.devices.GamepadKey.A;
 import static com.shprobotics.pestocore.devices.GamepadKey.LEFT_BUMPER;
 import static com.shprobotics.pestocore.devices.GamepadKey.RIGHT_BUMPER;
 import static com.shprobotics.pestocore.devices.GamepadKey.Y;
-import static org.firstinspires.ftc.teamcode.FourBarSubsystem.FourBarState.UP;
-import static org.firstinspires.ftc.teamcode.SlideSubsystem.SlideState.INTAKE;
+import static org.firstinspires.ftc.teamcode.SampleSlideSubsystem.SlideState.INTAKE;
 
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -20,12 +19,12 @@ import com.shprobotics.pestocore.drivebases.TeleOpController;
 import com.shprobotics.pestocore.geometries.PathFollower;
 import com.shprobotics.pestocore.geometries.Vector2D;
 
-import org.firstinspires.ftc.teamcode.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.FourBarSubsystem;
-import org.firstinspires.ftc.teamcode.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.PestoFTCConfig;
-import org.firstinspires.ftc.teamcode.SlideSubsystem;
-import org.firstinspires.ftc.teamcode.SpecimenSubsystem;
+import org.firstinspires.ftc.teamcode.SampleIntakeSubsystem;
+import org.firstinspires.ftc.teamcode.SampleSlideSubsystem;
+import org.firstinspires.ftc.teamcode.SpecimenClawSubsystem;
+import org.firstinspires.ftc.teamcode.SpecimenSlideSubsystem;
 import org.firstinspires.ftc.teamcode.StaticVariables;
 
 import java.util.List;
@@ -36,12 +35,11 @@ public abstract class BaseTeleOp extends LinearOpMode {
     protected TeleOpController teleOpController;
 
     protected FourBarSubsystem fourBarSubsystem;
-//    protected WristSubsystem wristSubsystem;
-    protected IntakeSubsystem intakeSubsystem;
-    protected SlideSubsystem slideSubsystem;
+    protected SampleIntakeSubsystem sampleIntakeSubsystem;
+    protected SampleSlideSubsystem sampleSlideSubsystem;
 
-    protected SpecimenSubsystem specimenSubsystem;
-    protected ClawSubsystem clawSubsystem;
+    protected SpecimenSlideSubsystem specimenSlideSubsystem;
+    protected SpecimenClawSubsystem specimenClawSubsystem;
 
     protected List<LynxModule> modules;
 
@@ -53,6 +51,8 @@ public abstract class BaseTeleOp extends LinearOpMode {
     protected PathFollower follower;
 
     protected ElapsedTime elapsedTime;
+    protected ElapsedTime specimenUpTimer = null;
+    protected ElapsedTime specimenDownTimer = null;
 
     @Override
     public void runOpMode() {
@@ -61,12 +61,11 @@ public abstract class BaseTeleOp extends LinearOpMode {
         teleOpController = PestoFTCConfig.getTeleOpController(mecanumController, tracker, hardwareMap);
 
         fourBarSubsystem = new FourBarSubsystem(hardwareMap);
-//        wristSubsystem = new WristSubsystem(hardwareMap);
-        intakeSubsystem = new IntakeSubsystem(hardwareMap);
-        slideSubsystem = new SlideSubsystem(hardwareMap);
+        sampleIntakeSubsystem = new SampleIntakeSubsystem(hardwareMap);
+        sampleSlideSubsystem = new SampleSlideSubsystem(hardwareMap);
 
-        specimenSubsystem = new SpecimenSubsystem(hardwareMap);
-        clawSubsystem = new ClawSubsystem(hardwareMap);
+        specimenSlideSubsystem = new SpecimenSlideSubsystem(hardwareMap);
+        specimenClawSubsystem = new SpecimenClawSubsystem(hardwareMap);
 
         modules = hardwareMap.getAll(LynxModule.class);
 
@@ -77,9 +76,8 @@ public abstract class BaseTeleOp extends LinearOpMode {
 
         elapsedTime = new ElapsedTime();
 
-//        wristSubsystem.setState(WristSubsystem.WristState.UP);
-        slideSubsystem.init();
-        specimenSubsystem.init();
+        sampleSlideSubsystem.init();
+        specimenSlideSubsystem.init();
 
         fourBarSubsystem.setState(FourBarSubsystem.FourBarState.DOWN);
         fourBarSubsystem.update();
@@ -87,7 +85,8 @@ public abstract class BaseTeleOp extends LinearOpMode {
         for (LynxModule module: modules)
             module.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
 
-        tracker.reset(StaticVariables.HEADING);
+//        tracker.reset(StaticVariables.HEADING);
+        tracker.reset();
         waitForStart();
 
         elapsedTime.reset();
@@ -106,10 +105,16 @@ public abstract class BaseTeleOp extends LinearOpMode {
         gamepadInterface.update();
         tracker.update();
 
-        if (gamepad1.dpad_down) {
+        if (gamepad1.x) {
             teleOpController.resetIMU();
             tracker.reset();
         }
+
+        if (gamepad1.dpad_up) {
+            sampleSlideSubsystem.increment();
+            fourBarSubsystem.setState(FourBarSubsystem.FourBarState.UP);
+        } else if (gamepad1.dpad_down)
+            sampleSlideSubsystem.decrement();
 
         mecanumController.setZeroPowerBehavior(gamepad1.touchpad ? BRAKE: FLOAT);
 
@@ -152,83 +157,103 @@ public abstract class BaseTeleOp extends LinearOpMode {
 //                }
 //            }
 
-//            if (slideSubsystem.getState() == HIGH)
-//                wristSubsystem.setState(WristSubsystem.WristState.DEPOSIT);
-//            else
-//                wristSubsystem.setState(WristSubsystem.WristState.UP);
+        if (gamepadInterface.isKeyDown(LEFT_BUMPER))
+            fourBarSubsystem.increment();
 
-        if (gamepadInterface.isKeyDown(LEFT_BUMPER)) {
-            if (fourBarSubsystem.getState() == UP)
-                slideSubsystem.setState(slideSubsystem.getState().increment());
-            fourBarSubsystem.setState(fourBarSubsystem.getState().increment());
-        }
-
-        if (gamepadInterface.isKeyDown(RIGHT_BUMPER)) {
-            if (slideSubsystem.getState() == INTAKE)
-                fourBarSubsystem.setState(fourBarSubsystem.getState().decrement());
-            slideSubsystem.setState(slideSubsystem.getState().decrement());
-        }
+        if (gamepadInterface.isKeyDown(RIGHT_BUMPER))
+            fourBarSubsystem.decrement();
 
         if (gamepad1.left_trigger > 0.9) {
-            intakeSubsystem.setState(IntakeSubsystem.IntakeState.OUTTAKE);
+            sampleIntakeSubsystem.setState(SampleIntakeSubsystem.IntakeState.OUTTAKE);
 
             vector = tracker.getCurrentPosition().asVector();
             heading = tracker.getCurrentPosition().getHeadingRadians();
         } else if (gamepad1.right_trigger > 0.05)
-            intakeSubsystem.setState(IntakeSubsystem.IntakeState.INTAKE);
-        else if (slideSubsystem.getState() != INTAKE)
-            intakeSubsystem.setState(IntakeSubsystem.IntakeState.HOLD);
+            sampleIntakeSubsystem.setState(SampleIntakeSubsystem.IntakeState.INTAKE);
+        else if (sampleSlideSubsystem.getState() != INTAKE)
+            sampleIntakeSubsystem.setState(SampleIntakeSubsystem.IntakeState.HOLD);
         else
-            intakeSubsystem.setState(IntakeSubsystem.IntakeState.NEUTRAL);
+            sampleIntakeSubsystem.setState(SampleIntakeSubsystem.IntakeState.NEUTRAL);
 
         if (gamepad1.dpad_left) {
-            slideSubsystem.setMode(RUN_WITHOUT_ENCODER);
-            slideSubsystem.setPower(-0.5);
+            sampleSlideSubsystem.setMode(RUN_WITHOUT_ENCODER);
+            sampleSlideSubsystem.setPower(-0.5);
             mecanumController.drive(0, 0, 0);
 
             while (gamepad1.dpad_left) {
             }
 
-            slideSubsystem.setPower(0);
-            slideSubsystem.setState(INTAKE);
-            slideSubsystem.init();
+            sampleSlideSubsystem.setPower(0);
+            sampleSlideSubsystem.setState(INTAKE);
+            sampleSlideSubsystem.init();
         }
 
-        if (gamepadInterface.isKeyDown(Y))
-            specimenSubsystem.increment();
-        else if (gamepadInterface.isKeyDown(A))
-            specimenSubsystem.decrement();
+        if (gamepadInterface.isKeyDown(Y)) {
+            if (specimenClawSubsystem.getState() != SpecimenClawSubsystem.ClawState.CLOSE) {
+                specimenUpTimer = new ElapsedTime();
+                specimenUpTimer.reset();
+                specimenDownTimer = null;
+                specimenClawSubsystem.setState(SpecimenClawSubsystem.ClawState.CLOSE);
+            } else {
+                specimenSlideSubsystem.setState(SpecimenSlideSubsystem.SpecimenState.HIGH);
+                specimenUpTimer = null;
+            }
+        } else if (gamepadInterface.isKeyDown(A)) {
+            if (specimenSlideSubsystem.getState() == SpecimenSlideSubsystem.SpecimenState.HIGH) {
+                specimenDownTimer = new ElapsedTime();
+                specimenDownTimer.reset();
+                specimenUpTimer = null;
+
+                specimenSlideSubsystem.setState(SpecimenSlideSubsystem.SpecimenState.BELOW_HIGH);
+            } else {
+                if (specimenSlideSubsystem.getState() == SpecimenSlideSubsystem.SpecimenState.HIGH)
+                    specimenSlideSubsystem.setState(SpecimenSlideSubsystem.SpecimenState.BELOW_HIGH);
+                else
+                    specimenSlideSubsystem.setState(SpecimenSlideSubsystem.SpecimenState.INTAKE);
+                specimenClawSubsystem.setState(SpecimenClawSubsystem.ClawState.OPEN);
+                specimenDownTimer = null;
+            }
+        }
+
+        if (specimenUpTimer != null && specimenUpTimer.seconds() > 0.2) {
+            specimenUpTimer = null;
+            specimenSlideSubsystem.setState(SpecimenSlideSubsystem.SpecimenState.HIGH);
+        }
+
+        if (specimenDownTimer != null && specimenDownTimer.seconds() > 0.4) {
+            specimenDownTimer = null;
+            specimenClawSubsystem.setState(SpecimenClawSubsystem.ClawState.OPEN);
+            specimenSlideSubsystem.setState(SpecimenSlideSubsystem.SpecimenState.INTAKE);
+        }
 
         if (gamepad1.dpad_right) {
-            specimenSubsystem.setMode(RUN_WITHOUT_ENCODER);
-            specimenSubsystem.setPower(-0.5);
+            specimenSlideSubsystem.setMode(RUN_WITHOUT_ENCODER);
+            specimenSlideSubsystem.setPower(-0.5);
             mecanumController.drive(0, 0, 0);
 
             while (gamepad1.dpad_right) {
             }
 
-            specimenSubsystem.setPower(0);
-            specimenSubsystem.setState(SpecimenSubsystem.SpecimenState.INTAKE);
-            specimenSubsystem.init();
+            specimenSlideSubsystem.setPower(0);
+            specimenSlideSubsystem.setState(SpecimenSlideSubsystem.SpecimenState.INTAKE);
+            specimenSlideSubsystem.init();
         }
 
         telemetry.addData("Radians", teleOpController.getHeading());
 
         fourBarSubsystem.update();
-        intakeSubsystem.update();
-        slideSubsystem.update();
-//        wristSubsystem.update();
+        sampleIntakeSubsystem.update();
+        sampleSlideSubsystem.update();
 
-        specimenSubsystem.update();
-        clawSubsystem.update();
+        specimenSlideSubsystem.update();
+        specimenClawSubsystem.update();
 
         fourBarSubsystem.updateTelemetry(telemetry);
-        intakeSubsystem.updateTelemetry(telemetry);
-        slideSubsystem.updateTelemetry(telemetry);
-//        wristSubsystem.updateTelemetry(telemetry);
+        sampleIntakeSubsystem.updateTelemetry(telemetry);
+        sampleSlideSubsystem.updateTelemetry(telemetry);
 
-        specimenSubsystem.updateTelemetry(telemetry);
-        clawSubsystem.updateTelemetry(telemetry);
+        specimenSlideSubsystem.updateTelemetry(telemetry);
+        specimenClawSubsystem.updateTelemetry(telemetry);
 
         teleOpController.updateSpeed(gamepad1);
 

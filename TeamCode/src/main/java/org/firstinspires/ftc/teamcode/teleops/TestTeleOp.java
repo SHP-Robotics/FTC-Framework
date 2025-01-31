@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.shprobotics.pestocore.devices.GamepadInterface;
 
-import org.firstinspires.ftc.teamcode.SlideSubsystem;
+import org.firstinspires.ftc.teamcode.SampleSlideSubsystem;
 
 @TeleOp
 public class TestTeleOp extends LinearOpMode {
@@ -15,15 +15,15 @@ public class TestTeleOp extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         GamepadInterface gamepadInterface = new GamepadInterface(gamepad1);
-        SlideSubsystem slideSubsystem = new SlideSubsystem(hardwareMap);
-        slideSubsystem.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        SampleSlideSubsystem sampleSlideSubsystem = new SampleSlideSubsystem(hardwareMap);
+        sampleSlideSubsystem.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         waitForStart();
 
         while (opModeIsActive()) {
             gamepadInterface.update();
 
-            telemetry.addData("position", slideSubsystem.getPosition());
+            telemetry.addData("position", sampleSlideSubsystem.getPosition());
             telemetry.update();
         }
     }

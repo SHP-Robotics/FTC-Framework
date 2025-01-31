@@ -2,22 +2,17 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import dev.frozenmilk.dairy.cachinghardware.CachingServo;
 
-public class ClawSubsystem {
-    private CachingServo claw;
-    private ElapsedTime timer;
-    private static double CHANGE_SECONDS = 0.5;
+public class SpecimenClawSubsystem {
+    private final CachingServo claw;
 
     public enum ClawState {
-        OPEN (0.2),
-        OPENING (0.2),
-        CLOSE (0.05),
-        CLOSING (0.05);
+        OPEN (0.62),
+        CLOSE (0.958);
 
         ClawState(double position) {
             this.position = position;
@@ -32,17 +27,13 @@ public class ClawSubsystem {
 
     private ClawState state;
 
-    public ClawSubsystem(HardwareMap hardwareMap) {
+    public SpecimenClawSubsystem(HardwareMap hardwareMap) {
         this.claw = new CachingServo((Servo) hardwareMap.get("claw"));
         this.claw.setDirection(Servo.Direction.FORWARD);
         this.state = ClawState.CLOSE;
     }
 
     public void setState(ClawState state) {
-        if ((state == ClawState.CLOSING || state == ClawState.OPENING) && state != this.state) {
-            timer = new ElapsedTime();
-            timer.reset();
-        }
         this.state = state;
     }
 
@@ -51,12 +42,6 @@ public class ClawSubsystem {
     }
 
     public void update() {
-        if (this.timer.seconds() > CHANGE_SECONDS) {
-            if (this.state == ClawState.CLOSING)
-                this.state = ClawState.CLOSE;
-            else if (this.state == ClawState.OPENING)
-                this.state = ClawState.OPEN;
-        }
         this.claw.setPositionResult(state.getPosition());
     }
 

@@ -7,7 +7,6 @@ import static org.firstinspires.ftc.teamcode.PestoFTCConfig.getPlaceSpecimen;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.shprobotics.pestocore.algorithms.PID;
 import com.shprobotics.pestocore.drivebases.DeterministicTracker;
 import com.shprobotics.pestocore.drivebases.MecanumController;
 import com.shprobotics.pestocore.geometries.BezierCurve;
@@ -16,10 +15,10 @@ import com.shprobotics.pestocore.geometries.PathContainer;
 import com.shprobotics.pestocore.geometries.PathFollower;
 import com.shprobotics.pestocore.geometries.Vector2D;
 
-import org.firstinspires.ftc.teamcode.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.FourBarSubsystem;
 import org.firstinspires.ftc.teamcode.PestoFTCConfig;
-import org.firstinspires.ftc.teamcode.SpecimenSubsystem;
+import org.firstinspires.ftc.teamcode.SpecimenClawSubsystem;
+import org.firstinspires.ftc.teamcode.SpecimenSlideSubsystem;
 
 @Autonomous(name = "Specimen Auto")
 public class SpecimenAuto extends LinearOpMode {
@@ -32,8 +31,8 @@ public class SpecimenAuto extends LinearOpMode {
 
     PathFollower pathFollower;
 
-    private ClawSubsystem clawSubsystem;
-    private SpecimenSubsystem specimenSubsystem;
+    private SpecimenClawSubsystem specimenClawSubsystem;
+    private SpecimenSlideSubsystem specimenSlideSubsystem;
 
     private ElapsedTime elapsedTime;
 
@@ -43,15 +42,15 @@ public class SpecimenAuto extends LinearOpMode {
         tracker = PestoFTCConfig.getTracker(hardwareMap);
 
         elapsedTime = new ElapsedTime();
-        clawSubsystem = new ClawSubsystem(hardwareMap);
-        specimenSubsystem = new SpecimenSubsystem(hardwareMap);
+        specimenClawSubsystem = new SpecimenClawSubsystem(hardwareMap);
+        specimenSlideSubsystem = new SpecimenSlideSubsystem(hardwareMap);
 
         FourBarSubsystem fourBarSubsystem = new FourBarSubsystem(hardwareMap);
-        fourBarSubsystem.setState(FourBarSubsystem.FourBarState.DOWN);
+        fourBarSubsystem.setState(FourBarSubsystem.FourBarState.UP);
         fourBarSubsystem.update();
 
-        Runnable placeSpecimen = getPlaceSpecimen(tracker, specimenSubsystem, clawSubsystem, elapsedTime, this);
-        Runnable grabSpecimen = getGrabSpecimen(tracker, specimenSubsystem, clawSubsystem, elapsedTime, this);
+        Runnable placeSpecimen = getPlaceSpecimen(tracker, specimenSlideSubsystem, specimenClawSubsystem, elapsedTime, this);
+        Runnable grabSpecimen = getGrabSpecimen(tracker, specimenSlideSubsystem, specimenClawSubsystem, elapsedTime, this);
 
         tracker = PestoFTCConfig.getTracker(hardwareMap);
 
@@ -60,7 +59,7 @@ public class SpecimenAuto extends LinearOpMode {
                 .addCurve(new BezierCurve(
                         new Vector2D[]{
                                 new Vector2D(0, 0),
-                                new Vector2D(0, -30)
+                                new Vector2D(0, -29)
                         }
                 ),
                         new ParametricHeading(new double[]{0, 0}))
@@ -72,8 +71,8 @@ public class SpecimenAuto extends LinearOpMode {
                 .build();
 
         waitForStart();
-        specimenSubsystem.init();
-        specimenSubsystem.setState(SpecimenSubsystem.SpecimenState.HIGH);
+        specimenSlideSubsystem.init();
+        specimenSlideSubsystem.setState(SpecimenSlideSubsystem.SpecimenState.HIGH);
 
         elapsedTime.reset();
 
@@ -85,18 +84,37 @@ public class SpecimenAuto extends LinearOpMode {
                 .setIncrement(0.01)
                 .addCurve(new BezierCurve(
                                 new Vector2D[]{
-                                        new Vector2D(0, -30),
-                                        new Vector2D(-49, -20),
-                                        new Vector2D(-49, 0),
+                                        new Vector2D(0, -29),
+                                        new Vector2D(-49, -20)
                                 }
                         ),
-                        new ParametricHeading(new double[]{0, Math.PI, Math.PI, Math.PI, Math.PI, Math.PI, Math.PI})
+                        new ParametricHeading(new double[]{0, Math.PI, Math.PI, Math.PI, Math.PI})
+                )
+                .build();
+
+        subToSample2 = new PathContainer.PathContainerBuilder()
+                .setIncrement(0.01)
+                .addCurve(new BezierCurve(
+                                new Vector2D[]{
+                                        new Vector2D(-49, -20),
+                                        new Vector2D(-49, 0)
+                                }
+                        ),
+                        new ParametricHeading(new double[]{Math.PI, Math.PI, Math.PI, Math.PI, Math.PI, Math.PI})
                 )
                 .build();
 
         pathFollower = generatePathFollower(subToSample, mecanumController, tracker)
-                .setTimeAfterDeceleration(10)
-                .setEndpointPID(new PID(0.07, 0, 0.01))
+                .setTimeAfterDeceleration(3)
+                .build();
+        pathFollower.reset();
+
+        while (opModeIsActive() && !pathFollower.isCompleted()) {
+            loopOpMode();
+        }
+
+        pathFollower = generatePathFollower(subToSample2, mecanumController, tracker)
+                .setTimeAfterDeceleration(3)
                 .build();
         pathFollower.reset();
 
@@ -130,15 +148,17 @@ public class SpecimenAuto extends LinearOpMode {
 
         pathFollower.update();
 
-        clawSubsystem.update();
-        specimenSubsystem.update();
+        specimenClawSubsystem.update();
+        specimenSlideSubsystem.update();
 
-        clawSubsystem.updateTelemetry(telemetry);
-        specimenSubsystem.updateTelemetry(telemetry);
+        specimenClawSubsystem.updateTelemetry(telemetry);
+        specimenSlideSubsystem.updateTelemetry(telemetry);
 
         telemetry.addData("Loop Times", elapsedTime.milliseconds());
         telemetry.addData("x", tracker.getCurrentPosition().getX());
         telemetry.addData("y", tracker.getCurrentPosition().getY());
+        telemetry.addData("r", tracker.getCurrentPosition().getHeadingRadians());
+        telemetry.addData("r", subToSample2);
         telemetry.addData("r", tracker.getCurrentPosition().getHeadingRadians());
         elapsedTime.reset();
         telemetry.update();
