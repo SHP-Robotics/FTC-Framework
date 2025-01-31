@@ -37,16 +37,16 @@ public class RedAuto extends LinearOpMode {
 
     private ElapsedTime elapsedTime;
 
-    public PathFollower generatePathFollower(PathContainer pathContainer, Runnable finalAction, double deceleration, double speed) {
+    public PathFollower generatePathFollower(PathContainer pathContainer, Runnable finalAction, double decelerationSpeed, double decelerationTime, double speed) {
         return new PathFollower.PathFollowerBuilder(mecanumController, tracker, pathContainer)
-                .setEndpointPID(new PID(0.006,0, 0))
+                .setEndpointPID(new PID(0.008,0, 0))//0.008
                 .setHeadingPID(new PID(1.6, 0, 0))
-                .setDeceleration(PestoFTCConfig.DECELERATION)
+                .setDeceleration(decelerationSpeed)
                 .setSpeed(speed)
 
                 .setEndTolerance(0.4, Math.toRadians(2))
                 .setEndVelocityTolerance(4)
-                .setTimeAfterDeceleration(deceleration)
+                .setTimeAfterDeceleration(decelerationTime)
                 .addFinalAction(finalAction)
                 .build();
     }
@@ -61,7 +61,7 @@ public class RedAuto extends LinearOpMode {
                 .addCurve(new BezierCurve(
                         new Vector2D[]{
                                 new Vector2D(0, 0),
-                                new Vector2D(0, -32)
+                                new Vector2D(0, -22)
                         }
                 ))
                 .build();
@@ -82,7 +82,7 @@ public class RedAuto extends LinearOpMode {
                 clawSubsystem.update();
 
             slideSubsystem.setState(INTAKE);
-        }, 0.25, 0.6);
+        }, PestoFTCConfig.DECELERATION, 0.25, 0.6);
 
         clawSubsystem = new SpecimenClawSubsystem(hardwareMap);
         slideSubsystem = new SlideSubsystem(hardwareMap);
@@ -117,7 +117,7 @@ public class RedAuto extends LinearOpMode {
                     .addCurve(new BezierCurve(
                                     new Vector2D[]{
                                             new Vector2D(-49, -20),
-                                            new Vector2D(-49, 25.5)
+                                            new Vector2D(-49, 12.5)
                                     }
                             ),
                             new ParametricHeading(Math.PI, Math.PI)
@@ -128,7 +128,7 @@ public class RedAuto extends LinearOpMode {
                     .setIncrement(0.1)
                     .addCurve(new BezierCurve(
                                     new Vector2D[]{
-                                            new Vector2D(-48.5, 25.5),
+                                            new Vector2D(-49, 12.5),
                                             new Vector2D(0, 10)
                                     }
                             ),
@@ -148,7 +148,7 @@ public class RedAuto extends LinearOpMode {
                     )
                     .build();
 
-            pathFollower = generatePathFollower(subToSample, () -> {}, 1.5, 0.6);
+            pathFollower = generatePathFollower(subToSample, () -> {}, PestoFTCConfig.DECELERATION,1.5, 0.6);
 
             while (opModeIsActive() && !pathFollower.isCompleted()) {
                 loopOpMode();
@@ -171,7 +171,7 @@ public class RedAuto extends LinearOpMode {
                 elapsedTime.reset();
                 while (elapsedTime.seconds() < 0.5)
                     slideSubsystem.update();
-            }, 3.0, 0.4);
+            },PestoFTCConfig.DECELERATION, Double.POSITIVE_INFINITY, 0.6);
 
             ElapsedTime elapsedTime1 = new ElapsedTime();
             elapsedTime1.reset();
@@ -180,36 +180,36 @@ public class RedAuto extends LinearOpMode {
             }
             mecanumController.drive(0, 0, 0);
 
-            pathFollower = generatePathFollower(sampleToSub, () -> {}, 0.8, 0.6);
+           // pathFollower = generatePathFollower(sampleToSub, () -> {}, PestoFTCConfig.DECELERATION,0.8, 0.6);
 
-            while (opModeIsActive() && !pathFollower.isCompleted()) {
-                loopOpMode();
-            }
+//            while (opModeIsActive() && !pathFollower.isCompleted()) {
+//                loopOpMode();
+//            }
 
-            mecanumController.drive(0, 0, 0);
-            sleep(500);
-
-            pathFollower = generatePathFollower(sampleToSub2, () -> {
-                elapsedTime.reset();
-                while (opModeIsActive() && elapsedTime.seconds() < 0.5)
-                    slideSubsystem.update();
-                slideSubsystem.setState(BELOW_HIGH_RUNG);
-                elapsedTime.reset();
-                while (opModeIsActive() && elapsedTime.seconds() < 1.0)
-                    slideSubsystem.update();
-
-                elapsedTime.reset();
-                clawSubsystem.setState(SpecimenClawSubsystem.ClawState.OPEN);
-
-                while (opModeIsActive() && elapsedTime.seconds() < 0.5)
-                    clawSubsystem.update();
-
-                slideSubsystem.setState(INTAKE);
-            }, 2.0, 0.6);
-
-            while (opModeIsActive() && !pathFollower.isCompleted()) {
-                loopOpMode();
-            }
+//            mecanumController.drive(0, 0, 0);
+//            sleep(500);
+//
+//            pathFollower = generatePathFollower(sampleToSub2, () -> {
+//                elapsedTime.reset();
+//                while (opModeIsActive() && elapsedTime.seconds() < 0.5)
+//                    slideSubsystem.update();
+//                slideSubsystem.setState(BELOW_HIGH_RUNG);
+//                elapsedTime.reset();
+//                while (opModeIsActive() && elapsedTime.seconds() < 1.0)
+//                    slideSubsystem.update();
+//
+//                elapsedTime.reset();
+//                clawSubsystem.setState(SpecimenClawSubsystem.ClawState.OPEN);
+//
+//                while (opModeIsActive() && elapsedTime.seconds() < 0.5)
+//                    clawSubsystem.update();
+//
+//                slideSubsystem.setState(INTAKE);
+//            }, PestoFTCConfig.DECELERATION,2.0, 0.6);
+//
+//            while (opModeIsActive() && !pathFollower.isCompleted()) {
+//                loopOpMode();
+//            }
         }
     }
 

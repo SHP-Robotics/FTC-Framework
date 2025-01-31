@@ -22,7 +22,7 @@ public class PestoFTCConfig {
 
     // TODO: tune these
     // distance traveled / (2 * velocity)
-    public static double DECELERATION = 0.28147257117*4;
+    public static double DECELERATION = 1.3;
     public static double MAX_VELOCITY = 52;
 
     public static final DcMotorSimple.Direction leftEncoderDirection = REVERSE;
@@ -71,7 +71,7 @@ public class PestoFTCConfig {
                 RevHubOrientationOnRobot.UsbFacingDirection.UP
         );
 
-//        teleOpController.useTrackerIMU(tracker);
+        teleOpController.useTrackerIMU(tracker);
 
         teleOpController.setSpeedController((gamepad) -> {
             if (gamepad.left_stick_button) {
