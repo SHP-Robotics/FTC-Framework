@@ -117,7 +117,7 @@ public class RedAuto extends LinearOpMode {
                     .addCurve(new BezierCurve(
                                     new Vector2D[]{
                                             new Vector2D(-49, -20),
-                                            new Vector2D(-49, 13.5) //12.5
+                                            new Vector2D(-49, 20.0) //12.5, 16.875
                                     }
                             ),
                             new ParametricHeading(Math.PI, Math.PI)
@@ -180,36 +180,36 @@ public class RedAuto extends LinearOpMode {
             }
             mecanumController.drive(0, 0, 0);
 
-           // pathFollower = generatePathFollower(sampleToSub, () -> {}, PestoFTCConfig.DECELERATION,0.8, 0.6);
+            pathFollower = generatePathFollower(sampleToSub, () -> {}, PestoFTCConfig.DECELERATION,0.8, 0.6);
 
-//            while (opModeIsActive() && !pathFollower.isCompleted()) {
-//                loopOpMode();
-//            }
+            while (opModeIsActive() && !pathFollower.isCompleted()) {
+                loopOpMode();
+            }
 
-//            mecanumController.drive(0, 0, 0);
-//            sleep(500);
-//
-//            pathFollower = generatePathFollower(sampleToSub2, () -> {
-//                elapsedTime.reset();
-//                while (opModeIsActive() && elapsedTime.seconds() < 0.5)
-//                    slideSubsystem.update();
-//                slideSubsystem.setState(BELOW_HIGH_RUNG);
-//                elapsedTime.reset();
-//                while (opModeIsActive() && elapsedTime.seconds() < 1.0)
-//                    slideSubsystem.update();
-//
-//                elapsedTime.reset();
-//                clawSubsystem.setState(SpecimenClawSubsystem.ClawState.OPEN);
-//
-//                while (opModeIsActive() && elapsedTime.seconds() < 0.5)
-//                    clawSubsystem.update();
-//
-//                slideSubsystem.setState(INTAKE);
-//            }, PestoFTCConfig.DECELERATION,2.0, 0.6);
-//
-//            while (opModeIsActive() && !pathFollower.isCompleted()) {
-//                loopOpMode();
-//            }
+            mecanumController.drive(0, 0, 0);
+            sleep(500);
+
+            pathFollower = generatePathFollower(sampleToSub2, () -> {
+                elapsedTime.reset();
+                while (opModeIsActive() && elapsedTime.seconds() < 0.5)
+                    slideSubsystem.update();
+                slideSubsystem.setState(BELOW_HIGH_RUNG);
+                elapsedTime.reset();
+                while (opModeIsActive() && elapsedTime.seconds() < 1.0)
+                    slideSubsystem.update();
+
+                elapsedTime.reset();
+                clawSubsystem.setState(SpecimenClawSubsystem.ClawState.OPEN);
+
+                while (opModeIsActive() && elapsedTime.seconds() < 0.5)
+                    clawSubsystem.update();
+
+                slideSubsystem.setState(INTAKE);
+            }, PestoFTCConfig.DECELERATION,2.0, 0.6);
+
+            while (opModeIsActive() && !pathFollower.isCompleted()) {
+                loopOpMode();
+            }
        // }
     }
 
