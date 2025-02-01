@@ -117,7 +117,7 @@ public class RedAuto extends LinearOpMode {
                     .addCurve(new BezierCurve(
                                     new Vector2D[]{
                                             new Vector2D(-49, -20),
-                                            new Vector2D(-49, 20.0) //12.5, 16.875
+                                            new Vector2D(-48.5, 18.2) //12.5, 16.875
                                     }
                             ),
                             new ParametricHeading(Math.PI, Math.PI)
@@ -128,8 +128,8 @@ public class RedAuto extends LinearOpMode {
                     .setIncrement(0.1)
                     .addCurve(new BezierCurve(
                                     new Vector2D[]{
-                                            new Vector2D(-49, 12.5),
-                                            new Vector2D(0, 10)
+                                            new Vector2D(-48.5, 18.2),
+                                            new Vector2D(5, -10) //was 10
                                     }
                             ),
                             new ParametricHeading(Math.PI, 0)
@@ -140,8 +140,8 @@ public class RedAuto extends LinearOpMode {
                     .setIncrement(0.1)
                     .addCurve(new BezierCurve(
                                     new Vector2D[]{
-                                            new Vector2D(0, 10),
-                                            new Vector2D(0, -34.5)
+                                            new Vector2D(5, -10), // was 10
+                                            new Vector2D(7, -34.5)
                                     }
                             ),
                             new ParametricHeading(0, 0)
@@ -155,7 +155,7 @@ public class RedAuto extends LinearOpMode {
             }
 
             mecanumController.drive(0, 0, 0);
-            sleep(500);
+            sleep(100);
 
             pathFollower = generatePathFollower(subToSample2, () -> {
                 clawSubsystem.setState(SpecimenClawSubsystem.ClawState.CLOSE);
@@ -171,7 +171,7 @@ public class RedAuto extends LinearOpMode {
                 elapsedTime.reset();
                 while (elapsedTime.seconds() < 0.5)
                     slideSubsystem.update();
-            },PestoFTCConfig.DECELERATION, Double.POSITIVE_INFINITY, 0.6);
+            },PestoFTCConfig.DECELERATION, 2.0, 0.4); //deceleration was double.POSITIVE_INFINITY
 
             ElapsedTime elapsedTime1 = new ElapsedTime();
             elapsedTime1.reset();
@@ -187,7 +187,7 @@ public class RedAuto extends LinearOpMode {
             }
 
             mecanumController.drive(0, 0, 0);
-            sleep(500);
+            sleep(100);
 
             pathFollower = generatePathFollower(sampleToSub2, () -> {
                 elapsedTime.reset();
