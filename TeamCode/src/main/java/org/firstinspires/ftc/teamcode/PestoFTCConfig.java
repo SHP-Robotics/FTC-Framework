@@ -23,15 +23,16 @@ import com.shprobotics.pestocore.geometries.Vector2D;
 public class PestoFTCConfig {
     public static double ODOMETRY_TICKS_PER_INCH = 505.316944316;
     public static double FORWARD_OFFSET = 0.794;
-    public static double ODOMETRY_WIDTH = 6.65;
+    public static double ODOMETRY_WIDTH = 6.622;
 
     // TODO: tune these
     // distance traveled / velocity
-    public static double DECELERATION = 1.7;
+
+    public static double DECELERATION = 0.9;
     public static double MAX_VELOCITY = 80;
 
     public static double endpointKP = 0.005;
-    public static double headingKP = 0.8;
+    public static double headingKP = 1.8;
 
     public static final DcMotorSimple.Direction leftEncoderDirection = FORWARD;
     public static final DcMotorSimple.Direction centerEncoderDirection = REVERSE;
@@ -112,7 +113,7 @@ public class PestoFTCConfig {
     public static PathFollower.PathFollowerBuilder generatePathFollower(PathContainer pathContainer, MecanumController mecanumController, DeterministicTracker tracker) {
         return new PathFollower.PathFollowerBuilder(mecanumController, tracker, pathContainer)
                 .setEndpointPID(new PID(endpointKP, 0, 0))
-                .setHeadingPID(new PID(headingKP, 0, 0))
+                .setHeadingPID(new PID(headingKP, 0, 0.1))
                 .setDeceleration(DECELERATION)
                 .setSpeed(1.0)
 
@@ -129,7 +130,7 @@ public class PestoFTCConfig {
             }
             specimenSlideSubsystem.setState(SpecimenSlideSubsystem.SpecimenState.BELOW_HIGH);
             elapsedTime.reset();
-            while (linearOpMode.opModeIsActive() && elapsedTime.seconds() < 1.0) {
+            while (linearOpMode.opModeIsActive() && elapsedTime.seconds() < 0.5) {
                 specimenSlideSubsystem.update();
                 tracker.update();
             }
@@ -137,7 +138,7 @@ public class PestoFTCConfig {
             elapsedTime.reset();
             specimenClawSubsystem.setState(SpecimenClawSubsystem.ClawState.OPEN);
 
-            while (linearOpMode.opModeIsActive() && elapsedTime.seconds() < 0.5) {
+            while (linearOpMode.opModeIsActive() && elapsedTime.seconds() < 0.2) {
                 specimenClawSubsystem.update();
                 tracker.update();
             }
