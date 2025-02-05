@@ -19,7 +19,8 @@ public class SampleSlideSubsystem {
 
     public enum SlideState {
         INTAKE (170),
-        HIGH (4050);
+//        HIGH (4050);
+        HIGH (3050);
 
         SlideState(int position) {
             this.position = position;

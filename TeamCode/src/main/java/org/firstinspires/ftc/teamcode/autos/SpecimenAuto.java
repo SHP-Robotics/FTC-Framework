@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.PestoFTCConfig.getGrabSpecimen;
 import static org.firstinspires.ftc.teamcode.PestoFTCConfig.getPlaceSpecimen;
 import static java.lang.Math.PI;
 
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -20,6 +21,8 @@ import org.firstinspires.ftc.teamcode.FourBarSubsystem;
 import org.firstinspires.ftc.teamcode.PestoFTCConfig;
 import org.firstinspires.ftc.teamcode.SpecimenClawSubsystem;
 import org.firstinspires.ftc.teamcode.SpecimenSlideSubsystem;
+
+import java.util.List;
 
 @Autonomous(name = "Specimen Auto")
 public class SpecimenAuto extends LinearOpMode {
@@ -49,6 +52,8 @@ public class SpecimenAuto extends LinearOpMode {
 
     private ElapsedTime elapsedTime;
 
+    protected List<LynxModule> modules;
+
     @Override
     public void runOpMode() {
         MecanumController mecanumController = PestoFTCConfig.getMecanumController(hardwareMap);
@@ -61,6 +66,11 @@ public class SpecimenAuto extends LinearOpMode {
         FourBarSubsystem fourBarSubsystem = new FourBarSubsystem(hardwareMap);
         fourBarSubsystem.setState(FourBarSubsystem.FourBarState.UP);
         fourBarSubsystem.update();
+
+        modules = hardwareMap.getAll(LynxModule.class);
+
+        for (LynxModule module: modules)
+            module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
 
 //        ColorSensor colorSensor = (ColorSensor) hardwareMap.get("clawColor");
 
@@ -212,7 +222,7 @@ public class SpecimenAuto extends LinearOpMode {
                         new BezierCurve(
                                 new Vector2D[]{
                                         new Vector2D(0, -10),
-                                        new Vector2D(0, -35),
+                                        new Vector2D(0, -37),
                                 }
                         ),
                         new ParametricHeading(new double[]{Math.toRadians(5), Math.toRadians(5)})
@@ -303,15 +313,15 @@ public class SpecimenAuto extends LinearOpMode {
 //                .setEndTolerance(2, Math.toRadians(2))
 //                .setEndVelocityTolerance(4)
                 .addFinalAction(() -> {
-                    mecanumController.drive(-1.0, 0, 0);
+                    mecanumController.drive(-1.0, 0.0, -0.4);
                     ElapsedTime elapsedTime1 = new ElapsedTime();
                     elapsedTime1.reset();
-                    while (elapsedTime1.milliseconds() < 2000)
+                    while (elapsedTime1.milliseconds() < 1000)
                         tracker.update();
                     tracker.resetHeading(PI);
                     grabSpecimen.run();
                     elapsedTime1.reset();
-                    while (elapsedTime1.milliseconds() < 1000)
+                    while (elapsedTime1.milliseconds() < 200)
                         tracker.update();
                 })
                 .setTimeAfterDeceleration(0.1)
@@ -320,6 +330,17 @@ public class SpecimenAuto extends LinearOpMode {
         while (opModeIsActive() && !pathFollower.isCompleted()) {
             loopOpMode();
         }
+
+//        ElapsedTime elapsedTime1 = new ElapsedTime();
+//        elapsedTime1.reset();
+//
+//        while (elapsedTime1.milliseconds() < 1000)
+//        {
+//            tracker.update();
+//            mecanumController.drive(0, 1.0, 0);
+//        }
+
+        grabSpecimen.run();
 
         pathFollower = generatePathFollower(place1, mecanumController, tracker)
                 .setSpeed(0.9)
@@ -354,19 +375,23 @@ public class SpecimenAuto extends LinearOpMode {
         }
 
         pathFollower = generatePathFollower(blockToPick3, mecanumController, tracker)
-                .setSpeed(0.3)
-                .addFinalAction(() -> {
-                    mecanumController.drive(-1.0, 0.4, 0);
-                    ElapsedTime elapsedTime1 = new ElapsedTime();
-                    elapsedTime1.reset();
-                    while (elapsedTime1.milliseconds() < 1000)
-                        tracker.update();
-                    tracker.resetHeading(PI);
-                    grabSpecimen.run();
-                    elapsedTime1.reset();
-                    while (elapsedTime1.milliseconds() < 200)
-                        tracker.update();
-                })
+                .setSpeed(0.5)
+//                .addFinalAction(() -> {
+//                    mecanumController.drive(-1.0, 0.0, 0.0);
+//                    ElapsedTime elapsedTime1 = new ElapsedTime();
+//                    elapsedTime1.reset();
+//                    while (elapsedTime1.milliseconds() < 1000)
+//                        tracker.update();
+//                    mecanumController.drive(0.0, 0.0, 1.0);
+//                    elapsedTime1.reset();
+//                    while (elapsedTime1.milliseconds() < 1000)
+//                        tracker.update();
+//                    tracker.resetHeading(PI);
+//                    grabSpecimen.run();
+//                    elapsedTime1.reset();
+//                    while (elapsedTime1.milliseconds() < 200)
+//                        tracker.update();
+//                })
                 .setKillTime(2.5)
                 .setTimeAfterDeceleration(0.1)
                 .build();
@@ -375,25 +400,30 @@ public class SpecimenAuto extends LinearOpMode {
             loopOpMode();
         }
 
-        pathFollower = generatePathFollower(place1, mecanumController, tracker)
-                .setSpeed(0.9)
-                .setTimeAfterDeceleration(0.1)
-                .build();
-
-        while (opModeIsActive() && !pathFollower.isCompleted()) {
-            loopOpMode();
-        }
-
-        pathFollower = generatePathFollower(place12, mecanumController, tracker)
-                .setSpeed(0.9)
-                .addFinalAction(placeSpecimen)
-                .setTimeAfterDeceleration(0.1)
-                .build();
-
-        while (opModeIsActive() && !pathFollower.isCompleted()) {
-            loopOpMode();
-        }
+//        pathFollower = generatePathFollower(place1, mecanumController, tracker)
+//                .setSpeed(0.9)
+//                .setTimeAfterDeceleration(0.1)
+//                .build();
+//
+//        while (opModeIsActive() && !pathFollower.isCompleted()) {
+//            loopOpMode();
+//        }
+//
+//        pathFollower = generatePathFollower(place12, mecanumController, tracker)
+//                .setSpeed(0.9)
+//                .addFinalAction(placeSpecimen)
+//                .setTimeAfterDeceleration(0.1)
+//                .build();
+//
+//        while (opModeIsActive() && !pathFollower.isCompleted()) {
+//            loopOpMode();
+//        }
     }
+
+//    public void clearModules() {
+//        for (LynxModule module: modules)
+//            module.clearBulkCache();
+//    }
 
     public void loopOpMode() {
         tracker.update();
